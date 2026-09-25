@@ -21,7 +21,7 @@ pnpm build
 pnpm preview
 ```
 
-The production output is in `dist/`. The page includes responsive navigation, keyboard-accessible approach tabs, native FAQ disclosures, metadata, and reduced-motion support. It does not use analytics, external fonts, or a client framework runtime.
+The production output is in `dist/`. The page includes responsive navigation, keyboard-accessible approach tabs, native FAQ disclosures, metadata, and reduced-motion support. It does not use analytics, third-party font requests, or a client framework runtime. Geist Sans and Geist Mono are self-hosted through Fontsource; headings, copy, and technical labels share a consistent type scale.
 
 ## Deployment
 
@@ -59,3 +59,7 @@ Keep public copy accurate about implementation status. Product plans must not be
 ## Attribution
 
 Niu-owned website code is MIT licensed. Brand assets and theme tokens are reused unchanged from [Niu's branding directory](https://github.com/niu-io/niu/tree/main/branding); their original attribution is retained in [public/brand/SOURCE-LICENSE.txt](public/brand/SOURCE-LICENSE.txt). No LiteLLM marketing copy is included.
+
+## Typography
+
+Geist Sans and Geist Mono are bundled locally through Fontsource under the SIL Open Font License. Font notices are available in `public/fonts/`. The page uses the NIU.IO light theme, a larger body-text scale, and monospace labels for technical details.
