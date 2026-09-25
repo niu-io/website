@@ -1,0 +1,480 @@
+---
+import "../styles/tokens.css";
+import "../styles/global.css";
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const asset = (path: string) => `${base}/${path}`;
+const repo = "https://github.com/niu-io/niu";
+const docs = `${repo}/tree/main/docs/architecture`;
+const description =
+  "Niu is an open-source AI gateway focused on performance and cost, with security as its foundation. Follow the development of a more intentional AI infrastructure layer.";
+const canonical = new URL(`${base}/`, Astro.site);
+const modes = [
+  {
+    id: "performance",
+    label: "Performance",
+    title: "Make every millisecond visible.",
+    detail:
+      "Our goal: measure latency, time to first token, throughput, and reliability across the complete request path.",
+    output: "Latency · throughput · reliability",
+    icon: "↗",
+  },
+  {
+    id: "cost",
+    label: "Cost",
+    title: "Know what every attempt costs.",
+    detail:
+      "Our goal: connect provider pricing to attributable usage, including retries and cache behavior, so spend has an explanation.",
+    output: "Pricing · usage · attribution",
+    icon: "◎",
+  },
+  {
+    id: "security",
+    label: "Security",
+    title: "Keep control at the boundary.",
+    detail:
+      "Our goal: preserve tenant authorization, credential ownership, and data boundaries throughout the request lifecycle.",
+    output: "Identity · credentials · policy",
+    icon: "◇",
+  },
+];
+---
+
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#111315" />
+    <link rel="icon" href={asset("favicon.ico")} sizes="any" />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="NIU.IO — A clearer path for AI." />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta
+      property="og:image"
+      content={new URL(asset("brand/niu-logo-dark.png"), Astro.site)}
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <title>NIU.IO — A clearer path for AI.</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">
+      Skip to content
+    </a>
+    <header class="site-header">
+      <div class="container nav-row">
+        <a class="wordmark" href={`${base}/`} aria-label="NIU.IO home">
+          <img
+            src={asset("brand/niu-mark.png")}
+            alt=""
+            width="34"
+            height="34"
+          />
+          <span>
+            niu<span class="wordmark-suffix">.io</span>
+          </span>
+        </a>
+        <button
+          class="menu-toggle"
+          aria-expanded="false"
+          aria-controls="navigation"
+        >
+          Menu <span aria-hidden="true">+</span>
+        </button>
+        <nav id="navigation" aria-label="Main navigation">
+          <a href="#approach">Our approach</a>
+          <a href="#building">What we’re building</a>
+          <a href={docs}>
+            Documentation <span aria-hidden="true">↗</span>
+          </a>
+          <a class="nav-github" href={repo}>
+            GitHub <span aria-hidden="true">↗</span>
+          </a>
+        </nav>
+      </div>
+    </header>
+    <main id="main">
+      <section class="hero container" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <a class="eyebrow status-link" href="#building">
+            <span class="status-dot"></span> OPEN SOURCE. TAKING SHAPE.{" "}
+            <span aria-hidden="true">↗</span>
+          </a>
+          <h1 id="hero-title">
+            A clearer path
+            <br />
+            for <span class="accent">AI.</span>
+          </h1>
+          <p class="hero-description">
+            Your models. Your infrastructure.
+            <br />
+            An AI gateway built around what matters:
+            <br class="desktop-break" /> performance, cost, and control.
+          </p>
+          <div class="actions">
+            <a class="button primary" href={repo}>
+              Explore the project <span aria-hidden="true">↗</span>
+            </a>
+            <a class="text-link" href={docs}>
+              Read the architecture <span aria-hidden="true">→</span>
+            </a>
+          </div>
+          <div class="hero-note">
+            <span class="mini-bracket">[</span> Early development{" "}
+            <span class="separator">/</span> Built in the open{" "}
+            <span class="mini-bracket">]</span>
+          </div>
+        </div>
+        <div
+          class="flow-visual"
+          role="img"
+          aria-label="Conceptual request flow: applications connect through Niu to model providers, with performance, cost, and security considered throughout."
+        >
+          <div class="visual-topline">
+            <span>THE REQUEST PATH</span>
+            <span>01 / CONCEPT</span>
+          </div>
+          <div class="flow-grid">
+            <div class="flow-source">
+              <span class="node-symbol" aria-hidden="true">
+                ⌘
+              </span>
+              <span>Your applications</span>
+              <span class="node-meta">ONE ENTRY POINT</span>
+            </div>
+            <div class="flow-connector left-connector">
+              <span></span>
+            </div>
+            <div class="flow-hub">
+              <div class="hub-orbit"></div>
+              <img
+                src={asset("brand/niu-mark.png")}
+                alt=""
+                width="76"
+                height="76"
+              />
+              <strong>Niu</strong>
+              <span>AI GATEWAY</span>
+            </div>
+            <div class="flow-connector right-connector">
+              <span></span>
+            </div>
+            <div class="flow-destinations">
+              <div>
+                <span class="provider-dot"></span>Model providers
+              </div>
+              <div>
+                <span class="provider-dot"></span>Cloud platforms
+              </div>
+              <div>
+                <span class="provider-dot"></span>Self-hosted models
+              </div>
+            </div>
+          </div>
+          <div class="flow-signals">
+            <span>
+              <i></i> Performance
+            </span>
+            <span>
+              <i></i> Cost
+            </span>
+            <span>
+              <i></i> Security
+            </span>
+          </div>
+          <div class="visual-bottomline">
+            <span>Infrastructure you can understand.</span>
+            <span aria-hidden="true">↳</span>
+          </div>
+        </div>
+      </section>
+      <div class="principles-strip">
+        <div class="container">
+          <span>LESS GUESSWORK. MORE CONTROL.</span>
+          <span>Open source</span>
+          <span>Rust at the core</span>
+          <span>Self-hosted by design</span>
+        </div>
+      </div>
+      <section
+        class="section container"
+        id="approach"
+        aria-labelledby="approach-title"
+      >
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">01 / OUR APPROACH</p>
+            <h2 id="approach-title">
+              The gateway is where
+              <br />
+              the details matter.
+            </h2>
+          </div>
+          <p>
+            Every request has a path, a cost, and a boundary. <br />
+            We’re building Niu to make all three explicit.
+          </p>
+        </div>
+        <div class="approach-layout">
+          <div
+            class="approach-tabs"
+            role="tablist"
+            aria-label="Explore our approach"
+            aria-orientation="vertical"
+          >
+            {modes.map((mode, i) => (
+              <button
+                id={`tab-${mode.id}`}
+                role="tab"
+                aria-selected={i === 0 ? "true" : "false"}
+                aria-controls={`panel-${mode.id}`}
+                tabindex={i === 0 ? 0 : -1}
+              >
+                <span class="tab-index">0{i + 1}</span>
+                <span>{mode.label}</span>
+                <span class="tab-arrow" aria-hidden="true">
+                  ↗
+                </span>
+              </button>
+            ))}
+          </div>
+          {modes.map((mode, i) => (
+            <div
+              class="approach-panel"
+              id={`panel-${mode.id}`}
+              role="tabpanel"
+              aria-labelledby={`tab-${mode.id}`}
+              tabindex="0"
+              hidden={i !== 0}
+            >
+              <div class="panel-top">
+                <span class="panel-symbol" aria-hidden="true">
+                  {mode.icon}
+                </span>
+                <span class="small-label">DESIGN PRINCIPLE / 0{i + 1}</span>
+              </div>
+              <h3>{mode.title}</h3>
+              <p>{mode.detail}</p>
+              <div class="panel-output">
+                <span class="status-dot"></span>
+                {mode.output}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+      <section
+        class="building-section"
+        id="building"
+        aria-labelledby="building-title"
+      >
+        <div class="container section">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">02 / BUILDING IN THE OPEN</p>
+              <h2 id="building-title">
+                A small beginning.
+                <br />A deliberate direction.
+              </h2>
+            </div>
+            <p>
+              Follow the implementation, inspect the decisions, <br />
+              and help shape what comes next.
+            </p>
+          </div>
+          <div class="building-grid">
+            <article class="build-card">
+              <span class="phase current">PUBLIC FOUNDATION</span>
+              <h3>Start with the cost.</h3>
+              <p>
+                The public project includes a native model-pricing engine,
+                selected from LiteLLM’s Rust cost component, with source and
+                license attribution preserved.
+              </p>
+              <a class="text-link" href={`${repo}/tree/main/crates/cost`}>
+                Explore the pricing engine <span aria-hidden="true">↗</span>
+              </a>
+            </article>
+            <article class="build-card">
+              <span class="phase">PRODUCT DIRECTION</span>
+              <h3>Connect the request path.</h3>
+              <p>
+                A gateway runtime and management experience for connecting
+                providers, routing requests, and understanding usage. Follow the
+                repository for implementation progress.
+              </p>
+              <a class="text-link" href={docs}>
+                Read the design <span aria-hidden="true">↗</span>
+              </a>
+            </article>
+            <article class="build-card">
+              <span class="phase">OUR COMMITMENT</span>
+              <h3>Keep the details open.</h3>
+              <p>
+                Explicit implementation status, traceable reuse, and decisions
+                you can inspect. Architecture describes our intent; the source
+                shows what’s available.
+              </p>
+              <a class="text-link" href={`${repo}#current-status`}>
+                Check project status <span aria-hidden="true">↗</span>
+              </a>
+            </article>
+          </div>
+          <p class="development-note">
+            <span class="status-dot"></span>Niu is in early development.
+            Production qualification and the broader gateway feature set are
+            still in progress.
+          </p>
+        </div>
+      </section>
+      <section
+        class="section container explore-section"
+        aria-labelledby="explore-title"
+      >
+        <div>
+          <p class="eyebrow">03 / TAKE A CLOSER LOOK</p>
+          <h2 id="explore-title">
+            Good infrastructure
+            <br />
+            starts with questions.
+          </h2>
+          <p class="section-description">
+            Bring a use case. Challenge a design decision.
+            <br />
+            Build something useful with us.
+          </p>
+          <a class="text-link" href={`${repo}/issues`}>
+            Join the conversation <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+        <div class="faq-list">
+          <details open>
+            <summary>
+              What is Niu?<span aria-hidden="true">+</span>
+            </summary>
+            <p>
+              Niu is an open-source AI gateway and management platform in
+              development. Its focus is performance and cost, with security as
+              the foundation.
+            </p>
+          </details>
+          <details>
+            <summary>
+              Can I use it in production today?<span aria-hidden="true">+</span>
+            </summary>
+            <p>
+              Niu is not yet production-qualified. Check the{" "}
+              <a href={repo}>public repository</a> for current implementation
+              status and development instructions before evaluating it.
+            </p>
+          </details>
+          <details>
+            <summary>
+              How does Niu relate to LiteLLM?<span aria-hidden="true">+</span>
+            </summary>
+            <p>
+              Niu selectively reuses small, independently licensed components
+              from LiteLLM alongside its own design. Reused code retains
+              upstream attribution and recorded provenance in the{" "}
+              <a href={`${repo}/blob/main/THIRD-PARTY-NOTICES.md`}>
+                third-party notices
+              </a>
+              .
+            </p>
+          </details>
+          <details>
+            <summary>
+              How can I contribute?<span aria-hidden="true">+</span>
+            </summary>
+            <p>
+              Read the architecture, explore the code, or{" "}
+              <a href={`${repo}/issues`}>open an issue</a> with a concrete use
+              case, bug report, or proposal. The project README has the latest
+              development instructions.
+            </p>
+          </details>
+        </div>
+      </section>
+      <section class="closing container">
+        <div>
+          <p class="eyebrow">YOUR NEXT REQUEST STARTS HERE.</p>
+          <h2>Build with a clearer view.</h2>
+        </div>
+        <a class="button primary" href={repo}>
+          Explore Niu on GitHub <span aria-hidden="true">↗</span>
+        </a>
+      </section>
+    </main>
+    <footer class="container footer">
+      <a class="wordmark" href={`${base}/`} aria-label="NIU.IO home">
+        <img src={asset("brand/niu-mark.png")} alt="" width="28" height="28" />
+        <span>
+          niu<span class="wordmark-suffix">.io</span>
+        </span>
+      </a>
+      <p>Open infrastructure. Considered engineering.</p>
+      <div>
+        <a href={docs}>Docs</a>
+        <a href={repo}>GitHub</a>
+        <a href="https://github.com/niu-io/website">Website source</a>
+        <a href={asset("brand/SOURCE-LICENSE.txt")}>Brand attribution</a>
+      </div>
+    </footer>
+    <script>
+      const menu = document.querySelector<HTMLButtonElement>(".menu-toggle");
+      const navigation = document.querySelector<HTMLElement>("#navigation");
+      const closeMenu = () => {
+        menu?.setAttribute("aria-expanded", "false");
+        navigation?.classList.remove("is-open");
+      };
+      menu?.addEventListener("click", () => {
+        const open = menu.getAttribute("aria-expanded") !== "true";
+        menu.setAttribute("aria-expanded", String(open));
+        navigation?.classList.toggle("is-open", open);
+      });
+      navigation
+        ?.querySelectorAll("a")
+        .forEach((link) => link.addEventListener("click", closeMenu));
+      document.addEventListener("keydown", (event) => {
+        if (
+          event.key === "Escape" &&
+          menu?.getAttribute("aria-expanded") === "true"
+        ) {
+          closeMenu();
+          menu.focus();
+        }
+      });
+      const tabs = Array.from(
+        document.querySelectorAll<HTMLButtonElement>('[role="tab"]'),
+      );
+      function activateTab(tab: HTMLButtonElement) {
+        tabs.forEach((item) => {
+          const selected = item === tab;
+          item.setAttribute("aria-selected", String(selected));
+          item.tabIndex = selected ? 0 : -1;
+          const panel = document.getElementById(
+            item.getAttribute("aria-controls") || "",
+          );
+          if (panel) panel.hidden = !selected;
+        });
+      }
+      tabs.forEach((tab, index) => {
+        tab.addEventListener("click", () => activateTab(tab));
+        tab.addEventListener("keydown", (event) => {
+          let next = index;
+          if (event.key === "ArrowDown") next = (index + 1) % tabs.length;
+          else if (event.key === "ArrowUp")
+            next = (index - 1 + tabs.length) % tabs.length;
+          else if (event.key === "Home") next = 0;
+          else if (event.key === "End") next = tabs.length - 1;
+          else return;
+          event.preventDefault();
+          activateTab(tabs[next]);
+          tabs[next].focus();
+        });
+      });
+    </script>
+  </body>
+</html>
