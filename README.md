@@ -25,15 +25,27 @@ The production output is in `dist/`. The page includes responsive navigation, ke
 
 ## Deployment
 
-The GitHub Actions workflow validates pull requests and deploys `main` to GitHub Pages. Enable Pages with GitHub Actions as the source in repository settings. The workflow builds for `https://niu-io.github.io/website/` by setting `SITE_URL` and `BASE_PATH`.
+### Render
 
-For a custom domain or another static host, build with the desired origin and path:
+`render.yaml` defines a static site named `niu-website`, built from `main` with Node.js 24 and pnpm 11.25.0. It installs the locked dependencies, runs Astro's checks, and publishes `dist/` at the domain root.
+
+Create a Render Blueprint connected to this repository to apply the configuration. The site uses Render's assigned URL for canonical and social metadata until a custom domain is configured.
+
+To move to `niu.io`, add and verify the custom domain in Render, configure the DNS records Render supplies, and set `SITE_URL=https://niu.io` in the service environment. Redeploy after changing this value. `BASE_PATH` stays `/`.
+
+### GitHub Pages preview
+
+The GitHub Actions workflow validates pull requests and maintains the existing preview at `https://niu-io.github.io/website/`. Its build explicitly overrides `SITE_URL` and `BASE_PATH`; this does not affect the Render deployment.
+
+### Other static hosts
+
+Build with the desired origin and path, then publish `dist/`:
 
 ```sh
 SITE_URL=https://niu.io BASE_PATH=/ pnpm build
 ```
 
-Domain and DNS configuration are managed separately. No custom domain is claimed by this repository.
+Domain and DNS configuration are managed separately.
 
 ## Content and branding
 
