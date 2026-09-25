@@ -1,8 +1,8 @@
-# NIU.IO website
+# niu.io website
 
 The public landing page for Niu, an open-source AI gateway focused on performance and cost, with security as its foundation.
 
-Built with Astro and the existing NIU.IO brand assets and theme tokens. This is a static marketing site; the product documentation and implementation live in [niu-io/niu](https://github.com/niu-io/niu).
+Built with Astro and the existing niu.io brand assets and theme tokens. This is a static marketing site; the product documentation and implementation live in [niu-io/niu](https://github.com/niu-io/niu).
 
 ## Development
 
@@ -51,8 +51,8 @@ Domain and DNS configuration are managed separately.
 
 - `src/pages/index.astro`: landing-page content and accessible interactions.
 - `src/styles/global.css`: responsive page styles.
-- `src/styles/tokens.css`: unchanged NIU.IO theme tokens.
-- `public/brand/`: approved NIU.IO assets and retained source license.
+- `src/styles/tokens.css`: unchanged niu.io theme tokens.
+- `public/brand/`: approved niu.io assets and retained source license.
 
 Keep public copy accurate about implementation status. Product plans must not be presented as shipped capabilities. Link to public repositories and avoid private source paths, customer information, and secrets.
 
@@ -62,4 +62,4 @@ Niu-owned website code is MIT licensed. Brand assets and theme tokens are reused
 
 ## Typography
 
-Geist Sans and Geist Mono are bundled locally through Fontsource under the SIL Open Font License. Font notices are available in `public/fonts/`. The page uses the NIU.IO light theme, a larger body-text scale, and monospace labels for technical details.
+Geist Sans and Geist Mono are bundled locally through Fontsource under the SIL Open Font License. Font notices are available in `public/fonts/`. The page uses the niu.io light theme, a larger body-text scale, and monospace labels for technical details.
