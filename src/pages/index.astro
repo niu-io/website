@@ -210,113 +210,110 @@ const spans = [
           class="product-preview"
           aria-label="Illustrative task investigation preview with synthetic data"
         >
-          <div class="preview-toolbar">
-            <div class="preview-brand">
-              <img
-                src={asset("brand/niu-mark.png")}
-                alt=""
-                width="22"
-                height="22"
-              />
-              <strong>niu.io</strong>
-              <span class="toolbar-divider">/</span>
-              <span>Tasks</span>
+          <MockNavigation active={1} />
+          <div class="mock-workspace">
+            <div class="preview-toolbar">
+              <div class="preview-brand">
+                <strong>niu.io</strong>
+                <span>Tasks</span>
+              </div>
+              <span class="sample-label">
+                Illustrative view · Synthetic data
+              </span>
             </div>
-            <span class="sample-label">Illustrative view · Synthetic data</span>
-          </div>
-          <div class="preview-body">
-            <MockNavigation active={1} />
-            <div class="investigation">
-              <div class="task-heading">
-                <div>
-                  <p class="small-label">TASK / PARALLEL EXECUTION</p>
-                  <h2>Follow every branch.</h2>
-                </div>
-                <span class="badge">Imported evidence</span>
-              </div>
-              <div class="metrics">
-                <div>
-                  <span>Wall-clock duration</span>
-                  <strong>
-                    100 <small>ms</small>
-                  </strong>
-                </div>
-                <div>
-                  <span>Agent branches</span>
-                  <strong>
-                    2 <small>parallel</small>
-                  </strong>
-                </div>
-                <div>
-                  <span>Total task cost</span>
-                  <strong class="unknown">
-                    Unknown <span aria-hidden="true">◌</span>
-                  </strong>
-                </div>
-              </div>
-              <div
-                class="timeline"
-                role="img"
-                aria-label="Example timeline: task lasts 100 milliseconds. Agent A runs from 0 to 70 milliseconds, Agent B from 10 to 90, and validation from 90 to 100. Parallel durations do not add up to task latency."
-              >
-                <div class="time-axis">
-                  <span>EXECUTION TIMELINE</span>
+            <div class="preview-body">
+              <div class="investigation">
+                <div class="task-heading">
                   <div>
-                    <span>0 ms</span>
-                    <span>50 ms</span>
-                    <span>100 ms</span>
+                    <p class="small-label">Parallel execution</p>
+                    <h2>Follow every branch.</h2>
+                  </div>
+                  <span class="badge">Imported evidence</span>
+                </div>
+                <div class="metrics">
+                  <div>
+                    <span>Wall-clock duration</span>
+                    <strong>
+                      100 <small>ms</small>
+                    </strong>
+                  </div>
+                  <div>
+                    <span>Agent branches</span>
+                    <strong>
+                      2 <small>parallel</small>
+                    </strong>
+                  </div>
+                  <div>
+                    <span>Total task cost</span>
+                    <strong class="unknown">
+                      Unknown <span aria-hidden="true">◌</span>
+                    </strong>
                   </div>
                 </div>
-                {spans.map((span, i) => (
-                  <div class="timeline-row">
-                    <div class="span-name">
-                      <span class={`span-icon icon-${i}`}>
-                        {i === 0 ? "◇" : i === 3 ? "✓" : "↳"}
-                      </span>
-                      <span>
-                        {span.name}
-                        <small>{span.kind}</small>
-                      </span>
-                    </div>
-                    <div class="track">
-                      <span
-                        class={`bar bar-${i}`}
-                        style={`--offset:${span.offset}%;--width:${span.width}%`}
-                      >
-                        <span class="sr-only">{span.duration}</span>
-                      </span>
+                <div
+                  class="timeline"
+                  role="img"
+                  aria-label="Example timeline: task lasts 100 milliseconds. Agent A runs from 0 to 70 milliseconds, Agent B from 10 to 90, and validation from 90 to 100. Parallel durations do not add up to task latency."
+                >
+                  <div class="time-axis">
+                    <span>Execution timeline</span>
+                    <div>
+                      <span>0 ms</span>
+                      <span>50 ms</span>
+                      <span>100 ms</span>
                     </div>
                   </div>
-                ))}
-              </div>
-              <div class="evidence-row">
-                <div>
-                  <span class="evidence-icon">↳</span>
-                  <div>
-                    <span class="small-label">AGENT CLAIM</span>
-                    <strong>Completed</strong>
-                  </div>
+                  {spans.map((span, i) => (
+                    <div class="timeline-row">
+                      <div class="span-name">
+                        <span class={`span-icon icon-${i}`}>
+                          {i === 0 ? "◇" : i === 3 ? "✓" : "↳"}
+                        </span>
+                        <span>
+                          {span.name}
+                          <small>{span.kind}</small>
+                        </span>
+                      </div>
+                      <div class="track">
+                        <span
+                          class={`bar bar-${i}`}
+                          style={`--offset:${span.offset}%;--width:${span.width}%`}
+                        >
+                          <span class="sr-only">{span.duration}</span>
+                        </span>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-                <div>
-                  <span class="evidence-icon warning">!</span>
+                <div class="evidence-row">
                   <div>
-                    <span class="small-label">VALIDATOR RESULT</span>
-                    <strong>Acceptance failed</strong>
+                    <span class="evidence-icon">↳</span>
+                    <div>
+                      <span class="small-label">AGENT CLAIM</span>
+                      <strong>Completed</strong>
+                    </div>
                   </div>
+                  <div>
+                    <span class="evidence-icon warning">!</span>
+                    <div>
+                      <span class="small-label">VALIDATOR RESULT</span>
+                      <strong>Acceptance failed</strong>
+                    </div>
+                  </div>
+                  <p>
+                    A completion claim
+                    <br />
+                    isn’t an accepted outcome.
+                  </p>
                 </div>
-                <p>
-                  A completion claim
-                  <br />
-                  isn’t an accepted outcome.
-                </p>
               </div>
             </div>
-          </div>
-          <div class="preview-caption">
-            <span>Tasks → agents → invocations → outcomes</span>
-            <a href={links.api}>
-              Explore the execution API <span aria-hidden="true">↗</span>
-            </a>
+            <div class="preview-caption">
+              <span>Tasks → agents → invocations → outcomes</span>
+              <a href={links.api}>
+                Explore the execution API <span aria-hidden="true">↗</span>
+              </a>
+            </div>
           </div>
         </div>
         <div class="principle-note">

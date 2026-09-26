@@ -2968,3 +2968,16 @@ h3 {
     height: 36px;
   }
 }
+
+.product-preview {
+  display: grid;
+  grid-template-columns: 60px minmax(0, 1fr);
+}
+.product-preview .preview-body {
+  display: block;
+}
+@media (max-width: 760px) {
+  .product-preview {
+    grid-template-columns: 48px minmax(0, 1fr);
+  }
+}
