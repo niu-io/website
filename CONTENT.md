@@ -49,7 +49,7 @@ Keep one explicit availability section and a short release notice. Do not repeat
 
 Do not add unsupported savings, throughput, provider counts, customer logos, testimonials or comparative claims. Keep upstream code attribution in the existing notices. The landing page is original copy.
 
-Update the page, shared content and this baseline together when positioning or availability changes. Keep the GitHub Pages base-path build working alongside the root-domain build.
+Update the page, shared content and this baseline together when positioning or availability changes. The build is root-mounted; product routes remain owned by the composed Niu Gateway.
 
 ## Product narrative and editions
 
@@ -58,20 +58,6 @@ Simple has two promises: ready-to-use models and easy coding-agent integration t
 Transparency means detailed token and time evidence at each task step, leading to task-level cost accounting. Missing instrumentation and costs remain explicit. Planned model fusion uses benchmark evidence to combine models across task stages and evaluates the complete outcome, including handoffs, repeated context, failures and validation. The existing examples compare single models; they are not evidence of fusion savings.
 
 Open Source and Enterprise both support the self-hosting direction. The public core is independently usable without a private service or enterprise license. Enterprise scope follows the public release matrix: federation/provisioning, advanced governance/retention, private integrations and optimization policies. These extensions are planned, not a released SKU or support/SLA promise. Core security, keys, accounting, budgets and baseline routing must not be described as enterprise-only. Company-server deployment controls application/database placement and operations; external provider calls still leave that environment. Do not imply air-gapped inference or universal data residency from self-hosting alone.
-
-## Landing review against adjacent products — 2026-09-26
-
-This is an editorial positioning review of public homepages, not a feature-parity audit or a claim that competitors lack Niu's planned capabilities.
-
-| Reference                            | Homepage emphasis                                                                                  | Application to Niu                                                                                                            |
-| ------------------------------------ | -------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| [LiteLLM](https://www.litellm.ai/)   | Platform-team gateway, centralized access, spend controls and request routing                      | Name the audience in the hero, provide a concrete starting action, and distinguish public core from enterprise extensions.    |
-| [Helicone](https://www.helicone.ai/) | Application reliability through routing, debugging and analysis, with dashboard visuals            | Show the workflow instead of relying on abstract benefit language. Keep illustrative UI labeled.                              |
-| [AgentOps](https://www.agentops.ai/) | Agent tracing/debugging, token and cost visibility, integration entry point, enterprise deployment | Token tracking alone is not distinctive. Connect step evidence to controlled coding-task comparisons and a planned model mix. |
-
-Final narrative: Agent Gateway for complex tasks → Simple / Transparent / Cost-effective → preserve the existing coding workflow and plan as an integration goal → demonstrate accepted-result economics → investigate execution evidence → model access → self-hosted editions → explicit release status and evaluation paths.
-
-The intended differentiation is the connected workflow, not an unsupported exclusive-feature claim. Coding-plan preservation, universal integrations, model availability and fusion require qualification. No competitor logos, copied marketing copy, claimed customer proof or competitor feature-denial matrix are used. The benchmark's 60% remains a hypothetical arithmetic example, never a headline savings promise.
 
 ## Scope clarification
 

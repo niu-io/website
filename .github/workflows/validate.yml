@@ -1,0 +1,44 @@
+name: Validate marketing artifact
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: website-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm check
+      - run: pnpm build
+      - name: Verify root mounted website artifact
+        run: |
+          test -f dist/index.html
+          test -f dist/favicon.ico
+          test -f dist/robots.txt
+          test -f dist/sitemap.xml
+          test -d dist/_astro
+          test -f dist/site-assets/brand/SOURCE-LICENSE.txt
+          test -f dist/site-assets/fonts/geist-LICENSE.txt
+          test -f dist/site-assets/fonts/geist-mono-LICENSE.txt
+          test ! -e dist/models
+          test ! -e dist/docs
+          test ! -e dist/workspaces
+          test ! -e dist/_catalog
+          test ! -e dist/catalog-assets
+          test ! -e dist/brand
+          test ! -e dist/fonts

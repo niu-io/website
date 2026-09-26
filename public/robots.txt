@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /catalog/v1/
+Disallow: /enterprise/api/
+Disallow: /v1/
+Disallow: /workspaces/
+
+Sitemap: https://niu.io/sitemap.xml

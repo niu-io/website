@@ -1,9 +1,9 @@
 import { defineConfig } from "astro/config";
 
 export default defineConfig({
-  site:
-    process.env.SITE_URL || process.env.RENDER_EXTERNAL_URL || "https://niu.io",
-  base: process.env.BASE_PATH || "/",
+  site: process.env.SITE_URL || "https://niu.io",
   output: "static",
+  trailingSlash: "always",
+  build: { assets: "_astro" },
   devToolbar: { enabled: false },
 });

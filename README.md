@@ -1,19 +1,19 @@
-# niu.io website
+# niu.io marketing website
 
-The public landing page for Niu, an open-source Agent Gateway for model access, execution visibility and evidence-based model choices. The page presents implemented evaluation workflows separately from first-release targets.
-
-Built with Astro and the existing niu.io brand assets and theme tokens. This is a static marketing site; the product documentation and implementation live in [niu-io/niu](https://github.com/niu-io/niu).
+This Astro project builds the Niu marketing homepage. The Niu Gateway serves the built artifact at `/` alongside product routes on the same origin. This repository does not build or deploy `/models/`, `/docs/`, or `/workspaces/`; links to those routes are owned by the composed Gateway.
 
 ## Development
 
 Use Node.js 22.12 or newer and pnpm 11.25.0.
 
 ```sh
-pnpm install
+pnpm install --frozen-lockfile
 pnpm dev
 ```
 
-## Validate and build
+Astro serves the homepage at `http://127.0.0.1:4321/`. Product links resolve when the page is served through the Niu Gateway composition. Set `SITE_URL` only when generating canonical and social metadata for a non-production preview; the deployed origin is `https://niu.io`.
+
+## Check and build
 
 ```sh
 pnpm check
@@ -21,50 +21,42 @@ pnpm build
 pnpm preview
 ```
 
-The production output is in `dist/`. The page includes responsive navigation, an interactive hypothetical coding-agent cost comparison, a labeled synthetic task investigation preview, native FAQ disclosures, metadata, and reduced-motion support. It does not use analytics, third-party font requests, or a client framework runtime. Geist Sans and Geist Mono are self-hosted through Fontsource; headings, copy, and technical labels share a consistent type scale.
+The build output is a root-mounted static artifact in `dist/`:
 
-## Deployment
+- `dist/index.html` is the marketing homepage.
+- `dist/_astro/` contains generated CSS, font and script assets.
+- `dist/site-assets/` contains approved Niu brand art, attribution and font license notices.
 
-### Render
+The artifact intentionally contains no `/models`, `/docs`, `/workspaces`, `/_catalog`, or catalog API output. The public model catalog and all product routes belong to the Niu Gateway.
 
-`render.yaml` defines a static site named `niu-website`, built from `main` with Node.js 24 and pnpm 11.25.0. It installs the locked dependencies, runs Astro's checks, and publishes `dist/` at the domain root.
+## Composed deployment
 
-Create a Render Blueprint connected to this repository to apply the configuration. The site uses Render's assigned URL for canonical and social metadata until a custom domain is configured.
+There is no standalone production deployment for this repository. The composed Niu Gateway consumes the website build as its marketing artifact through `NIU_SITE_DIR`.
 
-To move to `niu.io`, add and verify the custom domain in Render, configure the DNS records Render supplies, and set `SITE_URL=https://niu.io` in the service environment. Redeploy after changing this value. `BASE_PATH` stays `/`.
-
-### GitHub Pages preview
-
-The GitHub Actions workflow validates pull requests and maintains the existing preview at `https://niu-io.github.io/website/`. Its build explicitly overrides `SITE_URL` and `BASE_PATH`; this does not affect the Render deployment.
-
-### Other static hosts
-
-Build with the desired origin and path, then publish `dist/`:
+Pin consumption to a reviewed immutable website commit, not a moving branch. Build from that checkout with the locked dependencies, then retain the commit SHA and the archive SHA-256 in the release record:
 
 ```sh
-SITE_URL=https://niu.io BASE_PATH=/ pnpm build
+git checkout --detach <reviewed-website-commit-sha>
+pnpm install --frozen-lockfile
+pnpm check
+pnpm build
+tar -czf niu-website-dist.tar.gz -C dist .
+shasum -a 256 niu-website-dist.tar.gz
 ```
 
-Domain and DNS configuration are managed separately.
+The release image extracts the pinned artifact and sets `NIU_SITE_DIR` to its root. The Gateway serves `/` and `/_astro/` from that directory while its catalog and documentation artifacts own their respective routes. Keep the website commit and artifact digest with the composed Gateway release evidence.
 
-## Content and branding
+The GitHub Actions workflow checks the build and verifies its output layout; it does not publish a separate website deployment.
 
-- `src/pages/index.astro`: page structure, task illustration, and accessible navigation.
-- `src/components/ValueSlider.astro`: manually controlled value slides with touch, keyboard and reduced-motion support.
-- `src/components/Benchmark.astro`: keyboard-accessible scenario comparison; no inference is executed.
-- `src/content/benchmarks.ts`: hypothetical cohorts and shared cost arithmetic.
-- `src/content/landing.ts`: shared links, capability descriptions, FAQs, and request example.
-- `CONTENT.md`: positioning, claim sources, and release-copy update rules.
-- `src/styles/global.css`: responsive page styles.
-- `src/styles/tokens.css`: unchanged niu.io theme tokens.
-- `public/brand/`: approved niu.io assets and retained source license.
+## Source and attribution
 
-Keep public copy accurate about implementation status. Product plans must not be presented as shipped capabilities. Link to public repositories and avoid private source paths, customer information, and secrets.
+- `src/pages/index.astro`: homepage structure and task illustration.
+- `src/layouts/SiteLayout.astro`: metadata, theme and shared page shell.
+- `src/components/`: navigation, value slider, task mockups and hypothetical benchmark interaction.
+- `src/content/`: reviewed public page copy and synthetic benchmark arithmetic.
+- `CONTENT.md`: public claim sources, benchmark assumptions and release-copy guidance.
+- `src/styles/global.css`: responsive page presentation and Ox palette.
+- `src/styles/tokens.css`: the Niu theme token source, retained for the homepage.
+- `public/site-assets/`: Niu brand assets and required attribution/license notices.
 
-## Attribution
-
-Niu-owned website code is MIT licensed. Brand assets and theme tokens are reused unchanged from [Niu's branding directory](https://github.com/niu-io/niu/tree/main/branding); their original attribution is retained in [public/brand/SOURCE-LICENSE.txt](public/brand/SOURCE-LICENSE.txt). No LiteLLM marketing copy is included.
-
-## Typography
-
-Geist Sans and Geist Mono are bundled locally through Fontsource under the SIL Open Font License. Font notices are available in `public/fonts/`. The page uses the niu.io light theme, a larger body-text scale, and monospace labels for technical details.
+Niu-authored website code is MIT licensed in `LICENSE`. Brand artwork attribution is retained in [public/site-assets/brand/SOURCE-LICENSE.txt](public/site-assets/brand/SOURCE-LICENSE.txt). Geist fonts are bundled locally through Fontsource and retain their SIL Open Font License notices in `public/site-assets/fonts/`. Product claims distinguish current implementation from planned work.

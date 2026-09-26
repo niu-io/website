@@ -2,11 +2,11 @@
 // Keep planned capabilities separate until their release evidence is published.
 export const links = {
   repo: "https://github.com/niu-io/niu",
-  quickstart:
-    "https://github.com/niu-io/niu/blob/main/apps/docs/src/content/docs/getting-started.mdx",
-  deployment:
-    "https://github.com/niu-io/niu/blob/main/apps/docs/src/content/docs/deployment/single-container.mdx",
-  api: "https://github.com/niu-io/niu/blob/main/apps/docs/src/content/docs/reference/api.mdx",
+  quickstart: "/docs/getting-started/",
+  deployment: "/docs/deployment/single-container/",
+  api: "/docs/reference/api/",
+  models: "/models/",
+  workspace: "/workspaces/default/",
   release:
     "https://github.com/niu-io/niu/blob/main/docs/releases/first-release.md",
 };
