@@ -1,0 +1,262 @@
+---
+interface Props {
+  index: number;
+}
+const { index } = Astro.props;
+---
+
+<div
+  class="value-mockup"
+  role="group"
+  aria-label={`${["Model and agent setup", "Task analysis", "Model fusion"][index]} concept mockup`}
+>
+  <header>
+    <strong>
+      niu.io{" "}
+      <span>/ {["Connections", "Task analysis", "Model fusion"][index]}</span>
+    </strong>
+    <small>CONCEPT UI</small>
+  </header>
+  <div class="mock-body">
+    {index === 0 ? (
+      <>
+        <h3>Your agent, connected.</h3>
+        <div class="mock-box">
+          <small>AGENT CONNECTION</small>
+          <strong>Existing agent workflow</strong>
+        </div>
+        <div class="mock-box tinted">
+          <strong>Keep your current plan</strong>
+          <p>
+            Subscription access stays separate from additional paid API calls.
+          </p>
+        </div>
+        <dl>
+          <div>
+            <dt>Existing subscription</dt>
+            <dd>Preferred</dd>
+          </div>
+          <div>
+            <dt>OpenRouter fallback</dt>
+            <dd>Off by default</dd>
+          </div>
+        </dl>
+        <p>
+          Design goal: verified compatibility and explicit opt-in for paid
+          fallback.
+        </p>
+      </>
+    ) : index === 1 ? (
+      <>
+        <h3>One task. Every attempt counts.</h3>
+        <p class="task-example-label">
+          Prepare the narrative for a board presentation
+        </p>
+        <div class="cost-drivers">
+          <div>
+            <strong>2</strong>
+            <span>iterations</span>
+          </div>
+          <b>→</b>
+          <div>
+            <strong>3 + 2</strong>
+            <span>steps</span>
+          </div>
+          <b>→</b>
+          <div>
+            <strong>16k</strong>
+            <span>tokens used</span>
+          </div>
+        </div>
+        <div class="iteration-group">
+          <div class="iteration-title">
+            <strong>Iteration 1 · Draft</strong>
+            <span>Needs revision</span>
+          </div>
+          <table>
+            <caption class="sr-only">
+              First iteration: 12,000 tokens, 3 minutes, 24 cents in model
+              charges
+            </caption>
+            <thead>
+              <tr>
+                <th>Step</th>
+                <th>Tokens</th>
+                <th>Time</th>
+                <th>Model $</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Research</td>
+                <td>6,000</td>
+                <td>1m 30s</td>
+                <td>$0.12</td>
+              </tr>
+              <tr>
+                <td>Draft</td>
+                <td>4,000</td>
+                <td>1m</td>
+                <td>$0.08</td>
+              </tr>
+              <tr>
+                <td>Review</td>
+                <td>2,000</td>
+                <td>30s</td>
+                <td>$0.04</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="iteration-total">12,000 tokens · 3m · $0.24</div>
+        </div>
+        <div class="iteration-group">
+          <div class="iteration-title">
+            <strong>Iteration 2 · Repair</strong>
+            <span>Accepted</span>
+          </div>
+          <table>
+            <caption class="sr-only">
+              Second iteration: 4,000 tokens, 1 minute 20 seconds, 8 cents in
+              model charges
+            </caption>
+            <thead>
+              <tr>
+                <th>Step</th>
+                <th>Tokens</th>
+                <th>Time</th>
+                <th>Model $</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Revise</td>
+                <td>3,000</td>
+                <td>1m</td>
+                <td>$0.06</td>
+              </tr>
+              <tr>
+                <td>Review again</td>
+                <td>1,000</td>
+                <td>20s</td>
+                <td>$0.02</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="iteration-total">4,000 tokens · 1m 20s · $0.08</div>
+        </div>
+        <div class="task-cost-total">
+          <div>
+            <span>YOUR WAIT</span>
+            <strong>4m 20s</strong>
+          </div>
+          <span>+</span>
+          <div>
+            <span>MODEL SPEND</span>
+            <strong>$0.32</strong>
+          </div>
+        </div>
+        <p>
+          <strong>The repair adds 1m 20s and $0.08.</strong> Counting only the
+          accepted iteration would hide the first attempt’s cost.
+        </p>
+        <details class="mock-cost-details">
+          <summary>How to read these example costs</summary>
+          <p>
+            Synthetic, sequential model-only work: all five steps count. Token
+            figures combine input and output; real charges depend on their
+            separate rates, model and cache use. Tool, rendering, subscription
+            and human-review costs are excluded. Parallel step durations cannot
+            simply be added to calculate elapsed time.
+          </p>
+        </details>
+      </>
+    ) : (
+      <>
+        <h3>Balance quality, time and spend.</h3>
+        <p>
+          Same task, same acceptance criteria. Three hypothetical ways to
+          complete it.
+        </p>
+        <div class="fusion-options">
+          <article>
+            <div>
+              <strong>Expensive model throughout</strong>
+              <span>Fastest</span>
+            </div>
+            <p>1 iteration · 3 steps · 12k tokens</p>
+            <div class="fusion-metrics">
+              <strong>3 min</strong>
+              <strong>$1.20</strong>
+              <span>Meets quality bar</span>
+            </div>
+            <div class="fusion-cost-bar">
+              <i style="width:100%"></i>
+            </div>
+          </article>
+          <article>
+            <div>
+              <strong>Cheap model throughout</strong>
+              <span>Lowest spend</span>
+            </div>
+            <p>3 iterations · 9 steps · 36k tokens</p>
+            <div class="fusion-metrics">
+              <strong>9 min</strong>
+              <strong>$0.36</strong>
+              <span>Meets quality bar</span>
+            </div>
+            <div class="fusion-cost-bar">
+              <i style="width:30%"></i>
+            </div>
+          </article>
+          <article class="fusion-option-selected">
+            <div>
+              <strong>A mix of both</strong>
+              <span>Within both limits</span>
+            </div>
+            <p>2 iterations · 5 steps · 21k tokens</p>
+            <div class="fusion-metrics">
+              <strong>5 min</strong>
+              <strong>$0.48</strong>
+              <span>Meets quality bar</span>
+            </div>
+            <div class="fusion-cost-bar">
+              <i style="width:40%"></i>
+            </div>
+          </article>
+        </div>
+        <div class="mock-box tinted">
+          <small>EXAMPLE LIMITS: ≤ 6 MIN · ≤ $0.60 · QUALITY BAR MET</small>
+          <strong>Fusion meets all three.</strong>
+          <p>
+            It costs more than the cheap-only run, but finishes sooner. It costs
+            less than the expensive-only run, while taking longer.
+          </p>
+        </div>
+        <div class="mock-box">
+          <small>PLANNED STRATEGY</small>
+          <strong>
+            Strong model plans → cheap model drafts → strong model reviews
+          </strong>
+        </div>
+        <details class="mock-cost-details">
+          <summary>Illustrative assumptions</summary>
+          <p>
+            Invented results, not measured savings. Acceptance means meeting the
+            same defined quality threshold, not identical outputs. Example
+            blended token rates: $0.10 per 1k for the expensive model and $0.01
+            per 1k for the cheap model. The mix uses 3k expensive tokens ($0.30)
+            and 18k cheap tokens ($0.18). Real pricing separates input, output
+            and cached tokens. Model spend includes every shown iteration; tool,
+            subscription and human-review charges are excluded. Step counts
+            include model-based checks. The time and quality outcomes are
+            hypothetical, not derived from token counts.
+          </p>
+        </details>
+      </>
+    )}
+  </div>
+  <footer>
+    ILLUSTRATIVE DESIGN ·{" "}
+    {index > 0 ? "SYNTHETIC DATA · PLANNED WORKFLOW" : "PLANNED WORKFLOW"}
+  </footer>
+</div>

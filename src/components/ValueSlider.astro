@@ -1,0 +1,152 @@
+---
+import ValueMockup from "./ValueMockup.astro";
+const values = [
+  {
+    name: "Simple",
+    title: "Simple to use.",
+    detail:
+      "Ready-to-use models. Easy integration with your agents. Our goal: preserve your existing workflow and subscriptions while adding more model choices.",
+    link: "Start with model access",
+    href: "#gateway",
+    note: "MODELS + YOUR EXISTING AGENTS",
+    steps: ["Connect", "Keep your plan", "Build"],
+  },
+  {
+    name: "Transparent",
+    title: "Clear to understand.",
+    detail:
+      "How many iterations did it take? How many steps ran each time? How many tokens did each step use? See how that work adds up to waiting time and money spent.",
+    link: "Follow the execution",
+    href: "#product",
+    note: "FOLLOW THE EVIDENCE",
+    steps: ["Tokens", "Time", "Task cost"],
+  },
+  {
+    name: "Cost-effective",
+    title: "Cheaper to run.",
+    detail:
+      "A stronger model may finish sooner but cost more per step. A cheaper model may need more attempts. Fusion tests a mix of both: spend on difficult decisions, save on routine work, and meet your quality and time limits.",
+    link: "Explore the benchmark example",
+    href: "#benchmark",
+    note: "SAVINGS TO TEST, NOT ASSUME",
+    steps: ["Benchmark", "Combine", "Validate"],
+  },
+];
+---
+
+<section
+  class="value-slider container"
+  aria-label="Three Niu values"
+  aria-roledescription="carousel"
+>
+  <div class="value-controls">
+    <p class="eyebrow">LESS FRICTION. MORE CLARITY. LOWER COST.</p>
+    <div class="value-selectors" role="group" aria-label="Choose a value">
+      {values.map((value, i) => (
+        <button
+          type="button"
+          data-value-index={i}
+          aria-pressed={i === 0 ? "true" : "false"}
+          aria-controls="value-track"
+        >
+          {value.name}
+        </button>
+      ))}
+    </div>
+  </div>
+  <div
+    class="value-track"
+    id="value-track"
+    tabindex="0"
+    aria-label="Value slides. Use left and right arrow keys to navigate."
+  >
+    {values.map((value, i) => (
+      <div
+        class="value-slide"
+        role="group"
+        aria-roledescription="slide"
+        aria-label={`${i + 1} of 3: ${value.name}`}
+      >
+        <div class="value-copy">
+          <span class="value-index">
+            0{i + 1} / {value.name}
+          </span>
+          <h2>{value.title}</h2>
+          <p>{value.detail}</p>
+          <a class="text-link" href={value.href}>
+            {value.link}
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
+        <ValueMockup index={i} />
+      </div>
+    ))}
+  </div>
+  <div class="value-bottom">
+    <span class="value-position" aria-live="polite" aria-atomic="true">
+      01 / 03 — Simple
+    </span>
+    <div>
+      <button type="button" class="value-prev" aria-label="Previous value">
+        ←
+      </button>
+      <button type="button" class="value-next" aria-label="Next value">
+        →
+      </button>
+    </div>
+  </div>
+</section>
+<script>
+  const slider = document.querySelector<HTMLElement>(".value-slider");
+  const track = slider?.querySelector<HTMLElement>(".value-track");
+  const selectors = Array.from(
+    slider?.querySelectorAll<HTMLButtonElement>("[data-value-index]") || [],
+  );
+  const position = slider?.querySelector<HTMLElement>(".value-position");
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  let current = 0;
+  const update = (index: number) => {
+    current = index;
+    selectors.forEach((button, i) =>
+      button.setAttribute("aria-pressed", String(i === index)),
+    );
+    if (position)
+      position.textContent = `0${index + 1} / 03 — ${selectors[index]?.textContent}`;
+  };
+  const go = (index: number) => {
+    if (!track) return;
+    const target = (index + selectors.length) % selectors.length;
+    track.scrollTo({
+      left: target * track.clientWidth,
+      behavior: reducedMotion.matches ? "instant" : "smooth",
+    });
+  };
+  selectors.forEach((button, index) =>
+    button.addEventListener("click", () => go(index)),
+  );
+  slider
+    ?.querySelector(".value-prev")
+    ?.addEventListener("click", () => go(current - 1));
+  slider
+    ?.querySelector(".value-next")
+    ?.addEventListener("click", () => go(current + 1));
+  slider?.addEventListener("keydown", (event) => {
+    if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+    event.preventDefault();
+    go(current + (event.key === "ArrowRight" ? 1 : -1));
+  });
+  track?.addEventListener(
+    "scroll",
+    () => {
+      const index = Math.max(
+        0,
+        Math.min(
+          selectors.length - 1,
+          Math.round(track.scrollLeft / track.clientWidth),
+        ),
+      );
+      if (index !== current) update(index);
+    },
+    { passive: true },
+  );
+</script>

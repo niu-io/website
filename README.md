@@ -1,6 +1,6 @@
 # niu.io website
 
-The public landing page for Niu, an open-source AI gateway focused on performance and cost, with security as its foundation.
+The public landing page for Niu, an open-source Agent Gateway for model access, execution visibility and evidence-based model choices. The page presents implemented evaluation workflows separately from first-release targets.
 
 Built with Astro and the existing niu.io brand assets and theme tokens. This is a static marketing site; the product documentation and implementation live in [niu-io/niu](https://github.com/niu-io/niu).
 
@@ -21,7 +21,7 @@ pnpm build
 pnpm preview
 ```
 
-The production output is in `dist/`. The page includes responsive navigation, keyboard-accessible approach tabs, native FAQ disclosures, metadata, and reduced-motion support. It does not use analytics, third-party font requests, or a client framework runtime. Geist Sans and Geist Mono are self-hosted through Fontsource; headings, copy, and technical labels share a consistent type scale.
+The production output is in `dist/`. The page includes responsive navigation, an interactive hypothetical coding-agent cost comparison, a labeled synthetic task investigation preview, native FAQ disclosures, metadata, and reduced-motion support. It does not use analytics, third-party font requests, or a client framework runtime. Geist Sans and Geist Mono are self-hosted through Fontsource; headings, copy, and technical labels share a consistent type scale.
 
 ## Deployment
 
@@ -49,7 +49,12 @@ Domain and DNS configuration are managed separately.
 
 ## Content and branding
 
-- `src/pages/index.astro`: landing-page content and accessible interactions.
+- `src/pages/index.astro`: page structure, task illustration, and accessible navigation.
+- `src/components/ValueSlider.astro`: manually controlled value slides with touch, keyboard and reduced-motion support.
+- `src/components/Benchmark.astro`: keyboard-accessible scenario comparison; no inference is executed.
+- `src/content/benchmarks.ts`: hypothetical cohorts and shared cost arithmetic.
+- `src/content/landing.ts`: shared links, capability descriptions, FAQs, and request example.
+- `CONTENT.md`: positioning, claim sources, and release-copy update rules.
 - `src/styles/global.css`: responsive page styles.
 - `src/styles/tokens.css`: unchanged niu.io theme tokens.
 - `public/brand/`: approved niu.io assets and retained source license.
