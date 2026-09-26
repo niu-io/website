@@ -59,4 +59,6 @@ The GitHub Actions workflow checks the build and verifies its output layout; it 
 - `src/styles/tokens.css`: the Niu theme token source, retained for the homepage.
 - `public/site-assets/`: Niu brand assets and required attribution/license notices.
 
+The marketing source and brand snapshot were carried back from public Niu commit `287be5bee3dce511cdf76582548e1655914d3e89`, including the website fixes through `0d494d92aded07105d0faa2be57e72e1f63ccbd0`. The shared theme source remains Niu’s `branding/tokens.css`; update this provenance when refreshing the snapshot.
+
 Niu-authored website code is MIT licensed in `LICENSE`. Brand artwork attribution is retained in [public/site-assets/brand/SOURCE-LICENSE.txt](public/site-assets/brand/SOURCE-LICENSE.txt). Geist fonts are bundled locally through Fontsource and retain their SIL Open Font License notices in `public/site-assets/fonts/`. Product claims distinguish current implementation from planned work.
