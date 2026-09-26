@@ -84,3 +84,45 @@ The transparency mockup exposes task → iteration → step → token usage, wit
 ## Fusion tradeoff illustration
 
 The third value mockup compares three invented accepted executions of the same task: expensive-only (1 iteration, 3 steps, 12k tokens, 3 minutes, $1.20), cheap-only (3 iterations, 9 steps, 36k tokens, 9 minutes, $0.36), and mixed (2 iterations, 5 steps, 21k tokens, 5 minutes, $0.48). Illustrative blended rates are $0.10/1k and $0.01/1k; the mixed run has 3k expensive and 18k cheap tokens. Under a 6-minute and $0.60 limit, only the mix meets both constraints and the quality threshold. It is neither the fastest nor the cheapest unconditionally. This is synthetic model-only accounting, not fusion evidence. A higher-priced model is not guaranteed to take fewer steps, and acceptance is a defined threshold rather than a claim of identical output quality.
+
+### Surface design
+
+Use whitespace and typography to separate page sections. Group related content
+with soft neutral surfaces rather than outlined boxes. Keep the existing niu.io
+colors and Geist typography. Shared radii are 16px for outer surfaces, 12px for
+nested panels, and 10px for controls. Reserve subtle dividers for data rows and
+interactive lists; preserve keyboard focus outlines. Orange-tinted surfaces and
+explicit labels identify selected or recommended options without relying on
+color alone.
+
+## Persuasion review
+
+Lead with the user's decision: a cheaper model may require more attempts; a
+stronger model may save time while increasing spend. Keep “Agent Gateway for
+complex tasks” as the category, then connect model access to task evidence and
+the planned benchmark/fusion workflow. Quality is an acceptance threshold;
+time and spend are the tradeoff within that threshold.
+
+The primary action opens the development quickstart directly. State current
+availability beside it so visitors can distinguish what they can evaluate now
+from the illustrative future workflow. Translate accounting and quota language
+into questions a user can answer, without upgrading the implementation claims.
+
+Evidence still needed before a convincing production launch:
+
+- A reproducible task case study with real model identities, dated rates,
+  acceptance criteria, repeated runs, elapsed time, and all relevant costs.
+- A recording of the implemented task investigation workflow, clearly separate
+  from concept mockups, with a public sample import visitors can reproduce.
+- A verified agent/plan compatibility list explaining subscription behavior and
+  explicit paid fallback. Keep unverified integrations labeled as goals.
+
+Do not substitute synthetic percentages, customer logos, or unsupported
+integration promises for this evidence. The current landing invites evaluation
+of the public development build; it does not announce production readiness.
+
+Typography uses a 14px minimum for supporting text and 16px for primary body
+copy. Do not reintroduce decorative section eyebrows or numbered captions above
+headings. Keep release status, synthetic-example disclosures, and comparison
+assumptions visible and readable; remove redundant labels instead of shrinking
+them to fit. Tables may scroll horizontally on small screens.

@@ -141,7 +141,7 @@ summary:focus-visible {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  font-size: 12px;
+  font-size: 14px;
   border: 1px solid var(--border);
   border-radius: 30px;
   padding: 8px 13px;
@@ -167,10 +167,10 @@ summary:focus-visible {
 .preview-sidebar > span,
 .time-axis,
 .principles-strip > div > span {
-  font-family: "Geist Mono Variable", monospace;
-  font-size: 11px;
+  font-family: "Geist Variable", sans-serif;
+  font-size: 14px;
   font-weight: 500;
-  letter-spacing: 0.075em;
+  letter-spacing: 0;
   line-height: 1.5;
 }
 .eyebrow {
@@ -234,7 +234,7 @@ h1 {
   background: var(--secondary);
 }
 .hero-note {
-  font-size: 12px;
+  font-size: 14px;
   color: var(--muted-foreground);
   margin-top: 18px;
 }
@@ -242,7 +242,7 @@ h1 {
   text-align: left;
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 12px 12px 0 0;
+  border-radius: 12px;
   margin-top: 48px;
   box-shadow: 0 24px 70px -35px #27334545;
   overflow: hidden;
@@ -260,7 +260,7 @@ h1 {
   display: flex;
   align-items: center;
   gap: 12px;
-  font-size: 13px;
+  font-size: 14px;
 }
 .preview-brand strong {
   font-size: 16px;
@@ -272,8 +272,8 @@ h1 {
 }
 .sample-label {
   color: var(--muted-foreground);
-  font-size: 9px;
-  letter-spacing: 0.05em;
+  font-size: 14px;
+  letter-spacing: 0;
 }
 .preview-body {
   display: grid;
@@ -283,13 +283,13 @@ h1 {
   padding: 26px 14px;
   border-right: 1px solid var(--border);
   background: var(--muted);
-  font-size: 12px;
+  font-size: 14px;
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
 .preview-sidebar > span {
-  font-size: 9px;
+  font-size: 14px;
   color: var(--muted-foreground);
   padding: 0 12px;
   margin-bottom: 14px;
@@ -308,7 +308,7 @@ h1 {
 .preview-sidebar p {
   margin-top: auto;
   padding: 22px 12px 0;
-  font-size: 10px;
+  font-size: 14px;
   line-height: 2;
   color: var(--muted-foreground);
 }
@@ -331,18 +331,18 @@ h1 {
   gap: 12px;
 }
 .small-label {
-  font-size: 9px;
+  font-size: 14px;
   color: var(--muted-foreground);
 }
 .task-heading h2 {
   font-size: 24px;
   letter-spacing: -0.8px;
   margin-top: 6px;
-  font-weight: 560;
+  font-weight: 600;
 }
 .badge {
   border: 1px solid var(--border);
-  font-size: 10px;
+  font-size: 14px;
   white-space: nowrap;
   border-radius: 4px;
   padding: 6px 9px;
@@ -366,7 +366,7 @@ h1 {
 }
 .metrics > div > span {
   display: block;
-  font-size: 10px;
+  font-size: 14px;
   color: var(--muted-foreground);
   margin-bottom: 7px;
 }
@@ -376,7 +376,7 @@ h1 {
   font-weight: 520;
 }
 .metrics small {
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 450;
   letter-spacing: 0;
   color: var(--muted-foreground);
@@ -398,7 +398,7 @@ h1 {
   gap: 15px;
 }
 .time-axis {
-  font-size: 8px;
+  font-size: 14px;
   color: var(--muted-foreground);
   margin-bottom: 12px;
   letter-spacing: 0;
@@ -412,14 +412,14 @@ h1 {
   align-items: center;
 }
 .span-name {
-  font-size: 11px;
+  font-size: 14px;
   display: flex;
   align-items: center;
   gap: 10px;
 }
 .span-name small {
   display: block;
-  font-size: 8px;
+  font-size: 14px;
   color: var(--muted-foreground);
   margin-top: 3px;
 }
@@ -485,8 +485,8 @@ h1 {
 }
 .evidence-row strong {
   display: block;
-  font-size: 11px;
-  font-weight: 550;
+  font-size: 14px;
+  font-weight: 600;
   margin-top: 4px;
 }
 .evidence-icon {
@@ -497,14 +497,14 @@ h1 {
   display: grid;
   place-items: center;
   color: var(--muted-foreground);
-  font-size: 12px;
+  font-size: 14px;
 }
 .evidence-icon.warning {
   color: var(--brand-ink);
   background: #ed864512;
 }
 .evidence-row p {
-  font-size: 10px;
+  font-size: 14px;
   line-height: 1.6;
   border-left: 1px solid var(--border);
   padding-left: 15px;
@@ -514,7 +514,7 @@ h1 {
   justify-content: space-between;
   gap: 12px;
   padding: 12px 22px;
-  font-size: 10px;
+  font-size: 14px;
   color: var(--muted-foreground);
   border-top: 1px solid var(--border);
 }
@@ -534,7 +534,7 @@ h1 {
   min-height: 88px;
 }
 .principles-strip > div > span {
-  font-size: 9px;
+  font-size: 14px;
   color: var(--muted-foreground);
 }
 .principles-strip strong {
@@ -549,7 +549,7 @@ h2 {
   font-size: clamp(34px, 4vw, 47px);
   letter-spacing: -0.045em;
   line-height: 1.12;
-  font-weight: 550;
+  font-weight: 600;
 }
 .section-heading {
   display: flex;
@@ -588,14 +588,14 @@ h2 {
   border: 0;
 }
 .feature-number {
-  font-size: 10px;
+  font-size: 14px;
   color: var(--brand-ink);
   letter-spacing: 0;
 }
 .capability h3 {
   font-size: 25px;
   line-height: 1.25;
-  font-weight: 550;
+  font-weight: 600;
   letter-spacing: -0.8px;
   margin: 28px 0 16px;
 }
@@ -604,8 +604,8 @@ h2 {
   margin-bottom: 25px;
 }
 .text-link {
-  font-weight: 550;
-  font-size: 13px;
+  font-weight: 600;
+  font-size: 14px;
   display: inline-flex;
   align-items: center;
   gap: 12px;
@@ -627,11 +627,11 @@ h2 {
   color: var(--brand-ink);
 }
 .principle-note p {
-  font-size: 13px;
+  font-size: 14px;
 }
 .principle-note strong {
   color: var(--foreground);
-  font-weight: 550;
+  font-weight: 600;
 }
 .gateway-section {
   background: var(--secondary);
@@ -654,7 +654,7 @@ h2 {
   list-style: none;
   padding: 0;
   margin: 28px 0;
-  font-size: 13px;
+  font-size: 14px;
 }
 .gateway-features li {
   display: flex;
@@ -665,8 +665,8 @@ h2 {
 }
 .gateway-features span {
   font:
-    10px/2 "Geist Mono Variable",
-    monospace;
+    14px/2 "Geist Variable",
+    sans-serif;
   color: var(--muted-foreground);
 }
 .code-card {
@@ -682,7 +682,7 @@ h2 {
   justify-content: space-between;
   padding: 18px 22px;
   border-bottom: 1px solid var(--border);
-  font-size: 10px;
+  font-size: 14px;
   color: var(--muted-foreground);
 }
 pre {
@@ -690,7 +690,7 @@ pre {
   padding: 30px 24px;
   overflow-x: auto;
   font:
-    12px/2 "Geist Mono Variable",
+    14px/2 "Geist Mono Variable",
     monospace;
   color: var(--foreground);
 }
@@ -698,7 +698,7 @@ code {
   font-family: "Geist Mono Variable", monospace;
 }
 .code-footnote {
-  font-size: 10px;
+  font-size: 14px;
   color: var(--muted-foreground);
   padding: 16px 22px;
   border-top: 1px solid var(--border);
@@ -719,7 +719,7 @@ code {
   padding: 34px;
 }
 .phase {
-  font-size: 10px;
+  font-size: 14px;
   color: var(--muted-foreground);
   display: flex;
   gap: 8px;
@@ -731,7 +731,7 @@ code {
 .release-card h3 {
   font-size: 25px;
   letter-spacing: -0.7px;
-  font-weight: 550;
+  font-weight: 600;
   margin: 24px 0;
 }
 .release-card ul {
@@ -760,7 +760,7 @@ code {
   color: var(--muted-foreground);
 }
 .release-note {
-  font-size: 12px;
+  font-size: 14px;
   margin-top: 20px;
   max-width: 850px;
   color: var(--muted-foreground);
@@ -787,18 +787,18 @@ code {
 }
 .path-number {
   font:
-    12px "Geist Mono Variable",
-    monospace;
+    14px "Geist Variable",
+    sans-serif;
   color: var(--muted-foreground);
 }
 .start-paths h3 {
   font-size: 20px;
-  font-weight: 550;
+  font-weight: 600;
   letter-spacing: -0.5px;
   margin-bottom: 7px;
 }
 .start-paths p {
-  font-size: 13px;
+  font-size: 14px;
   max-width: 380px;
 }
 .start-paths a:hover h3 {
@@ -853,7 +853,7 @@ code {
   gap: 35px;
 }
 .closing .eyebrow {
-  font-size: 10px;
+  font-size: 14px;
   margin-bottom: 14px;
 }
 .closing h2 {
@@ -870,14 +870,14 @@ code {
   gap: 30px;
 }
 .footer p {
-  font-size: 11px;
+  font-size: 14px;
   margin-top: 12px;
 }
 .footer-links {
   display: flex;
   flex-wrap: wrap;
   gap: 24px;
-  font-size: 11px;
+  font-size: 14px;
   color: var(--copy-color);
 }
 @media (min-width: 1600px) {
@@ -915,7 +915,7 @@ code {
     font-size: 30px;
   }
   .principles-strip strong {
-    font-size: 12px;
+    font-size: 14px;
   }
 }
 @media (max-width: 760px) {
@@ -934,7 +934,7 @@ code {
     border-radius: 5px;
     background: var(--card);
     padding: 10px 13px;
-    font-size: 12px;
+    font-size: 14px;
   }
   .nav-row nav {
     display: none;
@@ -965,7 +965,7 @@ code {
     padding-top: 34px;
   }
   .hero-eyebrow {
-    font-size: 9px;
+    font-size: 14px;
     margin-top: 28px;
   }
   h1 {
@@ -983,7 +983,7 @@ code {
     flex-wrap: wrap;
   }
   .sample-label {
-    font-size: 8px;
+    font-size: 14px;
   }
   .investigation {
     padding: 24px 18px;
@@ -1013,7 +1013,7 @@ code {
   }
   .preview-caption {
     padding: 12px 16px;
-    font-size: 9px;
+    font-size: 14px;
     flex-wrap: wrap;
   }
   .principles-strip > div {
@@ -1023,7 +1023,7 @@ code {
     gap: 20px;
   }
   .principles-strip > div > span {
-    font-size: 8px;
+    font-size: 14px;
   }
   .section {
     padding-block: 64px;
@@ -1103,7 +1103,7 @@ code {
     font-size: 22px;
   }
   .badge {
-    font-size: 9px;
+    font-size: 14px;
   }
 }
 @media (max-width: 390px) {
@@ -1111,7 +1111,7 @@ code {
     width: calc(100% - 28px);
   }
   .release-link {
-    font-size: 10px;
+    font-size: 14px;
   }
   h1 {
     font-size: 37px;
@@ -1123,7 +1123,7 @@ code {
     gap: 8px;
   }
   .button {
-    font-size: 12px;
+    font-size: 14px;
     padding: 12px 15px;
     gap: 15px;
   }
@@ -1138,7 +1138,7 @@ code {
     padding-left: 8px;
   }
   .metrics > div > span {
-    font-size: 8px;
+    font-size: 14px;
   }
   .metrics strong {
     font-size: 21px;
@@ -1147,7 +1147,7 @@ code {
     font-size: 16px;
   }
   .metrics small {
-    font-size: 9px;
+    font-size: 14px;
   }
   .timeline-row,
   .time-axis {
@@ -1158,7 +1158,7 @@ code {
     font-size: 7px;
   }
   .span-name {
-    font-size: 10px;
+    font-size: 14px;
     gap: 7px;
   }
   .span-name small {
@@ -1169,13 +1169,13 @@ code {
     gap: 8px;
   }
   .small-label {
-    font-size: 8px;
+    font-size: 14px;
   }
   .evidence-row > div {
     gap: 7px;
   }
   .evidence-row strong {
-    font-size: 10px;
+    font-size: 14px;
   }
   .evidence-icon {
     width: 20px;
@@ -1237,16 +1237,16 @@ code {
 }
 .benchmark-steps li > span {
   font:
-    11px/1.8 "Geist Mono Variable",
-    monospace;
+    14px/1.8 "Geist Variable",
+    sans-serif;
   color: var(--brand-ink);
 }
 .benchmark-steps strong {
-  font-size: 13px;
-  font-weight: 550;
+  font-size: 14px;
+  font-weight: 600;
 }
 .benchmark-steps p {
-  font-size: 12px;
+  font-size: 14px;
   margin-top: 6px;
 }
 .benchmark-demo {
@@ -1266,10 +1266,10 @@ code {
   border-bottom: 1px solid var(--border);
 }
 .benchmark-toolbar .sample-label {
-  font-size: 10px;
+  font-size: 14px;
 }
 .benchmark-status {
-  font-size: 10px;
+  font-size: 14px;
   color: var(--muted-foreground);
 }
 .benchmark-tabs {
@@ -1278,7 +1278,7 @@ code {
   padding: 20px 24px 0;
 }
 .benchmark-tabs button {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
   border: 1px solid var(--border);
   border-radius: 5px;
@@ -1307,16 +1307,16 @@ code {
 }
 .benchmark-task h3 {
   font-size: 22px;
-  font-weight: 550;
+  font-weight: 600;
   letter-spacing: -0.6px;
   line-height: 1.3;
   margin: 9px 0 7px;
 }
 .benchmark-task p {
-  font-size: 12px;
+  font-size: 14px;
 }
 .acceptance-rule {
-  font-size: 11px;
+  font-size: 14px;
   flex-shrink: 0;
   padding-left: 20px;
   border-left: 1px solid var(--border);
@@ -1326,7 +1326,7 @@ code {
   display: block;
 }
 .acceptance-rule strong {
-  font-weight: 550;
+  font-weight: 600;
   margin-bottom: 7px;
 }
 .acceptance-rule span {
@@ -1361,11 +1361,11 @@ code {
   margin: 0;
 }
 .model-title p {
-  font-size: 10px;
+  font-size: 14px;
   margin-top: 4px;
 }
 .model-verdict {
-  font-size: 9px;
+  font-size: 14px;
   padding: 5px 6px;
   background: var(--secondary);
   border-radius: 4px;
@@ -1384,8 +1384,8 @@ code {
 .per-result > span {
   display: block;
   font:
-    9px "Geist Mono Variable",
-    monospace;
+    14px "Geist Variable",
+    sans-serif;
   color: var(--muted-foreground);
 }
 .per-result > strong {
@@ -1400,7 +1400,7 @@ code {
   color: var(--brand-ink);
 }
 .per-result > small {
-  font-size: 11px;
+  font-size: 14px;
   color: var(--muted-foreground);
 }
 .model-facts,
@@ -1412,7 +1412,7 @@ code {
   display: flex;
   gap: 10px;
   justify-content: space-between;
-  font-size: 11px;
+  font-size: 14px;
   line-height: 1.6;
   padding-block: 5px;
 }
@@ -1448,7 +1448,7 @@ code {
   background: var(--muted-foreground);
 }
 .spend-breakdown > div {
-  font-size: 10px;
+  font-size: 14px;
   padding-block: 3px;
 }
 .spend-breakdown dt {
@@ -1481,35 +1481,35 @@ code {
   font-size: 40px;
   line-height: 1.1;
   letter-spacing: -1.8px;
-  font-weight: 550;
+  font-weight: 600;
   color: var(--brand-ink);
 }
 .verdict-number span {
   display: block;
-  font-size: 10px;
+  font-size: 14px;
   margin-top: 7px;
   color: var(--copy-color);
 }
 .benchmark-verdict h4 {
   font-size: 17px;
   letter-spacing: -0.3px;
-  font-weight: 550;
+  font-weight: 600;
   margin: 0 0 8px;
 }
 .benchmark-verdict p {
-  font-size: 12px;
+  font-size: 14px;
 }
 .benchmark-method {
   border-top: 1px solid var(--border);
   padding: 18px 24px;
 }
 .benchmark-method p {
-  font-size: 11px;
+  font-size: 14px;
 }
 .benchmark-method p + p {
   margin-top: 8px;
   color: var(--muted-foreground);
-  font-size: 10px;
+  font-size: 14px;
   max-width: 990px;
 }
 .benchmark-next {
@@ -1519,16 +1519,16 @@ code {
   margin-top: 24px;
 }
 .benchmark-next p {
-  font-size: 13px;
+  font-size: 14px;
   max-width: 800px;
 }
 .benchmark-next strong {
-  font-weight: 550;
+  font-weight: 600;
   color: var(--foreground);
 }
 .benchmark-next .text-link {
   flex-shrink: 0;
-  font-size: 12px;
+  font-size: 14px;
 }
 @media (max-width: 1000px) {
   .benchmark-heading {
@@ -1592,7 +1592,7 @@ code {
     gap: 6px;
   }
   .benchmark-toolbar .sample-label {
-    font-size: 8px;
+    font-size: 14px;
   }
   .benchmark-tabs {
     padding: 16px 14px 0;
@@ -1600,7 +1600,7 @@ code {
   }
   .benchmark-tabs button {
     padding: 10px 9px;
-    font-size: 11px;
+    font-size: 14px;
     flex: 1;
   }
   .benchmark-panel {
@@ -1654,7 +1654,7 @@ code {
     padding: 16px;
   }
   .benchmark-next p {
-    font-size: 12px;
+    font-size: 14px;
   }
 }
 
@@ -1674,7 +1674,7 @@ code {
   border-bottom: 1px solid var(--border);
 }
 .value-controls > .eyebrow {
-  font-size: 9px;
+  font-size: 14px;
 }
 .value-selectors {
   display: flex;
@@ -1686,7 +1686,7 @@ code {
   color: var(--muted-foreground);
   border-radius: 5px;
   padding: 9px 12px;
-  font-size: 12px;
+  font-size: 14px;
   cursor: pointer;
 }
 .value-selectors button[aria-pressed="true"] {
@@ -1715,8 +1715,8 @@ code {
 }
 .value-index {
   font:
-    10px "Geist Mono Variable",
-    monospace;
+    14px "Geist Variable",
+    sans-serif;
   color: var(--brand-ink);
 }
 .value-copy h2 {
@@ -1731,37 +1731,6 @@ code {
 .value-copy .text-link {
   margin-top: 18px;
 }
-.value-visual {
-  border: 1px solid var(--border);
-  background: var(--background);
-  border-radius: 8px;
-  padding: 26px;
-}
-.value-visual > span {
-  font:
-    9px "Geist Mono Variable",
-    monospace;
-  color: var(--muted-foreground);
-}
-.value-visual > div {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  justify-content: space-between;
-  margin: 32px 0;
-}
-.value-visual strong {
-  font-size: 15px;
-  font-weight: 530;
-  letter-spacing: -0.3px;
-}
-.value-visual i {
-  font-style: normal;
-  color: var(--brand-orange);
-}
-.value-visual > p {
-  font-size: 11px;
-}
 .value-bottom {
   display: flex;
   align-items: center;
@@ -1771,8 +1740,8 @@ code {
 }
 .value-position {
   font:
-    10px "Geist Mono Variable",
-    monospace;
+    14px "Geist Variable",
+    sans-serif;
   color: var(--muted-foreground);
 }
 .value-bottom > div {
@@ -1804,12 +1773,6 @@ code {
     flex-direction: column;
     gap: 10px;
   }
-  .value-visual {
-    padding: 20px;
-  }
-  .value-visual strong {
-    font-size: 12px;
-  }
 }
 @media (max-width: 760px) {
   .value-slider {
@@ -1824,7 +1787,7 @@ code {
     gap: 3px;
   }
   .value-selectors button {
-    font-size: 11px;
+    font-size: 14px;
     padding: 9px;
   }
   .value-slide {
@@ -1840,12 +1803,6 @@ code {
     font-size: 14px;
     min-height: 96px;
   }
-  .value-visual > div {
-    margin: 22px 0;
-  }
-  .value-visual strong {
-    font-size: 14px;
-  }
   .value-bottom {
     padding: 12px 20px;
   }
@@ -1854,17 +1811,11 @@ code {
   .value-copy h2 {
     font-size: 30px;
   }
-  .value-visual {
-    padding: 16px;
-  }
-  .value-visual strong {
-    font-size: 12px;
-  }
   .value-controls > .eyebrow {
-    font-size: 8px;
+    font-size: 14px;
   }
   .value-position {
-    font-size: 9px;
+    font-size: 14px;
   }
 }
 .integration-story {
@@ -1885,7 +1836,7 @@ code {
 }
 .integration-points h3 {
   font-size: 20px;
-  font-weight: 550;
+  font-weight: 600;
   letter-spacing: -0.5px;
   margin-bottom: 10px;
 }
@@ -1902,7 +1853,7 @@ code {
 }
 .fusion-story h3 {
   font-size: 28px;
-  font-weight: 550;
+  font-weight: 600;
   line-height: 1.25;
   letter-spacing: -0.8px;
   margin: 18px 0;
@@ -1916,7 +1867,7 @@ code {
 }
 .fusion-story li {
   padding: 0 0 20px 10px;
-  font-size: 13px;
+  font-size: 14px;
   color: var(--brand-ink);
 }
 .fusion-story strong,
@@ -1925,15 +1876,12 @@ code {
 }
 .fusion-story strong {
   color: var(--foreground);
-  font-weight: 550;
+  font-weight: 600;
   margin-bottom: 7px;
 }
 .fusion-story span {
   color: var(--copy-color);
   line-height: 1.7;
-}
-.value-visual strong {
-  white-space: normal;
 }
 .value-copy > p {
   min-height: 102px;
@@ -1981,7 +1929,7 @@ code {
 .edition-cards h3 {
   font-size: 29px;
   letter-spacing: -0.8px;
-  font-weight: 550;
+  font-weight: 600;
   margin: 22px 0 14px;
 }
 .edition-cards p {
@@ -2008,7 +1956,7 @@ code {
 }
 .enterprise-controls h3 {
   font-size: 21px;
-  font-weight: 550;
+  font-weight: 600;
   letter-spacing: -0.5px;
   margin-bottom: 24px;
 }
@@ -2023,7 +1971,7 @@ code {
   margin: 0 0 9px;
 }
 .enterprise-controls p {
-  font-size: 13px;
+  font-size: 14px;
 }
 @media (max-width: 760px) {
   .edition-cards,
@@ -2052,17 +2000,17 @@ code {
 }
 .task-examples span {
   font:
-    9px/1.7 "Geist Mono Variable",
-    monospace;
+    14px/1.7 "Geist Variable",
+    sans-serif;
   color: var(--muted-foreground);
-  letter-spacing: 0.04em;
+  letter-spacing: 0;
 }
 @media (max-width: 760px) {
   .task-examples {
     gap: 10px 18px;
   }
   .task-examples span {
-    font-size: 8px;
+    font-size: 14px;
   }
 }
 .value-slide {
@@ -2087,17 +2035,17 @@ code {
   background: var(--muted);
 }
 .value-mockup header strong {
-  font-size: 13px;
+  font-size: 14px;
 }
 .value-mockup header span {
   font-weight: 400;
   color: var(--muted-foreground);
-  font-size: 11px;
+  font-size: 14px;
 }
 .value-mockup small {
   font:
-    8px/1.7 "Geist Mono Variable",
-    monospace;
+    14px/1.7 "Geist Variable",
+    sans-serif;
   color: var(--muted-foreground);
 }
 .mock-body {
@@ -2105,12 +2053,12 @@ code {
 }
 .mock-body h3 {
   font-size: 19px;
-  font-weight: 550;
+  font-weight: 600;
   letter-spacing: -0.5px;
   margin: 0 0 20px;
 }
 .mock-body p {
-  font-size: 11px;
+  font-size: 14px;
   line-height: 1.7;
   margin-top: 12px;
 }
@@ -2125,8 +2073,8 @@ code {
   display: block;
 }
 .mock-box strong {
-  font-size: 13px;
-  font-weight: 550;
+  font-size: 14px;
+  font-weight: 600;
   margin-top: 5px;
 }
 .mock-box p {
@@ -2144,7 +2092,7 @@ code {
   gap: 14px;
   padding: 13px 0;
   border-bottom: 1px solid var(--border);
-  font-size: 11px;
+  font-size: 14px;
 }
 .mock-body dd {
   margin: 0;
@@ -2153,11 +2101,11 @@ code {
 .mock-body table {
   border-collapse: collapse;
   width: 100%;
-  font-size: 11px;
+  font-size: 14px;
 }
 .mock-body th {
   text-align: left;
-  font-size: 9px;
+  font-size: 14px;
   font-weight: 500;
   color: var(--muted-foreground);
 }
@@ -2172,8 +2120,8 @@ code {
 }
 .value-mockup footer {
   font:
-    8px/1.6 "Geist Mono Variable",
-    monospace;
+    14px/1.6 "Geist Variable",
+    sans-serif;
   color: var(--muted-foreground);
   padding: 12px 18px;
   border-top: 1px solid var(--border);
@@ -2191,7 +2139,7 @@ code {
     padding: 16px;
   }
   .mock-body table {
-    font-size: 10px;
+    font-size: 14px;
   }
   .value-slide {
     padding: 24px 16px;
@@ -2200,13 +2148,10 @@ code {
     padding: 12px;
   }
   .mock-box strong {
-    font-size: 12px;
+    font-size: 14px;
   }
 }
-/* Keep off-screen carousel panels inside the page viewport. */
-body {
-  overflow-x: clip;
-}
+
 .cost-drivers {
   display: flex;
   justify-content: space-between;
@@ -2223,12 +2168,12 @@ body {
 .cost-drivers strong {
   display: block;
   font-size: 23px;
-  font-weight: 550;
+  font-weight: 600;
   letter-spacing: -0.7px;
 }
 .cost-drivers span {
   display: block;
-  font-size: 9px;
+  font-size: 14px;
   color: var(--muted-foreground);
   margin-top: 4px;
 }
@@ -2249,15 +2194,15 @@ body {
   gap: 8px;
 }
 .iteration-title strong {
-  font-size: 11px;
-  font-weight: 550;
+  font-size: 14px;
+  font-weight: 600;
 }
 .iteration-title span {
-  font-size: 9px;
+  font-size: 14px;
   color: var(--brand-ink);
 }
 .iteration-total {
-  font-size: 10px;
+  font-size: 14px;
   text-align: right;
   padding-top: 10px;
   color: var(--copy-color);
@@ -2275,14 +2220,14 @@ body {
 .task-cost-total div > span {
   display: block;
   font:
-    8px "Geist Mono Variable",
-    monospace;
+    14px "Geist Variable",
+    sans-serif;
   color: var(--muted-foreground);
 }
 .task-cost-total strong {
   display: block;
   font-size: 27px;
-  font-weight: 550;
+  font-weight: 600;
   letter-spacing: -1px;
   margin-top: 6px;
 }
@@ -2290,7 +2235,7 @@ body {
   margin-top: 12px;
 }
 .mock-cost-details summary {
-  font-size: 10px;
+  font-size: 14px;
   cursor: pointer;
   color: var(--muted-foreground);
 }
@@ -2305,7 +2250,7 @@ body {
 }
 .iteration-group td,
 .iteration-group th {
-  font-size: 9px;
+  font-size: 14px;
   padding: 9px 2px;
 }
 @media (max-width: 390px) {
@@ -2314,7 +2259,7 @@ body {
   }
   .iteration-group td,
   .iteration-group th {
-    font-size: 8px;
+    font-size: 14px;
   }
   .cost-drivers {
     padding: 12px 9px;
@@ -2340,15 +2285,15 @@ body {
   align-items: center;
 }
 .fusion-options article > div:first-child strong {
-  font-size: 11px;
-  font-weight: 550;
+  font-size: 14px;
+  font-weight: 600;
 }
 .fusion-options article > div:first-child span {
-  font-size: 8px;
+  font-size: 14px;
   color: var(--muted-foreground);
 }
 .fusion-options article p {
-  font-size: 10px;
+  font-size: 14px;
   margin-top: 8px;
 }
 .fusion-metrics {
@@ -2359,11 +2304,11 @@ body {
 }
 .fusion-metrics strong {
   font-size: 18px;
-  font-weight: 550;
+  font-weight: 600;
   letter-spacing: -0.5px;
 }
 .fusion-metrics span {
-  font-size: 9px;
+  font-size: 14px;
   color: var(--muted-foreground);
   margin-left: auto;
 }
@@ -2382,4 +2327,644 @@ body {
   display: block;
   height: 100%;
   background: var(--brand-orange);
+}
+
+/* Polish pass: keep the carousel local and size it to the selected content. */
+.value-track {
+  align-items: flex-start;
+  overflow-y: hidden;
+  contain: inline-size;
+  transition: height 180ms ease;
+}
+.value-slide {
+  align-items: start;
+  flex-shrink: 0;
+}
+.value-copy {
+  padding-top: 22px;
+}
+.value-copy h2 {
+  text-wrap: balance;
+}
+.value-copy > p {
+  min-height: 0;
+  font-size: 16px;
+  line-height: 1.75;
+}
+.value-slider {
+  box-shadow: 0 18px 55px -45px #27334555;
+}
+.value-controls {
+  background: var(--muted);
+}
+.value-selectors button {
+  min-height: 42px;
+  padding-inline: 16px;
+}
+.value-selectors button[aria-pressed="true"] {
+  background: var(--card);
+  box-shadow: 0 1px 4px #0000000a;
+}
+.value-bottom button {
+  min-width: 44px;
+  min-height: 42px;
+}
+.value-mockup header {
+  min-height: 48px;
+}
+.value-mockup small,
+.value-mockup footer {
+  font-size: 14px;
+}
+.mock-body p {
+  font-size: 14px;
+}
+.mock-body th,
+.iteration-group th {
+  font-size: 14px;
+}
+.iteration-group td {
+  font-size: 14px;
+  padding-block: 11px;
+}
+.iteration-title strong {
+  font-size: 14px;
+}
+.iteration-title span,
+.iteration-total,
+.mock-cost-details summary {
+  font-size: 14px;
+}
+.fusion-options article > div:first-child strong {
+  font-size: 14px;
+}
+.fusion-options article > div:first-child span {
+  font-size: 14px;
+}
+.fusion-options article p,
+.fusion-metrics span {
+  font-size: 14px;
+}
+.fusion-option-selected {
+  position: relative;
+}
+.fusion-option-selected:before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 12px;
+  bottom: 12px;
+  width: 3px;
+  border-radius: 2px;
+  background: var(--brand-orange);
+}
+.hero {
+  padding-top: 40px;
+}
+.hero-eyebrow {
+  margin-top: 26px;
+}
+.hero-description {
+  max-width: 640px;
+}
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+.section {
+  padding-block: 82px;
+}
+.task-examples {
+  margin-top: 24px;
+}
+.task-examples span {
+  border: 1px solid var(--border);
+  border-radius: 30px;
+  padding: 6px 12px;
+  background: var(--card);
+}
+.benchmark-tabs button {
+  min-height: 44px;
+}
+.benchmark-toolbar .sample-label,
+.benchmark-status {
+  font-size: 14px;
+}
+.benchmark-method p + p {
+  font-size: 14px;
+}
+@media (max-width: 760px) {
+  .hero {
+    padding-top: 30px;
+  }
+  .section {
+    padding-block: 56px;
+  }
+  .value-copy {
+    padding-top: 0;
+  }
+  .value-copy > p {
+    font-size: 15px;
+  }
+  .value-slide {
+    gap: 24px;
+  }
+  .value-selectors button {
+    padding-inline: 10px;
+  }
+  .task-examples {
+    gap: 8px;
+  }
+  .task-examples span {
+    padding: 5px 9px;
+  }
+  .mock-body td,
+  .iteration-group td {
+    font-size: 14px;
+  }
+  .mock-body th,
+  .iteration-group th {
+    font-size: 14px;
+  }
+  .benchmark-panel {
+    padding: 20px 16px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .value-track {
+    transition: none;
+  }
+}
+/* Anchor visually hidden table captions inside their scrolling panel. */
+.value-track {
+  position: relative;
+}
+.value-slide {
+  position: relative;
+}
+
+/* Surface hierarchy: spacing for sections, tone for groups, lines for data. */
+:root {
+  --surface-radius: 16px;
+  --panel-radius: 12px;
+  --control-radius: 10px;
+  --surface-shadow: 0 8px 32px -20px rgb(25 32 40 / 18%);
+  --data-divider: color-mix(in oklab, var(--border) 55%, transparent);
+  --selected-surface: color-mix(in oklab, var(--brand-orange) 9%, var(--card));
+}
+.site-header,
+.capability-grid,
+.capability,
+.capability:first-child,
+.capability:last-child,
+.gateway-section,
+.editions-section,
+.start-section,
+.faq-section,
+.integration-story,
+.benchmark-steps li {
+  border: 0;
+}
+.product-preview,
+.benchmark-demo,
+.value-slider,
+.code-card,
+.release-card,
+.edition-cards > article,
+.closing {
+  border: 0;
+  border-radius: var(--surface-radius);
+  box-shadow: none;
+}
+.product-preview,
+.benchmark-demo,
+.code-card {
+  box-shadow: var(--surface-shadow);
+}
+.value-slider {
+  background: var(--muted);
+}
+.value-controls,
+.value-bottom {
+  background: transparent;
+  border: 0;
+}
+.value-mockup {
+  border: 0;
+  border-radius: var(--panel-radius);
+  box-shadow: var(--surface-shadow);
+}
+.value-mockup header,
+.value-mockup footer,
+.preview-toolbar,
+.preview-caption,
+.code-heading,
+.code-footnote,
+.benchmark-toolbar {
+  border: 0;
+  background: transparent;
+}
+.preview-sidebar {
+  border: 0;
+  background: var(--muted);
+}
+.metrics,
+.metrics > div,
+.evidence-row,
+.evidence-row p,
+.mock-box,
+.iteration-group,
+.fusion-options article,
+.model-result {
+  border: 0;
+}
+.mock-box,
+.iteration-group,
+.fusion-options article,
+.model-result,
+.evidence-row,
+.enterprise-controls {
+  border-radius: var(--panel-radius);
+  background: var(--muted);
+}
+.fusion-options .fusion-option-selected,
+.model-result.model-winner {
+  background: var(--selected-surface);
+  box-shadow: none;
+}
+.edition-cards .enterprise-card {
+  border: 0;
+  padding-top: 34px;
+  background: var(--selected-surface);
+}
+.secondary,
+.nav-github,
+.menu-toggle,
+.release-link,
+.task-examples span,
+.badge,
+.evidence-icon,
+.value-bottom button,
+.benchmark-tabs button {
+  border: 0;
+}
+.button,
+.nav-github,
+.menu-toggle,
+.value-selectors button,
+.value-bottom button,
+.benchmark-tabs button {
+  border-radius: var(--control-radius);
+}
+.nav-github,
+.value-bottom button,
+.badge {
+  background: var(--muted);
+}
+.task-examples span {
+  background: transparent;
+}
+.value-selectors button[aria-pressed="true"] {
+  box-shadow: none;
+}
+.start-paths > a,
+.faq-list details {
+  border-color: var(--data-divider);
+}
+.mock-body td,
+.mock-body th,
+.model-facts > div:last-child {
+  border-color: var(--data-divider);
+}
+@media (max-width: 760px) {
+  .edition-cards .enterprise-card {
+    padding-top: 26px;
+  }
+}
+
+/* Keep each comparison dimension on one shared row, including on phones. */
+.comparison-scroll {
+  position: relative;
+  overflow-x: auto;
+  margin-top: 22px;
+  border-radius: var(--panel-radius);
+}
+.comparison-matrix {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: fixed;
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+}
+.comparison-matrix th,
+.comparison-matrix td,
+.mock-body .comparison-matrix th,
+.mock-body .comparison-matrix td {
+  padding: 16px;
+  text-align: left;
+  vertical-align: middle;
+  border: 0;
+  border-bottom: 1px solid var(--data-divider);
+  font-size: inherit;
+}
+.comparison-matrix th {
+  font-weight: 500;
+  color: var(--copy-color);
+}
+.comparison-matrix thead th {
+  padding-block: 20px;
+  color: var(--foreground);
+}
+.comparison-matrix small {
+  display: block;
+  margin-top: 6px;
+  color: var(--muted-foreground);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 400;
+}
+.comparison-matrix .matrix-selected {
+  background: var(--selected-surface);
+}
+.comparison-matrix .matrix-key td {
+  font-weight: 600;
+  color: var(--foreground);
+}
+.benchmark-matrix .matrix-key strong {
+  font-size: 25px;
+  letter-spacing: -0.7px;
+}
+.comparison-matrix .matrix-decision td {
+  font-weight: 600;
+}
+.comparison-matrix tr:last-child > * {
+  border-bottom: 0;
+}
+.fusion-matrix {
+  min-width: 420px;
+  font-size: 14px;
+}
+.mock-body .fusion-matrix th,
+.mock-body .fusion-matrix td {
+  padding: 12px 9px;
+}
+.fusion-matrix small {
+  font-size: 14px;
+}
+.benchmark-matrix {
+  min-width: 620px;
+}
+@media (max-width: 760px) {
+  .comparison-matrix th:first-child {
+    position: sticky;
+    left: 0;
+    background: var(--card);
+    z-index: 1;
+  }
+}
+.hero-availability {
+  max-width: 610px;
+  margin: 14px auto 0;
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--muted-foreground);
+}
+.hero-availability a {
+  display: block;
+  color: var(--brand-ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* One editorial type system; monospace is reserved for executable code. */
+:root {
+  --type-label: 14px;
+  --type-body: 16px;
+  --type-title: clamp(28px, 3.4vw, 42px);
+}
+.eyebrow,
+.feature-number,
+.phase,
+.value-index,
+.value-position,
+.task-examples span,
+.value-mockup small,
+.value-mockup footer {
+  font-size: var(--type-label);
+  letter-spacing: 0;
+  line-height: 1.5;
+}
+.section-heading h2,
+.value-copy h2,
+.gateway-section h2,
+.start-section h2,
+.integration-story h2,
+.benchmark-heading h2 {
+  font-size: var(--type-title);
+  font-weight: 600;
+  letter-spacing: -0.035em;
+}
+.capability h3,
+.integration-points h3,
+.mock-body h3,
+.enterprise-controls h3,
+.start-paths h3 {
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+.capability p,
+.integration-points p,
+.section-description,
+.edition-cards p,
+.edition-cards ul {
+  font-size: var(--type-body);
+  line-height: 1.7;
+}
+
+/* Supporting text is for reading, not decoration. */
+.value-controls {
+  justify-content: flex-end;
+}
+.value-copy {
+  padding-top: 0;
+}
+.value-copy h2 {
+  margin-top: 0;
+}
+.value-mockup header {
+  flex-wrap: wrap;
+}
+.value-mockup small,
+.value-mockup footer,
+.comparison-matrix small,
+.fusion-matrix small {
+  font-size: 14px;
+  line-height: 1.6;
+}
+.fusion-matrix {
+  min-width: 500px;
+}
+.benchmark-matrix {
+  min-width: 680px;
+}
+
+/* A quiet workspace shell shared by the concept previews. */
+.value-mockup,
+.product-preview {
+  border-radius: 20px;
+  background: var(--card);
+  box-shadow:
+    0 2px 6px rgb(25 32 40 / 2%),
+    0 18px 48px -28px rgb(25 32 40 / 16%);
+  overflow: hidden;
+}
+.value-mockup header,
+.preview-toolbar {
+  padding: 22px 24px;
+  min-height: 72px;
+  background: transparent;
+  gap: 16px;
+}
+.value-mockup header strong {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 16px;
+}
+.value-mockup header .mock-brand {
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  color: var(--foreground);
+}
+.value-mockup header .mock-location {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--copy-color);
+}
+.value-mockup header .mock-status {
+  font-size: 14px;
+  color: var(--muted-foreground);
+}
+.mock-body {
+  padding: 12px 24px 24px;
+}
+.mock-body h3 {
+  line-height: 1.4;
+}
+.value-mockup footer,
+.preview-caption {
+  padding: 18px 24px;
+  background: transparent;
+  color: var(--muted-foreground);
+  line-height: 1.6;
+}
+.mock-body .mock-box:not(.tinted),
+.iteration-group {
+  background: transparent;
+  padding-inline: 0;
+  border-radius: 0;
+}
+.mock-box.tinted,
+.cost-drivers,
+.task-cost-total,
+.evidence-row {
+  border-radius: 16px;
+  background: color-mix(in oklab, var(--muted) 65%, var(--card));
+}
+.iteration-group + .iteration-group {
+  margin-top: 24px;
+}
+.preview-sidebar {
+  margin: 0 0 20px 16px;
+  padding: 20px 12px;
+  border-radius: 16px;
+  background: color-mix(in oklab, var(--muted) 65%, var(--card));
+}
+.preview-sidebar > div {
+  border-radius: 10px;
+  padding: 12px;
+}
+.preview-sidebar .selected {
+  background: var(--card);
+  color: var(--foreground);
+}
+.toolbar-divider {
+  display: none;
+}
+@media (max-width: 760px) {
+  .value-mockup header,
+  .preview-toolbar {
+    padding: 18px 20px;
+  }
+  .mock-body {
+    padding: 8px 20px 20px;
+  }
+  .value-mockup footer,
+  .preview-caption {
+    padding: 16px 20px;
+  }
+}
+
+.value-mockup {
+  display: grid;
+  grid-template-columns: 60px minmax(0, 1fr);
+}
+.mock-workspace {
+  min-width: 0;
+}
+.mock-nav-rail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  padding: 18px 8px;
+  background: color-mix(in oklab, var(--muted) 65%, var(--card));
+}
+.mock-nav-items {
+  display: grid;
+  gap: 10px;
+}
+.mock-nav-rail span {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  color: var(--muted-foreground);
+}
+.mock-nav-rail svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.mock-nav-rail .is-active {
+  background: var(--card);
+  color: var(--foreground);
+}
+.mock-nav-rail .mock-nav-profile {
+  margin-top: auto;
+}
+.preview-body {
+  grid-template-columns: 60px minmax(0, 1fr);
+}
+@media (max-width: 760px) {
+  .value-mockup,
+  .preview-body {
+    grid-template-columns: 48px minmax(0, 1fr);
+  }
+  .mock-nav-rail {
+    padding-inline: 4px;
+  }
+  .mock-nav-rail span {
+    width: 36px;
+    height: 36px;
+  }
 }

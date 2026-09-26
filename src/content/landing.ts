@@ -14,25 +14,25 @@ export const links = {
 export const capabilities = [
   {
     number: "01",
-    title: "Follow the work, not just the request.",
+    title: "Find where the task repeats itself.",
     description:
-      "Follow a task through its iterations, then inspect the steps and tokens within each attempt. The analysis goal: explain accumulated time and spend, including revisions, retries and parallel work. Missing evidence stays visible.",
+      "Inspect imported execution timelines and linked attempts to understand repeated work and parallel branches. The goal is to connect each iteration and step to its tokens, time and spend; missing evidence stays visible.",
     label: "Task investigation",
     href: `${links.api}#standalone-execution-imports`,
   },
   {
     number: "02",
-    title: "Give every cost its context.",
+    title: "Know what you paid—and what is unknown.",
     description:
-      "Inspect settled gateway charges and resolve referenced attempts in imported tasks. Cash cost and API-equivalent cost stay separate. Unresolved work stays visible as unknown cost.",
+      "Inspect recorded gateway charges and link them to imported task attempts. Keep actual charges separate from API-equivalent estimates, and see which parts of a task still have unknown cost.",
     label: "Usage & cost",
     href: links.api,
   },
   {
     number: "03",
-    title: "See the evidence behind capacity.",
+    title: "Check capacity before relying on it.",
     description:
-      "Inspect registered supplier accounts and submitted quota observations, with their source, units and reset times. Stale or missing evidence is labeled explicitly.",
+      "Review registered provider accounts and reported quotas, including when they reset and where the information came from. Stale or missing reports stay visible rather than implying capacity is available.",
     label: "Supplier accounts",
     href: links.api,
   },
@@ -52,7 +52,7 @@ export const faqs = [
   {
     question: "What does model fusion mean?",
     answer:
-      "Different parts of a complex task may suit different models: research, planning, writing, implementation or review. Our planned methodology uses execution evidence and controlled benchmarks to choose a model mix, then validates the complete task. Switching, repeated context, failed attempts and validation all count toward cost. A mix is useful only when it meets the same quality and latency requirements for less total spend.",
+      "Different parts of a complex task may suit different models: research, planning, writing, implementation or review. Our planned methodology uses execution evidence and controlled benchmarks to choose a model mix, then validates the complete task. Switching, repeated context, failed attempts and validation all count toward cost. A mix is useful when it meets the quality bar and offers a better fit for your budget and deadline. It need not be the cheapest or fastest option on its own.",
   },
   {
     question: "How can benchmarking reduce coding-agent costs?",
