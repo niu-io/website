@@ -5,9 +5,9 @@ import ValueSlider from "../components/ValueSlider.astro";
 import SiteLayout from "../layouts/SiteLayout.astro";
 import { links, capabilities, faqs, requestExample } from "../content/landing";
 
-const title = "niu.io — The Agent Gateway for complex tasks";
+const title = "niu.io — The Agent Gateway for chat, video and complex tasks";
 const description =
-  "An open-source Agent Gateway for model access, execution visibility, and evidence-based model choices. Understand multi-step agent tasks, compare model choices, and evaluate the cost of successful outcomes.";
+  "An open-source Agent Gateway for chat and video workflows. Manage asynchronous Seedance video tasks, inspect saved results and execution context, and connect model access with task evidence.";
 const spans = [
   {
     name: "Task",
@@ -54,10 +54,10 @@ const spans = [
           for <span class="accent">complex tasks.</span>
         </h1>
         <p class="hero-description">
-          A cheaper model can take more attempts. A stronger model can finish
-          sooner and still cost more. Niu connects model access with task-level
-          evidence—so you can work toward the right balance of time, cost and
-          quality.
+          Work across chat and video, from model requests to saved results.
+          Manage asynchronous Seedance tasks, inspect their execution context,
+          and keep output availability visible alongside task status. Niu
+          connects multimodal model access with evidence about what happened.
         </p>
         <div class="actions">
           <a class="button primary" href={links.quickstart}>
@@ -69,7 +69,7 @@ const spans = [
         </div>
         <p class="hero-note">Open source · Self-hosted · Development preview</p>
         <p class="hero-availability">
-          Evaluate model access and task investigation today.{" "}
+          Evaluate chat, video task management and result inspection today.{" "}
           <a href="#release">Benchmarking and fusion are in development →</a>
         </p>
       </div>
@@ -147,11 +147,11 @@ const spans = [
       </div>
       <div class="integration-points">
         <article>
-          <h3>Ready-to-use models</h3>
+          <h3>Chat and video in one workspace</h3>
           <p>
-            Choose a model and get to work. We plan to combine direct
-            connections with OpenRouter as an optional fallback for broader
-            model access.
+            Connect supported Providers for chat and asynchronous video
+            workflows, including Seedance through FastRouter. Access depends on
+            your configured model, credentials and upstream permissions.
           </p>
         </article>
         <article>
@@ -491,6 +491,7 @@ const spans = [
             <li>Metadata import and task investigation</li>
             <li>Execution timelines and outcome evidence</li>
             <li>Scoped keys and compatible model access</li>
+            <li>Saved Video sessions, task state and output availability</li>
             <li>Settled usage and cost reporting</li>
             <li>Registered accounts and quota evidence</li>
           </ul>
@@ -507,6 +508,10 @@ const spans = [
             <li>Coding-agent integrations that preserve existing plans</li>
             <li>Ready-to-use models with optional OpenRouter fallback</li>
             <li>Subscription inference and account pooling</li>
+            <li>
+              Seedance materials, human verification and result recovery
+              qualification
+            </li>
             <li>Broader provider and protocol qualification</li>
             <li>Production installation and recovery checks</li>
           </ul>

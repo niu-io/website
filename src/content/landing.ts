@@ -6,6 +6,7 @@ export const links = {
   deployment: "/docs/deployment/single-container/",
   api: "/docs/reference/api/",
   models: "/models/",
+  video: "/docs/reference/video/",
   workspace: "/workspaces/default/",
   release:
     "https://github.com/niu-io/niu/blob/main/docs/releases/first-release.md",
@@ -14,11 +15,11 @@ export const links = {
 export const capabilities = [
   {
     number: "01",
-    title: "Find where the task repeats itself.",
+    title: "Manage Seedance video tasks.",
     description:
-      "Inspect imported execution timelines and linked attempts to understand repeated work and parallel branches. The goal is to connect each iteration and step to its tokens, time and spend; missing evidence stays visible.",
-    label: "Task investigation",
-    href: `${links.api}#standalone-execution-imports`,
+      "Follow asynchronous video jobs through saved sessions, inspect status and original execution context, and retrieve available video or last-frame results. Output expiry stays separate from task success. Provider materials and verification have their own permissions and availability.",
+    label: "Video API & SDK",
+    href: links.video,
   },
   {
     number: "02",
@@ -39,6 +40,11 @@ export const capabilities = [
 ];
 
 export const faqs = [
+  {
+    question: "What can I evaluate with Seedance video?",
+    answer:
+      "Niu implements asynchronous video tasks, saved sessions, task and output inventories, and typed JavaScript SDK methods. Seedance uses the configured FastRouter/Volcengine-compatible channel; original task bindings are retained for recovery. Materials, references and human verification depend on that channel and upstream permissions. A successful task does not guarantee retained output bytes, and the complete video workflow is still being qualified.",
+  },
   {
     question: "Can I keep my coding agent and its subscription?",
     answer:
