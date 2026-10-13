@@ -3,6 +3,7 @@ interface Props {
   active: number;
 }
 const { active } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 const items = [
   { name: "Connections", path: "M8 12h8M8 8H5v8h3m8-8h3v8h-3M12 4v4m0 8v4" },
   { name: "Tasks", path: "M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01" },
@@ -14,10 +15,10 @@ const items = [
 ---
 
 <aside class="mock-nav-rail" aria-label="Illustrated navigation">
-  <span class="mock-nav-home" title="niu.io">
+  <span class="mock-nav-home" title="Niu">
     <img
-      src="/site-assets/brand/niu-mark.png"
-      alt="niu.io"
+      src={`${base}/site-assets/brand/niu-mark.png`}
+      alt="Niu"
       width="28"
       height="28"
     />
