@@ -54,8 +54,8 @@ button,
 summary {
   touch-action: manipulation;
 }
-a:focus-visible,
-button:focus-visible,
+a:focus-visible:not([data-slot]),
+button:focus-visible:not([data-slot]),
 summary:focus-visible {
   outline: 3px solid var(--ring);
   outline-offset: 5px;
