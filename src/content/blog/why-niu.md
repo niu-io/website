@@ -1,142 +1,91 @@
 ---
-title: "Why Niu? A Financial-Grade Rust Core with a Composable Plugin Host"
-chineseTitle: "为什么选择 Niu 牛元？金融级极简内核 + 可组合插件架构"
-description: "Why Niu pairs a minimalist, financial-grade Rust and PostgreSQL core with a strongly-typed Plugin Host with explicit process boundaries (niu.plugin.v1) instead of building another monolithic proxy."
+title: "Why Niu? Build a Model API Business People Trust"
+chineseTitle: "为什么选择 Niu 牛元？让模型生意，赢得客户信任"
+description: "For people building a business on model aggregation: reliable delivery, clear accounts, and a service customers feel confident using. Open-source foundations, commercial discipline."
 publishedAt: "2026-10-15"
-readingTime: "8 min read"
-category: "Architecture"
-author: "Niu Engineering"
+readingTime: "7 min read"
+category: "Product"
+author: "Niu"
 ---
 
-## 1. Core Thesis: "Best" Does Not Mean the Most Bloated Monolith
+Your customer sends a request. The model responds. You earn the difference between what you charge and what it costs to deliver.
 
-When teams evaluate open-source LLM gateways and aggregation platforms—such as LiteLLM, New API / One API, Bifrost, or Portkey—the conventional comparison is a feature checklist: _who has the most built-in enterprise toggles, check-in widgets, or third-party integrations stuffed into one repository?_
+That is the simple version of a model API business.
 
-**Niu (Niu 牛元) takes the opposite architectural stance:**
+The real version includes an upstream service that stops responding during a stream. Several requests competing for the last of a customer's balance. A price change halfway through the day. A customer asking why they were charged for a call that timed out. A new user who wants to try your service but cannot work out which model to choose or how to get started.
 
-- An AI gateway's core job is **deterministic model access, verifiable financial accounting, and consumption observability**.
-- Everything that varies by organization, industry, or deployment model—custom SSO/SCIM, industry DLP redaction, regional tax invoicing, SIEM audit streaming, or proprietary route scoring—belongs behind **strongly-typed Plugin contracts**, with process isolation for services and explicit trust for hooks in the core transaction path.
-- By combining a **minimalist, financial-grade Rust core** with a **unified Plugin Host (`niu.plugin.v1`)**, Niu keeps the core focused and auditable while allowing deployment-specific extensions at explicit boundaries.
+Those moments decide whether aggregation becomes a lasting business. You need to deliver the service, understand the accounts, and give customers a reason to come back.
 
----
+**Niu is for people who want to build a business on model aggregation and forwarding. Our goal is to combine the openness and engineering quality of open-source software with the operational completeness of a commercial platform.**
 
-## 2. Why First-Generation Open-Source Gateways Hit an Architectural Ceiling
+## In a crowded market, another endpoint is not enough
 
-Different gateway designs optimize for different needs. LiteLLM, New API / One API, Bifrost, and Portkey are useful comparison points, but a feature checklist alone does not explain where accounting authority and extension boundaries live. The table below compares architectural choices rather than asserting a benchmark or a universal limitation of another product.
+There are already strong ways to aggregate model access. [LiteLLM](https://docs.litellm.ai/docs/proxy/virtual_keys) documents virtual keys and spend management. [New API](https://github.com/QuantumNous/new-api) provides model aggregation and distribution. [OpenRouter](https://openrouter.ai/docs/quickstart) offers hosted access, with [logs for investigating generations](https://openrouter.ai/docs/guides/features/logs).
 
-| Dimension                    | Proxy-centered design question                                                            | Niu's architectural choice                                                                                                                   |
-| :--------------------------- | :---------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Runtime & footprint**      | Which runtime and backing services does the deployment require?                           | Rust (`axum` + `tokio`) gateway with PostgreSQL; configured upstream model services remain external.                                         |
-| **Financial precision**      | Are usage estimates, procurement costs, customer charges, and Provider earnings separate? | Integer nanounits (`10⁻⁹`), with independent `cost_entries`, `customer_charges` / `customer_media_charges`, and `provider_earnings` records. |
-| **Crash & timeout safety**   | What happens when upstream execution is uncertain?                                        | Atomic priced admission and explicit `not_sent`, `may_have_executed`, `confirmed_completed`, and `confirmed_not_executed` states.            |
-| **Commercial data boundary** | Can customer responses expose procurement prices or margins?                              | Customer serialization and authorization boundaries separate retail records from procurement data.                                           |
-| **Extensibility**            | Which extensions share the gateway process, and which run separately?                     | Typed in-process hooks plus supervised Unix-socket services, signed request context, and transactional outbox delivery.                      |
+A unified API, a list of models, or a usage chart cannot explain why Niu should exist. These are capabilities an operator can already find.
 
-No latency ranking is claimed here. A useful performance comparison needs the same workload, upstream behavior, hardware, concurrency, and measurement method. The goal of Niu's design is to make accounting authority and failure handling inspectable rather than treating a fast proxy response as proof of financial correctness.
+The question behind Niu is more specific: **can someone build a model API business on an open foundation without having to assemble the service delivery, financial operations, and customer experience into a product themselves?**
 
----
+Our answer has to be demonstrated across all three. A fast gateway with confusing bills loses trust. Accurate accounts cannot rescue unreliable delivery. Both fall short if customers struggle to use the service. Niu's purpose is to make those responsibilities work together.
 
-## 3. Pillar 1: An Uncompromising, Financial-Grade Core
+## Your traffic is your business. The gateway must earn its place.
 
-What belongs in the open-source core (`niu-io/niu`) is implemented to financial-ledger standards rather than "best-effort proxy" standards:
+When customers pay you for model access, they hold your platform responsible for the request. They do not have a relationship with every upstream service you use.
 
-### 1. Three Strictly Independent Ledgers in Integer Nanounits (`10⁻⁹`)
+That makes aggregation an operating responsibility. You need to know which routes can serve a model, which credentials are eligible, where a request was sent, and what happened when it failed. A long model list means little if the route behind the model cannot deliver the capability you advertised.
 
-Every billable event is recorded in exact integer nanounits (`10⁻⁹`) across three separate accounting ledgers:
+Niu brings Provider credentials, model mappings, and configured routing together. Applications use model aliases and scoped workspace keys, while upstream credentials remain on the server. Recorded attempts remain distinguishable from the customer's request, giving operators evidence for investigating delivery problems.
 
-- **`cost_entries`**: Installation upstream procurement cost for calls dispatched to external Providers.
-- **`customer_charges` & `customer_media_charges`**: Workspace retail charges covering both text token consumption and durable video/media generation jobs.
-- **`provider_earnings`**: Revenue share owed to external Providers where settlement applies.
+Performance matters because gateway overhead and resource use affect the service you can afford to run. Reliability matters because failures affect both the customer and your accounts. Niu uses a Rust gateway with an asynchronous request path; that is an engineering choice in support of these goals. It is not a substitute for measurements under real traffic.
 
-No ledger is derived by approximation from another. Crucially, the commercial boundary is enforced at the serialization and authorization layer: customer workspace APIs, dashboards, and exports physically omit upstream Provider purchase prices and installation margins.
+The same discipline applies to retries. When an upstream response is uncertain, sending the request again can repeat work and create another liability. Niu's design preserves execution uncertainty instead of assuming every failed connection is safe to replay. Current failover support is bounded; broad automatic failover is not a claim we make.
 
-### 2. Atomic Priced Admission & Execution Certainty
+For an operator, the value is a service you can inspect and improve: trace a problem to its request and attempts, distinguish configuration from actual availability, and qualify the routes on which your customers depend. See the [model configuration guide](/docs/configuration/models/) and [execution observation guide](/docs/concepts/execution-observation/).
 
-Before a single byte is sent to an upstream Provider, Niu commits the entire admission envelope in **one PostgreSQL transaction**:
+## Revenue is not profit. A balance is not a complete set of accounts.
 
-- The operation and attempt records
-- The immutable published route generation
-- Token and media bounds
-- Any active guardrail receipt
-- The effective customer tariff and Provider offer
-- The prepaid balance or credit reservation across company, workspace, and workspace-key caps
+A growing request count can hide an unhealthy business. You need to distinguish what a customer owes, what upstream delivery costs, what is owed to a Provider, and which amounts are still unresolved.
 
-Once admitted, each attempt advances through a strict **4-state execution certainty machine**:
+Consider a request that completes upstream just as the gateway loses its accounting connection. The customer may have received useful output, but the debit has not yet been recorded. Or consider several requests arriving while the account has only enough spending capacity for some of them. Checking yesterday's settled total does not account for work already in flight.
 
-1. `not_sent` — Admitted locally, prior to upstream transmission.
-2. `may_have_executed` — Dispatched over the network; awaiting deterministic outcome.
-3. `confirmed_completed` — Upstream execution verified and settled against the reservation.
-4. `confirmed_not_executed` — Guaranteed pre-execution rejection; reservation safely released.
+Niu's accounting design separates customer charges, upstream procurement costs, and Provider earnings. Customer tariffs are managed independently of Provider offers. Integer monetary units avoid using floating-point approximations for money, and reservations account for supported liabilities before dispatch. Original pricing context and request evidence provide a basis for explaining and reconciling charges.
 
-If a network drop or process restart occurs before upstream confirmation, the recovery scheduler preserves unresolved execution as `may_have_executed`. Ambiguous calls are never silently treated as free, and Niu never blindly replays an uncertain non-idempotent request to cause double execution or double billing.
+These details serve business questions: what did we sell, what do we owe, and what still needs attention? An unresolved amount must remain visible as unresolved; missing usage must not become an invented zero. Recovery should settle from durable evidence rather than asking an operator to guess what happened.
 
-### 3. Immutable Route Publications
+Clear accounts also require clear permissions. Your customers need their prices, consumption, and charges. Your procurement rates and platform margins belong in platform administration. Provider access should expose only that Provider's agreed rates and settlements. Customer confidence should never require exposing your commercial arrangements.
 
-Database-configured routes and static TOML routes compile into a single validated generation (`routing_publications`). Each publication supports priority tiers, weighted load distribution, and live credential/cooldown checks—giving operators deterministic routing auditability without freezing time-dependent health state into static configuration files.
+This is why accounting belongs in the product's foundation. It affects whether you can price responsibly, control exposure, answer disputes, and understand the business you are running. The [usage and cost guide](/docs/concepts/performance-and-cost/) explains the customer-facing records and their boundaries.
 
----
+## Customers need confidence before they become regular users
 
-## 4. Pillar 2: The Unified Plugin Host (`niu.plugin.v1`)
+Your customers are evaluating more than a model response. Can they get started without asking you for help? Do they know what they will pay? Can they limit an application's spending? If something goes wrong, can they find a useful explanation?
 
-Niu defines a **Plugin Host** through `crates/plugin-api` and `crates/plugin-sdk`. The public composition contract describes both the target architecture and a transitional runtime slice; the breakdown below explains those boundaries, rather than claiming every integration has completed release qualification. Typed hooks run in process and must be trusted; Unix-socket HTTP and event services run out of process.
+Every unclear step becomes work for your support team. Every unexplained charge makes the next top-up harder to earn.
 
-```text
-┌────────────────────────────────────────────────────────────────────────────┐
-│                         Niu Core (niu-io/niu)                              │
-│   Rust (axum + tokio) · Single-Transaction Priced Admission · PostgreSQL   │
-│   cost_entries │ customer_charges │ provider_earnings │ routing_publications│
-└──────────┬───────────────────┬─────────────────────┬──────────────────┬────┘
-           │                   │                     │                  │
-           ▼                   ▼                     ▼                  ▼
-  ┌─────────────────┐ ┌─────────────────┐ ┌───────────────────┐ ┌──────────────┐
-  │ 1. Data-Plane   │ │ 2. Event        │ │ 3. Supervised     │ │ 4. Dashboard │
-  │    Hooks        │ │    Observers    │ │    Unix-Socket    │ │    UI Slots  │
-  │                 │ │                 │ │    HTTP Routes    │ │              │
-  │ • IdentityFed   │ │ • Metering      │ │ • /run/niu/       │ │ • Build-time │
-  │ • PolicyHook    │ │   Observer      │ │   plugins/*.sock  │ │   routes &   │
-  │ • Provider/     │ │ • Transactional │ │ • Ed25519 JWS     │ │   settings   │
-  │   PaymentAdapter│ │   Outbox        │ │ • 4 Auth Modes +  │ │   extensions │
-  │ • RouteSelector │ │   Delivery      │ │   SSE Streaming   │ │              │
-  └─────────────────┘ └─────────────────┘ └───────────────────┘ └──────────────┘
-```
+Niu brings a model catalog, API documentation, workspace keys, spending controls, request records, and saved generation workflows into the same product. Compatible model APIs help customers connect existing applications on supported routes. Workspace and key limits give them boundaries around application spending. Request history connects reported usage with customer charges.
 
-### Four Cohesive Capability Facets per Plugin
+Saved Chat and Video workflows let customers use supported models directly and return to their work. Sessions and messages are backed by server storage. For supported video jobs, submission, status, original inputs, and authorized access to available results belong together. Job success and result availability remain separate, so an expired output does not masquerade as a failed generation.
 
-1. **Data-Plane Hooks (`hooks`)**:
-   - `IdentityFederation`: Maps external identity assertions into verified claims without allowing privilege elevation.
-   - `PolicyHook`: Evaluates request and response content under a cryptographic `PolicyBinding` (SHA-256 input digest, stage, revision, expiry) and applies atomic JSON Pointer redactions (`PolicyDecision::Redact`).
-   - `ProviderAdapter` & `PaymentAdapter`: Normalizes upstream model protocols (including stateful `ProviderStreamValidator` for SSE frames) and payment channels while core transport validation blocks path traversal and credential-header injection.
-   - `RouteSelector`: Reorders eligible route candidates (for example, by lowest cost or SLA telemetry), while the core re-verifies every grant, capability, and budget bound before dispatch.
-2. **Asynchronous Event Observers (`observers`)**:
-   - `MeteringObserver` and Unix-socket transactional outbox delivery (`/_niu/plugins/v1/outbox/events`) with idempotent `OutboxDeliveryReceipt` (`accepted` / `duplicate`). Plugin services use public contracts rather than querying or mutating core PostgreSQL tables.
-3. **Supervised Unix-Socket HTTP Routes (`routes`)**:
-   - Out-of-process services listen on `/run/niu/plugins/{plugin_id}.sock` and are exposed under neutral `/api/plugins/v1/{plugin_id}/…` routes.
-   - Supports **4 route authentication modes**: `operator` (workspace role matrix), `installation_admin`, `workspace_key` (`Bearer sk-…`), and `public_callback` (bounded webhook ingress), plus `streaming: true` SSE forwarding.
-   - Every proxied request strips client-supplied `X-Niu-*` headers and replaces `Authorization` with a short-lived Gateway-signed **Ed25519 JWS** bound to the target plugin `aud`, actor, workspace scope, HTTP method, path, and SHA-256 body digest.
-4. **Dashboard UI Contributions (`ui`)**:
-   - Build-time frontend routes and settings extensions that integrate cleanly into the workspace dashboard.
+Trust also depends on restraint: keep credentials protected, enforce customer boundaries on the backend, explain what is retained, and say when evidence is unavailable. The result should be a platform customers can understand and operate for themselves, with records that help you support them when they need it.
 
-### Built-in Open-Source Plugins Included in `niu-io/niu`
+Payment is part of that experience too. Customers need a clear path from payment to usable balance and an accurate record afterward. Payment adapters alone do not establish an active merchant or prove receipt of funds; that complete journey is part of commercial qualification.
 
-The public repository includes three reference plugins illustrating the extension contracts:
+## Open source should be a foundation for your business
 
-- **`plugins/hello-echo`**: Reference Unix-socket service demonstrating Ed25519 JWS verification, `operator` + `public_callback` routes, and idempotent outbox consumption.
-- **`plugins/request-tagger`**: Reference in-process `PolicyHook` paired with a lowest-cost `RouteSelector`.
-- **`plugins/webhook-audit`**: Reference `MeteringObserver` paired with an `installation_admin` audit inspection endpoint.
+If you build a business on Niu, you should be able to inspect the software you depend on, deploy the public core independently, and adapt it to your operation.
 
-### Clean Open-Core & Distribution Boundary
+Niu's public product includes the gateway, dashboard, catalog, and documentation, and runs with PostgreSQL. Community operation does not require private source or a license service. Niu-owned public code is MIT licensed; reused modules retain their own licenses and attribution.
 
-This architecture makes Niu's open-core boundary explicit and verifiable:
+Commercial completeness brings another responsibility: usable workflows, qualified integrations, dependable operation, and support for the people running the platform. Publishing source code does not finish those jobs. Niu aims to make the public foundation useful on its own while supporting commercial and enterprise extensions through explicit boundaries.
 
-- **Community deployments** run `niu-io/niu` standalone with a single Rust binary and PostgreSQL, with zero private dependencies or license servers.
-- **Hosted SaaS (`niu-io/cloud` on `niu.io`) and self-hosted Enterprise (`niu-io/enterprise`)** compose pinned core and plugin commits behind one public listener. Enterprise excludes hosted-only commercial settlement and supply-margin plugins; each distribution selects its own manifest.
+This is what we mean by open-source foundations and commercial discipline. The source gives operators control. The product must help them turn that control into a service customers are willing to pay for.
 
-## Implementation references and qualification
+## Judge Niu by the business you can actually run
 
-“Financial-grade” describes the accounting design, not a certification or a completed production acceptance gate. The first release remains under qualification; architecture contracts and source code alone do not verify a deployed integration.
+The standard is concrete: can you deliver requests reliably at the capacity you need, reconcile the resulting money, and let customers use the platform with confidence?
 
-- [Plugin composition and current runtime scope](https://github.com/niu-io/niu/blob/main/docs/architecture/enterprise-composition.md)
-- [Public Plugin API](https://github.com/niu-io/niu/tree/main/crates/plugin-api) and [SDK](https://github.com/niu-io/niu/tree/main/crates/plugin-sdk)
-- [Financial recovery coordination and its evidence limits](https://github.com/niu-io/niu/blob/main/docs/reference/financial-recovery-coordination.md)
-- [Repository and distribution ownership](https://github.com/niu-io/niu/blob/main/docs/architecture/repository-ownership.md)
-- [Current release acceptance matrix](/docs/releases/first-release/)
+Niu's development build is available for evaluation. The first release remains under qualification, including model conformance, sustained performance and recovery, commercial supply, payments, Provider settlement, and the complete video lifecycle. The design is not a completed production guarantee; the [release acceptance matrix](/docs/releases/first-release/) records the current scope.
+
+Start with the [deployment guide](/docs/deployment/single-container/), connect a route, and make a [real model request](/docs/guides/api-quickstart/). Follow delivery through to the customer charge. Evaluate the customer journey as well as the gateway.
+
+That is the business Niu is being built to support: one you can operate with clear accounts, and one your customers can trust.
