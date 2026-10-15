@@ -4,5 +4,4 @@ import publicNavigation from './public-navigation.json';
 export default [
   { label: 'Why Niu?', href: '/blog/why-niu/' },
   ...publicNavigation,
-  { label: 'Dashboard', href: '/workspaces/default/' },
 ];
