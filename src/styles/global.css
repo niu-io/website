@@ -1365,11 +1365,14 @@ code {
   margin-top: 4px;
 }
 .model-verdict {
-  font-size: 14px;
-  padding: 5px 6px;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 5px 8px;
   background: var(--secondary);
   border-radius: 4px;
   line-height: 1.4;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 .model-winner .model-verdict {
   background: #ed864522;
@@ -1405,7 +1408,7 @@ code {
 }
 .model-facts,
 .spend-breakdown {
-  margin: 0;
+  margin: 14px 0 0;
 }
 .model-facts > div,
 .spend-breakdown > div {
@@ -1423,6 +1426,9 @@ code {
 .model-facts dd,
 .spend-breakdown dd {
   margin: 0;
+  text-align: right;
+  font-weight: 500;
+  color: var(--foreground);
   font-variant-numeric: tabular-nums;
 }
 .model-facts > div:last-child {

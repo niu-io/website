@@ -54,6 +54,6 @@ const canonical = new URL(`${base}/`, Astro.site);
 
 <body>
 <a class="skip-link" href="#main">Skip to content</a><SiteHeader />
-<LandingContent latestPosts={latestPosts} />
+<LandingContent client:load latestPosts={latestPosts} />
 <footer class="container footer"><div><a class="wordmark" href="/" aria-label="Niu home"><img src={asset('site-assets/brand/niu-mark.png')} alt="" width="28" height="28"/><span>Niu</span></a><p>Open-source foundations for your model API business.</p></div><div class="footer-links"><a href="/models/">Models</a><a href="/workspaces/default/">Dashboard</a><a href="/docs/">Documentation</a><a href="/blog/why-niu/">Why Niu?</a><a href="/blog/">Blog</a><a href="/compare/">Compare</a><a href={links.repo}>GitHub</a><a href={`${links.repo}/blob/main/THIRD-PARTY-NOTICES.md`}>Licenses & attribution</a><a href="https://github.com/niu-io/website">Website source</a></div></footer>
 </body></html>

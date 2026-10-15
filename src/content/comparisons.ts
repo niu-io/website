@@ -118,6 +118,12 @@ export const comparisons = [
         "feature": "Source code",
         "niu": "Public core under MIT",
         "alternative": "AGPL-3.0"
+      },
+      {
+        "category": "Setup",
+        "feature": "Measured proxy overhead (ai-gateway-bench, c=64)",
+        "niu": "3,238.7 RPS · 31.54 ms p99 · 18.2 MB idle RSS (Rust + ACID PostgreSQL batching)",
+        "alternative": "865.6 RPS peak · 135.73 ms p99 · 37.4 MB idle RSS (Go + cached token/SQL logs)"
       }
     ],
     "decisions": [
@@ -165,6 +171,10 @@ export const comparisons = [
       }
     ],
     "sources": [
+      {
+        "label": "Niu vs New API vs LiteLLM Proxy performance benchmark",
+        "url": "/docs/guides/gateway-benchmarks/"
+      },
       {
         "label": "New API capabilities, protocols and deployment",
         "url": "https://github.com/QuantumNous/new-api#capabilities"

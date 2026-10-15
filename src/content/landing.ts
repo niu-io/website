@@ -2,6 +2,7 @@
 export const links = {
  repo: 'https://github.com/niu-io/niu', quickstart: '/docs/getting-started/',
  deployment: '/docs/deployment/single-container/', api: '/docs/api/rest/',
+ benchmark: '/docs/guides/gateway-benchmarks/',
  release: 'https://github.com/niu-io/niu/blob/main/docs/releases/first-release.md',
 };
 export const capabilities = [
@@ -16,7 +17,7 @@ export const faqs = [
  {question:'Who is Niu for?',answer:'Niu is for people building a business on model aggregation and forwarding, from independent operators to platform teams. It brings model delivery, financial accounting and customer workflows together on an open-source foundation.'},
  {question:'Why build another aggregation platform?',answer:'Aggregation already has mature tools. Niu focuses on the operator’s complete business: delivering requests, keeping customer charges and supply accounts distinct, and giving customers a clear, convenient experience. Open-source control and commercial operating quality are the guiding commitments.'},
  {question:'Does Niu guarantee profit or lower prices?',answer:'No. Your economics depend on authorized supply, agreed rates, customer prices, service quality and operating costs. Niu separates pricing and accounting responsibilities; it does not guarantee margin, demand or a universal discount.'},
- {question:'Is Niu faster or more reliable than other gateways?',answer:'No universal ranking is claimed. The Rust gateway and explicit execution and accounting states support our engineering goals. Capacity, latency, protocol behavior and recovery need qualification against the actual deployment and workload; the first release remains under qualification.'},
+ {question:'How does Niu perform compared with New API and LiteLLM Proxy?',answer:'In our reproducible ai-gateway-bench suite (0ms mock upstream on Apple M4 with PostgreSQL 17.11), Niu v0.2.4 sustains 3,238.7 RPS with 31.54 ms p99 latency at 64 concurrent workers (3.7x New API peak and 10.7x LiteLLM Proxy), streams 235.9 concurrent SSE responses/sec (9,436 tokens/s), and idles at 18.2 MB RSS while persisting ACID PostgreSQL admission and completion records. Always qualify capacity and recovery against your own deployment and workload.'},
  {question:'Can customers use their existing model clients?',answer:'For supported routes, customers can point an OpenAI-compatible client at your gateway, use a workspace API key and select a configured model alias. Protocol and model capabilities depend on the route; the guides describe their current boundaries.'},
  {question:'Can I self-host the public product?',answer:'Yes. Run the public gateway, dashboard, catalog and docs with PostgreSQL. Community operation does not require private source or an enterprise license. Model calls still reach configured upstream services. Niu-owned public code is MIT licensed; reused modules retain their licenses and attribution.'},
  {question:'Can customers see my procurement prices?',answer:'Customer workspace reports and responses expose customer charges, not Provider purchase prices or platform margins. Procurement belongs in platform administration. Provider access is scoped to that Provider’s agreed rates and settlements.'},
