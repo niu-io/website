@@ -1,6 +1,6 @@
 # Niu website
 
-The composed Gateway serves this repository’s landing page and comparison pages for Niu, a model API gateway focused on model access, transparent usage and customer billing, workspace spending controls, and text/video generation management.
+The composed Gateway serves this repository’s landing page, blog, and comparison pages for Niu, a model API gateway focused on model access, transparent usage and customer billing, workspace spending controls, and text/video generation management.
 
 Built with Astro and the existing Niu brand assets and theme tokens. This is a static marketing site; the product documentation and implementation live in [niu-io/niu](https://github.com/niu-io/niu).
 
@@ -38,13 +38,14 @@ tar -czf niu-website-dist.tar.gz -C dist .
 shasum -a 256 niu-website-dist.tar.gz
 ```
 
-The release image extracts the pinned artifact and sets `NIU_SITE_DIR` to its root. The Gateway serves `/` and `/_astro/` from that directory while its catalog and documentation artifacts own their respective routes. Keep the website commit and artifact digest with the composed Gateway release evidence.
+The release image extracts the pinned artifact and sets `NIU_SITE_DIR` to its root. The Gateway serves `/`, `/blog/`, `/blog/*`, `/compare/`, and `/_astro/` from that directory while its catalog and documentation artifacts own their respective routes. Keep the website commit and artifact digest with the composed Gateway release evidence.
 
 The GitHub Actions workflow checks the build and verifies its output layout; it does not publish a separate website deployment.
 
 ## Content and branding
 
 - `src/pages/index.astro` and `src/components/LandingContent.tsx`: landing layout and current product narrative.
+- `src/pages/blog/` and `src/content/blog/*.md`: `/blog/` channel and Markdown articles (collected via `src/content.config.ts`).
 - `src/content/landing.ts`: public links, capabilities, FAQ and request example.
 - `src/content/comparisons.ts`: sourced feature comparisons and selection guidance.
 - `src/components/PublicHeader.tsx`: public navigation shell with installed shadcn controls.
@@ -52,7 +53,7 @@ The GitHub Actions workflow checks the build and verifies its output layout; it 
 - `CONTENT.md`: positioning and public-claim rules.
 - `public/site-assets/brand/`: approved assets and source attribution.
 
-Docs and catalog consume the canonical navigation/style definitions in Niu's `branding` directory. This separate website snapshots them, along with the Niu-specific public header composition, so its build never depends on an adjacent checkout. Synchronize with `node scripts/sync-public-shell.mjs --source <public-niu-checkout>`; `--check --source <public-niu-checkout>` verifies the snapshots against that checkout. Default `--check` verifies the recorded snapshot hashes.
+Docs and catalog consume the canonical navigation/style definitions in Niu's `branding` directory. This separate website snapshots them, along with the Niu-specific public header composition, so its build never depends on an adjacent checkout. Website headers add the editorial “Why Niu?” entry through `src/content/website-navigation.ts`; the sync adapter preserves this website-specific composition. Synchronize with `node scripts/sync-public-shell.mjs --source <public-niu-checkout>`; `--check --source <public-niu-checkout>` verifies the snapshots against that checkout. Default `--check` verifies the recorded snapshot hashes.
 
 Keep copy accurate about implemented workflows and qualification scope. Do not present agent orchestration, external agent telemetry, task benchmarking, model fusion or subscription pooling as current product features.
 

@@ -1,0 +1,71 @@
+---
+import { getCollection } from "astro:content";
+import BlogLayout from "../../layouts/BlogLayout.astro";
+
+const posts = (await getCollection("blog")).sort((a, b) =>
+  b.data.publishedAt.localeCompare(a.data.publishedAt),
+);
+
+function formatDate(isoDate: string): string {
+  const [year, month, day] = isoDate.split("-").map(Number);
+  return new Date(Date.UTC(year, month - 1, day)).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    timeZone: "UTC",
+  });
+}
+
+function getReadingTime(body: string | undefined, explicit?: string): string {
+  if (explicit) return explicit;
+  const words = (body ?? "").trim().split(/\s+/).filter(Boolean).length;
+  const minutes = Math.max(1, Math.round(words / 220));
+  return `${minutes} min read`;
+}
+---
+
+<BlogLayout
+  title="Blog"
+  description="Architecture notes, financial ledger design, and engineering deep dives from the Niu team."
+>
+  <header class="blog-intro">
+    <p class="blog-eyebrow">Blog</p>
+    <h1>Engineering &amp; Architecture</h1>
+    <p>
+      Notes on deterministic model access, financial-grade request accounting,
+      and the composable Plugin Host behind Niu.
+    </p>
+  </header>
+
+  <section class="blog-list" aria-label="Published articles">
+    {posts.map((post) => {
+      const href = `/blog/${post.id}/`;
+      const readingTime = getReadingTime(post.body, post.data.readingTime);
+      return (
+        <article class="blog-entry">
+          <div class="blog-entry-meta">
+            <span class="blog-entry-category">{post.data.category}</span>
+            <time datetime={post.data.publishedAt}>
+              {formatDate(post.data.publishedAt)}
+            </time>
+            <span>{readingTime}</span>
+          </div>
+          <div class="blog-entry-body">
+            <h2>
+              <a href={href}>{post.data.title}</a>
+            </h2>
+            {post.data.chineseTitle && (
+              <p class="blog-entry-zh" lang="zh-CN">
+                {post.data.chineseTitle}
+              </p>
+            )}
+            <p class="blog-entry-summary">{post.data.description}</p>
+            <a class="blog-read-link" href={href}>
+              Read article
+            </a>
+          </div>
+        </article>
+      );
+    })}
+  </section>
+</BlogLayout>

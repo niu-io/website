@@ -27,6 +27,8 @@ jobs:
       - run: pnpm build
       - name: Verify root mounted website artifact
         run: |
+          test -f dist/blog/index.html
+          test -f dist/blog/why-niu/index.html
           test -f dist/compare/index.html
           test -f dist/compare/new-api/index.html
           test -f dist/compare/openrouter/index.html

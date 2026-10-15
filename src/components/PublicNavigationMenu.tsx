@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { IconMenu2, IconSearch, IconDeviceDesktop, IconSun, IconMoon } from '@tabler/icons-react';
 import { Button } from './ui/button';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuLabel, DropdownMenuRadioGroup, DropdownMenuRadioItem } from './ui/dropdown-menu';
-import navigation from '../content/public-navigation.json';
+import navigation from '../content/website-navigation';
 type Theme='system'|'light'|'dark';
 function read():Theme {try{const value=localStorage.getItem('niu-dashboard-theme');return value==='dark'||value==='light'?value:'system';}catch{return 'system';}}
 export default function PublicNavigationMenu({path}:{path:string}) {

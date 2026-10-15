@@ -6,8 +6,24 @@ import '../styles/global.css';
 import '../styles/compare-ui.css';
 import '../styles/public-header.css';
 import SiteHeader from '../components/SiteHeader.astro';
+import { getCollection } from 'astro:content';
+import '../styles/landing-blog.css';
 import LandingContent from '../components/LandingContent';
 import { links } from '../content/landing';
+const latestPosts = (await getCollection('blog'))
+  .sort((a, b) => b.data.publishedAt.localeCompare(a.data.publishedAt))
+  .slice(0, 3)
+  .map(({ id, data, body }) => ({
+    href: `/blog/${id}/`,
+    title: data.title,
+    description: data.description,
+    category: data.category,
+    publishedAt: data.publishedAt,
+    dateLabel: new Date(`${data.publishedAt}T00:00:00Z`).toLocaleDateString('en-US', {
+      year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC',
+    }),
+    readingTime: data.readingTime ?? `${Math.max(1, Math.round((body ?? '').trim().split(/\s+/).filter(Boolean).length / 220))} min read`,
+  }));
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const asset = (path: string) => `${base}/${path}`;
 const title = 'Niu — Model access, clear usage and accountable spending';
@@ -38,6 +54,6 @@ const canonical = new URL(`${base}/`, Astro.site);
 
 <body>
 <a class="skip-link" href="#main">Skip to content</a><SiteHeader />
-<LandingContent />
-<footer class="container footer"><div><a class="wordmark" href="/" aria-label="Niu home"><img src={asset('site-assets/brand/niu-mark.png')} alt="" width="28" height="28"/><span>Niu</span></a><p>Model access with transparent usage and billing.</p></div><div class="footer-links"><a href="/models/">Models</a><a href="/workspaces/default/">Console</a><a href="/docs/">Documentation</a><a href={links.repo}>GitHub</a><a href={`${links.repo}/blob/main/THIRD-PARTY-NOTICES.md`}>Licenses & attribution</a><a href="https://github.com/niu-io/website">Website source</a></div></footer>
+<LandingContent latestPosts={latestPosts} />
+<footer class="container footer"><div><a class="wordmark" href="/" aria-label="Niu home"><img src={asset('site-assets/brand/niu-mark.png')} alt="" width="28" height="28"/><span>Niu</span></a><p>Model access with transparent usage and billing.</p></div><div class="footer-links"><a href="/models/">Models</a><a href="/workspaces/default/">Dashboard</a><a href="/docs/">Documentation</a><a href="/blog/why-niu/">Why Niu?</a><a href="/blog/">Blog</a><a href="/compare/">Compare</a><a href={links.repo}>GitHub</a><a href={`${links.repo}/blob/main/THIRD-PARTY-NOTICES.md`}>Licenses & attribution</a><a href="https://github.com/niu-io/website">Website source</a></div></footer>
 </body></html>
