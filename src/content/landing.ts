@@ -1,34 +1,114 @@
 // Operator positioning; capability claims remain bounded by current supported interfaces.
 export const links = {
- repo: 'https://github.com/niu-io/niu', quickstart: '/docs/getting-started/',
- deployment: '/docs/deployment/single-container/', api: '/docs/api/rest/',
- benchmark: '/docs/guides/gateway-benchmarks/',
- release: 'https://github.com/niu-io/niu/blob/main/docs/releases/first-release.md',
+  repo: 'https://github.com/niu-io/niu',
+  quickstart: '/docs/getting-started/',
+  deployment: '/docs/deployment/single-container/',
+  api: '/docs/api/rest/',
+  benchmark: '/docs/guides/gateway-benchmarks/',
+  compare: '/compare/',
+  release: 'https://github.com/niu-io/niu/blob/main/docs/releases/first-release.md',
 };
+
+export const pillars = [
+  {
+    index: '01',
+    metric: '3,239 RPS · 31.5 ms p99',
+    title: 'Rust gateway data plane',
+    detail: '10.7× LiteLLM Proxy & 3.7× New API peak throughput at c = 64, idling at 18.2 MB RSS with ACID PostgreSQL persistence.',
+  },
+  {
+    index: '02',
+    metric: 'Supply ≠ Customer Tariff',
+    title: 'Three-way financial isolation',
+    detail: 'Price customer workspaces independently of Provider offers. Keep procurement rates private in platform administration.',
+  },
+  {
+    index: '03',
+    metric: 'Operation → Attempt → Charge',
+    title: 'Attempt-level request evidence',
+    detail: 'Trace every call across route pool candidates, upstream attempts, token counts, and explicit settled vs. unresolved charge states.',
+  },
+  {
+    index: '04',
+    metric: 'API + Catalog + Generations',
+    title: 'Complete self-hosted product',
+    detail: 'Serve OpenAI/Anthropic endpoints, a public model catalog, workspace budget caps, and saved Chat & Seedance Video workspaces.',
+  },
+];
+
 export const capabilities = [
- {title:'Operate your model supply.',description:'Manage Providers, server-side credentials and model mappings. Configure route priorities and weights behind customer-facing model aliases.',label:'Models & routing',href:'/docs/configuration/models/'},
- {title:'Investigate service delivery.',description:'Follow request status, timing and recorded attempts. Keep uncertain execution visible when the upstream outcome is not confirmed.',label:'Request evidence',href:'/docs/concepts/execution-observation/'},
- {title:'Keep your accounts clear.',description:'Manage customer tariffs independently of Provider offers. Keep customer charges separate from procurement costs and Provider earnings, with explicit unresolved amounts.',label:'Usage & billing',href:'/docs/concepts/performance-and-cost/'},
- {title:'Bound customer spending.',description:'Use workspace and API-key caps alongside shared company funds. Outstanding reservations count toward supported limits before more work is admitted.',label:'Access & limits',href:'/docs/security/overview/'},
- {title:'Help customers get started.',description:'Offer a model catalog, compatible APIs and generated references. Customers use scoped workspace keys while upstream secrets stay on your server.',label:'API & SDK',href:'/docs/guides/api-quickstart/'},
- {title:'Give customers a place to work.',description:'Provide saved Chat and Video sessions, supported video job tracking, and authorized preview or download of available results.',label:'Generations',href:'/docs/reference/generations/'},
+  {
+    number: '01',
+    title: 'Route pools & Provider supply',
+    description: 'Bind customer-facing model aliases to weighted, prioritized Provider mappings while keeping upstream credentials server-side.',
+    label: 'Models & routing',
+    href: '/docs/configuration/models/',
+  },
+  {
+    number: '02',
+    title: 'Attempt-level request logs',
+    description: 'Inspect every attempt, status code, TTFT, and token count. Uncertain mid-stream disconnects stay explicit instead of silently zeroed.',
+    label: 'Request evidence',
+    href: '/docs/concepts/execution-observation/',
+  },
+  {
+    number: '03',
+    title: 'Independent customer tariffs',
+    description: 'Decouple workspace selling prices from Provider purchase offers so customer bills never expose your procurement costs or margins.',
+    label: 'Usage & billing',
+    href: '/docs/concepts/performance-and-cost/',
+  },
+  {
+    number: '04',
+    title: 'Pre-dispatch spending holds',
+    description: 'Enforce company, workspace, and API-key spending caps before upstream dispatch—counting in-flight reservations against active limits.',
+    label: 'Access & limits',
+    href: '/docs/security/overview/',
+  },
+  {
+    number: '05',
+    title: 'Drop-in OpenAI & Anthropic APIs',
+    description: 'Connect existing SDKs and coding agents (Claude Code, Codex) via /v1/chat/completions, /v1/responses, and scoped /v1/messages.',
+    label: 'API & SDK',
+    href: '/docs/guides/api-quickstart/',
+  },
+  {
+    number: '06',
+    title: 'Saved Chat & Video workspaces',
+    description: 'Give customers persistent backend-saved Chat sessions and asynchronous Seedance video job tracking with authorized result downloads.',
+    label: 'Generations',
+    href: '/docs/reference/generations/',
+  },
 ];
+
 export const faqs = [
- {question:'Who is Niu for?',answer:'Niu is for people building a business on model aggregation and forwarding, from independent operators to platform teams. It brings model delivery, financial accounting and customer workflows together on an open-source foundation.'},
- {question:'Why build another aggregation platform?',answer:'Aggregation already has mature tools. Niu focuses on the operator’s complete business: delivering requests, keeping customer charges and supply accounts distinct, and giving customers a clear, convenient experience. Open-source control and commercial operating quality are the guiding commitments.'},
- {question:'Does Niu guarantee profit or lower prices?',answer:'No. Your economics depend on authorized supply, agreed rates, customer prices, service quality and operating costs. Niu separates pricing and accounting responsibilities; it does not guarantee margin, demand or a universal discount.'},
- {question:'How does Niu perform compared with New API and LiteLLM Proxy?',answer:'In our reproducible ai-gateway-bench suite (0ms mock upstream on Apple M4 with PostgreSQL 17.11), Niu v0.2.4 sustains 3,238.7 RPS with 31.54 ms p99 latency at 64 concurrent workers (3.7x New API peak and 10.7x LiteLLM Proxy), streams 235.9 concurrent SSE responses/sec (9,436 tokens/s), and idles at 18.2 MB RSS while persisting ACID PostgreSQL admission and completion records. Always qualify capacity and recovery against your own deployment and workload.'},
- {question:'Can customers use their existing model clients?',answer:'For supported routes, customers can point an OpenAI-compatible client at your gateway, use a workspace API key and select a configured model alias. Protocol and model capabilities depend on the route; the guides describe their current boundaries.'},
- {question:'Can I self-host the public product?',answer:'Yes. Run the public gateway, dashboard, catalog and docs with PostgreSQL. Community operation does not require private source or an enterprise license. Model calls still reach configured upstream services. Niu-owned public code is MIT licensed; reused modules retain their licenses and attribution.'},
- {question:'Can customers see my procurement prices?',answer:'Customer workspace reports and responses expose customer charges, not Provider purchase prices or platform margins. Procurement belongs in platform administration. Provider access is scoped to that Provider’s agreed rates and settlements.'},
- {question:'What is ready to evaluate?',answer:'The development build includes model routing, workspace access and spending controls, request and customer-charge records, and saved Chat and Video interfaces. Complete release acceptance, commercial supply, merchant payments, Provider settlement, video lifecycle and broader performance and recovery qualification remain in progress. Check the release matrix for current scope.'},
- {question:'What customer content does Niu retain?',answer:'Niu stores request metadata and available usage/billing evidence. Inference content has bounded 24-hour retention by default with an explicit opt-out. Saved generation data and result availability follow their documented policies. Credentials remain server-side; see the security and observability guides for scope and access details.'},
+  {
+    question: 'How does Niu differ from LiteLLM Proxy and New API?',
+    answer: 'LiteLLM Proxy is a Python developer proxy (~302 RPS at c=64, 158 MB idle RSS); New API is a Go channel relay (~866 RPS peak, shared user/channel quota model). Niu is a Rust AI gateway (3,238.7 RPS at c=64, 18.2 MB idle RSS) purpose-built for model API businesses—separating Provider offers from customer tariffs, enforcing pre-dispatch spending holds, and shipping saved Chat and Video workspaces.',
+  },
+  {
+    question: 'Can customers see my upstream Provider prices or margins?',
+    answer: 'No. Customer workspace reports, logs, and API responses only expose customer-facing tariffs and charges. Provider purchase rates, procurement budgets, and platform margins are restricted to platform administration.',
+  },
+  {
+    question: 'What happens when an upstream stream drops mid-response?',
+    answer: 'Niu records pre-dispatch admission in PostgreSQL and never blindly replays an uncertain request that may have already executed upstream. If usage evidence is missing after a disconnect, the attempt and charge remain explicitly unresolved rather than fabricating a $0 bill.',
+  },
+  {
+    question: 'Can I self-host the entire stack without private dependencies?',
+    answer: 'Yes. The public gateway, dashboard, model catalog, and documentation run together against a single PostgreSQL database. Niu-owned public code is MIT-licensed and requires no external license service.',
+  },
+  {
+    question: 'What is ready to evaluate today vs. still under qualification?',
+    answer: 'Model route pools, workspace API keys, spending caps, request/charge accounting, and saved Chat & Video interfaces are available in the development build. Full first-release qualification across all commercial payment, Provider settlement, and recovery gates is tracked in the release matrix.',
+  },
 ];
+
 export const requestExample = `curl http://localhost:2555/v1/chat/completions \\
   -H "Authorization: Bearer $NIU_API_KEY" \\
   -H "Content-Type: application/json" \\
   -d '{
-    "model": "YOUR_MODEL_ALIAS",
-    "messages": [{"role": "user", "content": "Hello"}],
-    "max_tokens": 64
+    "model": "claude-sonnet-4",
+    "messages": [{"role": "user", "content": "Summarize our Q3 API latency."}],
+    "stream": true
   }'`;
