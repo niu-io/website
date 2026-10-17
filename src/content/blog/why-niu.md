@@ -1,91 +1,67 @@
 ---
 title: "Why Niu? Build a Model API Business People Trust"
-chineseTitle: "为什么选择 Niu 牛元？让模型生意，赢得客户信任"
-description: "For people building a business on model aggregation: reliable delivery, clear accounts, and a service customers feel confident using. Open-source foundations, commercial discipline."
+description: "Reliable model delivery, clear accounts, and customers who can help themselves. Why we are building Niu for people operating model API services."
 publishedAt: "2026-10-15"
-readingTime: "7 min read"
+updatedAt: "2026-10-17"
 category: "Product"
 author: "Niu"
 ---
 
-Your customer sends a request. The model responds. You earn the difference between what you charge and what it costs to deliver.
+Connecting a customer to a model is the beginning of an API business. Keeping that customer takes more: requests that arrive reliably, bills you can explain, and a service they can use without asking you for help.
 
-That is the simple version of a model API business.
+An upstream connection drops halfway through a response. Several requests compete for the last of a customer's balance. A customer asks why a timed-out call appears on their bill. These are everyday operating questions, and they cross the boundaries between routing, accounting, and support.
 
-The real version includes an upstream service that stops responding during a stream. Several requests competing for the last of a customer's balance. A price change halfway through the day. A customer asking why they were charged for a call that timed out. A new user who wants to try your service but cannot work out which model to choose or how to get started.
+Niu is being built for people who operate model aggregation and forwarding services. Our goal is to bring reliable delivery, clear financial records, and customer self-service into one product, on an open-source foundation you can run yourself.
 
-Those moments decide whether aggregation becomes a lasting business. You need to deliver the service, understand the accounts, and give customers a reason to come back.
+## Deliver a service you can account for
 
-**Niu is for people who want to build a business on model aggregation and forwarding. Our goal is to combine the openness and engineering quality of open-source software with the operational completeness of a commercial platform.**
+Your customers buy model access from you. When a request fails, they need you to explain what happened, even when the problem began upstream.
 
-## In a crowded market, another endpoint is not enough
+Niu separates the model names your applications use from the Provider credentials and model mappings behind them. Workspace keys give applications scoped access while upstream credentials stay on the server. Configured route pools let operators organize authorized supply. A route being configured does not prove that its model is available; operators still need to qualify the routes they offer.
 
-There are already strong ways to aggregate model access. [LiteLLM](https://docs.litellm.ai/docs/proxy/virtual_keys) documents virtual keys and spend management. [New API](https://github.com/QuantumNous/new-api) provides model aggregation and distribution. [OpenRouter](https://openrouter.ai/docs/quickstart) offers hosted access, with [logs for investigating generations](https://openrouter.ai/docs/guides/features/logs).
+Request history connects the customer request to its recorded attempts, reported usage, timing, and charge state. That gives support a place to begin: was the request rejected before dispatch, did an upstream service return an error, or did the connection end with execution still uncertain?
 
-A unified API, a list of models, or a usage chart cannot explain why Niu should exist. These are capabilities an operator can already find.
+That distinction matters for retries. Sending an uncertain request again can repeat upstream work and create another charge. Niu preserves that uncertainty; its current failover support is bounded. See the [routing and model configuration guide](/docs/configuration/models/) and [request evidence guide](/docs/concepts/execution-observation/) for the supported behavior.
 
-The question behind Niu is more specific: **can someone build a model API business on an open foundation without having to assemble the service delivery, financial operations, and customer experience into a product themselves?**
+Gateway performance matters too. We have published a [Niu, New API, and LiteLLM Proxy benchmark](/docs/guides/gateway-benchmarks/) covering throughput, tail latency, streaming, simulated multi-turn sessions, and memory. It records historical versions against a deterministic mock upstream. Current end-to-end performance remains unverified by those measurements; qualify capacity and recovery with your actual workload.
 
-Our answer has to be demonstrated across all three. A fast gateway with confusing bills loses trust. Accurate accounts cannot rescue unreliable delivery. Both fall short if customers struggle to use the service. Niu's purpose is to make those responsibilities work together.
+## Know what was charged and what is still unresolved
 
-## Your traffic is your business. The gateway must earn its place.
+A usage chart alone cannot explain a model API business. Customer charges, upstream procurement costs, and Provider earnings answer different questions. A settled debit and an amount still waiting for evidence must remain distinguishable.
 
-When customers pay you for model access, they hold your platform responsible for the request. They do not have a relationship with every upstream service you use.
+Niu manages customer tariffs separately from Provider offers. Supported priced requests reserve spending capacity before dispatch, so concurrent work counts toward the applicable limits. Saved pricing context and request evidence provide a basis for explaining the resulting charge. Missing usage remains unknown rather than becoming an invented zero.
 
-That makes aggregation an operating responsibility. You need to know which routes can serve a model, which credentials are eligible, where a request was sent, and what happened when it failed. A long model list means little if the route behind the model cannot deliver the capability you advertised.
+Consider a response that completes upstream while accounting is interrupted. Repeating the inference is not an accounting repair. Recovery needs to work from durable request evidence. This is why Niu uses PostgreSQL for saved records and keeps delivery state separate from charge settlement.
 
-Niu brings Provider credentials, model mappings, and configured routing together. Applications use model aliases and scoped workspace keys, while upstream credentials remain on the server. Recorded attempts remain distinguishable from the customer's request, giving operators evidence for investigating delivery problems.
+Permissions follow the same boundary. Customers see their usage and customer-facing charges. Procurement rates and platform margins belong in platform administration. A Provider should see only its own agreed rates and settlements. Clear customer bills do not require exposing your commercial arrangements.
 
-Performance matters because gateway overhead and resource use affect the service you can afford to run. Reliability matters because failures affect both the customer and your accounts. Niu uses a Rust gateway with an asynchronous request path; that is an engineering choice in support of these goals. It is not a substitute for measurements under real traffic.
+The [usage and cost guide](/docs/concepts/performance-and-cost/) describes these records and their limits. They are tools for running and reconciling the service; they do not guarantee profitability or complete commercial readiness.
 
-The same discipline applies to retries. When an upstream response is uncertain, sending the request again can repeat work and create another liability. Niu's design preserves execution uncertainty instead of assuming every failed connection is safe to replay. Current failover support is bounded; broad automatic failover is not a claim we make.
+## Give customers a service they can use themselves
 
-For an operator, the value is a service you can inspect and improve: trace a problem to its request and attempts, distinguish configuration from actual availability, and qualify the routes on which your customers depend. See the [model configuration guide](/docs/configuration/models/) and [execution observation guide](/docs/concepts/execution-observation/).
+Each confusing setup step becomes a support conversation. Each unexplained charge makes the next payment harder to earn.
 
-## Revenue is not profit. A balance is not a complete set of accounts.
+Niu brings the model catalog, API documentation, workspace keys, spending controls, and request records together. Customers can connect applications through supported model APIs, set workspace and key spending limits, and investigate recorded usage and charges.
 
-A growing request count can hide an unhealthy business. You need to distinguish what a customer owes, what upstream delivery costs, what is owed to a Provider, and which amounts are still unresolved.
+Saved Chat and Video workflows also give customers a way to use supported models directly. Sessions and messages are stored on the backend. Supported video workflows retain inputs and job history, track status, and provide authorized access to available results. Generation success and result availability remain separate: an expired download does not mean the model failed to generate it.
 
-Consider a request that completes upstream just as the gateway loses its accounting connection. The customer may have received useful output, but the debit has not yet been recorded. Or consider several requests arriving while the account has only enough spending capacity for some of them. Checking yesterday's settled total does not account for work already in flight.
+Payment must connect to this experience as well: a customer pays, receives usable balance, and can find the record afterward. A payment adapter by itself does not prove that a merchant is active or funds have arrived. That complete journey belongs in commercial qualification, alongside delivery and accounting.
 
-Niu's accounting design separates customer charges, upstream procurement costs, and Provider earnings. Customer tariffs are managed independently of Provider offers. Integer monetary units avoid using floating-point approximations for money, and reservations account for supported liabilities before dispatch. Original pricing context and request evidence provide a basis for explaining and reconciling charges.
+## An open foundation you can operate
 
-These details serve business questions: what did we sell, what do we owe, and what still needs attention? An unresolved amount must remain visible as unresolved; missing usage must not become an invented zero. Recovery should settle from durable evidence rather than asking an operator to guess what happened.
+The public Niu product includes the gateway, dashboard, catalog, and documentation, and runs with PostgreSQL. Community operation does not require private source or a license service. Niu-owned public code is MIT licensed; reused modules retain their own licenses and attribution.
 
-Clear accounts also require clear permissions. Your customers need their prices, consumption, and charges. Your procurement rates and platform margins belong in platform administration. Provider access should expose only that Provider's agreed rates and settlements. Customer confidence should never require exposing your commercial arrangements.
+That gives operators a foundation they can inspect, deploy, and adapt. Commercial and enterprise extensions use explicit plugin boundaries. Publishing source is one part of the promise; usable workflows, qualified integrations, and dependable operation still have to be demonstrated.
 
-This is why accounting belongs in the product's foundation. It affects whether you can price responsibly, control exposure, answer disputes, and understand the business you are running. The [usage and cost guide](/docs/concepts/performance-and-cost/) explains the customer-facing records and their boundaries.
+## Evaluate the whole customer journey
 
-## Customers need confidence before they become regular users
+Niu is available for evaluation. Tagged releases do not mean the first feature-complete release has finished qualification. The [release acceptance matrix](/docs/releases/first-release/) tracks the remaining model, performance, recovery, payment, Provider settlement, and video lifecycle work.
 
-Your customers are evaluating more than a model response. Can they get started without asking you for help? Do they know what they will pay? Can they limit an application's spending? If something goes wrong, can they find a useful explanation?
+Start with one authorized model route and one customer workspace:
 
-Every unclear step becomes work for your support team. Every unexplained charge makes the next top-up harder to earn.
+1. [Deploy Niu](/docs/deployment/single-container/) and configure your Provider credentials and model mapping.
+2. Issue a workspace key and make a [real model request](/docs/guides/api-quickstart/).
+3. Follow the request through its saved usage, charge, and spending records.
+4. Check the experience your customer receives, including failures and recovery.
 
-Niu brings a model catalog, API documentation, workspace keys, spending controls, request records, and saved generation workflows into the same product. Compatible model APIs help customers connect existing applications on supported routes. Workspace and key limits give them boundaries around application spending. Request history connects reported usage with customer charges.
-
-Saved Chat and Video workflows let customers use supported models directly and return to their work. Sessions and messages are backed by server storage. For supported video jobs, submission, status, original inputs, and authorized access to available results belong together. Job success and result availability remain separate, so an expired output does not masquerade as a failed generation.
-
-Trust also depends on restraint: keep credentials protected, enforce customer boundaries on the backend, explain what is retained, and say when evidence is unavailable. The result should be a platform customers can understand and operate for themselves, with records that help you support them when they need it.
-
-Payment is part of that experience too. Customers need a clear path from payment to usable balance and an accurate record afterward. Payment adapters alone do not establish an active merchant or prove receipt of funds; that complete journey is part of commercial qualification.
-
-## Open source should be a foundation for your business
-
-If you build a business on Niu, you should be able to inspect the software you depend on, deploy the public core independently, and adapt it to your operation.
-
-Niu's public product includes the gateway, dashboard, catalog, and documentation, and runs with PostgreSQL. Community operation does not require private source or a license service. Niu-owned public code is MIT licensed; reused modules retain their own licenses and attribution.
-
-Commercial completeness brings another responsibility: usable workflows, qualified integrations, dependable operation, and support for the people running the platform. Publishing source code does not finish those jobs. Niu aims to make the public foundation useful on its own while supporting commercial and enterprise extensions through explicit boundaries.
-
-This is what we mean by open-source foundations and commercial discipline. The source gives operators control. The product must help them turn that control into a service customers are willing to pay for.
-
-## Judge Niu by the business you can actually run
-
-The standard is concrete: can you deliver requests reliably at the capacity you need, reconcile the resulting money, and let customers use the platform with confidence?
-
-Niu's development build is available for evaluation. The first release remains under qualification, including model conformance, sustained performance and recovery, commercial supply, payments, Provider settlement, and the complete video lifecycle. The design is not a completed production guarantee; the [release acceptance matrix](/docs/releases/first-release/) records the current scope.
-
-Start with the [deployment guide](/docs/deployment/single-container/), connect a route, and make a [real model request](/docs/guides/api-quickstart/). Follow delivery through to the customer charge. Evaluate the customer journey as well as the gateway.
-
-That is the business Niu is being built to support: one you can operate with clear accounts, and one your customers can trust.
+Compare that journey with the service you want to run. That is the standard Niu should earn: delivery you can investigate, accounts you can explain, and customers who can use your service with confidence.

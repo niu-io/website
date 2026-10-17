@@ -1,7 +1,7 @@
 ---
 import { getCollection, render } from "astro:content";
 import BlogLayout from "../../layouts/BlogLayout.astro";
-import { Button } from "../../components/ui/button";
+import BlogArticleFooter from "../../components/BlogArticleFooter";
 
 export async function getStaticPaths() {
   const posts = await getCollection("blog");
@@ -39,21 +39,26 @@ const readingTime = getReadingTime(post.body, post.data.readingTime);
   description={post.data.description}
   ogType="article"
 >
-  <article>
+  <article class="blog-article">
     <header class="blog-article-header">
       <a class="blog-back" href="/blog/">
         ← All articles
       </a>
       <div class="blog-article-meta">
         <span class="blog-entry-category">{post.data.category}</span>
-        <span>·</span>
         <time datetime={post.data.publishedAt}>
           {formatDate(post.data.publishedAt)}
         </time>
-        <span>·</span>
         <span>{readingTime}</span>
-        <span>·</span>
         <span>{post.data.author}</span>
+        {post.data.updatedAt && (
+          <span>
+            Updated{" "}
+            <time datetime={post.data.updatedAt}>
+              {formatDate(post.data.updatedAt)}
+            </time>
+          </span>
+        )}
       </div>
       <h1>{post.data.title}</h1>
       {post.data.chineseTitle && (
@@ -68,21 +73,6 @@ const readingTime = getReadingTime(post.body, post.data.readingTime);
       <Content />
     </div>
 
-    <footer class="blog-article-footer">
-      <div>
-        <h2>Build your model API business</h2>
-        <p>
-          Evaluate model delivery, clear accounts, and the experience you can offer customers.
-        </p>
-      </div>
-      <div class="blog-article-actions">
-        <Button asChild>
-          <a href="/docs/guides/api-quickstart/">Get started</a>
-        </Button>
-        <Button asChild variant="outline">
-          <a href="https://github.com/niu-io/niu">View on GitHub</a>
-        </Button>
-      </div>
-    </footer>
+    <BlogArticleFooter />
   </article>
 </BlogLayout>

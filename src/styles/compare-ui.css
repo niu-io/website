@@ -1,7 +1,7 @@
 @layer theme, base, components, utilities;
-@import 'tailwindcss/theme.css' layer(theme);
-@import 'tailwindcss/preflight.css' layer(base);
-@import 'tailwindcss/utilities.css' layer(utilities);
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/preflight.css" layer(base);
+@import "tailwindcss/utilities.css" layer(utilities);
 @source '../components/ui';
 @source '../components/CompareMatrix.tsx';
 @source '../components/CompareOverview.tsx';
@@ -33,7 +33,15 @@
   --radius-md: var(--control-radius, var(--radius));
 }
 
-@layer base { * { border-color: var(--border); } }
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+}
 
 @source '../components/PublicHeader.tsx';
 @source '../components/LandingContent.tsx';
+
+@source '../components/CompareBenchmark.tsx';
+
+@source '../components/BlogArticleFooter.tsx';

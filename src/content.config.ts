@@ -10,6 +10,7 @@ const blog = defineCollection({
     chineseTitle: z.string().optional(),
     description: z.string(),
     publishedAt: z.string(),
+    updatedAt: z.string().optional(),
     readingTime: z.string().optional(),
     category: z.string().default("Architecture"),
     author: z.string().default("Niu Engineering"),

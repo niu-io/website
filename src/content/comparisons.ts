@@ -121,9 +121,9 @@ export const comparisons = [
       },
       {
         "category": "Setup",
-        "feature": "Measured proxy overhead (ai-gateway-bench, c=64)",
-        "niu": "3,238.7 RPS · 31.54 ms p99 · 18.2 MB idle RSS (Rust + ACID PostgreSQL batching)",
-        "alternative": "865.6 RPS peak · 135.73 ms p99 · 37.4 MB idle RSS (Go + cached token/SQL logs)"
+        "feature": "Performance benchmark archive",
+        "niu": "v0.2.4 historical synthetic run; see the performance section below",
+        "alternative": "45fbb14 historical synthetic run; current-release performance unverified"
       }
     ],
     "decisions": [
