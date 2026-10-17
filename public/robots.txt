@@ -1,6 +1,8 @@
 User-agent: *
 Allow: /
 Disallow: /admin/
+Disallow: /api/plugins/v1/
+Disallow: /api/v1/
 Disallow: /catalog/v1/
 Disallow: /enterprise/api/
 Disallow: /v1/

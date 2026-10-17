@@ -3,5 +3,5 @@ import publicNavigation from './public-navigation.json';
 // Website entry points; shared product navigation stays in its upstream snapshot.
 export default [
   { label: 'Why Niu?', href: '/blog/why-niu/' },
-  ...publicNavigation,
+  ...publicNavigation.filter(item => item.label !== 'Why Niu?'),
 ];
