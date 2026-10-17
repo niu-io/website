@@ -33,7 +33,7 @@ export default function ComparisonDetail({
       <Table className="compare-table">
         <TableCaption>
           Niu targets lower-cost model access and transparent billing. Savings
-          depend on the model, workload and qualified Supplier offer; this
+          depend on the model, workload and qualified Provider offer; this
           feature comparison is not a verified price comparison.
         </TableCaption>
         <TableHeader>

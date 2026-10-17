@@ -3,12 +3,12 @@ export const comparisons = [
   {
     "slug": "new-api",
     "name": "New API",
-    "intro": "New API is a straightforward way to try a model gateway. Choose Niu when model access becomes part of your business: manage Suppliers, application budgets, usage and customer billing in one place, with video jobs and saved generation history alongside text APIs. Niu is built for ongoing operation, beyond a first API call.",
+    "intro": "New API is a straightforward way to try a model gateway. Choose Niu when model access becomes part of your business: manage Providers, application budgets, usage and customer billing in one place, with video jobs and saved generation history alongside text APIs. Niu is built for ongoing operation, beyond a first API call.",
     "rows": [
       {
         "category": "Access & billing",
         "feature": "From experimentation to ongoing operation",
-        "niu": "Supplier management, company/workspace/key budgets, request accounting and text/video generation management",
+        "niu": "Provider management, company/workspace/key budgets, request accounting and text/video generation management",
         "alternative": "Straightforward channel configuration, API keys and a playground for getting started"
       },
       {
@@ -26,7 +26,7 @@ export const comparisons = [
       {
         "category": "Access & billing",
         "feature": "Pricing",
-        "niu": "Customer tariffs are separate from Supplier offers; unresolved charges stay unknown",
+        "niu": "Customer tariffs are separate from Provider offers; unresolved charges stay unknown",
         "alternative": "Expression pricing and cache accounting"
       },
       {
@@ -50,7 +50,7 @@ export const comparisons = [
       {
         "category": "Model access",
         "feature": "Upstream credentials",
-        "niu": "Supplier businesses with separate credentials and model mappings",
+        "niu": "Provider businesses with separate credentials and model mappings",
         "alternative": "Channels; multiple upstream keys"
       },
       {
@@ -147,9 +147,9 @@ export const comparisons = [
       },
       {
         "need": "Separate model supply from customer pricing",
-        "niu": "Supplier identity, credentials and model mappings; customer tariffs independent of Supplier offers",
+        "niu": "Provider identity, credentials and model mappings; customer tariffs independent of Provider offers",
         "alternative": "Channels, model mappings and expression pricing",
-        "choice": "Choose Niu for a Supplier-to-customer pricing workflow"
+        "choice": "Choose Niu for a Provider-to-customer pricing workflow"
       },
       {
         "need": "Explain an application\u2019s model bill",
@@ -180,7 +180,7 @@ export const comparisons = [
         "url": "https://github.com/QuantumNous/new-api#capabilities"
       },
       {
-        "label": "Niu routes and Suppliers",
+        "label": "Niu routes and Providers",
         "url": "/docs/configuration/models/"
       },
       {
@@ -204,7 +204,7 @@ export const comparisons = [
   {
     "slug": "openrouter",
     "name": "OpenRouter",
-    "intro": "OpenRouter gets you started with a hosted model catalog. Choose Niu when you need to manage model access as an ongoing business workflow: Suppliers, application budgets, customer billing, request records and video generation management. OpenRouter can remain an upstream service behind Niu.",
+    "intro": "OpenRouter gets you started with a hosted model catalog. Choose Niu when you need to manage model access as an ongoing business workflow: Providers, application budgets, customer billing, request records and video generation management. OpenRouter can remain an upstream service behind Niu.",
     "rows": [
       {
         "category": "Access & billing",
@@ -221,7 +221,7 @@ export const comparisons = [
       {
         "category": "Access & billing",
         "feature": "Pricing",
-        "niu": "Customer tariffs are separate from Supplier offers; unresolved charges stay unknown",
+        "niu": "Customer tariffs are separate from Provider offers; unresolved charges stay unknown",
         "alternative": "Catalog charges paid with credits; BYOK is also supported"
       },
       {
@@ -263,7 +263,7 @@ export const comparisons = [
       {
         "category": "Model access",
         "feature": "Upstream credentials",
-        "niu": "Supplier businesses with separate credentials and model mappings",
+        "niu": "Provider businesses with separate credentials and model mappings",
         "alternative": "OpenRouter credits or your Provider keys (BYOK)"
       },
       {
@@ -369,7 +369,7 @@ export const overviewRows = [
   {
     "category": "Access & billing",
     "feature": "From experimentation to ongoing operation",
-    "niu": "Supplier management, company/workspace/key budgets, request accounting and text/video generation management",
+    "niu": "Provider management, company/workspace/key budgets, request accounting and text/video generation management",
     "newApi": "Straightforward channel configuration, API keys and a playground for getting started",
     "openRouter": "Hosted model catalog, Provider routing and API-key limits"
   },
@@ -397,7 +397,7 @@ export const overviewRows = [
   {
     "category": "Access & billing",
     "feature": "Pricing",
-    "niu": "Customer tariffs are separate from Supplier offers; unresolved charges stay unknown",
+    "niu": "Customer tariffs are separate from Provider offers; unresolved charges stay unknown",
     "newApi": "Expression pricing and cache accounting",
     "openRouter": "Catalog charges paid with credits; BYOK is also supported"
   },
@@ -432,7 +432,7 @@ export const overviewRows = [
   {
     "category": "Model access",
     "feature": "Upstream credentials",
-    "niu": "Supplier businesses with separate credentials and model mappings",
+    "niu": "Provider businesses with separate credentials and model mappings",
     "newApi": "Channels; multiple upstream keys",
     "openRouter": "OpenRouter credits or your Provider keys (BYOK)"
   },

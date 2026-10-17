@@ -10,7 +10,7 @@ export default function CompareOverview() {
         <h1>Niu, New API and OpenRouter</h1>
         <p>
           From your first model call to ongoing application operations: Niu
-          combines Supplier management, workspace budgets, transparent usage and
+          combines Provider management, workspace budgets, transparent usage and
           billing, and text/video generation management. Compare it with New API
           for a straightforward start and OpenRouter for hosted model access.
         </p>
