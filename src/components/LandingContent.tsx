@@ -1,7 +1,26 @@
-import { createElement, useState } from 'react';
+import { useRef, useState } from 'react';
+import { CountUp, useLandingMotion } from './landing-motion';
+import {
+  IconArrowRight,
+  IconBolt,
+  IconBrandGithub,
+  IconCoins,
+  IconLayoutDashboard,
+  IconListSearch,
+  IconMessageChatbot,
+  IconPlugConnected,
+  IconRoute,
+  IconScale,
+  IconServerBolt,
+  IconShieldLock,
+  IconTimeline,
+} from '@tabler/icons-react';
 import { Button } from './ui/button';
-import { links, pillars, capabilities, faqs, requestExample } from '../content/landing';
+import { links, pillars, capabilities, faqs, requestExample, heroStats } from '../content/landing';
 import { benchmarkSteps, benchmarkSuites } from '../content/benchmarks';
+
+const pillarIcons = [IconBolt, IconScale, IconTimeline, IconServerBolt];
+const capabilityIcons = [IconRoute, IconListSearch, IconCoins, IconShieldLock, IconPlugConnected, IconMessageChatbot];
 
 interface LandingPost {
   href: string;
@@ -30,42 +49,70 @@ const traceSpans = [
 export default function LandingContent({ latestPosts }: { latestPosts: LandingPost[] }) {
   const [activePreviewIndex, setActivePreviewIndex] = useState(0);
   const [activeSuiteIndex, setActiveSuiteIndex] = useState(0);
+  const mainRef = useRef<HTMLElement>(null);
+  useLandingMotion(mainRef);
+  const stagger = (i: number) => ({ '--i': i }) as React.CSSProperties;
 
   return (
-    <main id="main">
-      {/* 1. HERO + 4 CORE COMPETITIVE PILLARS + INTERACTIVE PRODUCT PREVIEW */}
-      <section className="hero container" aria-labelledby="hero-title">
-        <a className="release-link" href="#benchmark">
-          <span className="status-dot"></span>MIT Open Source · 3,239 RPS Rust Gateway · 10.7× LiteLLM
+    <main id="main" ref={mainRef}>
+      {/* 1. HERO + INTERACTIVE PRODUCT PREVIEW + 4 CORE COMPETITIVE PILLARS */}
+      <section className="hero-stage" aria-labelledby="hero-title">
+        <div className="hero-backdrop" aria-hidden="true">
+          <span className="hero-grid" />
+          <span className="hero-glow" />
+        </div>
+      <div className="hero container">
+        <a className="release-link hero-enter" style={stagger(0)} href="#benchmark">
+          <span className="release-tag">Benchmark</span>
+          <span>MIT open source · 3,239 RPS Rust gateway · 10.7× LiteLLM</span>
+          <IconArrowRight size={14} aria-hidden="true" />
         </a>
-        <h1 id="hero-title">
+        <h1 id="hero-title" className="hero-enter" style={stagger(1)}>
           Build and run your<br />
           <span className="accent">model API business.</span>
         </h1>
-        <p className="hero-description">
+        <p className="hero-description hero-enter" style={stagger(2)}>
           High-throughput Rust AI gateway with independent customer tariffs, attempt-level request evidence, and self-service Chat &amp; Video workspaces.
         </p>
-        <div className="actions">
-          <Button asChild size="lg" children={createElement('a', { href: links.quickstart }, 'Get started')} />
-          <Button asChild size="lg" variant="secondary" children={createElement('a', { href: links.compare }, 'Compare gateways')} />
-          <Button asChild size="lg" variant="secondary" children={createElement('a', { href: '/models/' }, 'Browse models')} />
+        <div className="actions hero-actions hero-enter" style={stagger(3)}>
+          <Button asChild size="lg" className="cta-primary">
+            <a href={links.dashboard}>
+              <IconLayoutDashboard aria-hidden="true" />
+              Open dashboard
+              <IconArrowRight className="cta-arrow" aria-hidden="true" />
+            </a>
+          </Button>
+          <Button asChild size="lg" variant="outline" className="cta-secondary">
+            <a href={links.quickstart}>Get started</a>
+          </Button>
+          <Button asChild size="lg" variant="ghost" className="cta-ghost">
+            <a href={links.repo}>
+              <IconBrandGithub aria-hidden="true" />
+              Star on GitHub
+            </a>
+          </Button>
         </div>
+        <p className="hero-sublinks hero-enter" style={stagger(4)}>
+          <a href={links.compare}>Compare gateways</a>
+          <span aria-hidden="true">·</span>
+          <a href="/models/">Browse models</a>
+          <span aria-hidden="true">·</span>
+          <a href="/blog/why-niu/">Why Niu?</a>
+        </p>
 
-        {/* 4 Core Competitive Advantages Strip */}
-        <div className="pillars-grid" aria-label="Core competitive advantages">
-          {pillars.map((pillar) => (
-            <article key={pillar.index} className="pillar-card">
-              <div className="pillar-top">
-                <span className="feature-number">{pillar.index}</span>
-                <span className="pillar-metric">{pillar.metric}</span>
-              </div>
-              <h3>{pillar.title}</h3>
-              <p>{pillar.detail}</p>
-            </article>
+        <dl className="hero-stats" aria-label="Measured gateway results">
+          {heroStats.map((stat, i) => (
+            <div key={stat.label} data-reveal style={stagger(i)}>
+              <dt>{stat.label}</dt>
+              <dd>
+                <CountUp value={stat.value} />
+              </dd>
+            </div>
           ))}
-        </div>
+        </dl>
 
         {/* Interactive Product UI Preview Window */}
+        <div className="preview-frame" data-reveal>
         <div className="product-preview" aria-label="Interactive Niu workspace preview">
           <aside className="mock-nav-rail" aria-label="Workspace navigation preview">
             <span className="mock-nav-home" title="Niu">
@@ -174,7 +221,7 @@ export default function LandingContent({ latestPosts }: { latestPosts: LandingPo
                         <div className="track">
                           <span
                             className={`bar bar-${i}`}
-                            style={{ '--offset': `${span.offset}%`, '--width': `${span.width}%` } as React.CSSProperties}
+                            style={{ '--offset': `${span.offset}%`, '--width': `${span.width}%`, '--i': i } as React.CSSProperties}
                           >
                             <span className="sr-only">{span.duration}</span>
                           </span>
@@ -366,17 +413,39 @@ export default function LandingContent({ latestPosts }: { latestPosts: LandingPo
 
             <div className="preview-caption">
               <span>Gateway · Workspace Dashboard · Model Catalog · Docs — served from one endpoint</span>
-              <a href="/workspaces/default/">
-                Open workspace dashboard <span aria-hidden="true">→</span>
-              </a>
+              <Button asChild size="sm" className="cta-primary cta-compact">
+                <a href={links.dashboard}>
+                  Open workspace dashboard
+                  <IconArrowRight className="cta-arrow" aria-hidden="true" />
+                </a>
+              </Button>
             </div>
           </div>
         </div>
+        </div>
+
+        {/* 4 Core Competitive Advantages */}
+        <div className="pillars-grid" aria-label="Core competitive advantages">
+          {pillars.map((pillar, index) => {
+            const PillarIcon = pillarIcons[index];
+            return (
+              <article key={pillar.index} className="pillar-card" data-reveal data-spotlight style={stagger(index)}>
+                <span className="pillar-icon" aria-hidden="true">
+                  <PillarIcon size={20} stroke={1.75} />
+                </span>
+                <span className="pillar-metric">{pillar.metric}</span>
+                <h3>{pillar.title}</h3>
+                <p>{pillar.detail}</p>
+              </article>
+            );
+          })}
+        </div>
+      </div>
       </section>
 
       {/* 2. PERFORMANCE BENCHMARK (VISUAL CARDS + VERDICT) */}
       <section className="section container benchmark-section" id="benchmark" aria-labelledby="benchmark-title">
-        <div className="benchmark-heading">
+        <div className="benchmark-heading" data-reveal>
           <div>
             <p className="eyebrow">AI GATEWAY PERFORMANCE BENCHMARK</p>
             <h2 id="benchmark-title">
@@ -389,8 +458,8 @@ export default function LandingContent({ latestPosts }: { latestPosts: LandingPo
           </p>
         </div>
         <ol className="benchmark-steps">
-          {benchmarkSteps.map((item) => (
-            <li key={item.step}>
+          {benchmarkSteps.map((item, index) => (
+            <li key={item.step} data-reveal style={stagger(index)}>
               <span>{item.step}</span>
               <div>
                 <strong>{item.title}</strong>
@@ -399,7 +468,7 @@ export default function LandingContent({ latestPosts }: { latestPosts: LandingPo
             </li>
           ))}
         </ol>
-        <div className="benchmark-demo">
+        <div className="benchmark-demo" data-reveal>
           <div className="benchmark-toolbar">
             <span className="sample-label">AI-GATEWAY-BENCH · 0MS MOCK UPSTREAM (36,649 RPS DIRECT BASELINE)</span>
             <span className="benchmark-status">Apple M4 (10-core, 24 GB) · PostgreSQL 17.11 · 0% errors</span>
@@ -455,7 +524,7 @@ export default function LandingContent({ latestPosts }: { latestPosts: LandingPo
               </div>
               <div className="model-comparison">
                 {suite.cards.map((card) => (
-                  <article key={card.name} className={`model-result${card.isWinner ? ' model-winner' : ''}`}>
+                  <article key={card.name} className={`model-result${card.isWinner ? ' model-winner' : ''}`} data-spotlight>
                     <div className="model-title">
                       <div>
                         <h4>{card.name}</h4>
@@ -512,7 +581,7 @@ export default function LandingContent({ latestPosts }: { latestPosts: LandingPo
 
       {/* 3. SIX CORE CAPABILITIES */}
       <section className="section container" id="product" aria-labelledby="product-title">
-        <div className="section-heading">
+        <div className="section-heading" data-reveal>
           <div>
             <p className="eyebrow">COMPLETE OPERATOR PLATFORM</p>
             <h2 id="product-title">
@@ -525,23 +594,31 @@ export default function LandingContent({ latestPosts }: { latestPosts: LandingPo
           </p>
         </div>
         <div className="capability-grid">
-          {capabilities.map((item) => (
-            <article key={item.href} className="capability">
-              <span className="feature-number">{item.number}</span>
-              <h3>{item.title}</h3>
-              <p>{item.description}</p>
-              <a className="text-link" href={item.href}>
-                {item.label} <span aria-hidden="true">→</span>
-              </a>
-            </article>
-          ))}
+          {capabilities.map((item, index) => {
+            const CapabilityIcon = capabilityIcons[index];
+            return (
+              <article key={item.href} className="capability" data-reveal data-spotlight style={stagger(index % 3)}>
+                <div className="capability-top">
+                  <span className="capability-icon" aria-hidden="true">
+                    <CapabilityIcon size={20} stroke={1.75} />
+                  </span>
+                  <span className="feature-number">{item.number}</span>
+                </div>
+                <h3>{item.title}</h3>
+                <p>{item.description}</p>
+                <a className="text-link" href={item.href}>
+                  {item.label} <span aria-hidden="true">→</span>
+                </a>
+              </article>
+            );
+          })}
         </div>
       </section>
 
       {/* 4. DROP-IN API QUICKSTART */}
       <section className="gateway-section" id="gateway" aria-labelledby="gateway-title">
         <div className="container section gateway-grid">
-          <div>
+          <div data-reveal>
             <p className="eyebrow">DROP-IN COMPATIBILITY</p>
             <h2 id="gateway-title">
               One endpoint for SDKs<br />
@@ -570,16 +647,22 @@ export default function LandingContent({ latestPosts }: { latestPosts: LandingPo
               </a>
             </div>
           </div>
-          <div className="code-card">
+          <div className="code-card" data-reveal style={stagger(1)}>
             <div className="code-heading">
+              <span className="code-window" aria-hidden="true">
+                <i />
+                <i />
+                <i />
+              </span>
               <span>STREAMING REQUEST · /V1/CHAT/COMPLETIONS</span>
               <span>cURL</span>
             </div>
             <pre>
               <code>{requestExample}</code>
+              <span className="code-cursor" aria-hidden="true" />
             </pre>
             <div className="code-footnote">
-              <span className="status-dot"></span>Recorded in PostgreSQL: <strong>Operation → Attempt → Usage (40 tok) → Settled Customer Charge ($0.018)</strong>
+              <span className="status-dot is-live"></span>Recorded in PostgreSQL: <strong>Operation → Attempt → Usage (40 tok) → Settled Customer Charge ($0.018)</strong>
             </div>
           </div>
         </div>
@@ -587,7 +670,7 @@ export default function LandingContent({ latestPosts }: { latestPosts: LandingPo
 
       {/* 5. SELF-HOSTED ARCHITECTURE & EVALUATION SCOPE */}
       <section className="section container" id="release" aria-labelledby="release-title">
-        <div className="section-heading">
+        <div className="section-heading" data-reveal>
           <div>
             <p className="eyebrow">OPEN-SOURCE ARCHITECTURE &amp; SCOPE</p>
             <h2 id="release-title">
@@ -600,9 +683,9 @@ export default function LandingContent({ latestPosts }: { latestPosts: LandingPo
           </p>
         </div>
         <div className="release-grid">
-          <article className="release-card">
+          <article className="release-card" data-reveal data-spotlight>
             <span className="phase available">
-              <span className="status-dot"></span>READY TO DEPLOY &amp; EVALUATE
+              <span className="status-dot is-live"></span>READY TO DEPLOY &amp; EVALUATE
             </span>
             <h3>Available in the current build</h3>
             <ul>
@@ -616,7 +699,7 @@ export default function LandingContent({ latestPosts }: { latestPosts: LandingPo
               Single-container deployment guide <span aria-hidden="true">→</span>
             </a>
           </article>
-          <article className="release-card upcoming">
+          <article className="release-card upcoming" data-reveal data-spotlight style={stagger(1)}>
             <span className="phase">RELEASE QUALIFICATION IN PROGRESS</span>
             <h3>Verify against your workload</h3>
             <ul>
@@ -635,33 +718,35 @@ export default function LandingContent({ latestPosts }: { latestPosts: LandingPo
       {/* 6. LATEST BLOG POSTS */}
       {latestPosts.length > 0 && (
         <section className="section container landing-blog" aria-labelledby="landing-blog-title">
-          <div className="section-heading">
-            <h2 id="landing-blog-title">From the Niu blog.</h2>
+          <div className="section-heading" data-reveal>
+            <div>
+              <p className="eyebrow">FROM THE NIU BLOG</p>
+              <h2 id="landing-blog-title">
+                Engineering notes from<br />
+                the gateway team.
+              </h2>
+            </div>
             <div className="landing-blog-intro">
-              <p>Engineering notes on gateway performance, financial accounting, and operating model APIs.</p>
+              <p>Gateway performance, financial accounting, and operating model APIs in production.</p>
               <a className="text-link" href="/blog/">
                 All articles <span aria-hidden="true">→</span>
               </a>
             </div>
           </div>
-          <div className="landing-blog-list">
-            {latestPosts.map((post) => (
-              <article key={post.href} className="landing-blog-entry">
+          <div className={`landing-blog-list${latestPosts.length === 1 ? ' is-single' : ''}`}>
+            {latestPosts.map((post, index) => (
+              <a key={post.href} className="landing-blog-card" href={post.href} data-reveal data-spotlight style={stagger(index)}>
                 <div className="landing-blog-meta">
-                  <span>{post.category}</span>
+                  <span className="landing-blog-category">{post.category}</span>
                   <time dateTime={post.publishedAt}>{post.dateLabel}</time>
                   <span>{post.readingTime}</span>
                 </div>
-                <div className="landing-blog-body">
-                  <h3>
-                    <a href={post.href}>{post.title}</a>
-                  </h3>
-                  <p>{post.description}</p>
-                  <a className="text-link" href={post.href} aria-label={`Read article: ${post.title}`}>
-                    Read article <span aria-hidden="true">→</span>
-                  </a>
-                </div>
-              </article>
+                <h3>{post.title}</h3>
+                <p>{post.description}</p>
+                <span className="text-link">
+                  Read article <IconArrowRight size={16} aria-hidden="true" />
+                </span>
+              </a>
             ))}
           </div>
         </section>
@@ -669,32 +754,61 @@ export default function LandingContent({ latestPosts }: { latestPosts: LandingPo
 
       {/* 7. CONCISE FAQ */}
       <section className="section container faq-section" aria-labelledby="faq-title">
-        <div>
+        <div className="faq-heading" data-reveal>
           <p className="eyebrow">FREQUENTLY ASKED QUESTIONS</p>
           <h2 id="faq-title">Key questions.</h2>
+          <p>What operators ask before putting Niu in front of customers.</p>
         </div>
-        <div className="faq-list">
+        <div className="faq-list" data-reveal>
           {faqs.map((faq) => (
             <details key={faq.question}>
               <summary>
                 {faq.question}
-                <span aria-hidden="true">+</span>
+                <span className="faq-toggle" aria-hidden="true" />
               </summary>
               <p>{faq.answer}</p>
             </details>
           ))}
         </div>
+        <div className="faq-more" data-reveal>
+          <span>Still have a question?</span>
+          <a className="text-link" href="/docs/">
+            Read the docs <span aria-hidden="true">→</span>
+          </a>
+          <a className="text-link" href={`${links.repo}/issues`}>
+            Ask on GitHub <span aria-hidden="true">↗</span>
+          </a>
+        </div>
       </section>
 
       {/* 8. CLOSING CTA */}
-      <section className="closing container">
-        <div>
+      <section className="closing-stage container" aria-labelledby="closing-title">
+        <div className="closing" data-reveal>
+          <span className="closing-glow" aria-hidden="true" />
           <p className="eyebrow">OPEN-SOURCE AI GATEWAY &amp; WORKSPACE</p>
-          <h2>Deploy Niu and run your first model route.</h2>
-        </div>
-        <div className="actions" style={{ marginTop: 0 }}>
-          <Button asChild size="lg" children={createElement('a', { href: links.quickstart }, 'Get started')} />
-          <Button asChild size="lg" variant="secondary" children={createElement('a', { href: links.repo }, 'Star on GitHub')} />
+          <h2 id="closing-title">
+            Deploy Niu and run your<br />
+            <span className="accent">first model route today.</span>
+          </h2>
+          <p className="closing-copy">Self-host the MIT core against your own PostgreSQL, or open the hosted workspace dashboard.</p>
+          <div className="actions hero-actions">
+            <Button asChild size="lg" className="cta-primary">
+              <a href={links.dashboard}>
+                <IconLayoutDashboard aria-hidden="true" />
+                Open dashboard
+                <IconArrowRight className="cta-arrow" aria-hidden="true" />
+              </a>
+            </Button>
+            <Button asChild size="lg" variant="outline" className="cta-secondary">
+              <a href={links.quickstart}>Get started</a>
+            </Button>
+            <Button asChild size="lg" variant="ghost" className="cta-ghost">
+              <a href={links.repo}>
+                <IconBrandGithub aria-hidden="true" />
+                Star on GitHub
+              </a>
+            </Button>
+          </div>
         </div>
       </section>
     </main>

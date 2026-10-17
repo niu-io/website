@@ -1,10 +1,10 @@
 ---
 import { getCollection } from "astro:content";
+import { publishedPosts } from "../../content/blog-policy";
+import { IconPin } from "@tabler/icons-react";
 import BlogLayout from "../../layouts/BlogLayout.astro";
 
-const posts = (await getCollection("blog")).sort((a, b) =>
-  b.data.publishedAt.localeCompare(a.data.publishedAt),
-);
+const posts = publishedPosts(await getCollection("blog"));
 
 function formatDate(isoDate: string): string {
   const [year, month, day] = isoDate.split("-").map(Number);
@@ -44,6 +44,7 @@ function getReadingTime(body: string | undefined, explicit?: string): string {
       return (
         <article class="blog-entry">
           <div class="blog-entry-meta">
+            {post.data.pinned && <span class="blog-pinned"><IconPin size={14} aria-hidden="true" />Pinned</span>}
             <span class="blog-entry-category">{post.data.category}</span>
             <time datetime={post.data.publishedAt}>
               {formatDate(post.data.publishedAt)}

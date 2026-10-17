@@ -373,3 +373,12 @@
     align-items: flex-start;
   }
 }
+
+.blog-pinned {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--foreground);
+  font-size: 12px;
+  font-weight: 500;
+}

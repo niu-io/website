@@ -1,6 +1,9 @@
 ---
 title: "Why Niu? Build a Model API Business People Trust"
 description: "Reliable model delivery, clear accounts, and customers who can help themselves. Why we are building Niu for people operating model API services."
+status: "published"
+pinned: true
+pinOrder: 0
 publishedAt: "2026-10-15"
 updatedAt: "2026-10-17"
 category: "Product"

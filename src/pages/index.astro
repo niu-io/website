@@ -7,11 +7,12 @@ import '../styles/compare-ui.css';
 import '../styles/public-header.css';
 import SiteHeader from '../components/SiteHeader.astro';
 import { getCollection } from 'astro:content';
+import { publishedPosts } from '../content/blog-policy';
 import '../styles/landing-blog.css';
+import '../styles/landing-visual.css';
 import LandingContent from '../components/LandingContent';
 import { links } from '../content/landing';
-const latestPosts = (await getCollection('blog'))
-  .sort((a, b) => b.data.publishedAt.localeCompare(a.data.publishedAt))
+const latestPosts = publishedPosts(await getCollection('blog'))
   .slice(0, 3)
   .map(({ id, data, body }) => ({
     href: `/blog/${id}/`,
@@ -50,6 +51,14 @@ const canonical = new URL(`${base}/`, Astro.site);
     />
     <meta name="twitter:card" content="summary_large_image" />
     <title>{title}</title>
+    <script is:inline>
+      (() => {
+        if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        const html = document.documentElement;
+        html.classList.add('motion-ready');
+        setTimeout(() => { if (!window.__niuMotion) html.classList.remove('motion-ready'); }, 3000);
+      })();
+    </script>
   </head>
 
 <body>

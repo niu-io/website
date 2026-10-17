@@ -7,7 +7,16 @@ export const links = {
   benchmark: '/docs/guides/gateway-benchmarks/',
   compare: '/compare/',
   release: 'https://github.com/niu-io/niu/blob/main/docs/releases/first-release.md',
+  dashboard: '/workspaces/default/',
 };
+
+// Same measured values as the benchmark section (ai-gateway-bench, c = 64).
+export const heroStats = [
+  { value: '3,239', label: 'requests / second' },
+  { value: '10.7×', label: 'LiteLLM Proxy throughput' },
+  { value: '31.5 ms', label: 'p99 latency at c = 64' },
+  { value: '18.2 MB', label: 'idle memory (RSS)' },
+];
 
 export const pillars = [
   {

@@ -53,7 +53,7 @@ The GitHub Actions workflow checks the build and verifies its output layout; it 
 - `CONTENT.md`: positioning and public-claim rules.
 - `public/site-assets/brand/`: approved assets and source attribution.
 
-Docs and catalog consume the canonical navigation/style definitions in Niu's `branding` directory. This separate website snapshots them, along with the Niu-specific public header composition, so its build never depends on an adjacent checkout. Website headers add the editorial “Why Niu?” entry through `src/content/website-navigation.ts`; the sync adapter preserves this website-specific composition. Synchronize with `node scripts/sync-public-shell.mjs --source <public-niu-checkout>`; `--check --source <public-niu-checkout>` verifies the snapshots against that checkout. Default `--check` verifies the recorded snapshot hashes.
+Docs and catalog consume the canonical navigation/style definitions in Niu's `branding` directory. This separate website snapshots them, along with the Niu-specific public header composition, so its build never depends on an adjacent checkout. Website headers add the editorial “Blog” entry through `src/content/website-navigation.ts`; the sync adapter preserves this website-specific composition. Synchronize with `node scripts/sync-public-shell.mjs --source <public-niu-checkout>`; `--check --source <public-niu-checkout>` verifies the snapshots against that checkout. Default `--check` verifies the recorded snapshot hashes.
 
 Keep copy accurate about implemented workflows and qualification scope. Do not present agent orchestration, external agent telemetry, task benchmarking, model fusion or subscription pooling as current product features.
 
@@ -68,3 +68,32 @@ Geist Sans and Geist Mono are bundled locally through Fontsource under the SIL O
 ## Original marketing-source provenance
 
 The marketing source and brand snapshot were carried back from public Niu commit `287be5bee3dce511cdf76582548e1655914d3e89`, including website fixes through `0d494d92aded07105d0faa2be57e72e1f63ccbd0`. Current shared-shell provenance is recorded in `src/content/public-shell-manifest.json`.
+
+## Blog publishing
+
+Manage articles in `src/content/blog/*.md`; the filename is the permanent URL slug.
+The homepage, blog index and generated article routes share one publication policy.
+
+```yaml
+---
+title: "Article title"
+description: "A concise summary for the article list and search previews."
+status: "draft" # draft | published | archived
+publishedAt: "2026-10-18"
+category: "Product"
+author: "Niu"
+pinned: false
+pinOrder: 0
+---
+```
+
+- New articles default to `draft`. Only `published` articles with a publication date
+  on or before the build date (UTC) are included in the site, including direct URLs.
+- Set `pinned: true` to place an article before other posts. Lower `pinOrder` values
+  come first among pinned posts; dates break ties. Other articles sort newest first.
+- Set `status: archived` to remove an article from the next build without deleting
+  its source. An archived URL returns 404; no redirect is created automatically.
+- Keep `publishedAt` stable and set `updatedAt` when making substantive edits.
+- This is a static site: content changes and future publication dates require a
+  new build and deployment. There is no automatic scheduler or browser admin yet.
+- Run `node --test test/blog-policy.test.ts` and `pnpm check` before publishing.
