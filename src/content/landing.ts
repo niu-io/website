@@ -118,6 +118,6 @@ export const requestExample = `curl http://localhost:2555/v1/chat/completions \\
   -H "Content-Type: application/json" \\
   -d '{
     "model": "claude-sonnet-4",
-    "messages": [{"role": "user", "content": "Summarize our Q3 API latency."}],
+    "messages": [{"role": "user", "content": "Check Q3 p99."}],
     "stream": true
   }'`;

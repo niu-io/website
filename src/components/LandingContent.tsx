@@ -1,10 +1,12 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { CountUp, useLandingMotion } from './landing-motion';
 import {
   IconArrowRight,
   IconBolt,
   IconBrandGithub,
+  IconCheck,
   IconCoins,
+  IconCopy,
   IconLayoutDashboard,
   IconListSearch,
   IconMessageChatbot,
@@ -13,7 +15,9 @@ import {
   IconScale,
   IconServerBolt,
   IconShieldLock,
+  IconSparkles,
   IconTimeline,
+  IconVideo,
 } from '@tabler/icons-react';
 import { Button } from './ui/button';
 import { links, pillars, capabilities, faqs, requestExample, heroStats } from '../content/landing';
@@ -21,6 +25,56 @@ import { benchmarkSteps, benchmarkSuites } from '../content/benchmarks';
 
 const pillarIcons = [IconBolt, IconScale, IconTimeline, IconServerBolt];
 const capabilityIcons = [IconRoute, IconListSearch, IconCoins, IconShieldLock, IconPlugConnected, IconMessageChatbot];
+
+const capabilitySpecStrips: { tokens: string[]; accentIndex: number }[] = [
+  { tokens: ['claude-sonnet-4', 'Anthropic 80%', 'OpenRouter 20%'], accentIndex: 1 },
+  { tokens: ['Op', 'Attempt 1 · 401 ($0)', 'Attempt 2 · 40 tok'], accentIndex: 2 },
+  { tokens: ['Offer: Admin only', '≠', 'Tariff: $0.018 settled'], accentIndex: 2 },
+  { tokens: ['Company Cap', 'Workspace Cap', 'Key Hold ($0.050)'], accentIndex: 2 },
+  { tokens: ['/v1/chat/completions', '/v1/responses', '/v1/messages'], accentIndex: 0 },
+  { tokens: ['PostgreSQL Chat', 'Seedance 1080p Video', 'Auth Download'], accentIndex: 1 },
+];
+
+const codeExamples = [
+  {
+    id: 'curl',
+    label: 'cURL',
+    endpoint: 'STREAMING REQUEST · /V1/CHAT/COMPLETIONS',
+    code: requestExample,
+    streamOutput: 'Q3 gateway p50 held at 18.9 ms (31.5 ms p99 at c = 64) across 3,239 RPS.',
+    ledgerSummary: 'Operation → Attempt 2 (Anthropic) → 40 SSE tok → Settled ($0.018)',
+  },
+  {
+    id: 'ts',
+    label: 'TypeScript SDK',
+    endpoint: 'OPENAI-COMPATIBLE SDK · WORKSPACE KEY',
+    code: `import OpenAI from "openai";
+
+const niu = new OpenAI({
+  baseURL: "http://localhost:2555/v1",
+  apiKey: process.env.NIU_API_KEY,
+});
+
+const stream = await niu.chat.completions.create({
+  model: "claude-sonnet-4",
+  messages: [{ role: "user", content: "Summarize Q3 latency." }],
+  stream: true,
+});`,
+    streamOutput: 'Streamed 43/43 SSE chunks (1.34 ms median ITL) with zero dropped frames.',
+    ledgerSummary: 'Pre-dispatch hold ($0.050) → 40 tok usage → Exact debit ($0.018)',
+  },
+  {
+    id: 'claude',
+    label: 'Claude Code',
+    endpoint: 'SCOPED ANTHROPIC MESSAGES · /V1/MESSAGES',
+    code: `export ANTHROPIC_BASE_URL="http://localhost:2555"
+export ANTHROPIC_API_KEY="$NIU_API_KEY"
+
+claude -p "Audit route pool failover and PostgreSQL batch settlement"`,
+    streamOutput: '16 concurrent 30-turn agent sessions completed in 1.75 s (55.0 ms/turn).',
+    ledgerSummary: 'Scoped /v1/messages → Route pool claude-sonnet-4 → Settled ($0.018)',
+  },
+];
 
 interface LandingPost {
   href: string;
@@ -40,18 +94,42 @@ const previewTabs = [
 ];
 
 const traceSpans = [
-  { name: 'Pre-dispatch hold', kind: 'ACID admission & cap check', offset: 0, width: 12, duration: '2.1 ms' },
-  { name: 'Attempt 1 · OpenRouter', kind: 'HTTP 401 rejected ($0)', offset: 12, width: 18, duration: '3.2 ms' },
-  { name: 'Attempt 2 · Anthropic', kind: '200 OK · 40 SSE tokens', offset: 30, width: 58, duration: '11.4 ms' },
-  { name: 'Batch settlement', kind: '64-row UNNEST commit', offset: 88, width: 12, duration: '2.2 ms' },
+  { name: 'Pre-dispatch hold', kind: 'ACID admission & cap check', offset: 0, width: 12, duration: '2.1 ms', tag: '2.1 ms · hold' },
+  { name: 'Attempt 1 · OpenRouter', kind: 'HTTP 401 rejected ($0)', offset: 12, width: 18, duration: '3.2 ms', tag: '3.2 ms · 401 ($0)' },
+  { name: 'Attempt 2 · Anthropic', kind: '200 OK · 40 SSE tokens', offset: 30, width: 58, duration: '11.4 ms', tag: '11.4 ms · 40 tok' },
+  { name: 'Batch settlement', kind: '64-row UNNEST commit', offset: 88, width: 12, duration: '2.2 ms', tag: '2.2 ms · commit' },
 ];
 
 export default function LandingContent({ latestPosts }: { latestPosts: LandingPost[] }) {
   const [activePreviewIndex, setActivePreviewIndex] = useState(0);
+  const [isPreviewPaused, setIsPreviewPaused] = useState(false);
   const [activeSuiteIndex, setActiveSuiteIndex] = useState(0);
+  const [activeCodeIndex, setActiveCodeIndex] = useState(0);
+  const [copiedCode, setCopiedCode] = useState(false);
   const mainRef = useRef<HTMLElement>(null);
   useLandingMotion(mainRef);
   const stagger = (i: number) => ({ '--i': i }) as React.CSSProperties;
+
+  useEffect(() => {
+    if (isPreviewPaused) return;
+    if (typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      return;
+    }
+    const timer = window.setInterval(() => {
+      setActivePreviewIndex((prev) => (prev + 1) % previewTabs.length);
+    }, 6500);
+    return () => window.clearInterval(timer);
+  }, [isPreviewPaused, activePreviewIndex]);
+
+  const handleCopyCode = async () => {
+    try {
+      await navigator.clipboard.writeText(codeExamples[activeCodeIndex].code);
+      setCopiedCode(true);
+      window.setTimeout(() => setCopiedCode(false), 1800);
+    } catch {
+      // Clipboard API unavailable in restricted contexts
+    }
+  };
 
   return (
     <main id="main" ref={mainRef}>
@@ -61,386 +139,506 @@ export default function LandingContent({ latestPosts }: { latestPosts: LandingPo
           <span className="hero-grid" />
           <span className="hero-glow" />
         </div>
-      <div className="hero container">
-        <a className="release-link hero-enter" style={stagger(0)} href="#benchmark">
-          <span className="release-tag">Benchmark</span>
-          <span>MIT open source · 3,239 RPS Rust gateway · 10.7× LiteLLM</span>
-          <IconArrowRight size={14} aria-hidden="true" />
-        </a>
-        <h1 id="hero-title" className="hero-enter" style={stagger(1)}>
-          Build and run your<br />
-          <span className="accent">model API business.</span>
-        </h1>
-        <p className="hero-description hero-enter" style={stagger(2)}>
-          High-throughput Rust AI gateway with independent customer tariffs, attempt-level request evidence, and self-service Chat &amp; Video workspaces.
-        </p>
-        <div className="actions hero-actions hero-enter" style={stagger(3)}>
-          <Button asChild size="lg" className="cta-primary">
-            <a href={links.dashboard}>
-              <IconLayoutDashboard aria-hidden="true" />
-              Open dashboard
-              <IconArrowRight className="cta-arrow" aria-hidden="true" />
-            </a>
-          </Button>
-          <Button asChild size="lg" variant="outline" className="cta-secondary">
-            <a href={links.quickstart}>Get started</a>
-          </Button>
-          <Button asChild size="lg" variant="ghost" className="cta-ghost">
-            <a href={links.repo}>
-              <IconBrandGithub aria-hidden="true" />
-              Star on GitHub
-            </a>
-          </Button>
-        </div>
-        <p className="hero-sublinks hero-enter" style={stagger(4)}>
-          <a href={links.compare}>Compare gateways</a>
-          <span aria-hidden="true">·</span>
-          <a href="/models/">Browse models</a>
-          <span aria-hidden="true">·</span>
-          <a href="/blog/why-niu/">Why Niu?</a>
-        </p>
+        <div className="hero container">
+          <a className="release-link hero-enter" style={stagger(0)} href="#benchmark">
+            <span className="release-tag">Benchmark</span>
+            <span>MIT open source · 3,239 RPS Rust gateway · 10.7× LiteLLM</span>
+            <IconArrowRight size={14} aria-hidden="true" />
+          </a>
+          <h1 id="hero-title" className="hero-enter" style={stagger(1)}>
+            Build and run your<br />
+            <span className="accent">model API business.</span>
+          </h1>
+          <p className="hero-description hero-enter" style={stagger(2)}>
+            High-throughput Rust AI gateway with independent customer tariffs, attempt-level request evidence, and self-service Chat &amp; Video workspaces.
+          </p>
+          <div className="actions hero-actions hero-enter" style={stagger(3)}>
+            <Button asChild size="lg" className="cta-primary">
+              <a href={links.dashboard}>
+                <IconLayoutDashboard aria-hidden="true" />
+                Open dashboard
+                <IconArrowRight className="cta-arrow" aria-hidden="true" />
+              </a>
+            </Button>
+            <Button asChild size="lg" variant="outline" className="cta-secondary">
+              <a href={links.quickstart}>Get started</a>
+            </Button>
+            <Button asChild size="lg" variant="ghost" className="cta-ghost">
+              <a href={links.repo}>
+                <IconBrandGithub aria-hidden="true" />
+                Star on GitHub
+              </a>
+            </Button>
+          </div>
+          <p className="hero-sublinks hero-enter" style={stagger(4)}>
+            <a href={links.compare}>Compare gateways</a>
+            <span aria-hidden="true">·</span>
+            <a href="/models/">Browse models</a>
+            <span aria-hidden="true">·</span>
+            <a href="/blog/why-niu/">Why Niu?</a>
+          </p>
 
-        <dl className="hero-stats" aria-label="Measured gateway results">
-          {heroStats.map((stat, i) => (
-            <div key={stat.label} data-reveal style={stagger(i)}>
-              <dt>{stat.label}</dt>
-              <dd>
-                <CountUp value={stat.value} />
-              </dd>
-            </div>
-          ))}
-        </dl>
+          <dl className="hero-stats" aria-label="Measured gateway results">
+            {heroStats.map((stat, i) => (
+              <div key={stat.label} data-reveal style={stagger(i)}>
+                <dt>{stat.label}</dt>
+                <dd>
+                  <CountUp value={stat.value} />
+                </dd>
+              </div>
+            ))}
+          </dl>
 
-        {/* Interactive Product UI Preview Window */}
-        <div className="preview-frame" data-reveal>
-        <div className="product-preview" aria-label="Interactive Niu workspace preview">
-          <aside className="mock-nav-rail" aria-label="Workspace navigation preview">
-            <span className="mock-nav-home" title="Niu">
-              <img src="/site-assets/brand/niu-mark.png" alt="Niu" width="28" height="28" />
-            </span>
-            <div className="mock-nav-items">
-              {[
-                { name: 'Request Logs', path: 'M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01' },
-                { name: 'Route Pools', path: 'M5 5v4c0 3 7 3 7 6v4M19 5v4c0 3-7 3-7 6M9 17l3 3 3-3' },
-                { name: 'Usage & Tariffs', path: 'M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6' },
-                { name: 'Generations', path: 'M12 3l1.9 5.8a2 2 0 0 0 1.3 1.3L21 12l-5.8 1.9a2 2 0 0 0-1.3 1.3L12 21l-1.9-5.8a2 2 0 0 0-1.3-1.3L3 12l5.8-1.9a2 2 0 0 0 1.3-1.3L12 3z' },
-              ].map((icon, i) => (
-                <button
-                  key={icon.name}
-                  type="button"
-                  className={`mock-rail-btn${activePreviewIndex === i ? ' is-active' : ''}`}
-                  aria-label={icon.name}
-                  title={icon.name}
-                  onClick={() => setActivePreviewIndex(i)}
-                >
+          {/* Interactive Product UI Preview Window */}
+          <div
+            className="preview-frame"
+            data-reveal
+            data-paused={isPreviewPaused ? 'true' : undefined}
+            onMouseEnter={() => setIsPreviewPaused(true)}
+            onMouseLeave={() => setIsPreviewPaused(false)}
+          >
+            <div className="product-preview" aria-label="Interactive Niu workspace preview">
+              <aside className="mock-nav-rail" aria-label="Workspace navigation preview">
+                <span className="mock-nav-home" title="Niu">
+                  <img src="/site-assets/brand/niu-mark.png" alt="Niu" width="28" height="28" />
+                </span>
+                <div className="mock-nav-items">
+                  {[
+                    { name: 'Request Logs', path: 'M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01' },
+                    { name: 'Route Pools', path: 'M5 5v4c0 3 7 3 7 6v4M19 5v4c0 3-7 3-7 6M9 17l3 3 3-3' },
+                    { name: 'Usage & Tariffs', path: 'M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6' },
+                    { name: 'Generations', path: 'M12 3l1.9 5.8a2 2 0 0 0 1.3 1.3L21 12l-5.8 1.9a2 2 0 0 0-1.3 1.3L12 21l-1.9-5.8a2 2 0 0 0-1.3-1.3L3 12l5.8-1.9a2 2 0 0 0 1.3-1.3L12 3z' },
+                  ].map((icon, i) => (
+                    <button
+                      key={icon.name}
+                      type="button"
+                      className={`mock-rail-btn${activePreviewIndex === i ? ' is-active' : ''}`}
+                      aria-label={icon.name}
+                      title={icon.name}
+                      onClick={() => {
+                        setActivePreviewIndex(i);
+                        setIsPreviewPaused(true);
+                      }}
+                    >
+                      <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d={icon.path} />
+                      </svg>
+                    </button>
+                  ))}
+                </div>
+                <span className="mock-nav-profile" role="img" aria-label="Workspace account" title="Workspace account">
                   <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <path d={icon.path} />
+                    <circle cx="12" cy="8" r="3" />
+                    <path d="M5 20v-2a7 7 0 0 1 14 0v2" />
                   </svg>
-                </button>
-              ))}
-            </div>
-            <span className="mock-nav-profile" role="img" aria-label="Workspace account" title="Workspace account">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <circle cx="12" cy="8" r="3" />
-                <path d="M5 20v-2a7 7 0 0 1 14 0v2" />
-              </svg>
-            </span>
-          </aside>
+                </span>
+              </aside>
 
-          <div className="mock-workspace">
-            <div className="preview-toolbar">
-              <div className="preview-brand">
-                <strong>Niu</strong>
-                <span>{previewTabs[activePreviewIndex].breadcrumb}</span>
-              </div>
-              <div className="preview-tabs" role="tablist" aria-label="Product surface views">
-                {previewTabs.map((tab, i) => (
-                  <button
-                    key={tab.id}
-                    type="button"
-                    role="tab"
-                    aria-selected={activePreviewIndex === i}
-                    onClick={() => setActivePreviewIndex(i)}
-                  >
-                    {tab.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="preview-body">
-              {activePreviewIndex === 0 && (
-                <div className="investigation">
-                  <div className="task-heading">
-                    <div>
-                      <p className="small-label">POST /v1/chat/completions · Route pool: claude-sonnet-4</p>
-                      <h2>Every upstream attempt and charge state stays linked.</h2>
-                    </div>
-                    <span className="badge badge-accent">Settled · 2 attempts</span>
+              <div className="mock-workspace">
+                <div className="preview-toolbar">
+                  <div className="preview-brand">
+                    <span className="status-dot is-live" aria-hidden="true" />
+                    <strong>Niu</strong>
+                    <span>{previewTabs[activePreviewIndex].breadcrumb}</span>
                   </div>
-                  <div className="metrics">
-                    <div>
-                      <span>Gateway latency (p50)</span>
-                      <strong>
-                        18.9 <small>ms</small>
-                      </strong>
-                    </div>
-                    <div>
-                      <span>Recorded attempts</span>
-                      <strong>
-                        2 <small>bounded failover</small>
-                      </strong>
-                    </div>
-                    <div>
-                      <span>Customer charge</span>
-                      <strong>
-                        $0.018 <small>settled debit</small>
-                      </strong>
-                    </div>
-                  </div>
-                  <div className="timeline" role="img" aria-label="Request execution and settlement timeline">
-                    <div className="time-axis">
-                      <span>Operation → Attempt → Settlement trace</span>
-                      <div>
-                        <span>0 ms</span>
-                        <span>10 ms</span>
-                        <span>18.9 ms</span>
-                      </div>
-                    </div>
-                    {traceSpans.map((span, i) => (
-                      <div key={span.name} className="timeline-row">
-                        <div className="span-name">
-                          <span className={`span-icon icon-${i}`}>
-                            {i === 0 ? '◇' : i === 1 ? '!' : i === 2 ? '↳' : '✓'}
-                          </span>
-                          <span>
-                            {span.name}
-                            <small>{span.kind}</small>
-                          </span>
-                        </div>
-                        <div className="track">
-                          <span
-                            className={`bar bar-${i}`}
-                            style={{ '--offset': `${span.offset}%`, '--width': `${span.width}%`, '--i': i } as React.CSSProperties}
-                          >
-                            <span className="sr-only">{span.duration}</span>
-                          </span>
-                        </div>
-                      </div>
+                  <div className="preview-tabs" role="tablist" aria-label="Product surface views">
+                    {previewTabs.map((tab, i) => (
+                      <button
+                        key={tab.id}
+                        type="button"
+                        role="tab"
+                        aria-selected={activePreviewIndex === i}
+                        onClick={() => {
+                          setActivePreviewIndex(i);
+                          setIsPreviewPaused(true);
+                        }}
+                      >
+                        <span>{tab.label}</span>
+                        {activePreviewIndex === i && (
+                          <i key={`${tab.id}-${isPreviewPaused ? 'paused' : 'play'}`} className="preview-tab-progress" aria-hidden="true" />
+                        )}
+                      </button>
                     ))}
                   </div>
-                  <div className="evidence-row">
-                    <div>
-                      <span className="evidence-icon warning">!</span>
-                      <div>
-                        <span className="small-label">ATTEMPT 1 · OPENROUTER</span>
-                        <strong>401 Rejected · $0.00</strong>
+                </div>
+
+                <div className="preview-body">
+                  {activePreviewIndex === 0 && (
+                    <div className="investigation" key="tab-evidence">
+                      <div className="task-heading">
+                        <div>
+                          <p className="small-label">POST /v1/chat/completions · Route pool: claude-sonnet-4</p>
+                          <h2>Every upstream attempt and charge state stays linked.</h2>
+                        </div>
+                        <span className="badge badge-accent">Settled · 2 attempts</span>
+                      </div>
+                      <div className="metrics">
+                        <div>
+                          <span>Gateway latency (p50)</span>
+                          <strong>
+                            18.9 <small>ms</small>
+                          </strong>
+                        </div>
+                        <div>
+                          <span>Recorded attempts</span>
+                          <strong>
+                            2 <small>bounded failover</small>
+                          </strong>
+                        </div>
+                        <div>
+                          <span>Customer charge</span>
+                          <strong>
+                            $0.018 <small>settled debit</small>
+                          </strong>
+                        </div>
+                      </div>
+                      <div className="timeline" role="img" aria-label="Request execution and settlement timeline">
+                        <div className="time-axis">
+                          <span>Operation → Attempt → Settlement trace</span>
+                          <div>
+                            <span>0 ms</span>
+                            <span>10 ms</span>
+                            <span>18.9 ms</span>
+                          </div>
+                          <span className="time-axis-meta">Duration · State</span>
+                        </div>
+                        {traceSpans.map((span, i) => (
+                          <div key={span.name} className="timeline-row">
+                            <div className="span-name">
+                              <span className={`span-icon icon-${i}`}>
+                                {i === 0 ? '◇' : i === 1 ? '!' : i === 2 ? '↳' : '✓'}
+                              </span>
+                              <span>
+                                {span.name}
+                                <small>{span.kind}</small>
+                              </span>
+                            </div>
+                            <div className="track">
+                              <span
+                                className={`bar bar-${i}`}
+                                style={{ '--offset': `${span.offset}%`, '--width': `${span.width}%`, '--i': i } as React.CSSProperties}
+                              >
+                                <span className="sr-only">{span.duration}</span>
+                              </span>
+                            </div>
+                            <span
+                              className={`bar-tag bar-tag-${i}`}
+                              style={{ '--i': i } as React.CSSProperties}
+                            >
+                              {span.tag}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="evidence-row">
+                        <div>
+                          <span className="evidence-icon warning">!</span>
+                          <div>
+                            <span className="small-label">ATTEMPT 1 · OPENROUTER</span>
+                            <strong>401 Rejected · $0.00</strong>
+                          </div>
+                        </div>
+                        <div>
+                          <span className="evidence-icon success">✓</span>
+                          <div>
+                            <span className="small-label">ATTEMPT 2 · ANTHROPIC</span>
+                            <strong>40 tok · $0.018 settled</strong>
+                          </div>
+                        </div>
+                        <p>Uncertain mid-stream drops remain explicitly unresolved—never fabricated as $0.</p>
                       </div>
                     </div>
-                    <div>
-                      <span className="evidence-icon">✓</span>
-                      <div>
-                        <span className="small-label">ATTEMPT 2 · ANTHROPIC</span>
-                        <strong>40 tok · $0.018 settled</strong>
+                  )}
+
+                  {activePreviewIndex === 1 && (
+                    <div className="investigation" key="tab-routing">
+                      <div className="task-heading">
+                        <div>
+                          <p className="small-label">Route Pool Configuration · Revision 4</p>
+                          <h2>One customer alias backed by prioritized Provider routes.</h2>
+                        </div>
+                        <span className="badge badge-accent">Pool: claude-sonnet-4</span>
+                      </div>
+                      <div className="metrics">
+                        <div>
+                          <span>Catalog snapshot reads</span>
+                          <strong>
+                            1,346 <small>reads/s</small>
+                          </strong>
+                        </div>
+                        <div>
+                          <span>Route cache TTL</span>
+                          <strong>
+                            5.0 <small>seconds</small>
+                          </strong>
+                        </div>
+                        <div>
+                          <span>Upstream credentials</span>
+                          <strong>
+                            Server-side <small>encrypted</small>
+                          </strong>
+                        </div>
+                      </div>
+                      <div className="comparison-scroll">
+                        <table className="comparison-matrix preview-table">
+                          <thead>
+                            <tr>
+                              <th>Candidate mapping</th>
+                              <th>Provider</th>
+                              <th>Priority &amp; Traffic Share</th>
+                              <th>Declared capabilities</th>
+                              <th>Status</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr className="matrix-selected">
+                              <td><strong>claude-sonnet-4-direct</strong></td>
+                              <td>Anthropic Direct</td>
+                              <td>
+                                <div className="route-weight-cell">
+                                  <span>Priority 100 · Weight 80%</span>
+                                  <span className="route-weight-bar" aria-hidden="true">
+                                    <i style={{ width: '80%' }} />
+                                  </span>
+                                </div>
+                              </td>
+                              <td>Chat · Messages · SSE · Tools</td>
+                              <td>
+                                <span className="route-status-pill is-primary">
+                                  <span className="status-dot is-live" aria-hidden="true" />
+                                  Selected primary
+                                </span>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td><strong>claude-sonnet-4-or</strong></td>
+                              <td>OpenRouter</td>
+                              <td>
+                                <div className="route-weight-cell">
+                                  <span>Priority 100 · Weight 20%</span>
+                                  <span className="route-weight-bar" aria-hidden="true">
+                                    <i style={{ width: '20%' }} />
+                                  </span>
+                                </div>
+                              </td>
+                              <td>Chat · Messages · SSE · Tools</td>
+                              <td>
+                                <span className="route-status-pill">Active weighted peer</span>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td><strong>claude-sonnet-4-vertex</strong></td>
+                              <td>Google Vertex AI</td>
+                              <td>
+                                <div className="route-weight-cell">
+                                  <span>Priority 50 · Weight 100%</span>
+                                  <span className="route-weight-bar is-standby" aria-hidden="true">
+                                    <i style={{ width: '100%' }} />
+                                  </span>
+                                </div>
+                              </td>
+                              <td>Chat · SSE</td>
+                              <td>
+                                <span className="route-status-pill">Secondary failover tier</span>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                     </div>
-                    <p>Uncertain mid-stream drops remain explicitly unresolved—never fabricated as $0.</p>
-                  </div>
-                </div>
-              )}
+                  )}
 
-              {activePreviewIndex === 1 && (
-                <div className="investigation">
-                  <div className="task-heading">
-                    <div>
-                      <p className="small-label">Route Pool Configuration · Revision 4</p>
-                      <h2>One customer alias backed by prioritized Provider routes.</h2>
+                  {activePreviewIndex === 2 && (
+                    <div className="investigation" key="tab-billing">
+                      <div className="task-heading">
+                        <div>
+                          <p className="small-label">Commercial Data Boundary &amp; Ledger</p>
+                          <h2>Provider costs, workspace caps, and customer bills stay separate.</h2>
+                        </div>
+                        <span className="badge badge-accent">3-way isolation</span>
+                      </div>
+                      <div className="metrics">
+                        <div>
+                          <span>Provider purchase rate</span>
+                          <strong>
+                            Admin only <small>hidden from workspace</small>
+                          </strong>
+                        </div>
+                        <div>
+                          <span>Pre-dispatch hold</span>
+                          <strong>
+                            Active <small>company + workspace + key</small>
+                          </strong>
+                        </div>
+                        <div>
+                          <span>Interrupted stream</span>
+                          <strong>
+                            Unresolved <small>never fake $0</small>
+                          </strong>
+                        </div>
+                      </div>
+                      <div className="preview-cards-grid">
+                        <article className="preview-subcard">
+                          <span className="small-label">01 · PLATFORM ADMINISTRATION</span>
+                          <h3>Provider Offer &amp; Cost</h3>
+                          <p>Bind upstream mappings to agreed Provider rates without exposing procurement margins to customer workspaces.</p>
+                          <dl className="mini-ledger">
+                            <div>
+                              <dt>Agreed offer</dt>
+                              <dd>Anthropic Direct · Tier 1</dd>
+                            </div>
+                            <div>
+                              <dt>Workspace exposure</dt>
+                              <dd className="ledger-masked">Admin-only boundary</dd>
+                            </div>
+                          </dl>
+                        </article>
+                        <article className="preview-subcard">
+                          <span className="small-label">02 · PRE-DISPATCH ADMISSION</span>
+                          <h3>Spending Cap Reservation</h3>
+                          <p>Reserve spending capacity across company funds, workspace limits, and API key caps before upstream dispatch.</p>
+                          <dl className="mini-ledger">
+                            <div>
+                              <dt>Pre-dispatch hold</dt>
+                              <dd>$0.050 cap reserved</dd>
+                            </div>
+                            <div>
+                              <dt>PostgreSQL CTE</dt>
+                              <dd className="ledger-ok">ACID committed (2.1 ms)</dd>
+                            </div>
+                          </dl>
+                        </article>
+                        <article className="preview-subcard highlighted">
+                          <span className="small-label">03 · CUSTOMER WORKSPACE</span>
+                          <h3>Customer Tariff &amp; Bill</h3>
+                          <p>Charge workspaces against immutable operation tariff bindings. Interrupted calls stay explicitly unresolved.</p>
+                          <dl className="mini-ledger">
+                            <div>
+                              <dt>Workspace charge</dt>
+                              <dd className="ledger-accent">$0.018 settled (40 tok)</dd>
+                            </div>
+                            <div>
+                              <dt>Hold release</dt>
+                              <dd>$0.032 returned to cap</dd>
+                            </div>
+                          </dl>
+                        </article>
+                      </div>
                     </div>
-                    <span className="badge badge-accent">Pool: claude-sonnet-4</span>
-                  </div>
-                  <div className="metrics">
-                    <div>
-                      <span>Catalog snapshot reads</span>
-                      <strong>
-                        1,346 <small>reads/s</small>
-                      </strong>
-                    </div>
-                    <div>
-                      <span>Route cache TTL</span>
-                      <strong>
-                        5.0 <small>seconds</small>
-                      </strong>
-                    </div>
-                    <div>
-                      <span>Upstream credentials</span>
-                      <strong>
-                        Server-side <small>encrypted</small>
-                      </strong>
-                    </div>
-                  </div>
-                  <div className="comparison-scroll">
-                    <table className="comparison-matrix preview-table">
-                      <thead>
-                        <tr>
-                          <th>Candidate mapping</th>
-                          <th>Provider</th>
-                          <th>Priority / Weight</th>
-                          <th>Declared capabilities</th>
-                          <th>Status</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr className="matrix-selected">
-                          <td><strong>claude-sonnet-4-direct</strong></td>
-                          <td>Anthropic Direct</td>
-                          <td>Priority 100 · Weight 80%</td>
-                          <td>Chat · Messages · SSE · Tools</td>
-                          <td><strong>Selected primary</strong></td>
-                        </tr>
-                        <tr>
-                          <td><strong>claude-sonnet-4-or</strong></td>
-                          <td>OpenRouter</td>
-                          <td>Priority 100 · Weight 20%</td>
-                          <td>Chat · Messages · SSE · Tools</td>
-                          <td>Active weighted peer</td>
-                        </tr>
-                        <tr>
-                          <td><strong>claude-sonnet-4-vertex</strong></td>
-                          <td>Google Vertex AI</td>
-                          <td>Priority 50 · Weight 100%</td>
-                          <td>Chat · SSE</td>
-                          <td>Secondary tier</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              )}
+                  )}
 
-              {activePreviewIndex === 2 && (
-                <div className="investigation">
-                  <div className="task-heading">
-                    <div>
-                      <p className="small-label">Commercial Data Boundary &amp; Ledger</p>
-                      <h2>Provider costs, workspace caps, and customer bills stay separate.</h2>
+                  {activePreviewIndex === 3 && (
+                    <div className="investigation" key="tab-generations">
+                      <div className="task-heading">
+                        <div>
+                          <p className="small-label">Customer Self-Service Workspace</p>
+                          <h2>Persistent Chat sessions and Seedance video job management.</h2>
+                        </div>
+                        <span className="badge badge-accent">Chat + Video</span>
+                      </div>
+                      <div className="metrics">
+                        <div>
+                          <span>Session persistence</span>
+                          <strong>
+                            PostgreSQL <small>source of truth</small>
+                          </strong>
+                        </div>
+                        <div>
+                          <span>Video workflow</span>
+                          <strong>
+                            Seedance <small>async job tracking</small>
+                          </strong>
+                        </div>
+                        <div>
+                          <span>Result access</span>
+                          <strong>
+                            Authorized <small>workspace key / session</small>
+                          </strong>
+                        </div>
+                      </div>
+                      <div className="preview-cards-grid two-col">
+                        <article className="preview-subcard highlighted">
+                          <div className="subcard-head">
+                            <span className="small-label">CHAT GENERATIONS · /workspaces/default/</span>
+                            <IconSparkles size={16} aria-hidden="true" />
+                          </div>
+                          <h3>Multi-turn Chat with usage &amp; charge trace</h3>
+                          <div className="mini-chat-preview" aria-label="Sample saved Chat conversation">
+                            <div className="mini-chat-bubble is-user">
+                              Compare p99 tail latency across our claude-sonnet-4 route pool.
+                            </div>
+                            <div className="mini-chat-bubble is-assistant">
+                              <strong>claude-sonnet-4</strong> · Direct Anthropic held 18.9 ms p50 and 31.5 ms p99 at c = 64 with automatic 401 failover.
+                              <span className="mini-chat-receipt">40 tok · TTFT 11.4 ms · $0.018 settled · Saved in PostgreSQL</span>
+                            </div>
+                          </div>
+                        </article>
+                        <article className="preview-subcard">
+                          <div className="subcard-head">
+                            <span className="small-label">VIDEO GENERATIONS · SEEDANCE TASKS</span>
+                            <IconVideo size={16} aria-hidden="true" />
+                          </div>
+                          <h3>Async video creation, history &amp; result download</h3>
+                          <div className="mini-video-preview" aria-label="Sample Seedance video generation task">
+                            <div className="mini-video-stage">
+                              <div className="mini-video-frames" aria-hidden="true">
+                                <span />
+                                <span />
+                                <span />
+                                <span />
+                              </div>
+                              <div className="mini-video-meta">
+                                <strong>seedance-1-0-pro · 1080p · 5.0s · 16:9</strong>
+                                <span>Prompt &amp; reference frame persisted in PostgreSQL</span>
+                              </div>
+                            </div>
+                            <div className="mini-video-footer">
+                              <span className="route-status-pill is-primary">
+                                <span className="status-dot is-live" aria-hidden="true" />
+                                Completed · 120 frames
+                              </span>
+                              <span className="mini-video-action">Authorized MP4 download →</span>
+                            </div>
+                          </div>
+                        </article>
+                      </div>
                     </div>
-                    <span className="badge badge-accent">3-way isolation</span>
-                  </div>
-                  <div className="metrics">
-                    <div>
-                      <span>Provider purchase rate</span>
-                      <strong>
-                        Admin only <small>hidden from workspace</small>
-                      </strong>
-                    </div>
-                    <div>
-                      <span>Pre-dispatch hold</span>
-                      <strong>
-                        Active <small>company + workspace + key</small>
-                      </strong>
-                    </div>
-                    <div>
-                      <span>Interrupted stream</span>
-                      <strong>
-                        Unresolved <small>never fake $0</small>
-                      </strong>
-                    </div>
-                  </div>
-                  <div className="preview-cards-grid">
-                    <article className="preview-subcard">
-                      <span className="small-label">01 · PLATFORM ADMINISTRATION</span>
-                      <h3>Provider Offer &amp; Cost</h3>
-                      <p>Bind upstream mappings to agreed Provider rates and track settlement earnings without exposing procurement margins to customer workspaces.</p>
-                    </article>
-                    <article className="preview-subcard">
-                      <span className="small-label">02 · PRE-DISPATCH ADMISSION</span>
-                      <h3>Spending Cap Reservation</h3>
-                      <p>Reserve spending capacity across shared company funds, workspace limits, and API key caps in PostgreSQL before any upstream call is dispatched.</p>
-                    </article>
-                    <article className="preview-subcard highlighted">
-                      <span className="small-label">03 · CUSTOMER WORKSPACE</span>
-                      <h3>Customer Tariff &amp; Bill</h3>
-                      <p>Charge workspaces against immutable operation tariff bindings. Completed calls settle exact debits; interrupted calls stay explicitly unresolved.</p>
-                    </article>
-                  </div>
+                  )}
                 </div>
-              )}
 
-              {activePreviewIndex === 3 && (
-                <div className="investigation">
-                  <div className="task-heading">
-                    <div>
-                      <p className="small-label">Customer Self-Service Workspace</p>
-                      <h2>Persistent Chat sessions and Seedance video job management.</h2>
-                    </div>
-                    <span className="badge badge-accent">Chat + Video</span>
-                  </div>
-                  <div className="metrics">
-                    <div>
-                      <span>Session persistence</span>
-                      <strong>
-                        PostgreSQL <small>source of truth</small>
-                      </strong>
-                    </div>
-                    <div>
-                      <span>Video workflow</span>
-                      <strong>
-                        Seedance <small>async job tracking</small>
-                      </strong>
-                    </div>
-                    <div>
-                      <span>Result access</span>
-                      <strong>
-                        Authorized <small>workspace key / session</small>
-                      </strong>
-                    </div>
-                  </div>
-                  <div className="preview-cards-grid two-col">
-                    <article className="preview-subcard highlighted">
-                      <span className="small-label">CHAT GENERATIONS · /workspaces/default/</span>
-                      <h3>Multi-turn Chat with usage &amp; charge trace</h3>
-                      <p>Customers test models, compare outputs, and resume saved conversations across browsers while every response links to its workspace token count and customer charge.</p>
-                    </article>
-                    <article className="preview-subcard">
-                      <span className="small-label">VIDEO GENERATIONS · SEEDANCE TASKS</span>
-                      <h3>Async video creation, history &amp; result download</h3>
-                      <p>Submit text-to-video or image-to-video tasks, restore saved prompt/material inputs, track job status, and preview or download available video outputs.</p>
-                    </article>
-                  </div>
+                <div className="preview-caption">
+                  <span>Gateway · Workspace Dashboard · Model Catalog · Docs — served from one endpoint</span>
+                  <Button asChild size="sm" className="cta-primary cta-compact">
+                    <a href={links.dashboard}>
+                      Open workspace dashboard
+                      <IconArrowRight className="cta-arrow" aria-hidden="true" />
+                    </a>
+                  </Button>
                 </div>
-              )}
-            </div>
-
-            <div className="preview-caption">
-              <span>Gateway · Workspace Dashboard · Model Catalog · Docs — served from one endpoint</span>
-              <Button asChild size="sm" className="cta-primary cta-compact">
-                <a href={links.dashboard}>
-                  Open workspace dashboard
-                  <IconArrowRight className="cta-arrow" aria-hidden="true" />
-                </a>
-              </Button>
+              </div>
             </div>
           </div>
-        </div>
-        </div>
 
-        {/* 4 Core Competitive Advantages */}
-        <div className="pillars-grid" aria-label="Core competitive advantages">
-          {pillars.map((pillar, index) => {
-            const PillarIcon = pillarIcons[index];
-            return (
-              <article key={pillar.index} className="pillar-card" data-reveal data-spotlight style={stagger(index)}>
-                <span className="pillar-icon" aria-hidden="true">
-                  <PillarIcon size={20} stroke={1.75} />
-                </span>
-                <span className="pillar-metric">{pillar.metric}</span>
-                <h3>{pillar.title}</h3>
-                <p>{pillar.detail}</p>
-              </article>
-            );
-          })}
+          {/* 4 Core Competitive Advantages */}
+          <div className="pillars-grid" aria-label="Core competitive advantages">
+            {pillars.map((pillar, index) => {
+              const PillarIcon = pillarIcons[index];
+              return (
+                <article key={pillar.index} className="pillar-card" data-reveal data-spotlight style={stagger(index)}>
+                  <div className="pillar-top">
+                    <span className="pillar-icon" aria-hidden="true">
+                      <PillarIcon size={20} stroke={1.75} />
+                    </span>
+                    <span className="feature-number">{pillar.index}</span>
+                  </div>
+                  <span className="pillar-metric">{pillar.metric}</span>
+                  <h3>{pillar.title}</h3>
+                  <p>{pillar.detail}</p>
+                </article>
+              );
+            })}
+          </div>
         </div>
-      </div>
       </section>
 
       {/* 2. PERFORMANCE BENCHMARK (VISUAL CARDS + VERDICT) */}
@@ -471,7 +669,10 @@ export default function LandingContent({ latestPosts }: { latestPosts: LandingPo
         <div className="benchmark-demo" data-reveal>
           <div className="benchmark-toolbar">
             <span className="sample-label">AI-GATEWAY-BENCH · 0MS MOCK UPSTREAM (36,649 RPS DIRECT BASELINE)</span>
-            <span className="benchmark-status">Apple M4 (10-core, 24 GB) · PostgreSQL 17.11 · 0% errors</span>
+            <span className="benchmark-status">
+              <span className="status-dot is-live" aria-hidden="true" />
+              Apple M4 (10-core, 24 GB) · PostgreSQL 17.11 · 0% errors
+            </span>
           </div>
           <div className="benchmark-tabs" role="tablist" aria-label="Choose a benchmark workload">
             {benchmarkSuites.map((suite, index) => (
@@ -501,68 +702,87 @@ export default function LandingContent({ latestPosts }: { latestPosts: LandingPo
               </button>
             ))}
           </div>
-          {benchmarkSuites.map((suite, index) => (
-            <div
-              key={suite.id}
-              className="benchmark-panel"
-              role="tabpanel"
-              id={`benchmark-panel-${suite.id}`}
-              aria-labelledby={`benchmark-tab-${suite.id}`}
-              hidden={index !== activeSuiteIndex}
-              tabIndex={0}
-            >
-              <div className="benchmark-task">
-                <div>
-                  <span className="small-label">{suite.eyebrow}</span>
-                  <h3>{suite.title}</h3>
-                  <p>{suite.description}</p>
-                </div>
-                <div className="acceptance-rule">
-                  <strong>{suite.ruleTitle}</strong>
-                  <span>{suite.ruleDetail}</span>
-                </div>
-              </div>
-              <div className="model-comparison">
-                {suite.cards.map((card) => (
-                  <article key={card.name} className={`model-result${card.isWinner ? ' model-winner' : ''}`} data-spotlight>
-                    <div className="model-title">
+          {benchmarkSuites.map((suite, index) => {
+            const isActive = index === activeSuiteIndex;
+            const directionHint = suite.id === 'agents' || suite.id === 'efficiency' ? 'Lower is better' : 'Higher is better';
+            return (
+              <div
+                key={suite.id}
+                className="benchmark-panel"
+                role="tabpanel"
+                id={`benchmark-panel-${suite.id}`}
+                aria-labelledby={`benchmark-tab-${suite.id}`}
+                hidden={!isActive}
+                tabIndex={0}
+              >
+                {isActive && (
+                  <>
+                    <div className="benchmark-task">
                       <div>
-                        <h4>{card.name}</h4>
-                        <p>{card.runtime}</p>
+                        <span className="small-label">{suite.eyebrow}</span>
+                        <h3>{suite.title}</h3>
+                        <p>{suite.description}</p>
                       </div>
-                      <span className="model-verdict">{card.badge}</span>
+                      <div className="acceptance-rule">
+                        <strong>{suite.ruleTitle}</strong>
+                        <span>{suite.ruleDetail}</span>
+                      </div>
                     </div>
-                    <div className="per-result">
-                      <span>{card.primaryUnit}</span>
-                      <strong>{card.primaryMetric}</strong>
-                      <small>{card.primarySubtext}</small>
-                    </div>
-                    <div className="fusion-cost-bar" aria-hidden="true">
-                      <i style={{ width: `${card.barPercent}%` }} />
-                    </div>
-                    <dl className="model-facts">
-                      {card.facts.map((fact) => (
-                        <div key={fact.label}>
-                          <dt>{fact.label}</dt>
-                          <dd>{fact.value}</dd>
-                        </div>
+                    <div className="model-comparison">
+                      {suite.cards.map((card, cardIdx) => (
+                        <article
+                          key={`${suite.id}-${card.name}`}
+                          className={`model-result${card.isWinner ? ' model-winner' : ''}`}
+                          data-spotlight
+                          style={stagger(cardIdx)}
+                        >
+                          <div className="model-title">
+                            <div>
+                              <h4>{card.name}</h4>
+                              <p>{card.runtime}</p>
+                            </div>
+                            <span className="model-verdict">{card.badge}</span>
+                          </div>
+                          <div className="per-result">
+                            <span>
+                              {card.primaryUnit} · <em>{directionHint}</em>
+                            </span>
+                            <strong>
+                              <CountUp value={card.primaryMetric} />
+                            </strong>
+                            <small>{card.primarySubtext}</small>
+                          </div>
+                          <div className="fusion-cost-bar" aria-hidden="true">
+                            <i style={{ width: `${card.barPercent}%`, '--i': cardIdx } as React.CSSProperties} />
+                          </div>
+                          <dl className="model-facts">
+                            {card.facts.map((fact) => (
+                              <div key={fact.label}>
+                                <dt>{fact.label}</dt>
+                                <dd>{fact.value}</dd>
+                              </div>
+                            ))}
+                          </dl>
+                        </article>
                       ))}
-                    </dl>
-                  </article>
-                ))}
+                    </div>
+                    <div className="benchmark-verdict">
+                      <div className="verdict-number">
+                        <strong>
+                          <CountUp value={suite.verdictNumber} />
+                        </strong>
+                        <span>{suite.verdictSub}</span>
+                      </div>
+                      <div>
+                        <h4>{suite.verdictTitle}</h4>
+                        <p>{suite.verdictBody}</p>
+                      </div>
+                    </div>
+                  </>
+                )}
               </div>
-              <div className="benchmark-verdict">
-                <div className="verdict-number">
-                  <strong>{suite.verdictNumber}</strong>
-                  <span>{suite.verdictSub}</span>
-                </div>
-                <div>
-                  <h4>{suite.verdictTitle}</h4>
-                  <p>{suite.verdictBody}</p>
-                </div>
-              </div>
-            </div>
-          ))}
+            );
+          })}
           <div className="benchmark-method benchmark-method-compact">
             <p>
               <strong>Fairness note:</strong> Niu v0.2.4 ran with full ACID PostgreSQL pre-dispatch admission &amp; batched completion; New API (45fbb14) ran with <code>MEMORY_CACHE_ENABLED=true</code>; LiteLLM Proxy (v1.104.0) ran in stateless <code>master_key</code> mode with DB logs disabled. Always qualify your own deployment and workload.
@@ -596,6 +816,7 @@ export default function LandingContent({ latestPosts }: { latestPosts: LandingPo
         <div className="capability-grid">
           {capabilities.map((item, index) => {
             const CapabilityIcon = capabilityIcons[index];
+            const specStrip = capabilitySpecStrips[index];
             return (
               <article key={item.href} className="capability" data-reveal data-spotlight style={stagger(index % 3)}>
                 <div className="capability-top">
@@ -606,6 +827,15 @@ export default function LandingContent({ latestPosts }: { latestPosts: LandingPo
                 </div>
                 <h3>{item.title}</h3>
                 <p>{item.description}</p>
+                {specStrip && (
+                  <div className="capability-spec-strip" aria-hidden="true">
+                    {specStrip.tokens.map((tok, tokIdx) => (
+                      <span key={tok} className={tokIdx === specStrip.accentIndex ? 'is-accent' : ''}>
+                        {tok}
+                      </span>
+                    ))}
+                  </div>
+                )}
                 <a className="text-link" href={item.href}>
                   {item.label} <span aria-hidden="true">→</span>
                 </a>
@@ -628,13 +858,22 @@ export default function LandingContent({ latestPosts }: { latestPosts: LandingPo
               Point any OpenAI-compatible client, Claude Code, or Codex at your Niu gateway using a scoped workspace API key.
             </p>
             <ul className="gateway-features">
-              <li>
+              <li
+                className={activeCodeIndex === 0 ? 'is-highlighted' : ''}
+                onClick={() => setActiveCodeIndex(0)}
+              >
                 <span>01</span>Bind upstream Provider credentials to a route pool alias
               </li>
-              <li>
+              <li
+                className={activeCodeIndex === 1 ? 'is-highlighted' : ''}
+                onClick={() => setActiveCodeIndex(1)}
+              >
                 <span>02</span>Issue a workspace API key with model grants and spending caps
               </li>
-              <li>
+              <li
+                className={activeCodeIndex === 2 ? 'is-highlighted' : ''}
+                onClick={() => setActiveCodeIndex(2)}
+              >
                 <span>03</span>Stream responses while Niu records usage and customer charges
               </li>
             </ul>
@@ -647,22 +886,60 @@ export default function LandingContent({ latestPosts }: { latestPosts: LandingPo
               </a>
             </div>
           </div>
-          <div className="code-card" data-reveal style={stagger(1)}>
+          <div className="code-card" data-reveal data-spotlight style={stagger(1)}>
             <div className="code-heading">
-              <span className="code-window" aria-hidden="true">
-                <i />
-                <i />
-                <i />
-              </span>
-              <span>STREAMING REQUEST · /V1/CHAT/COMPLETIONS</span>
-              <span>cURL</span>
+              <div className="code-heading-left">
+                <span className="code-window" aria-hidden="true">
+                  <i />
+                  <i />
+                  <i />
+                </span>
+                <div className="code-tabs" role="tablist" aria-label="Choose API client example">
+                  {codeExamples.map((ex, idx) => (
+                    <button
+                      key={ex.id}
+                      type="button"
+                      role="tab"
+                      aria-selected={activeCodeIndex === idx}
+                      onClick={() => {
+                        setActiveCodeIndex(idx);
+                        setCopiedCode(false);
+                      }}
+                    >
+                      {ex.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <button
+                type="button"
+                className="code-copy-btn"
+                aria-label="Copy code snippet"
+                onClick={handleCopyCode}
+              >
+                {copiedCode ? <IconCheck size={14} aria-hidden="true" /> : <IconCopy size={14} aria-hidden="true" />}
+                <span>{copiedCode ? 'Copied' : 'Copy'}</span>
+              </button>
             </div>
-            <pre>
-              <code>{requestExample}</code>
+            <div className="code-endpoint-bar">
+              <span className="code-endpoint-label">{codeExamples[activeCodeIndex].endpoint}</span>
+              <span className="code-endpoint-meta">X-Niu-Trace: enabled</span>
+            </div>
+            <pre key={codeExamples[activeCodeIndex].id} className="code-pre">
+              <code>{codeExamples[activeCodeIndex].code}</code>
               <span className="code-cursor" aria-hidden="true" />
             </pre>
-            <div className="code-footnote">
-              <span className="status-dot is-live"></span>Recorded in PostgreSQL: <strong>Operation → Attempt → Usage (40 tok) → Settled Customer Charge ($0.018)</strong>
+            <div className="code-stream-preview" key={`stream-${codeExamples[activeCodeIndex].id}`}>
+              <div className="code-stream-line">
+                <span className="stream-badge">SSE 200 OK</span>
+                <span className="stream-text">{codeExamples[activeCodeIndex].streamOutput}</span>
+              </div>
+              <div className="code-footnote">
+                <span className="status-dot is-live"></span>
+                <span>
+                  Recorded in PostgreSQL: <strong>{codeExamples[activeCodeIndex].ledgerSummary}</strong>
+                </span>
+              </div>
             </div>
           </div>
         </div>

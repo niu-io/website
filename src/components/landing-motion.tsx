@@ -24,11 +24,13 @@ export function useLandingMotion(root: React.RefObject<HTMLElement | null>) {
       (entries) => {
         for (const entry of entries) {
           if (!entry.isIntersecting) continue;
-          entry.target.classList.add('is-visible');
-          observer.unobserve(entry.target);
+          const target = entry.target as HTMLElement;
+          target.classList.add('is-visible');
+          target.dataset.visible = 'true';
+          observer.unobserve(target);
         }
       },
-      { rootMargin: '0px 0px -8% 0px', threshold: 0.12 },
+      { rootMargin: '0px 0px -6% 0px', threshold: 0.08 },
     );
     targets.forEach((el) => observer.observe(el));
 
@@ -47,41 +49,49 @@ export function useLandingMotion(root: React.RefObject<HTMLElement | null>) {
   }, [root]);
 }
 
-/** Counts a formatted metric (for example `3,239`, `10.7×`, `31.5 ms`) up from zero once visible. */
+/** Counts a formatted metric (for example `3,239`, `10.7×`, `31.5 ms`) into place once visible or when its value changes. */
 export function CountUp({ value }: { value: string }) {
   const ref = useRef<HTMLSpanElement>(null);
   const [display, setDisplay] = useState(value);
   useEffect(() => {
-    const match = value.match(/^([\d,]+(?:\.\d+)?)(.*)$/);
+    const match = value.match(/^(\$?)([\d,]+(?:\.\d+)?)(.*)$/);
     const el = ref.current;
-    if (!match || !el || prefersReducedMotion()) return;
-    const [, numeric, suffix] = match;
+    if (!match || !el || prefersReducedMotion()) {
+      setDisplay(value);
+      return;
+    }
+    const [, prefix, numeric, suffix] = match;
     const target = Number(numeric.replaceAll(',', ''));
     const decimals = numeric.includes('.') ? numeric.split('.')[1].length : 0;
     const grouped = numeric.includes(',');
     const format = (n: number) =>
-      `${n.toLocaleString('en-US', {
+      `${prefix}${n.toLocaleString('en-US', {
         minimumFractionDigits: decimals,
         maximumFractionDigits: decimals,
         useGrouping: grouped,
       })}${suffix}`;
-    setDisplay(format(0));
+    const startRatio = 0.68;
     let frame = 0;
+    const runAnimation = () => {
+      const start = performance.now();
+      const duration = 680;
+      setDisplay(format(target * startRatio));
+      const tick = (now: number) => {
+        const t = Math.min(1, (now - start) / duration);
+        const eased = 1 - Math.pow(1 - t, 4);
+        const current = target * (startRatio + (1 - startRatio) * eased);
+        setDisplay(t < 1 ? format(current) : value);
+        if (t < 1) frame = requestAnimationFrame(tick);
+      };
+      frame = requestAnimationFrame(tick);
+    };
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (!entry.isIntersecting) return;
         observer.disconnect();
-        const start = performance.now();
-        const duration = 1400;
-        const tick = (now: number) => {
-          const t = Math.min(1, (now - start) / duration);
-          const eased = 1 - Math.pow(1 - t, 4);
-          setDisplay(t < 1 ? format(target * eased) : value);
-          if (t < 1) frame = requestAnimationFrame(tick);
-        };
-        frame = requestAnimationFrame(tick);
+        runAnimation();
       },
-      { threshold: 0.4 },
+      { threshold: 0.2 },
     );
     observer.observe(el);
     return () => {
@@ -90,8 +100,8 @@ export function CountUp({ value }: { value: string }) {
     };
   }, [value]);
   return (
-    <span ref={ref} aria-label={value}>
-      <span aria-hidden="true">{display}</span>
+    <span ref={ref} className="count-up-val" aria-label={value}>
+      {display}
     </span>
   );
 }
