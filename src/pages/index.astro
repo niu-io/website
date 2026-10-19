@@ -11,7 +11,13 @@ import { publishedPosts } from '../content/blog-policy';
 import '../styles/landing-blog.css';
 import '../styles/landing-visual.css';
 import LandingContent from '../components/LandingContent';
-import { links } from '../content/landing';
+import { links, codeExamples } from '../content/landing';
+import { codeToHtml } from 'shiki';
+const highlightedCode = await Promise.all(codeExamples.map(example => codeToHtml(example.code, {
+  lang: example.language,
+  themes: { light: 'github-light', dark: 'github-dark' },
+})));
+
 const latestPosts = publishedPosts(await getCollection('blog'))
   .slice(0, 3)
   .map(({ id, data, body }) => ({
@@ -67,6 +73,6 @@ const canonical = new URL(`${base}/`, Astro.site);
 
 <body>
 <a class="skip-link" href="#main">Skip to content</a><SiteHeader />
-<LandingContent client:load latestPosts={latestPosts} />
+<LandingContent client:load latestPosts={latestPosts} highlightedCode={highlightedCode} />
 <footer class="container footer"><div><a class="wordmark" href="/" aria-label="Niu home"><img src={asset('site-assets/brand/niu-mark.png')} alt="" width="28" height="28"/><span>Niu</span></a><p>Open-source foundations for your model API business.</p></div><div class="footer-links"><a href="/models/">Models</a><a href="/workspaces/default/">Dashboard</a><a href="/docs/">Documentation</a><a href="/blog/why-niu/">Why Niu?</a><a href="/blog/">Blog</a><a href="/compare/">Compare</a><a href={links.repo}>GitHub</a><a href={`${links.repo}/blob/main/THIRD-PARTY-NOTICES.md`}>Licenses & attribution</a><a href="https://github.com/niu-io/website">Website source</a></div></footer>
 </body></html>

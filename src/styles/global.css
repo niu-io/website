@@ -3205,3 +3205,24 @@ h3 {
     line-height: 1.25;
   }
 }
+
+/* Shiki uses the same light/dark selection as Niu's shared shell. */
+.shiki,
+.astro-code {
+  background-color: transparent !important;
+}
+html.dark :is(.shiki, .astro-code),
+html.dark :is(.shiki, .astro-code) span {
+  color: var(--shiki-dark) !important;
+}
+.highlighted-example {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+}
+.highlighted-example pre {
+  width: 100%;
+  min-width: 0;
+  line-height: 1.7;
+  tab-size: 2;
+}

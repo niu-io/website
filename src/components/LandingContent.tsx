@@ -387,8 +387,10 @@ const gatewaySteps = [
 
 export default function LandingContent({
   latestPosts,
+  highlightedCode,
 }: {
   latestPosts: LandingPost[];
+  highlightedCode: string[];
 }) {
   const [activePreviewIndex, setActivePreviewIndex] = useState(0);
   const [previewPaused, setPreviewPaused] = useState(false);
@@ -2381,10 +2383,14 @@ export default function LandingContent({
               <span>{codeExamples[activeCodeIndex].endpoint}</span>
               <span>TLS / Localhost · Bearer Workspace Key</span>
             </div>
-            <pre key={codeExamples[activeCodeIndex].id}>
-              <code>{codeExamples[activeCodeIndex].code}</code>
-              <span className="code-cursor" aria-hidden="true" />
-            </pre>
+            {/* Build-time Shiki HTML from our own source snippets; no runtime highlighter. */}
+            <div
+              key={codeExamples[activeCodeIndex].id}
+              className="highlighted-example"
+              dangerouslySetInnerHTML={{
+                __html: highlightedCode[activeCodeIndex],
+              }}
+            />
             <div className="code-footnote">
               <span className="status-dot is-live"></span>
               <span>
