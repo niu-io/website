@@ -15,9 +15,7 @@ import {
   IconScale,
   IconServerBolt,
   IconShieldLock,
-  IconSparkles,
   IconTimeline,
-  IconVideo,
 } from '@tabler/icons-react';
 import { Button } from './ui/button';
 import { links, pillars, capabilities, faqs, codeExamples, heroStats } from '../content/landing';
@@ -25,56 +23,6 @@ import { benchmarkSteps, benchmarkSuites } from '../content/benchmarks';
 
 const pillarIcons = [IconBolt, IconScale, IconTimeline, IconServerBolt];
 const capabilityIcons = [IconRoute, IconListSearch, IconCoins, IconShieldLock, IconPlugConnected, IconMessageChatbot];
-
-const capabilitySpecStrips: { tokens: string[]; accentIndex: number }[] = [
-  { tokens: ['claude-sonnet-4', 'Anthropic 80%', 'OpenRouter 20%'], accentIndex: 1 },
-  { tokens: ['Op', 'Attempt 1 · 401 ($0)', 'Attempt 2 · 40 tok'], accentIndex: 2 },
-  { tokens: ['Offer: Admin only', '≠', 'Tariff: $0.018 settled'], accentIndex: 2 },
-  { tokens: ['Company Cap', 'Workspace Cap', 'Key Hold ($0.050)'], accentIndex: 2 },
-  { tokens: ['/v1/chat/completions', '/v1/responses', '/v1/messages'], accentIndex: 0 },
-  { tokens: ['PostgreSQL Chat', 'Seedance 1080p Video', 'Auth Download'], accentIndex: 1 },
-];
-
-const codeExamples = [
-  {
-    id: 'curl',
-    label: 'cURL',
-    endpoint: 'STREAMING REQUEST · /V1/CHAT/COMPLETIONS',
-    code: requestExample,
-    streamOutput: 'Q3 gateway p50 held at 18.9 ms (31.5 ms p99 at c = 64) across 3,239 RPS.',
-    ledgerSummary: 'Operation → Attempt 2 (Anthropic) → 40 SSE tok → Settled ($0.018)',
-  },
-  {
-    id: 'ts',
-    label: 'TypeScript SDK',
-    endpoint: 'OPENAI-COMPATIBLE SDK · WORKSPACE KEY',
-    code: `import OpenAI from "openai";
-
-const niu = new OpenAI({
-  baseURL: "http://localhost:2555/v1",
-  apiKey: process.env.NIU_API_KEY,
-});
-
-const stream = await niu.chat.completions.create({
-  model: "claude-sonnet-4",
-  messages: [{ role: "user", content: "Summarize Q3 latency." }],
-  stream: true,
-});`,
-    streamOutput: 'Streamed 43/43 SSE chunks (1.34 ms median ITL) with zero dropped frames.',
-    ledgerSummary: 'Pre-dispatch hold ($0.050) → 40 tok usage → Exact debit ($0.018)',
-  },
-  {
-    id: 'claude',
-    label: 'Claude Code',
-    endpoint: 'SCOPED ANTHROPIC MESSAGES · /V1/MESSAGES',
-    code: `export ANTHROPIC_BASE_URL="http://localhost:2555"
-export ANTHROPIC_API_KEY="$NIU_API_KEY"
-
-claude -p "Audit route pool failover and PostgreSQL batch settlement"`,
-    streamOutput: '16 concurrent 30-turn agent sessions completed in 1.75 s (55.0 ms/turn).',
-    ledgerSummary: 'Scoped /v1/messages → Route pool claude-sonnet-4 → Settled ($0.018)',
-  },
-];
 
 interface LandingPost {
   href: string;
@@ -658,10 +606,7 @@ export default function LandingContent({ latestPosts }: { latestPosts: LandingPo
         <div className="benchmark-demo" data-reveal>
           <div className="benchmark-toolbar">
             <span className="sample-label">AI-GATEWAY-BENCH · 0MS MOCK UPSTREAM (36,649 RPS DIRECT BASELINE)</span>
-            <span className="benchmark-status">
-              <span className="status-dot is-live" aria-hidden="true" />
-              Apple M4 (10-core, 24 GB) · PostgreSQL 17.11 · 0% errors
-            </span>
+            <span className="benchmark-status">Apple M4 (10-core, 24 GB) · PostgreSQL 17.11 · 0% errors</span>
           </div>
           <div className="benchmark-tabs" role="tablist" aria-label="Choose a benchmark workload">
             {benchmarkSuites.map((suite, index) => (
@@ -691,87 +636,68 @@ export default function LandingContent({ latestPosts }: { latestPosts: LandingPo
               </button>
             ))}
           </div>
-          {benchmarkSuites.map((suite, index) => {
-            const isActive = index === activeSuiteIndex;
-            const directionHint = suite.id === 'agents' || suite.id === 'efficiency' ? 'Lower is better' : 'Higher is better';
-            return (
-              <div
-                key={suite.id}
-                className="benchmark-panel"
-                role="tabpanel"
-                id={`benchmark-panel-${suite.id}`}
-                aria-labelledby={`benchmark-tab-${suite.id}`}
-                hidden={!isActive}
-                tabIndex={0}
-              >
-                {isActive && (
-                  <>
-                    <div className="benchmark-task">
-                      <div>
-                        <span className="small-label">{suite.eyebrow}</span>
-                        <h3>{suite.title}</h3>
-                        <p>{suite.description}</p>
-                      </div>
-                      <div className="acceptance-rule">
-                        <strong>{suite.ruleTitle}</strong>
-                        <span>{suite.ruleDetail}</span>
-                      </div>
-                    </div>
-                    <div className="model-comparison">
-                      {suite.cards.map((card, cardIdx) => (
-                        <article
-                          key={`${suite.id}-${card.name}`}
-                          className={`model-result${card.isWinner ? ' model-winner' : ''}`}
-                          data-spotlight
-                          style={stagger(cardIdx)}
-                        >
-                          <div className="model-title">
-                            <div>
-                              <h4>{card.name}</h4>
-                              <p>{card.runtime}</p>
-                            </div>
-                            <span className="model-verdict">{card.badge}</span>
-                          </div>
-                          <div className="per-result">
-                            <span>
-                              {card.primaryUnit} · <em>{directionHint}</em>
-                            </span>
-                            <strong>
-                              <CountUp value={card.primaryMetric} />
-                            </strong>
-                            <small>{card.primarySubtext}</small>
-                          </div>
-                          <div className="fusion-cost-bar" aria-hidden="true">
-                            <i style={{ width: `${card.barPercent}%`, '--i': cardIdx } as React.CSSProperties} />
-                          </div>
-                          <dl className="model-facts">
-                            {card.facts.map((fact) => (
-                              <div key={fact.label}>
-                                <dt>{fact.label}</dt>
-                                <dd>{fact.value}</dd>
-                              </div>
-                            ))}
-                          </dl>
-                        </article>
-                      ))}
-                    </div>
-                    <div className="benchmark-verdict">
-                      <div className="verdict-number">
-                        <strong>
-                          <CountUp value={suite.verdictNumber} />
-                        </strong>
-                        <span>{suite.verdictSub}</span>
-                      </div>
-                      <div>
-                        <h4>{suite.verdictTitle}</h4>
-                        <p>{suite.verdictBody}</p>
-                      </div>
-                    </div>
-                  </>
-                )}
+          {benchmarkSuites.map((suite, index) => (
+            <div
+              key={suite.id}
+              className="benchmark-panel"
+              role="tabpanel"
+              id={`benchmark-panel-${suite.id}`}
+              aria-labelledby={`benchmark-tab-${suite.id}`}
+              hidden={index !== activeSuiteIndex}
+              tabIndex={0}
+            >
+              <div className="benchmark-task">
+                <div>
+                  <span className="small-label">{suite.eyebrow}</span>
+                  <h3>{suite.title}</h3>
+                  <p>{suite.description}</p>
+                </div>
+                <div className="acceptance-rule">
+                  <strong>{suite.ruleTitle}</strong>
+                  <span>{suite.ruleDetail}</span>
+                </div>
               </div>
-            );
-          })}
+              <div className="model-comparison">
+                {suite.cards.map((card) => (
+                  <article key={card.name} className={`model-result${card.isWinner ? ' model-winner' : ''}`} data-spotlight>
+                    <div className="model-title">
+                      <div>
+                        <h4>{card.name}</h4>
+                        <p>{card.runtime}</p>
+                      </div>
+                      <span className="model-verdict">{card.badge}</span>
+                    </div>
+                    <div className="per-result">
+                      <span>{card.primaryUnit}</span>
+                      <strong>{card.primaryMetric}</strong>
+                      <small>{card.primarySubtext}</small>
+                    </div>
+                    <div className="fusion-cost-bar" aria-hidden="true">
+                      <i style={{ width: `${card.barPercent}%` }} />
+                    </div>
+                    <dl className="model-facts">
+                      {card.facts.map((fact) => (
+                        <div key={fact.label}>
+                          <dt>{fact.label}</dt>
+                          <dd>{fact.value}</dd>
+                        </div>
+                      ))}
+                    </dl>
+                  </article>
+                ))}
+              </div>
+              <div className="benchmark-verdict">
+                <div className="verdict-number">
+                  <strong>{suite.verdictNumber}</strong>
+                  <span>{suite.verdictSub}</span>
+                </div>
+                <div>
+                  <h4>{suite.verdictTitle}</h4>
+                  <p>{suite.verdictBody}</p>
+                </div>
+              </div>
+            </div>
+          ))}
           <div className="benchmark-method benchmark-method-compact">
             <p>
               <strong>Fairness note:</strong> Niu v0.2.4 ran with full ACID PostgreSQL pre-dispatch admission &amp; batched completion; New API (45fbb14) ran with <code>MEMORY_CACHE_ENABLED=true</code>; LiteLLM Proxy (v1.104.0) ran in stateless <code>master_key</code> mode with DB logs disabled. Always qualify your own deployment and workload.
@@ -805,7 +731,6 @@ export default function LandingContent({ latestPosts }: { latestPosts: LandingPo
         <div className="capability-grid">
           {capabilities.map((item, index) => {
             const CapabilityIcon = capabilityIcons[index];
-            const specStrip = capabilitySpecStrips[index];
             return (
               <article key={item.href} className="capability" data-reveal data-spotlight style={stagger(index % 3)}>
                 <div className="capability-top">
@@ -816,15 +741,6 @@ export default function LandingContent({ latestPosts }: { latestPosts: LandingPo
                 </div>
                 <h3>{item.title}</h3>
                 <p>{item.description}</p>
-                {specStrip && (
-                  <div className="capability-spec-strip" aria-hidden="true">
-                    {specStrip.tokens.map((tok, tokIdx) => (
-                      <span key={tok} className={tokIdx === specStrip.accentIndex ? 'is-accent' : ''}>
-                        {tok}
-                      </span>
-                    ))}
-                  </div>
-                )}
                 <a className="text-link" href={item.href}>
                   {item.label} <span aria-hidden="true">→</span>
                 </a>
@@ -866,7 +782,7 @@ export default function LandingContent({ latestPosts }: { latestPosts: LandingPo
               </a>
             </div>
           </div>
-          <div className="code-card" data-reveal data-spotlight style={stagger(1)}>
+          <div className="code-card" data-reveal style={stagger(1)}>
             <div className="code-heading">
               <span className="code-window" aria-hidden="true">
                 <i />
