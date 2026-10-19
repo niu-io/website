@@ -36,17 +36,17 @@ interface LandingPost {
 }
 
 const previewTabs = [
-  { id: 'evidence', label: 'Request evidence & trace', breadcrumb: 'Workspace · Request Logs' },
-  { id: 'routing', label: 'Route pools & supply', breadcrumb: 'Administration · Route Pools' },
-  { id: 'billing', label: 'Three-way accounting', breadcrumb: 'Workspace · Usage & Tariffs' },
-  { id: 'generations', label: 'Chat & Seedance video', breadcrumb: 'Workspace · Generations' },
+  { id: 'evidence', label: 'Request evidence & trace', breadcrumb: 'Workspace / Logs' },
+  { id: 'routing', label: 'Route pools & supply', breadcrumb: 'Admin / Route pools' },
+  { id: 'billing', label: 'Three-way accounting', breadcrumb: 'Admin / Financial statements' },
+  { id: 'generations', label: 'Chat & Seedance video', breadcrumb: 'Generations · Chat & Video' },
 ];
 
 const traceSpans = [
-  { name: 'Pre-dispatch hold', kind: 'ACID admission & cap check', offset: 0, width: 12, duration: '2.1 ms', tag: 'HOLD OK' },
-  { name: 'Attempt 1 · OpenRouter', kind: 'HTTP 401 rejected ($0)', offset: 12, width: 18, duration: '3.2 ms', tag: '401 FAILOVER' },
-  { name: 'Attempt 2 · Anthropic', kind: '200 OK · 40 SSE tokens', offset: 30, width: 58, duration: '11.4 ms', tag: '200 STREAM' },
-  { name: 'Batch settlement', kind: '64-row UNNEST commit', offset: 88, width: 12, duration: '2.2 ms', tag: 'SETTLED' },
+  { name: 'Preparation', kind: 'Validation, policy & route admission', offset: 0, width: 12, duration: '2.1 ms', tag: 'ADMITTED' },
+  { name: 'Attempt 1 · Rejected', kind: 'Not executed · HTTP 401 · Not charged', offset: 12, width: 17, duration: '3.2 ms', tag: 'HTTP 401' },
+  { name: 'First output wait', kind: 'Attempt 2 dispatch to first SSE token', offset: 29, width: 23, duration: '4.4 ms', tag: 'TTFT' },
+  { name: 'Output stream', kind: '40 SSE tokens · Completed · $0.018', offset: 52, width: 48, duration: '9.2 ms', tag: 'HTTP 200' },
 ];
 
 const gatewaySteps = [
@@ -300,15 +300,15 @@ export default function LandingContent({ latestPosts }: { latestPosts: LandingPo
                         <div className={activeSpanIndex === 1 ? 'is-highlighted' : undefined}>
                           <span className="evidence-icon warning">!</span>
                           <div>
-                            <span className="small-label">ATTEMPT 1 · OPENROUTER</span>
-                            <strong>401 Rejected · $0.00</strong>
+                            <span className="small-label">ATTEMPT 1 · RELATED REQUEST</span>
+                            <strong>Not executed · HTTP 401 · Not charged</strong>
                           </div>
                         </div>
-                        <div className={activeSpanIndex === 2 ? 'is-highlighted' : undefined}>
+                        <div className={activeSpanIndex === 2 || activeSpanIndex === 3 ? 'is-highlighted' : undefined}>
                           <span className="evidence-icon">✓</span>
                           <div>
-                            <span className="small-label">ATTEMPT 2 · ANTHROPIC</span>
-                            <strong>40 tok · $0.018 settled</strong>
+                            <span className="small-label">ATTEMPT 2 · RELATED REQUEST</span>
+                            <strong>Completed · 40 tok · $0.018</strong>
                           </div>
                         </div>
                         <p>Uncertain mid-stream drops remain explicitly unresolved—never fabricated as $0.</p>
@@ -320,28 +320,28 @@ export default function LandingContent({ latestPosts }: { latestPosts: LandingPo
                     <div className="investigation">
                       <div className="task-heading">
                         <div>
-                          <p className="small-label">Route Pool Configuration · Revision 4</p>
-                          <h2>One customer alias backed by prioritized Provider routes.</h2>
+                          <p className="small-label">Admin / Route pools · Revision 4 · Shared pool</p>
+                          <h2>One customer alias backed by prioritized candidate routes.</h2>
                         </div>
                         <span className="badge badge-accent">Pool: claude-sonnet-4</span>
                       </div>
                       <div className="metrics">
                         <div>
-                          <span>Catalog snapshot reads</span>
+                          <span>Ownership scope</span>
                           <strong>
-                            1,346 <small>reads/s</small>
+                            Shared pool <small>all workspaces</small>
                           </strong>
                         </div>
                         <div>
-                          <span>Route cache TTL</span>
+                          <span>Candidate routes</span>
                           <strong>
-                            5.0 <small>seconds</small>
+                            3 <small>of 3 enabled</small>
                           </strong>
                         </div>
                         <div>
-                          <span>Upstream credentials</span>
+                          <span>Auth cooldown policy</span>
                           <strong>
-                            Server-side <small>AES-GCM encrypted</small>
+                            0 / 3 <small>failures in 60s window</small>
                           </strong>
                         </div>
                       </div>
@@ -349,49 +349,49 @@ export default function LandingContent({ latestPosts }: { latestPosts: LandingPo
                         <table className="comparison-matrix preview-table">
                           <thead>
                             <tr>
-                              <th>Candidate mapping</th>
-                              <th>Provider</th>
-                              <th>Priority &amp; Traffic Share</th>
-                              <th>Declared capabilities</th>
+                              <th>Candidate route alias</th>
+                              <th>Priority tier</th>
+                              <th>Weight &amp; tier share</th>
+                              <th>Temporary cooldown</th>
                               <th>Status</th>
                             </tr>
                           </thead>
                           <tbody>
                             <tr className="matrix-selected">
                               <td><strong>claude-sonnet-4-direct</strong></td>
-                              <td>Anthropic Direct</td>
+                              <td>Priority 100</td>
                               <td>
                                 <div className="route-weight-cell">
-                                  <span>P100 · 80% weight</span>
+                                  <span>Weight 800 · 80% tier share</span>
                                   <i className="route-weight-bar"><b style={{ width: '80%' }} /></i>
                                 </div>
                               </td>
-                              <td>Chat · Messages · SSE · Tools</td>
-                              <td><span className="route-status is-primary"><i className="status-dot is-live" />Selected primary</span></td>
+                              <td>No active cooldown · 0 / 3 in 60s</td>
+                              <td><span className="route-status is-primary"><i className="status-dot is-live" />Enabled</span></td>
                             </tr>
                             <tr>
                               <td><strong>claude-sonnet-4-or</strong></td>
-                              <td>OpenRouter</td>
+                              <td>Priority 100</td>
                               <td>
                                 <div className="route-weight-cell">
-                                  <span>P100 · 20% weight</span>
+                                  <span>Weight 200 · 20% tier share</span>
                                   <i className="route-weight-bar"><b style={{ width: '20%' }} /></i>
                                 </div>
                               </td>
-                              <td>Chat · Messages · SSE · Tools</td>
-                              <td><span className="route-status">Active weighted peer</span></td>
+                              <td>No active cooldown · 0 / 3 in 60s</td>
+                              <td><span className="route-status">Enabled</span></td>
                             </tr>
                             <tr>
                               <td><strong>claude-sonnet-4-vertex</strong></td>
-                              <td>Google Vertex AI</td>
+                              <td>Priority 50</td>
                               <td>
                                 <div className="route-weight-cell">
-                                  <span>P50 · Standby tier</span>
+                                  <span>Weight 1000 · Standby tier</span>
                                   <i className="route-weight-bar"><b style={{ width: '100%', opacity: 0.35 }} /></i>
                                 </div>
                               </td>
-                              <td>Chat · SSE</td>
-                              <td><span className="route-status is-muted">Secondary failover</span></td>
+                              <td>No active cooldown · 0 / 3 in 60s</td>
+                              <td><span className="route-status is-muted">Enabled · standby</span></td>
                             </tr>
                           </tbody>
                         </table>
@@ -407,11 +407,11 @@ export default function LandingContent({ latestPosts }: { latestPosts: LandingPo
                         <div>
                           <span className="evidence-icon">◇</span>
                           <div>
-                            <span className="small-label">CREDENTIAL BOUNDARY</span>
-                            <strong>Zero client key leakage</strong>
+                            <span className="small-label">IMMUTABLE REVISIONS</span>
+                            <strong>Revision 4 · audited history</strong>
                           </div>
                         </div>
-                        <p>Supply readiness requires active approved Provider offers plus enabled route mappings.</p>
+                        <p>Highest eligible priority wins, with weighted selection inside that tier.</p>
                       </div>
                     </div>
                   )}
