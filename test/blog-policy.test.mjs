@@ -1,7 +1,7 @@
 import { strict as assert } from 'node:assert';
 import { test } from 'node:test';
 import { publishedPosts } from '../src/content/blog-policy.ts';
-const post = (id: string, overrides = {}) => ({ id, data: { status: 'published', pinned: false, pinOrder: 0, publishedAt: '2026-10-01', ...overrides } });
+const post = (id, overrides = {}) => ({ id, data: { status: 'published', pinned: false, pinOrder: 0, publishedAt: '2026-10-01', ...overrides } });
 const now = new Date('2026-10-18T00:00:00Z');
 test('excludes drafts, archives and future posts from every publication consumer', () => {
   assert.deepEqual(publishedPosts([post('draft', {status:'draft',pinned:true}), post('archive', {status:'archived'}), post('future',{publishedAt:'2026-10-19'}), post('today',{publishedAt:'2026-10-18'})], now).map(p => p.id), ['today']);

@@ -23,6 +23,7 @@ jobs:
           node-version: 24
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      - run: pnpm test
       - run: pnpm check
       - run: pnpm build
       - name: Verify root mounted website artifact

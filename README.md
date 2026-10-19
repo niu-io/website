@@ -72,7 +72,7 @@ The marketing source and brand snapshot were carried back from public Niu commit
 ## Blog publishing
 
 Manage articles in `src/content/blog/*.md`; the filename is the permanent URL slug.
-The homepage, blog index and generated article routes share one publication policy.
+The homepage, blog index, sitemap and generated article routes share one publication policy.
 
 ```yaml
 ---
@@ -96,4 +96,4 @@ pinOrder: 0
 - Keep `publishedAt` stable and set `updatedAt` when making substantive edits.
 - This is a static site: content changes and future publication dates require a
   new build and deployment. There is no automatic scheduler or browser admin yet.
-- Run `node --test test/blog-policy.test.ts` and `pnpm check` before publishing.
+- Run `pnpm test` and `pnpm check` before publishing. CI runs these checks on every pull request.
