@@ -5,11 +5,11 @@
     "src/styles/public-header.css": "efd81b52f19bff011bcaddb1c52c784726c8da3138d1bff7f3c118c73f87b351",
     "src/content/public-navigation.json": "cc49a3649789518b221f989dae9976978ca3e3f5a89888afa1f164d1b2e39051",
     "src/components/PublicHeader.tsx": "a5daa6b4968cbe1f220b5ab89340ac8b5eba797ab155b6fccbfde61738f97e5f",
-    "src/components/SessionLink.tsx": "af9915aab8e9f15e50dec04d325f56203f73012287f688d160a8d8cff0f6ca48",
+    "src/components/SessionLink.tsx": "7010b46645e5aff64a30a216652098b528518334bdb6bba0d3b65f7c7b88ceb4",
     "src/components/live-api/session.ts": "fe89a76e3505741e7b30631fea828d54cf80ecb26086c43f3c298ca75c64cf7e",
     "src/content/docs-navigation.ts": "15da10412eda40bcdf866cc082c1888a0df6dfef673deed2d3f5b8e4e2e906a0",
     "src/components/PublicNavigationMenu.tsx": "667d632be024a57b9ea8ca59c32d396441d3799304e023c5784ace033acc4e82"
   },
-  "sourceRevision": "0cc007e1b0beafa4433ca5c494ec27f825e5e4bd",
+  "sourceRevision": "8c12c75a2dc50d278ae280c50dae9ab45307e46d",
   "sourceWorkingTreeModified": false
 }
