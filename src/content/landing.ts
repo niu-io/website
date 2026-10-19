@@ -92,24 +92,52 @@ export const capabilities = [
 
 export const faqs = [
   {
+    index: '01',
+    category: 'Architecture',
     question: 'How does Niu differ from LiteLLM Proxy and New API?',
     answer: 'LiteLLM Proxy is a Python developer proxy (~302 RPS at c=64, 158 MB idle RSS); New API is a Go channel relay (~866 RPS peak, shared user/channel quota model). Niu is a Rust AI gateway (3,238.7 RPS at c=64, 18.2 MB idle RSS) purpose-built for model API businesses—separating Provider offers from customer tariffs, enforcing pre-dispatch spending holds, and shipping saved Chat and Video workspaces.',
+    linkLabel: 'Compare gateways',
+    linkHref: '/compare/',
   },
   {
+    index: '02',
+    category: 'Commercial boundary',
     question: 'Can customers see my upstream Provider prices or margins?',
     answer: 'No. Customer workspace reports, logs, and API responses only expose customer-facing tariffs and charges. Provider purchase rates, procurement budgets, and platform margins are restricted to platform administration.',
+    linkLabel: 'Usage & billing boundary',
+    linkHref: '/docs/concepts/performance-and-cost/',
   },
   {
+    index: '03',
+    category: 'Stream reliability',
     question: 'What happens when an upstream stream drops mid-response?',
     answer: 'Niu records pre-dispatch admission in PostgreSQL and never blindly replays an uncertain request that may have already executed upstream. If usage evidence is missing after a disconnect, the attempt and charge remain explicitly unresolved rather than fabricating a $0 bill.',
+    linkLabel: 'Request evidence contract',
+    linkHref: '/docs/concepts/execution-observation/',
   },
   {
+    index: '04',
+    category: 'Self-hosting',
     question: 'Can I self-host the entire stack without private dependencies?',
     answer: 'Yes. The public gateway, dashboard, model catalog, and documentation run together against a single PostgreSQL database. Niu-owned public code is MIT-licensed and requires no external license service.',
+    linkLabel: 'Single-container deployment',
+    linkHref: '/docs/deployment/single-container/',
   },
   {
+    index: '05',
+    category: 'Extensibility',
+    question: 'How do plugins and commercial extensions integrate without bloating the core?',
+    answer: 'Niu keeps its Rust data plane lean and extensible through the open niu-plugin-api contract and niu-plugin-sdk. Plugins run as supervised Unix-socket services verified with short-lived Ed25519 JWS request contexts, isolating custom policies, webhooks, and enterprise modules from core inference latency.',
+    linkLabel: 'Architecture overview',
+    linkHref: '/docs/concepts/architecture/',
+  },
+  {
+    index: '06',
+    category: 'Release scope',
     question: 'What is ready to evaluate today vs. still under qualification?',
-    answer: 'Model route pools, workspace API keys, spending caps, request/charge accounting, and saved Chat & Video interfaces are available in the development build. Full first-release qualification across all commercial payment, Provider settlement, and recovery gates is tracked in the release matrix.',
+    answer: 'Model route pools, workspace API keys, spending caps, request/charge accounting, and saved Chat & Video interfaces are available in the current build. Full first-release qualification across all commercial payment, Provider settlement, and recovery gates is tracked in the release matrix.',
+    linkLabel: 'Release acceptance matrix',
+    linkHref: 'https://github.com/niu-io/niu/blob/main/docs/releases/first-release.md',
   },
 ];
 
@@ -121,3 +149,46 @@ export const requestExample = `curl http://localhost:2555/v1/chat/completions \\
     "messages": [{"role": "user", "content": "Check Q3 p99."}],
     "stream": true
   }'`;
+
+export const codeExamples = [
+  {
+    id: 'curl',
+    label: 'cURL · SSE',
+    endpoint: 'POST /v1/chat/completions',
+    code: requestExample,
+    trace: 'Operation → Attempt #1 (Anthropic 200 OK) → 40 SSE tok → Settled Customer Charge ($0.018)',
+  },
+  {
+    id: 'sdk',
+    label: 'TypeScript SDK',
+    endpoint: '@niu/sdk · NiuClient',
+    code: `import { NiuClient } from "@niu/sdk";
+
+const niu = new NiuClient({
+  baseUrl: "https://niu.io",
+  apiKey: process.env.NIU_API_KEY,
+});
+
+const stream = await niu.chat.completions.create({
+  model: "claude-sonnet-4",
+  messages: [{ role: "user", content: "Summarize our Q3 API latency." }],
+  stream: true,
+});`,
+    trace: 'Typed SSE iterator · Scoped workspace key · Pre-dispatch hold reserved in PostgreSQL',
+  },
+  {
+    id: 'agents',
+    label: 'Claude Code & Codex',
+    endpoint: 'POST /v1/messages & /v1/responses',
+    code: `export ANTHROPIC_BASE_URL="http://localhost:2555"
+export ANTHROPIC_API_KEY="$NIU_WORKSPACE_KEY"
+
+export OPENAI_BASE_URL="http://localhost:2555/v1"
+export OPENAI_API_KEY="$NIU_WORKSPACE_KEY"
+
+# Launch coding agents directly against your Niu route pool
+claude "Refactor the billing ledger retry handler"`,
+    trace: 'Native /v1/messages & /v1/responses · Multi-turn tool calls · Per-key budget cap enforced',
+  },
+];
+

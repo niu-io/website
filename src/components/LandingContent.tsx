@@ -20,7 +20,7 @@ import {
   IconVideo,
 } from '@tabler/icons-react';
 import { Button } from './ui/button';
-import { links, pillars, capabilities, faqs, requestExample, heroStats } from '../content/landing';
+import { links, pillars, capabilities, faqs, codeExamples, heroStats } from '../content/landing';
 import { benchmarkSteps, benchmarkSuites } from '../content/benchmarks';
 
 const pillarIcons = [IconBolt, IconScale, IconTimeline, IconServerBolt];
@@ -84,6 +84,7 @@ interface LandingPost {
   publishedAt: string;
   dateLabel: string;
   readingTime: string;
+  highlights?: string[];
 }
 
 const previewTabs = [
@@ -94,15 +95,34 @@ const previewTabs = [
 ];
 
 const traceSpans = [
-  { name: 'Pre-dispatch hold', kind: 'ACID admission & cap check', offset: 0, width: 12, duration: '2.1 ms', tag: '2.1 ms · hold' },
-  { name: 'Attempt 1 · OpenRouter', kind: 'HTTP 401 rejected ($0)', offset: 12, width: 18, duration: '3.2 ms', tag: '3.2 ms · 401 ($0)' },
-  { name: 'Attempt 2 · Anthropic', kind: '200 OK · 40 SSE tokens', offset: 30, width: 58, duration: '11.4 ms', tag: '11.4 ms · 40 tok' },
-  { name: 'Batch settlement', kind: '64-row UNNEST commit', offset: 88, width: 12, duration: '2.2 ms', tag: '2.2 ms · commit' },
+  { name: 'Pre-dispatch hold', kind: 'ACID admission & cap check', offset: 0, width: 12, duration: '2.1 ms', tag: 'HOLD OK' },
+  { name: 'Attempt 1 · OpenRouter', kind: 'HTTP 401 rejected ($0)', offset: 12, width: 18, duration: '3.2 ms', tag: '401 FAILOVER' },
+  { name: 'Attempt 2 · Anthropic', kind: '200 OK · 40 SSE tokens', offset: 30, width: 58, duration: '11.4 ms', tag: '200 STREAM' },
+  { name: 'Batch settlement', kind: '64-row UNNEST commit', offset: 88, width: 12, duration: '2.2 ms', tag: 'SETTLED' },
+];
+
+const gatewaySteps = [
+  {
+    step: '01',
+    title: 'Bind upstream Provider credentials to a route pool alias',
+    detail: 'Keep Anthropic, OpenRouter, and Vertex credentials encrypted server-side behind one customer model name.',
+  },
+  {
+    step: '02',
+    title: 'Issue a workspace API key with model grants and spending caps',
+    detail: 'Scope each key to authorized models and reserve company, workspace, and key budgets before dispatch.',
+  },
+  {
+    step: '03',
+    title: 'Stream responses while Niu settles usage and customer charges',
+    detail: 'Every call links its operation, upstream attempts, SSE token count, and settled customer tariff in PostgreSQL.',
+  },
 ];
 
 export default function LandingContent({ latestPosts }: { latestPosts: LandingPost[] }) {
   const [activePreviewIndex, setActivePreviewIndex] = useState(0);
-  const [isPreviewPaused, setIsPreviewPaused] = useState(false);
+  const [previewPaused, setPreviewPaused] = useState(false);
+  const [activeSpanIndex, setActiveSpanIndex] = useState<number | null>(null);
   const [activeSuiteIndex, setActiveSuiteIndex] = useState(0);
   const [activeCodeIndex, setActiveCodeIndex] = useState(0);
   const [copiedCode, setCopiedCode] = useState(false);
@@ -111,24 +131,21 @@ export default function LandingContent({ latestPosts }: { latestPosts: LandingPo
   const stagger = (i: number) => ({ '--i': i }) as React.CSSProperties;
 
   useEffect(() => {
-    if (isPreviewPaused) return;
-    if (typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      return;
-    }
+    if (previewPaused) return;
+    if (typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const timer = window.setInterval(() => {
       setActivePreviewIndex((prev) => (prev + 1) % previewTabs.length);
     }, 6500);
     return () => window.clearInterval(timer);
-  }, [isPreviewPaused, activePreviewIndex]);
+  }, [previewPaused, activePreviewIndex]);
 
-  const handleCopyCode = async () => {
-    try {
-      await navigator.clipboard.writeText(codeExamples[activeCodeIndex].code);
+  const handleCopyCode = () => {
+    const snippet = codeExamples[activeCodeIndex]?.code;
+    if (!snippet || typeof navigator === 'undefined' || !navigator.clipboard) return;
+    void navigator.clipboard.writeText(snippet).then(() => {
       setCopiedCode(true);
       window.setTimeout(() => setCopiedCode(false), 1800);
-    } catch {
-      // Clipboard API unavailable in restricted contexts
-    }
+    });
   };
 
   return (
@@ -191,11 +208,19 @@ export default function LandingContent({ latestPosts }: { latestPosts: LandingPo
 
           {/* Interactive Product UI Preview Window */}
           <div
-            className="preview-frame"
+            className={`preview-frame${previewPaused ? ' is-paused' : ''}`}
             data-reveal
-            data-paused={isPreviewPaused ? 'true' : undefined}
-            onMouseEnter={() => setIsPreviewPaused(true)}
-            onMouseLeave={() => setIsPreviewPaused(false)}
+            onMouseEnter={() => setPreviewPaused(true)}
+            onMouseLeave={() => {
+              setPreviewPaused(false);
+              setActiveSpanIndex(null);
+            }}
+            onFocusCapture={() => setPreviewPaused(true)}
+            onBlurCapture={(e) => {
+              if (!e.currentTarget.contains(e.relatedTarget as Node | null)) {
+                setPreviewPaused(false);
+              }
+            }}
           >
             <div className="product-preview" aria-label="Interactive Niu workspace preview">
               <aside className="mock-nav-rail" aria-label="Workspace navigation preview">
@@ -215,10 +240,7 @@ export default function LandingContent({ latestPosts }: { latestPosts: LandingPo
                       className={`mock-rail-btn${activePreviewIndex === i ? ' is-active' : ''}`}
                       aria-label={icon.name}
                       title={icon.name}
-                      onClick={() => {
-                        setActivePreviewIndex(i);
-                        setIsPreviewPaused(true);
-                      }}
+                      onClick={() => setActivePreviewIndex(i)}
                     >
                       <svg viewBox="0 0 24 24" aria-hidden="true">
                         <path d={icon.path} />
@@ -248,15 +270,10 @@ export default function LandingContent({ latestPosts }: { latestPosts: LandingPo
                         type="button"
                         role="tab"
                         aria-selected={activePreviewIndex === i}
-                        onClick={() => {
-                          setActivePreviewIndex(i);
-                          setIsPreviewPaused(true);
-                        }}
+                        onClick={() => setActivePreviewIndex(i)}
                       >
                         <span>{tab.label}</span>
-                        {activePreviewIndex === i && (
-                          <i key={`${tab.id}-${isPreviewPaused ? 'paused' : 'play'}`} className="preview-tab-progress" aria-hidden="true" />
-                        )}
+                        {activePreviewIndex === i && <i className="preview-tab-progress" aria-hidden="true" />}
                       </button>
                     ))}
                   </div>
@@ -264,7 +281,7 @@ export default function LandingContent({ latestPosts }: { latestPosts: LandingPo
 
                 <div className="preview-body">
                   {activePreviewIndex === 0 && (
-                    <div className="investigation" key="tab-evidence">
+                    <div className="investigation">
                       <div className="task-heading">
                         <div>
                           <p className="small-label">POST /v1/chat/completions · Route pool: claude-sonnet-4</p>
@@ -276,7 +293,7 @@ export default function LandingContent({ latestPosts }: { latestPosts: LandingPo
                         <div>
                           <span>Gateway latency (p50)</span>
                           <strong>
-                            18.9 <small>ms</small>
+                            18.9 <small>ms total</small>
                           </strong>
                         </div>
                         <div>
@@ -303,7 +320,11 @@ export default function LandingContent({ latestPosts }: { latestPosts: LandingPo
                           <span className="time-axis-meta">Duration · State</span>
                         </div>
                         {traceSpans.map((span, i) => (
-                          <div key={span.name} className="timeline-row">
+                          <div
+                            key={span.name}
+                            className={`timeline-row${activeSpanIndex === i ? ' is-hovered' : ''}`}
+                            onMouseEnter={() => setActiveSpanIndex(i)}
+                          >
                             <div className="span-name">
                               <span className={`span-icon icon-${i}`}>
                                 {i === 0 ? '◇' : i === 1 ? '!' : i === 2 ? '↳' : '✓'}
@@ -321,25 +342,22 @@ export default function LandingContent({ latestPosts }: { latestPosts: LandingPo
                                 <span className="sr-only">{span.duration}</span>
                               </span>
                             </div>
-                            <span
-                              className={`bar-tag bar-tag-${i}`}
-                              style={{ '--i': i } as React.CSSProperties}
-                            >
-                              {span.tag}
+                            <span className="span-duration">
+                              <strong>{span.duration}</strong> · {span.tag}
                             </span>
                           </div>
                         ))}
                       </div>
                       <div className="evidence-row">
-                        <div>
+                        <div className={activeSpanIndex === 1 ? 'is-highlighted' : undefined}>
                           <span className="evidence-icon warning">!</span>
                           <div>
                             <span className="small-label">ATTEMPT 1 · OPENROUTER</span>
                             <strong>401 Rejected · $0.00</strong>
                           </div>
                         </div>
-                        <div>
-                          <span className="evidence-icon success">✓</span>
+                        <div className={activeSpanIndex === 2 ? 'is-highlighted' : undefined}>
+                          <span className="evidence-icon">✓</span>
                           <div>
                             <span className="small-label">ATTEMPT 2 · ANTHROPIC</span>
                             <strong>40 tok · $0.018 settled</strong>
@@ -351,7 +369,7 @@ export default function LandingContent({ latestPosts }: { latestPosts: LandingPo
                   )}
 
                   {activePreviewIndex === 1 && (
-                    <div className="investigation" key="tab-routing">
+                    <div className="investigation">
                       <div className="task-heading">
                         <div>
                           <p className="small-label">Route Pool Configuration · Revision 4</p>
@@ -375,7 +393,7 @@ export default function LandingContent({ latestPosts }: { latestPosts: LandingPo
                         <div>
                           <span>Upstream credentials</span>
                           <strong>
-                            Server-side <small>encrypted</small>
+                            Server-side <small>AES-GCM encrypted</small>
                           </strong>
                         </div>
                       </div>
@@ -396,60 +414,62 @@ export default function LandingContent({ latestPosts }: { latestPosts: LandingPo
                               <td>Anthropic Direct</td>
                               <td>
                                 <div className="route-weight-cell">
-                                  <span>Priority 100 · Weight 80%</span>
-                                  <span className="route-weight-bar" aria-hidden="true">
-                                    <i style={{ width: '80%' }} />
-                                  </span>
+                                  <span>P100 · 80% weight</span>
+                                  <i className="route-weight-bar"><b style={{ width: '80%' }} /></i>
                                 </div>
                               </td>
                               <td>Chat · Messages · SSE · Tools</td>
-                              <td>
-                                <span className="route-status-pill is-primary">
-                                  <span className="status-dot is-live" aria-hidden="true" />
-                                  Selected primary
-                                </span>
-                              </td>
+                              <td><span className="route-status is-primary"><i className="status-dot is-live" />Selected primary</span></td>
                             </tr>
                             <tr>
                               <td><strong>claude-sonnet-4-or</strong></td>
                               <td>OpenRouter</td>
                               <td>
                                 <div className="route-weight-cell">
-                                  <span>Priority 100 · Weight 20%</span>
-                                  <span className="route-weight-bar" aria-hidden="true">
-                                    <i style={{ width: '20%' }} />
-                                  </span>
+                                  <span>P100 · 20% weight</span>
+                                  <i className="route-weight-bar"><b style={{ width: '20%' }} /></i>
                                 </div>
                               </td>
                               <td>Chat · Messages · SSE · Tools</td>
-                              <td>
-                                <span className="route-status-pill">Active weighted peer</span>
-                              </td>
+                              <td><span className="route-status">Active weighted peer</span></td>
                             </tr>
                             <tr>
                               <td><strong>claude-sonnet-4-vertex</strong></td>
                               <td>Google Vertex AI</td>
                               <td>
                                 <div className="route-weight-cell">
-                                  <span>Priority 50 · Weight 100%</span>
-                                  <span className="route-weight-bar is-standby" aria-hidden="true">
-                                    <i style={{ width: '100%' }} />
-                                  </span>
+                                  <span>P50 · Standby tier</span>
+                                  <i className="route-weight-bar"><b style={{ width: '100%', opacity: 0.35 }} /></i>
                                 </div>
                               </td>
                               <td>Chat · SSE</td>
-                              <td>
-                                <span className="route-status-pill">Secondary failover tier</span>
-                              </td>
+                              <td><span className="route-status is-muted">Secondary failover</span></td>
                             </tr>
                           </tbody>
                         </table>
+                      </div>
+                      <div className="evidence-row">
+                        <div>
+                          <span className="evidence-icon">✓</span>
+                          <div>
+                            <span className="small-label">BOUNDED RETRY POLICY</span>
+                            <strong>Max 2 candidate attempts</strong>
+                          </div>
+                        </div>
+                        <div>
+                          <span className="evidence-icon">◇</span>
+                          <div>
+                            <span className="small-label">CREDENTIAL BOUNDARY</span>
+                            <strong>Zero client key leakage</strong>
+                          </div>
+                        </div>
+                        <p>Supply readiness requires active approved Provider offers plus enabled route mappings.</p>
                       </div>
                     </div>
                   )}
 
                   {activePreviewIndex === 2 && (
-                    <div className="investigation" key="tab-billing">
+                    <div className="investigation">
                       <div className="task-heading">
                         <div>
                           <p className="small-label">Commercial Data Boundary &amp; Ledger</p>
@@ -481,54 +501,41 @@ export default function LandingContent({ latestPosts }: { latestPosts: LandingPo
                         <article className="preview-subcard">
                           <span className="small-label">01 · PLATFORM ADMINISTRATION</span>
                           <h3>Provider Offer &amp; Cost</h3>
-                          <p>Bind upstream mappings to agreed Provider rates without exposing procurement margins to customer workspaces.</p>
-                          <dl className="mini-ledger">
-                            <div>
-                              <dt>Agreed offer</dt>
-                              <dd>Anthropic Direct · Tier 1</dd>
-                            </div>
-                            <div>
-                              <dt>Workspace exposure</dt>
-                              <dd className="ledger-masked">Admin-only boundary</dd>
-                            </div>
-                          </dl>
+                          <p>Bind upstream mappings to agreed Provider rates and track settlement earnings without exposing procurement margins to customer workspaces.</p>
                         </article>
                         <article className="preview-subcard">
                           <span className="small-label">02 · PRE-DISPATCH ADMISSION</span>
                           <h3>Spending Cap Reservation</h3>
-                          <p>Reserve spending capacity across company funds, workspace limits, and API key caps before upstream dispatch.</p>
-                          <dl className="mini-ledger">
-                            <div>
-                              <dt>Pre-dispatch hold</dt>
-                              <dd>$0.050 cap reserved</dd>
-                            </div>
-                            <div>
-                              <dt>PostgreSQL CTE</dt>
-                              <dd className="ledger-ok">ACID committed (2.1 ms)</dd>
-                            </div>
-                          </dl>
+                          <p>Reserve spending capacity across shared company funds, workspace limits, and API key caps in PostgreSQL before any upstream call is dispatched.</p>
                         </article>
                         <article className="preview-subcard highlighted">
                           <span className="small-label">03 · CUSTOMER WORKSPACE</span>
                           <h3>Customer Tariff &amp; Bill</h3>
-                          <p>Charge workspaces against immutable operation tariff bindings. Interrupted calls stay explicitly unresolved.</p>
-                          <dl className="mini-ledger">
-                            <div>
-                              <dt>Workspace charge</dt>
-                              <dd className="ledger-accent">$0.018 settled (40 tok)</dd>
-                            </div>
-                            <div>
-                              <dt>Hold release</dt>
-                              <dd>$0.032 returned to cap</dd>
-                            </div>
-                          </dl>
+                          <p>Charge workspaces against immutable operation tariff bindings. Completed calls settle exact debits; interrupted calls stay explicitly unresolved.</p>
                         </article>
+                      </div>
+                      <div className="evidence-row">
+                        <div>
+                          <span className="evidence-icon">✓</span>
+                          <div>
+                            <span className="small-label">SERIALIZATION GUARD</span>
+                            <strong>Zero supplier cost in API</strong>
+                          </div>
+                        </div>
+                        <div>
+                          <span className="evidence-icon">◇</span>
+                          <div>
+                            <span className="small-label">BATCH COMPLETION</span>
+                            <strong>64-row UNNEST settlement</strong>
+                          </div>
+                        </div>
+                        <p>Enforced in backend authorization and response serialization—not merely hidden in the UI.</p>
                       </div>
                     </div>
                   )}
 
                   {activePreviewIndex === 3 && (
-                    <div className="investigation" key="tab-generations">
+                    <div className="investigation">
                       <div className="task-heading">
                         <div>
                           <p className="small-label">Customer Self-Service Workspace</p>
@@ -558,49 +565,32 @@ export default function LandingContent({ latestPosts }: { latestPosts: LandingPo
                       </div>
                       <div className="preview-cards-grid two-col">
                         <article className="preview-subcard highlighted">
-                          <div className="subcard-head">
-                            <span className="small-label">CHAT GENERATIONS · /workspaces/default/</span>
-                            <IconSparkles size={16} aria-hidden="true" />
-                          </div>
+                          <span className="small-label">CHAT GENERATIONS · /generations</span>
                           <h3>Multi-turn Chat with usage &amp; charge trace</h3>
-                          <div className="mini-chat-preview" aria-label="Sample saved Chat conversation">
-                            <div className="mini-chat-bubble is-user">
-                              Compare p99 tail latency across our claude-sonnet-4 route pool.
-                            </div>
-                            <div className="mini-chat-bubble is-assistant">
-                              <strong>claude-sonnet-4</strong> · Direct Anthropic held 18.9 ms p50 and 31.5 ms p99 at c = 64 with automatic 401 failover.
-                              <span className="mini-chat-receipt">40 tok · TTFT 11.4 ms · $0.018 settled · Saved in PostgreSQL</span>
-                            </div>
-                          </div>
+                          <p>Customers test models, compare outputs, and resume saved conversations across browsers while every response links to its workspace token count and customer charge.</p>
                         </article>
                         <article className="preview-subcard">
-                          <div className="subcard-head">
-                            <span className="small-label">VIDEO GENERATIONS · SEEDANCE TASKS</span>
-                            <IconVideo size={16} aria-hidden="true" />
-                          </div>
+                          <span className="small-label">VIDEO GENERATIONS · SEEDANCE TASKS</span>
                           <h3>Async video creation, history &amp; result download</h3>
-                          <div className="mini-video-preview" aria-label="Sample Seedance video generation task">
-                            <div className="mini-video-stage">
-                              <div className="mini-video-frames" aria-hidden="true">
-                                <span />
-                                <span />
-                                <span />
-                                <span />
-                              </div>
-                              <div className="mini-video-meta">
-                                <strong>seedance-1-0-pro · 1080p · 5.0s · 16:9</strong>
-                                <span>Prompt &amp; reference frame persisted in PostgreSQL</span>
-                              </div>
-                            </div>
-                            <div className="mini-video-footer">
-                              <span className="route-status-pill is-primary">
-                                <span className="status-dot is-live" aria-hidden="true" />
-                                Completed · 120 frames
-                              </span>
-                              <span className="mini-video-action">Authorized MP4 download →</span>
-                            </div>
-                          </div>
+                          <p>Submit text-to-video or image-to-video tasks, restore saved prompt/material inputs, track job status, and preview or download available video outputs.</p>
                         </article>
+                      </div>
+                      <div className="evidence-row">
+                        <div>
+                          <span className="evidence-icon">✓</span>
+                          <div>
+                            <span className="small-label">DURABLE BACKEND STATE</span>
+                            <strong>Cross-browser history sync</strong>
+                          </div>
+                        </div>
+                        <div>
+                          <span className="evidence-icon">◇</span>
+                          <div>
+                            <span className="small-label">GUARDED REFRESH</span>
+                            <strong>Original key &amp; route bound</strong>
+                          </div>
+                        </div>
+                        <p>Browser storage is only a disposable cache; clearing it never loses saved Chat or Video records.</p>
                       </div>
                     </div>
                   )}
@@ -629,9 +619,8 @@ export default function LandingContent({ latestPosts }: { latestPosts: LandingPo
                     <span className="pillar-icon" aria-hidden="true">
                       <PillarIcon size={20} stroke={1.75} />
                     </span>
-                    <span className="feature-number">{pillar.index}</span>
+                    <span className="pillar-metric">{pillar.metric}</span>
                   </div>
-                  <span className="pillar-metric">{pillar.metric}</span>
                   <h3>{pillar.title}</h3>
                   <p>{pillar.detail}</p>
                 </article>
@@ -657,8 +646,8 @@ export default function LandingContent({ latestPosts }: { latestPosts: LandingPo
         </div>
         <ol className="benchmark-steps">
           {benchmarkSteps.map((item, index) => (
-            <li key={item.step} data-reveal style={stagger(index)}>
-              <span>{item.step}</span>
+            <li key={item.step} data-reveal data-spotlight style={stagger(index)}>
+              <span className="benchmark-step-num">{item.step}</span>
               <div>
                 <strong>{item.title}</strong>
                 <p>{item.description}</p>
@@ -848,7 +837,7 @@ export default function LandingContent({ latestPosts }: { latestPosts: LandingPo
       {/* 4. DROP-IN API QUICKSTART */}
       <section className="gateway-section" id="gateway" aria-labelledby="gateway-title">
         <div className="container section gateway-grid">
-          <div data-reveal>
+          <div className="gateway-copy" data-reveal>
             <p className="eyebrow">DROP-IN COMPATIBILITY</p>
             <h2 id="gateway-title">
               One endpoint for SDKs<br />
@@ -858,24 +847,15 @@ export default function LandingContent({ latestPosts }: { latestPosts: LandingPo
               Point any OpenAI-compatible client, Claude Code, or Codex at your Niu gateway using a scoped workspace API key.
             </p>
             <ul className="gateway-features">
-              <li
-                className={activeCodeIndex === 0 ? 'is-highlighted' : ''}
-                onClick={() => setActiveCodeIndex(0)}
-              >
-                <span>01</span>Bind upstream Provider credentials to a route pool alias
-              </li>
-              <li
-                className={activeCodeIndex === 1 ? 'is-highlighted' : ''}
-                onClick={() => setActiveCodeIndex(1)}
-              >
-                <span>02</span>Issue a workspace API key with model grants and spending caps
-              </li>
-              <li
-                className={activeCodeIndex === 2 ? 'is-highlighted' : ''}
-                onClick={() => setActiveCodeIndex(2)}
-              >
-                <span>03</span>Stream responses while Niu records usage and customer charges
-              </li>
+              {gatewaySteps.map((item) => (
+                <li key={item.step}>
+                  <span className="gateway-step-badge">{item.step}</span>
+                  <div>
+                    <strong>{item.title}</strong>
+                    <p>{item.detail}</p>
+                  </div>
+                </li>
+              ))}
             </ul>
             <div className="gateway-links">
               <a className="text-link" href="/docs/guides/api-quickstart/">
@@ -888,58 +868,47 @@ export default function LandingContent({ latestPosts }: { latestPosts: LandingPo
           </div>
           <div className="code-card" data-reveal data-spotlight style={stagger(1)}>
             <div className="code-heading">
-              <div className="code-heading-left">
-                <span className="code-window" aria-hidden="true">
-                  <i />
-                  <i />
-                  <i />
-                </span>
-                <div className="code-tabs" role="tablist" aria-label="Choose API client example">
-                  {codeExamples.map((ex, idx) => (
-                    <button
-                      key={ex.id}
-                      type="button"
-                      role="tab"
-                      aria-selected={activeCodeIndex === idx}
-                      onClick={() => {
-                        setActiveCodeIndex(idx);
-                        setCopiedCode(false);
-                      }}
-                    >
-                      {ex.label}
-                    </button>
-                  ))}
-                </div>
+              <span className="code-window" aria-hidden="true">
+                <i />
+                <i />
+                <i />
+              </span>
+              <div className="code-tabs" role="tablist" aria-label="Integration examples">
+                {codeExamples.map((example, idx) => (
+                  <button
+                    key={example.id}
+                    type="button"
+                    role="tab"
+                    aria-selected={activeCodeIndex === idx}
+                    onClick={() => setActiveCodeIndex(idx)}
+                  >
+                    {example.label}
+                  </button>
+                ))}
               </div>
               <button
                 type="button"
                 className="code-copy-btn"
-                aria-label="Copy code snippet"
                 onClick={handleCopyCode}
+                aria-label="Copy code snippet"
               >
                 {copiedCode ? <IconCheck size={14} aria-hidden="true" /> : <IconCopy size={14} aria-hidden="true" />}
                 <span>{copiedCode ? 'Copied' : 'Copy'}</span>
               </button>
             </div>
-            <div className="code-endpoint-bar">
-              <span className="code-endpoint-label">{codeExamples[activeCodeIndex].endpoint}</span>
-              <span className="code-endpoint-meta">X-Niu-Trace: enabled</span>
+            <div className="code-subbar">
+              <span>{codeExamples[activeCodeIndex].endpoint}</span>
+              <span>TLS / Localhost · Bearer Workspace Key</span>
             </div>
-            <pre key={codeExamples[activeCodeIndex].id} className="code-pre">
+            <pre key={codeExamples[activeCodeIndex].id}>
               <code>{codeExamples[activeCodeIndex].code}</code>
               <span className="code-cursor" aria-hidden="true" />
             </pre>
-            <div className="code-stream-preview" key={`stream-${codeExamples[activeCodeIndex].id}`}>
-              <div className="code-stream-line">
-                <span className="stream-badge">SSE 200 OK</span>
-                <span className="stream-text">{codeExamples[activeCodeIndex].streamOutput}</span>
-              </div>
-              <div className="code-footnote">
-                <span className="status-dot is-live"></span>
-                <span>
-                  Recorded in PostgreSQL: <strong>{codeExamples[activeCodeIndex].ledgerSummary}</strong>
-                </span>
-              </div>
+            <div className="code-footnote">
+              <span className="status-dot is-live"></span>
+              <span>
+                Recorded in PostgreSQL: <strong>{codeExamples[activeCodeIndex].trace}</strong>
+              </span>
             </div>
           </div>
         </div>
@@ -1013,16 +982,31 @@ export default function LandingContent({ latestPosts }: { latestPosts: LandingPo
           <div className={`landing-blog-list${latestPosts.length === 1 ? ' is-single' : ''}`}>
             {latestPosts.map((post, index) => (
               <a key={post.href} className="landing-blog-card" href={post.href} data-reveal data-spotlight style={stagger(index)}>
-                <div className="landing-blog-meta">
-                  <span className="landing-blog-category">{post.category}</span>
-                  <time dateTime={post.publishedAt}>{post.dateLabel}</time>
-                  <span>{post.readingTime}</span>
+                <div className="landing-blog-main">
+                  <div className="landing-blog-meta">
+                    <span className="landing-blog-category">{post.category}</span>
+                    <time dateTime={post.publishedAt}>{post.dateLabel}</time>
+                    <span>{post.readingTime}</span>
+                  </div>
+                  <h3>{post.title}</h3>
+                  <p>{post.description}</p>
+                  <span className="text-link">
+                    Read article <IconArrowRight size={16} aria-hidden="true" />
+                  </span>
                 </div>
-                <h3>{post.title}</h3>
-                <p>{post.description}</p>
-                <span className="text-link">
-                  Read article <IconArrowRight size={16} aria-hidden="true" />
-                </span>
+                {latestPosts.length === 1 && post.highlights && post.highlights.length > 0 && (
+                  <div className="landing-blog-chapters">
+                    <span className="small-label">INSIDE THIS ESSAY</span>
+                    <ol>
+                      {post.highlights.map((heading, hIndex) => (
+                        <li key={heading}>
+                          <span>{String(hIndex + 1).padStart(2, '0')}</span>
+                          <strong>{heading}</strong>
+                        </li>
+                      ))}
+                    </ol>
+                  </div>
+                )}
               </a>
             ))}
           </div>
@@ -1031,30 +1015,45 @@ export default function LandingContent({ latestPosts }: { latestPosts: LandingPo
 
       {/* 7. CONCISE FAQ */}
       <section className="section container faq-section" aria-labelledby="faq-title">
-        <div className="faq-heading" data-reveal>
-          <p className="eyebrow">FREQUENTLY ASKED QUESTIONS</p>
-          <h2 id="faq-title">Key questions.</h2>
-          <p>What operators ask before putting Niu in front of customers.</p>
+        <div className="section-heading" data-reveal>
+          <div>
+            <p className="eyebrow">FREQUENTLY ASKED QUESTIONS</p>
+            <h2 id="faq-title">
+              Key questions before<br />
+              you run in production.
+            </h2>
+          </div>
+          <div className="faq-intro">
+            <p>What operators verify before putting Niu in front of customer traffic and billing.</p>
+            <div className="faq-intro-links">
+              <a className="text-link" href="/docs/">
+                Read the docs <span aria-hidden="true">→</span>
+              </a>
+              <a className="text-link" href={`${links.repo}/issues`}>
+                Ask on GitHub <span aria-hidden="true">↗</span>
+              </a>
+            </div>
+          </div>
         </div>
         <div className="faq-list" data-reveal>
-          {faqs.map((faq) => (
-            <details key={faq.question}>
+          {faqs.map((faq, idx) => (
+            <details key={faq.question} open={idx === 0 || undefined}>
               <summary>
-                {faq.question}
+                <span className="faq-meta">
+                  <span className="faq-index">{faq.index}</span>
+                  <span className="faq-category">{faq.category}</span>
+                </span>
+                <span className="faq-question">{faq.question}</span>
                 <span className="faq-toggle" aria-hidden="true" />
               </summary>
-              <p>{faq.answer}</p>
+              <div className="faq-body">
+                <p>{faq.answer}</p>
+                <a className="text-link faq-doc-link" href={faq.linkHref}>
+                  {faq.linkLabel} <span aria-hidden="true">→</span>
+                </a>
+              </div>
             </details>
           ))}
-        </div>
-        <div className="faq-more" data-reveal>
-          <span>Still have a question?</span>
-          <a className="text-link" href="/docs/">
-            Read the docs <span aria-hidden="true">→</span>
-          </a>
-          <a className="text-link" href={`${links.repo}/issues`}>
-            Ask on GitHub <span aria-hidden="true">↗</span>
-          </a>
         </div>
       </section>
 
