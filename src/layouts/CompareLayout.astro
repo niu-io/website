@@ -1,13 +1,47 @@
 ---
-import '@fontsource-variable/geist/wght.css';
-import '@fontsource-variable/geist-mono/wght.css';
-import '../styles/tokens.css';
-import '../styles/global.css';
-import '../styles/compare-ui.css';
-import '../styles/compare.css';
-import '../styles/public-header.css';
-import SiteHeader from '../components/SiteHeader.astro';
-interface Props {title:string; description:string;}
-const {title,description}=Astro.props;
+import "@fontsource-variable/geist/wght.css";
+import "@fontsource-variable/geist-mono/wght.css";
+import "../styles/tokens.css";
+import "../styles/global.css";
+import "../styles/compare-ui.css";
+import "../styles/compare.css";
+import "../styles/public-header.css";
+import SiteHeader from "../components/SiteHeader.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+interface Props {
+  title: string;
+  description: string;
+}
+const { title, description } = Astro.props;
 ---
-<!doctype html><html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>{title} — Niu</title><meta name="description" content={description}/><link rel="canonical" href={new URL(Astro.url.pathname,Astro.site)}/><link rel="icon" href="/favicon.ico"/><meta property="og:type" content="website"/><meta property="og:title" content={`${title} — Niu`}/><meta property="og:description" content={description}/><meta property="og:url" content={new URL(Astro.url.pathname,Astro.site)}/><meta property="og:image" content={new URL('/site-assets/brand/niu-logo-dark.png',Astro.site)}/><meta name="twitter:card" content="summary_large_image"/></head><body><a class="skip-link" href="#main">Skip to content</a><SiteHeader/><main id="main" class="container compare-page"><slot/></main><footer class="container compare-footer"><a class="wordmark" href="/">Niu</a><nav aria-label="Compare resources"><a href="/workspaces/default/">Dashboard</a><a href="/blog/why-niu/">Why Niu?</a><a href="/blog/">Blog</a><a href="/compare/">Compare</a><a href="/docs/">Docs</a><a href="/docs/api/rest/">API</a><a href="/docs/api/sdk/">SDK</a><a href="https://github.com/niu-io/niu">Source</a></nav></footer></body></html>
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>{title} — Niu</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
+    <link rel="icon" href="/favicon.ico" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={`${title} — Niu`} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={new URL(Astro.url.pathname, Astro.site)} />
+    <meta
+      property="og:image"
+      content={new URL("/site-assets/brand/niu-logo-dark.png", Astro.site)}
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">
+      Skip to content
+    </a>
+    <SiteHeader />
+    <main id="main" class="container compare-page">
+      <slot />
+    </main>
+    <SiteFooter />
+  </body>
+</html>

@@ -1,24 +1,90 @@
-<footer class="container footer">
-  <div>
-    <a class="wordmark" href="/" aria-label="niu.io home">
-      <img
-        src="/site-assets/brand/niu-mark.png"
-        alt=""
-        width="28"
-        height="28"
-      />
-      <span>
-        niu<span class="wordmark-suffix">.io</span>
-      </span>
-    </a>
-    <p>Open source. Self-hosted. In development.</p>
+---
+import { links } from "../content/landing";
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const markUrl = `${base}/site-assets/brand/niu-mark.png`;
+
+const footerGroups = [
+  {
+    title: "Product",
+    links: [
+      { label: "Models", href: "/models/" },
+      { label: "Dashboard", href: links.dashboard },
+      { label: "Generations", href: "/docs/reference/generations/" },
+      { label: "Benchmarks", href: links.benchmark },
+    ],
+  },
+  {
+    title: "Developers",
+    links: [
+      { label: "Getting started", href: links.quickstart },
+      { label: "Documentation", href: "/docs/" },
+      { label: "REST API", href: links.api },
+      { label: "JavaScript SDK", href: "/docs/api/sdk/" },
+      { label: "Self-hosting", href: links.deployment },
+    ],
+  },
+  {
+    title: "Resources",
+    links: [
+      { label: "Why Niu?", href: "/blog/why-niu/" },
+      { label: "Blog", href: "/blog/" },
+      { label: "Compare gateways", href: links.compare },
+      { label: "Niu vs. OpenRouter", href: "/compare/openrouter/" },
+      { label: "Niu vs. New API", href: "/compare/new-api/" },
+    ],
+  },
+  {
+    title: "Open Source",
+    links: [
+      { label: "GitHub", href: links.repo },
+      { label: "Website source", href: "https://github.com/niu-io/website" },
+      { label: "Release matrix", href: links.release },
+      {
+        label: "Third-party notices",
+        href: `${links.repo}/blob/main/THIRD-PARTY-NOTICES.md`,
+      },
+      {
+        label: "Brand attribution",
+        href: `${base}/site-assets/brand/SOURCE-LICENSE.txt`,
+      },
+    ],
+  },
+];
+---
+
+<footer class="site-footer">
+  <div class="container site-footer-inner">
+    <div class="site-footer-grid">
+      <div class="site-footer-meta">
+        <a class="site-footer-brand" href="/" aria-label="Niu home">
+          <span
+            class="site-footer-mark"
+            style={`--footer-mark-url: url('${markUrl}')`}
+            aria-hidden="true"
+          ></span>
+          <span>Niu</span>
+        </a>
+        <p class="site-footer-tagline">
+          Open-source foundations for your model API business.
+        </p>
+        <p class="site-footer-submeta">MIT License · Self-hosted &amp; cloud</p>
+      </div>
+
+      <nav class="site-footer-columns" aria-label="Footer navigation">
+        {footerGroups.map((group) => (
+          <div class="site-footer-group">
+            <h3>{group.title}</h3>
+            <ul>
+              {group.links.map((item) => (
+                <li>
+                  <a href={item.href}>{item.label}</a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </nav>
+    </div>
   </div>
-  <nav class="footer-links" aria-label="Footer navigation">
-    <a href="/models/">Models</a>
-    <a href="/docs/">Documentation</a>
-    <a href="/workspaces/default/">Dashboard</a><a href="/blog/why-niu/">Why Niu?</a><a href="/blog/">Blog</a>
-    <a href="/compare/">Compare</a>
-    <a href="https://github.com/niu-io/niu">GitHub</a>
-    <a href="/site-assets/brand/SOURCE-LICENSE.txt">Brand attribution</a>
-  </nav>
 </footer>
