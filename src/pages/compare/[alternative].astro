@@ -5,4 +5,4 @@ import { comparisons } from '../../content/comparisons';
 export function getStaticPaths(){return comparisons.map(comparison=>({params:{alternative:comparison.slug},props:{comparison}}));}
 const {comparison}=Astro.props;
 ---
-<CompareLayout title={`Niu vs ${comparison.name}`} description={comparison.intro}><ComparisonDetail comparison={comparison}/></CompareLayout>
+<CompareLayout title={`Niu vs ${comparison.name}`} description={comparison.intro}><ComparisonDetail comparison={comparison} client:load /></CompareLayout>

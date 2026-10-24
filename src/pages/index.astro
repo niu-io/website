@@ -28,6 +28,7 @@ const latestPosts = publishedPosts(await getCollection("blog"))
   .map(({ id, data, body }) => ({
     href: `/blog/${id}/`,
     title: data.title,
+    chineseTitle: data.chineseTitle,
     description: data.description,
     category: data.category,
     publishedAt: data.publishedAt,

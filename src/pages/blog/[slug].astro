@@ -42,7 +42,7 @@ const readingTime = getReadingTime(post.body, post.data.readingTime);
 >
   <article class="blog-article">
     <header class="blog-article-header">
-      <a class="blog-back" href="/blog/">
+      <a class="blog-back" href="/blog/" data-en="← All articles" data-zh="← 返回全部文章">
         ← All articles
       </a>
       <div class="blog-article-meta">
@@ -74,6 +74,9 @@ const readingTime = getReadingTime(post.body, post.data.readingTime);
       <Content />
     </div>
 
-    <BlogArticleFooter />
+    <BlogArticleFooter client:load />
+    <script is:inline>
+      (()=>{const sync=()=>{const zh=document.documentElement.dataset.locale==='zh-CN'||document.documentElement.lang==='zh-CN';document.querySelectorAll('.blog-article [data-en][data-zh]').forEach(el=>{el.textContent=el.getAttribute(zh?'data-zh':'data-en')||'';});};sync();window.addEventListener('niu-locale-change',sync);window.addEventListener('storage',sync);})();
+    </script>
   </article>
 </BlogLayout>

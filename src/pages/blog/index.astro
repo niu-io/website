@@ -29,9 +29,12 @@ function getReadingTime(body: string | undefined, explicit?: string): string {
   description="Product and engineering notes on operating a model API business: delivery, accounting and customer trust."
 >
   <header class="blog-intro">
-    <p class="blog-eyebrow">Blog</p>
-    <h1>Building a model API business</h1>
-    <p>
+    <p class="blog-eyebrow" data-en="Blog" data-zh="博客">Blog</p>
+    <h1 data-en="Building a model API business" data-zh="构建并运营模型 API 商业服务">Building a model API business</h1>
+    <p
+      data-en="Product and engineering decisions behind model delivery, clear accounts, and a service customers can trust."
+      data-zh="围绕模型路由交付、清晰的财务账本与可信赖客户服务背后的产品与工程实践。"
+    >
       Product and engineering decisions behind model delivery, clear accounts,
       and a service customers can trust.
     </p>
@@ -44,7 +47,7 @@ function getReadingTime(body: string | undefined, explicit?: string): string {
       return (
         <article class="blog-entry">
           <div class="blog-entry-meta">
-            {post.data.pinned && <span class="blog-pinned"><IconPin size={14} aria-hidden="true" />Pinned</span>}
+            {post.data.pinned && <span class="blog-pinned"><IconPin size={14} aria-hidden="true" /><span data-en="Pinned" data-zh="置顶">Pinned</span></span>}
             <span class="blog-entry-category">{post.data.category}</span>
             <time datetime={post.data.publishedAt}>
               {formatDate(post.data.publishedAt)}
@@ -61,7 +64,7 @@ function getReadingTime(body: string | undefined, explicit?: string): string {
               </p>
             )}
             <p class="blog-entry-summary">{post.data.description}</p>
-            <a class="blog-read-link" href={href}>
+            <a class="blog-read-link" href={href} data-en="Read article" data-zh="阅读全文">
               Read article
             </a>
           </div>
@@ -69,4 +72,7 @@ function getReadingTime(body: string | undefined, explicit?: string): string {
       );
     })}
   </section>
+  <script is:inline>
+    (()=>{const sync=()=>{const zh=document.documentElement.dataset.locale==='zh-CN'||document.documentElement.lang==='zh-CN';document.querySelectorAll('main [data-en][data-zh]').forEach(el=>{el.textContent=el.getAttribute(zh?'data-zh':'data-en')||'';});};sync();window.addEventListener('niu-locale-change',sync);window.addEventListener('storage',sync);})();
+  </script>
 </BlogLayout>

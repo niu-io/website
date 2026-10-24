@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { CountUp, useLandingMotion } from "./landing-motion";
+import { useLocale } from "./locale";
 import {
   IconArrowRight,
   IconBolt,
@@ -68,6 +69,7 @@ const capabilityIcons = [
 interface LandingPost {
   href: string;
   title: string;
+  chineseTitle?: string;
   description: string;
   category: string;
   publishedAt: string;
@@ -80,25 +82,33 @@ const previewTabs = [
   {
     id: "logs",
     label: "Workspace · Logs",
+    labelZh: "工作空间 · 请求日志",
     breadcrumb: "Default workspace / Logs",
+    breadcrumbZh: "默认工作空间 / 请求日志",
     railArea: "workspace" as const,
   },
   {
     id: "routing",
     label: "Admin · Route pools",
+    labelZh: "管理后台 · 路由池",
     breadcrumb: "Admin / Route pools",
+    breadcrumbZh: "管理后台 / 路由池",
     railArea: "admin" as const,
   },
   {
     id: "billing",
     label: "Admin · Financial statements",
+    labelZh: "管理后台 · 财务报表",
     breadcrumb: "Admin / Financial statements",
+    breadcrumbZh: "管理后台 / 财务报表",
     railArea: "admin" as const,
   },
   {
     id: "generations",
     label: "Generations · Chat & Video",
+    labelZh: "生成对话 · 对话与视频",
     breadcrumb: "Generations / Chat & Video",
+    breadcrumbZh: "生成对话 / 对话与视频",
     railArea: "generations" as const,
   },
 ];
@@ -368,20 +378,29 @@ const gatewaySteps = [
   {
     step: "01",
     title: "Bind upstream Provider credentials to a route pool alias",
+    titleZh: "将上游供应商凭据绑定至路由池模型别名",
     detail:
       "Keep Anthropic, OpenRouter, and Vertex credentials encrypted server-side behind one customer model name.",
+    detailZh:
+      "将 Anthropic、OpenRouter 与 Vertex 等密钥在服务端加密托管，统一暴露为面向客户的单一模型名称。",
   },
   {
     step: "02",
     title: "Issue a workspace API key with model grants and spending caps",
+    titleZh: "签发具备模型授权与消费上限的工作空间 API 密钥",
     detail:
       "Scope each key to authorized models and reserve company, workspace, and key budgets before dispatch.",
+    detailZh:
+      "按密钥限定可调用的模型范围，并在转发前同步校验企业、工作空间与密钥三级预算。",
   },
   {
     step: "03",
     title: "Stream responses while Niu settles usage and customer charges",
+    titleZh: "流式返回响应并实时完成用量与客户费率结算",
     detail:
       "Every call links its operation, upstream attempts, SSE token count, and settled customer tariff in PostgreSQL.",
+    detailZh:
+      "每次请求均在 PostgreSQL 中关联操作记录、上游尝试、SSE Token 用量以及已结算的客户费率。",
   },
 ];
 
@@ -392,6 +411,7 @@ export default function LandingContent({
   latestPosts: LandingPost[];
   highlightedCode: string[];
 }) {
+  const { isZh, t } = useLocale();
   const [activePreviewIndex, setActivePreviewIndex] = useState(0);
   const [previewPaused, setPreviewPaused] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -455,27 +475,41 @@ export default function LandingContent({
             style={stagger(0)}
             href="#benchmark"
           >
-            <span className="release-tag">Benchmark</span>
+            <span className="release-tag">{t("Benchmark", "性能基准")}</span>
             <span>
-              MIT open source · 3,239 RPS Rust gateway · 10.7× LiteLLM
+              {t(
+                "MIT open source · 3,239 RPS Rust gateway · 10.7× LiteLLM",
+                "MIT 开源 · 3,239 RPS Rust 网关 · 10.7 倍 LiteLLM 吞吐",
+              )}
             </span>
             <IconArrowRight size={14} aria-hidden="true" />
           </a>
           <h1 id="hero-title" className="hero-enter" style={stagger(1)}>
-            Build and run your
-            <br />
-            <span className="accent">model API business.</span>
+            {isZh ? (
+              <>
+                构建并运营您的
+                <br />
+                <span className="accent">模型 API 商业服务。</span>
+              </>
+            ) : (
+              <>
+                Build and run your
+                <br />
+                <span className="accent">model API business.</span>
+              </>
+            )}
           </h1>
           <p className="hero-description hero-enter" style={stagger(2)}>
-            High-throughput Rust AI gateway with independent customer tariffs,
-            attempt-level request evidence, and self-service Chat &amp; Video
-            workspaces.
+            {t(
+              "High-throughput Rust AI gateway with independent customer tariffs, attempt-level request evidence, and self-service Chat & Video workspaces.",
+              "高吞吐 Rust AI 网关，内置独立客户定价体系、尝试级全链路请求证据，以及自助式生成对话与视频工作空间。",
+            )}
           </p>
           <div className="actions hero-actions hero-enter" style={stagger(3)}>
             <Button asChild size="lg" className="cta-primary">
               <a href={links.dashboard}>
                 <IconLayoutDashboard aria-hidden="true" />
-                Open dashboard
+                {t("Open dashboard", "打开控制台")}
                 <IconArrowRight className="cta-arrow" aria-hidden="true" />
               </a>
             </Button>
@@ -485,27 +519,27 @@ export default function LandingContent({
               variant="outline"
               className="cta-secondary"
             >
-              <a href={links.quickstart}>Get started</a>
+              <a href={links.quickstart}>{t("Get started", "快速入门")}</a>
             </Button>
             <Button asChild size="lg" variant="ghost" className="cta-ghost">
               <a href={links.repo}>
                 <IconBrandGithub aria-hidden="true" />
-                Star on GitHub
+                {t("Star on GitHub", "GitHub Star")}
               </a>
             </Button>
           </div>
           <p className="hero-sublinks hero-enter" style={stagger(4)}>
-            <a href={links.compare}>Compare gateways</a>
+            <a href={links.compare}>{t("Compare gateways", "网关对比")}</a>
             <span aria-hidden="true">·</span>
-            <a href="/models/">Browse models</a>
+            <a href="/models/">{t("Browse models", "浏览模型目录")}</a>
             <span aria-hidden="true">·</span>
-            <a href="/blog/why-niu/">Why Niu?</a>
+            <a href="/blog/why-niu/">{t("Why Niu?", "为什么选择牛元？")}</a>
           </p>
 
           <dl className="hero-stats" aria-label="Measured gateway results">
             {heroStats.map((stat, i) => (
               <div key={stat.label} data-reveal style={stagger(i)}>
-                <dt>{stat.label}</dt>
+                <dt>{isZh ? stat.labelZh : stat.label}</dt>
                 <dd>
                   <CountUp value={stat.value} />
                 </dd>
@@ -630,7 +664,7 @@ export default function LandingContent({
                         >
                           <span className="demo-ws-badge">D</span>
                           <span className="demo-ws-name">
-                            Default workspace
+                            {t("Default workspace", "默认工作空间")}
                           </span>
                           <ChevronsUpDown size={13} aria-hidden="true" />
                         </button>
@@ -645,7 +679,7 @@ export default function LandingContent({
                           onClick={() => setActivePreviewIndex(0)}
                         >
                           <Activity size={15} />
-                          <span>Overview</span>
+                          <span>{t("Overview", "概览")}</span>
                         </button>
                         <button
                           type="button"
@@ -653,7 +687,7 @@ export default function LandingContent({
                           onClick={() => setActivePreviewIndex(0)}
                         >
                           <KeyRound size={15} />
-                          <span>API keys</span>
+                          <span>{t("API keys", "API 密钥")}</span>
                         </button>
                         <button
                           type="button"
@@ -661,7 +695,7 @@ export default function LandingContent({
                           onClick={() => setActivePreviewIndex(0)}
                         >
                           <List size={15} />
-                          <span>Logs</span>
+                          <span>{t("Logs", "请求日志")}</span>
                         </button>
                         <button
                           type="button"
@@ -672,7 +706,7 @@ export default function LandingContent({
                           }}
                         >
                           <Film size={15} />
-                          <span>Video</span>
+                          <span>{t("Video", "视频生成")}</span>
                         </button>
                         <button
                           type="button"
@@ -680,7 +714,7 @@ export default function LandingContent({
                           onClick={() => setActivePreviewIndex(0)}
                         >
                           <ShieldAlert size={15} />
-                          <span>Guardrails</span>
+                          <span>{t("Guardrails", "安全护栏")}</span>
                         </button>
                         <button
                           type="button"
@@ -688,7 +722,7 @@ export default function LandingContent({
                           onClick={() => setActivePreviewIndex(0)}
                         >
                           <BarChart3 size={15} />
-                          <span>Activity</span>
+                          <span>{t("Activity", "活动监控")}</span>
                         </button>
                         <button
                           type="button"
@@ -696,7 +730,7 @@ export default function LandingContent({
                           onClick={() => setActivePreviewIndex(2)}
                         >
                           <Coins size={15} />
-                          <span>Billing</span>
+                          <span>{t("Billing", "账单计费")}</span>
                         </button>
                         <button
                           type="button"
@@ -704,7 +738,7 @@ export default function LandingContent({
                           onClick={() => setActivePreviewIndex(0)}
                         >
                           <Users size={15} />
-                          <span>Users</span>
+                          <span>{t("Users", "成员管理")}</span>
                         </button>
                         <button
                           type="button"
@@ -712,13 +746,13 @@ export default function LandingContent({
                           onClick={() => setActivePreviewIndex(0)}
                         >
                           <Settings size={15} />
-                          <span>Settings</span>
+                          <span>{t("Settings", "工作空间设置")}</span>
                         </button>
                       </nav>
                       <div className="demo-sidebar-footer">
                         <a href="/docs/" className="demo-sidebar-item">
                           <IconBook size={15} />
-                          <span>Documentation</span>
+                          <span>{t("Documentation", "开发文档")}</span>
                         </a>
                       </div>
                     </>
@@ -727,7 +761,9 @@ export default function LandingContent({
                   {activeTab.railArea === "admin" && (
                     <>
                       <div className="demo-sidebar-header">
-                        <span className="demo-sidebar-title">Admin</span>
+                        <span className="demo-sidebar-title">
+                          {t("Admin", "管理后台")}
+                        </span>
                       </div>
                       <nav className="demo-sidebar-nav" aria-label="Admin menu">
                         <button
@@ -736,7 +772,7 @@ export default function LandingContent({
                           onClick={() => setActivePreviewIndex(1)}
                         >
                           <IconPlugConnected size={15} />
-                          <span>Providers</span>
+                          <span>{t("Providers", "模型供应商")}</span>
                         </button>
                         <button
                           type="button"
@@ -744,7 +780,7 @@ export default function LandingContent({
                           onClick={() => setActivePreviewIndex(1)}
                         >
                           <IconRoute size={15} />
-                          <span>Route pools</span>
+                          <span>{t("Route pools", "路由池")}</span>
                         </button>
                         <button
                           type="button"
@@ -752,7 +788,7 @@ export default function LandingContent({
                           onClick={() => setActivePreviewIndex(2)}
                         >
                           <IconCoins size={15} />
-                          <span>Financial statements</span>
+                          <span>{t("Financial statements", "财务报表")}</span>
                         </button>
                         <button
                           type="button"
@@ -760,7 +796,7 @@ export default function LandingContent({
                           onClick={() => setActivePreviewIndex(2)}
                         >
                           <Users size={15} />
-                          <span>Customer accounts</span>
+                          <span>{t("Customer accounts", "客户账户")}</span>
                         </button>
                         <button
                           type="button"
@@ -768,7 +804,7 @@ export default function LandingContent({
                           onClick={() => setActivePreviewIndex(2)}
                         >
                           <Receipt size={15} />
-                          <span>Customer pricing</span>
+                          <span>{t("Customer pricing", "客户定价")}</span>
                         </button>
                         <button
                           type="button"
@@ -776,7 +812,7 @@ export default function LandingContent({
                           onClick={() => setActivePreviewIndex(2)}
                         >
                           <CreditCard size={15} />
-                          <span>Payment gateways</span>
+                          <span>{t("Payment gateways", "支付网关")}</span>
                         </button>
                         <button
                           type="button"
@@ -784,7 +820,7 @@ export default function LandingContent({
                           onClick={() => setActivePreviewIndex(1)}
                         >
                           <Palette size={15} />
-                          <span>Branding &amp; theme</span>
+                          <span>{t("Branding & theme", "品牌与主题")}</span>
                         </button>
                         <button
                           type="button"
@@ -792,13 +828,13 @@ export default function LandingContent({
                           onClick={() => setActivePreviewIndex(1)}
                         >
                           <ScrollText size={15} />
-                          <span>Audit logs</span>
+                          <span>{t("Audit logs", "审计日志")}</span>
                         </button>
                       </nav>
                       <div className="demo-sidebar-footer">
                         <a href="/docs/" className="demo-sidebar-item">
                           <IconBook size={15} />
-                          <span>Documentation</span>
+                          <span>{t("Documentation", "开发文档")}</span>
                         </a>
                       </div>
                     </>
@@ -807,7 +843,9 @@ export default function LandingContent({
                   {activeTab.railArea === "generations" && (
                     <>
                       <div className="demo-sidebar-header demo-sidebar-header-gen">
-                        <span className="demo-sidebar-title">Generations</span>
+                        <span className="demo-sidebar-title">
+                          {t("Generations", "生成对话")}
+                        </span>
                         <button
                           type="button"
                           className="demo-new-gen-btn"
@@ -820,7 +858,7 @@ export default function LandingContent({
                           }
                         >
                           <Plus size={13} />
-                          <span>New generation</span>
+                          <span>{t("New generation", "新建会话")}</span>
                         </button>
                       </div>
                       <nav
@@ -834,7 +872,12 @@ export default function LandingContent({
                         >
                           <IconMessageChatbot size={15} />
                           <div>
-                            <strong>Production API architecture</strong>
+                            <strong>
+                              {t(
+                                "Production API architecture",
+                                "生产级 API 架构设计",
+                              )}
+                            </strong>
                             <small>claude-sonnet-4 + gpt-4.1 · 2m</small>
                           </div>
                         </button>
@@ -845,7 +888,12 @@ export default function LandingContent({
                         >
                           <Film size={15} />
                           <div>
-                            <strong>Seedance 1.5 Pro studio</strong>
+                            <strong>
+                              {t(
+                                "Seedance 1.5 Pro studio",
+                                "Seedance 1.5 Pro 视频工作台",
+                              )}
+                            </strong>
                             <small>seedance-1-5-pro · 1080p · 6m</small>
                           </div>
                         </button>
@@ -856,14 +904,22 @@ export default function LandingContent({
                         >
                           <IconMessageChatbot size={15} />
                           <div>
-                            <strong>Guardrail &amp; retry audit</strong>
+                            <strong>
+                              {t(
+                                "Guardrail & retry audit",
+                                "安全护栏与重试审计",
+                              )}
+                            </strong>
                             <small>deepseek-r1 · 1h ago</small>
                           </div>
                         </button>
                       </nav>
                       <div className="demo-sidebar-footer">
                         <span className="demo-sidebar-muted">
-                          PostgreSQL session sync active
+                          {t(
+                            "PostgreSQL session sync active",
+                            "PostgreSQL 会话实时同步已启用",
+                          )}
                         </span>
                       </div>
                     </>
@@ -891,7 +947,7 @@ export default function LandingContent({
                     <span className="demo-topbar-sep" aria-hidden="true" />
                     <span className="status-dot is-live" aria-hidden="true" />
                     <span className="demo-breadcrumb-text">
-                      {activeTab.breadcrumb}
+                      {isZh ? activeTab.breadcrumbZh : activeTab.breadcrumb}
                     </span>
                   </div>
                   <div
@@ -907,7 +963,7 @@ export default function LandingContent({
                         aria-selected={activePreviewIndex === i}
                         onClick={() => setActivePreviewIndex(i)}
                       >
-                        <span>{tab.label}</span>
+                        <span>{isZh ? tab.labelZh : tab.label}</span>
                         {activePreviewIndex === i && (
                           <i
                             className="preview-tab-progress"
@@ -926,15 +982,16 @@ export default function LandingContent({
                       <div className="demo-page-header">
                         <div>
                           <div className="demo-page-title-row">
-                            <h2>Logs</h2>
+                            <h2>{t("Logs", "请求日志")}</h2>
                             <span className="demo-count-badge">
-                              1,428 requests
+                              {t("1,428 requests", "1,428 条请求")}
                             </span>
                           </div>
                           <p className="demo-page-subtitle">
-                            Inspect every workspace operation, upstream
-                            route-pool attempt, phase latency, and settled
-                            customer tariff.
+                            {t(
+                              "Inspect every workspace operation, upstream route-pool attempt, phase latency, and settled customer tariff.",
+                              "检视工作空间的每一次请求操作、上游路由池尝试、分阶段延迟与已结算的客户费率。",
+                            )}
                           </p>
                         </div>
                         <div className="demo-header-actions">
@@ -946,8 +1003,8 @@ export default function LandingContent({
                             <BarChart3 size={13} />
                             <span>
                               {showVolumeChart
-                                ? "Hide volume"
-                                : "Request volume"}
+                                ? t("Hide volume", "隐藏趋势")
+                                : t("Request volume", "请求趋势")}
                             </span>
                           </button>
                           <button
@@ -956,7 +1013,9 @@ export default function LandingContent({
                             onClick={() => setSelectedLogIndex(1)}
                           >
                             <ShieldAlert size={13} />
-                            <span>Blocked &amp; failed</span>
+                            <span>
+                              {t("Blocked & failed", "拦截与失败")}
+                            </span>
                           </button>
                           <button
                             type="button"
@@ -979,10 +1038,17 @@ export default function LandingContent({
                           aria-label="Request volume over last 24 hours"
                         >
                           <div className="demo-volume-header">
-                            <span>Request volume · Last 24 hours</span>
                             <span>
-                              99.8% completed · 2 bounded failovers · 1
-                              uncertain stream
+                              {t(
+                                "Request volume · Last 24 hours",
+                                "请求量趋势 · 过去 24 小时",
+                              )}
+                            </span>
+                            <span>
+                              {t(
+                                "99.8% completed · 2 bounded failovers · 1 uncertain stream",
+                                "99.8% 已完成 · 2 次有界故障转移 · 1 次状态未定流",
+                              )}
                             </span>
                           </div>
                           <div className="demo-volume-bars">
@@ -1009,14 +1075,16 @@ export default function LandingContent({
                                 <IconSearch size={13} />
                               </span>
                               <span className="demo-filter-chip is-active">
-                                All statuses
+                                {t("All statuses", "全部状态")}
                               </span>
                               <span className="demo-filter-chip">
-                                Pool: claude-sonnet-4
+                                {t("Pool: claude-sonnet-4", "路由池：claude-sonnet-4")}
                               </span>
                             </div>
                             <div className="demo-subtoolbar-right">
-                              <span className="demo-filter-chip">All time</span>
+                              <span className="demo-filter-chip">
+                                {t("All time", "全部时间")}
+                              </span>
                               <span
                                 className="demo-toolbar-icon-pill"
                                 title="Columns"
@@ -1033,10 +1101,10 @@ export default function LandingContent({
                             >
                               <thead>
                                 <tr>
-                                  <th>Model &amp; time</th>
-                                  <th>Status</th>
+                                  <th>{t("Model & time", "模型与时间")}</th>
+                                  <th>{t("Status", "状态")}</th>
                                   <th className="is-right">
-                                    Charge &amp; latency
+                                    {t("Charge & latency", "客户费用与延迟")}
                                   </th>
                                 </tr>
                               </thead>
@@ -1096,7 +1164,7 @@ export default function LandingContent({
                           <div className="demo-drawer-header">
                             <div>
                               <span className="demo-drawer-eyebrow">
-                                Request details
+                                {t("Request details", "请求详情")}
                               </span>
                               <h3>
                                 <span className="demo-nowrap">
@@ -1115,26 +1183,29 @@ export default function LandingContent({
 
                           <div className="demo-drawer-metrics">
                             <div>
-                              <span>Gateway latency</span>
+                              <span>{t("Gateway latency", "网关延迟")}</span>
                               <strong>{selectedLog.duration}</strong>
                             </div>
                             <div>
-                              <span>Customer charge</span>
+                              <span>{t("Customer charge", "客户费用")}</span>
                               <strong>{selectedLog.charge}</strong>
                             </div>
                             <div>
-                              <span>Input tokens</span>
+                              <span>{t("Input tokens", "输入 Token")}</span>
                               <strong>
                                 {selectedLog.inputTokens}{" "}
-                                <small>Cached {selectedLog.cachedTokens}</small>
+                                <small>
+                                  {t("Cached", "缓存")} {selectedLog.cachedTokens}
+                                </small>
                               </strong>
                             </div>
                             <div>
-                              <span>Output tokens</span>
+                              <span>{t("Output tokens", "输出 Token")}</span>
                               <strong>
                                 {selectedLog.outputTokens}{" "}
                                 <small>
-                                  Reason {selectedLog.reasoningTokens}
+                                  {t("Reason", "推理")}{" "}
+                                  {selectedLog.reasoningTokens}
                                 </small>
                               </strong>
                             </div>
@@ -1143,9 +1214,12 @@ export default function LandingContent({
                           {/* RequestTiming.tsx component replica */}
                           <div className="demo-timing-card">
                             <div className="demo-timing-header">
-                              <strong>Request timing</strong>
+                              <strong>
+                                {t("Request timing", "请求耗时分解")}
+                              </strong>
                               <span>
-                                Gateway latency: {selectedLog.duration}
+                                {t("Gateway latency:", "网关延迟：")}{" "}
+                                {selectedLog.duration}
                               </span>
                             </div>
                             <div className="demo-timing-rows">
@@ -1169,25 +1243,27 @@ export default function LandingContent({
                             </div>
                             <div className="demo-timing-footer">
                               <span>{selectedLog.throughput}</span>
-                              <span>Total: {selectedLog.duration}</span>
+                              <span>
+                                {t("Total:", "总计：")} {selectedLog.duration}
+                              </span>
                             </div>
                           </div>
 
                           <dl className="demo-drawer-dl">
                             <div>
-                              <dt>Provider model</dt>
+                              <dt>{t("Provider model", "供应商模型")}</dt>
                               <dd>{selectedLog.providerSub}</dd>
                             </div>
                             <div>
-                              <dt>Provider status</dt>
+                              <dt>{t("Provider status", "上游状态")}</dt>
                               <dd>{selectedLog.providerStatus}</dd>
                             </div>
                             <div>
-                              <dt>Delivery &amp; billing</dt>
+                              <dt>{t("Delivery & billing", "交付与计费")}</dt>
                               <dd>{selectedLog.deliveryStatus}</dd>
                             </div>
                             <div>
-                              <dt>API key</dt>
+                              <dt>{t("API key", "API 密钥")}</dt>
                               <dd className="demo-mono-cell">
                                 {selectedLog.apiKey}
                               </dd>
@@ -1208,10 +1284,10 @@ export default function LandingContent({
                                   onClick={() => setActiveLogTab(tabKey)}
                                 >
                                   {tabKey === "response"
-                                    ? "Response"
+                                    ? t("Response", "响应")
                                     : tabKey === "request"
-                                      ? "Request"
-                                      : "Raw trace"}
+                                      ? t("Request", "请求")
+                                      : t("Raw trace", "原始追踪")}
                                 </button>
                               ),
                             )}
@@ -1238,16 +1314,16 @@ export default function LandingContent({
                       <div className="demo-page-header">
                         <div>
                           <div className="demo-page-title-row">
-                            <h2>Route pools</h2>
+                            <h2>{t("Route pools", "路由池")}</h2>
                             <span className="demo-count-badge">
-                              3 active pools
+                              {t("3 active pools", "3 个活跃路由池")}
                             </span>
                           </div>
                           <p className="demo-page-subtitle">
-                            Group multiple Provider model mappings under a
-                            single Niu alias with priority tiers and weighted
-                            selection. Highest eligible priority wins, with
-                            weighted selection inside that tier.
+                            {t(
+                              "Group multiple Provider model mappings under a single Niu alias with priority tiers and weighted selection. Highest eligible priority wins, with weighted selection inside that tier.",
+                              "将多个供应商模型映射聚合在单一 Niu 别名下，按优先级分层与权重分配流量：最高可用优先级胜出，同层内按权重均衡。",
+                            )}
                           </p>
                         </div>
                         <div className="demo-header-actions">
@@ -1257,7 +1333,7 @@ export default function LandingContent({
                             onClick={() => setActivePreviewIndex(2)}
                           >
                             <IconPlugConnected size={13} />
-                            <span>Providers</span>
+                            <span>{t("Providers", "模型供应商")}</span>
                           </button>
                           <button
                             type="button"
@@ -1269,7 +1345,7 @@ export default function LandingContent({
                             }
                           >
                             <Plus size={13} />
-                            <span>Create route pool</span>
+                            <span>{t("Create route pool", "新建路由池")}</span>
                           </button>
                         </div>
                       </div>
@@ -1283,19 +1359,21 @@ export default function LandingContent({
                             <IconSearch size={13} />
                           </span>
                           <span className="demo-filter-chip is-active">
-                            All scopes (3)
+                            {t("All scopes (3)", "全部范围 (3)")}
                           </span>
                           <span className="demo-filter-chip">
-                            Shared pools (2)
+                            {t("Shared pools (2)", "共享路由池 (2)")}
                           </span>
                           <span className="demo-filter-chip">
-                            Organization pools (1)
+                            {t("Organization pools (1)", "组织路由池 (1)")}
                           </span>
                         </div>
                         <div className="demo-subtoolbar-right">
                           <span className="demo-toolbar-meta">
-                            Click a route pool to inspect candidate priority
-                            &amp; weights
+                            {t(
+                              "Click a route pool to inspect candidate priority & weights",
+                              "点击路由池以检视候选路由的优先级与权重",
+                            )}
                           </span>
                         </div>
                       </div>
@@ -1307,11 +1385,11 @@ export default function LandingContent({
                         >
                           <thead>
                             <tr>
-                              <th>Pool alias</th>
-                              <th>Scope</th>
-                              <th>Candidate routes</th>
-                              <th>Status</th>
-                              <th>Actions</th>
+                              <th>{t("Pool alias", "路由池别名")}</th>
+                              <th>{t("Scope", "共享范围")}</th>
+                              <th>{t("Candidate routes", "候选路由")}</th>
+                              <th>{t("Status", "状态")}</th>
+                              <th>{t("Actions", "操作")}</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -1443,29 +1521,33 @@ export default function LandingContent({
                     </div>
                   )}
 
-                  {/* SURFACE 2: ADMIN / FINANCIAL STATEMENTS (features/commercial-position/page.tsx) */}
+                      {/* SURFACE 2: ADMIN / FINANCIAL STATEMENTS (features/commercial-position/page.tsx) */}
                   {activePreviewIndex === 2 && (
                     <div className="investigation demo-page-surface">
                       <div className="demo-page-header">
                         <div>
                           <div className="demo-page-title-row">
-                            <h2>Financial statements</h2>
+                            <h2>{t("Financial statements", "财务报表")}</h2>
                             <span className="demo-count-badge">
-                              Accrual + Cash flow
+                              {t("Accrual + Cash flow", "权责发生制 + 现金流")}
                             </span>
                           </div>
                           <p className="demo-page-subtitle">
-                            October 2026 (Month to date) · Compared against Sept
-                            2026 (same MTD span) · Personal owner-funded calls
-                            are excluded from commercial revenue and cost.
+                            {t(
+                              "October 2026 (Month to date) · Compared against Sept 2026 (same MTD span) · Personal owner-funded calls are excluded from commercial revenue and cost.",
+                              "2026 年 10 月（月初至今）· 对比 2026 年 9 月同期 · 个人所有者自付调用已从商业收入与成本中剔除。",
+                            )}
                           </p>
                         </div>
                         <div className="demo-header-actions">
                           <span className="demo-filter-chip">
-                            Month to date (Current month)
+                            {t(
+                              "Month to date (Current month)",
+                              "月初至今（当月）",
+                            )}
                           </span>
                           <span className="demo-filter-chip">
-                            Currency: $ USD
+                            {t("Currency: $ USD", "币种：$ USD")}
                           </span>
                         </div>
                       </div>
@@ -1487,7 +1569,10 @@ export default function LandingContent({
                           }
                           onClick={() => setActiveFinancialTab("pnl")}
                         >
-                          Financial summary (Statement of operations)
+                          {t(
+                            "Financial summary (Statement of operations)",
+                            "财务汇总（损益表 P&L）",
+                          )}
                         </button>
                         <button
                           type="button"
@@ -1500,7 +1585,10 @@ export default function LandingContent({
                           }
                           onClick={() => setActiveFinancialTab("providers")}
                         >
-                          Provider positions (3 active Providers)
+                          {t(
+                            "Provider positions (3 active Providers)",
+                            "供应商结算头寸（3 家活跃供应商）",
+                          )}
                         </button>
                       </div>
 
@@ -1508,59 +1596,93 @@ export default function LandingContent({
                       <div className="demo-kpi-grid">
                         <article className="demo-kpi-card">
                           <div className="demo-kpi-top">
-                            <span>Net recognized revenue</span>
-                            <span className="demo-outline-badge">Income</span>
+                            <span>
+                              {t("Net recognized revenue", "已确认净收入")}
+                            </span>
+                            <span className="demo-outline-badge">
+                              {t("Income", "收入")}
+                            </span>
                           </div>
                           <strong>$48,920.40</strong>
                           <div className="demo-kpi-foot">
                             <span className="demo-delta-badge is-positive">
-                              +18.4% vs prior MTD
+                              {t("+18.4% vs prior MTD", "较上月同期 +18.4%")}
                             </span>
-                            <small>Gross $51,240.00 · Gift -$2,139.60</small>
+                            <small>
+                              {t(
+                                "Gross $51,240.00 · Gift -$2,139.60",
+                                "总额 $51,240.00 · 赠金抵扣 -$2,139.60",
+                              )}
+                            </small>
                           </div>
                         </article>
                         <article className="demo-kpi-card">
                           <div className="demo-kpi-top">
-                            <span>Cost of supply (Provider payable)</span>
+                            <span>
+                              {t(
+                                "Cost of supply (Provider payable)",
+                                "模型供给成本（应付供应商）",
+                              )}
+                            </span>
                             <span className="demo-outline-badge">COGS</span>
                           </div>
                           <strong>$34,610.85</strong>
                           <div className="demo-kpi-foot">
                             <span className="demo-delta-badge">
-                              +14.1% vs prior MTD
+                              {t("+14.1% vs prior MTD", "较上月同期 +14.1%")}
                             </span>
-                            <small>128,450 settled commercial calls</small>
+                            <small>
+                              {t(
+                                "128,450 settled commercial calls",
+                                "128,450 次已结算商业调用",
+                              )}
+                            </small>
                           </div>
                         </article>
                         <article className="demo-kpi-card is-highlighted">
                           <div className="demo-kpi-top">
-                            <span>Platform net contribution</span>
+                            <span>
+                              {t("Platform net contribution", "平台净贡献毛利")}
+                            </span>
                             <span className="demo-outline-badge">
-                              29.3% margin
+                              {t("29.3% margin", "29.3% 毛利率")}
                             </span>
                           </div>
                           <strong>$14,309.55</strong>
                           <div className="demo-kpi-foot">
                             <span className="demo-delta-badge is-positive">
-                              +30.2% vs prior MTD
+                              {t("+30.2% vs prior MTD", "较上月同期 +30.2%")}
                             </span>
-                            <small>Net revenue minus Provider payable</small>
+                            <small>
+                              {t(
+                                "Net revenue minus Provider payable",
+                                "净收入减去应付供应商成本",
+                              )}
+                            </small>
                           </div>
                         </article>
                         <article className="demo-kpi-card">
                           <div className="demo-kpi-top">
-                            <span>Verified cash receipts</span>
+                            <span>
+                              {t("Verified cash receipts", "已核验现金收款")}
+                            </span>
                             <span className="demo-outline-badge">
-                              Cash flow
+                              {t("Cash flow", "现金流")}
                             </span>
                           </div>
                           <strong>$62,400.00</strong>
                           <div className="demo-kpi-foot">
                             <span className="demo-delta-badge is-positive">
-                              Prepaid wallet: $19,840.20
+                              {t(
+                                "Prepaid wallet: $19,840.20",
+                                "预付钱包余额：$19,840.20",
+                              )}
                             </span>
                             <small>
-                              Zero supplier cost leaked to customer API
+                              {t(
+                                "Zero supplier cost leaked to customer API",
+                                "上游采购成本对客户 API 零泄露",
+                              )}
                             </small>
                           </div>
                         </article>
@@ -1741,19 +1863,28 @@ export default function LandingContent({
                           <div className="demo-page-title-row">
                             <h2>
                               {activeGenerationsMode === "chat"
-                                ? "Chat comparison"
-                                : "Video · Seedance 1.5 Pro"}
+                                ? t("Chat comparison", "多模型对话对比")
+                                : t(
+                                    "Video · Seedance 1.5 Pro",
+                                    "视频生成 · Seedance 1.5 Pro",
+                                  )}
                             </h2>
                             <span className="demo-count-badge">
                               {activeGenerationsMode === "chat"
-                                ? "2 models side-by-side"
-                                : "Async video studio"}
+                                ? t("2 models side-by-side", "双模型并排对比")
+                                : t("Async video studio", "异步视频工作台")}
                             </span>
                           </div>
                           <p className="demo-page-subtitle">
                             {activeGenerationsMode === "chat"
-                              ? "Compare models side-by-side with live streaming throughput, token counts, and settled customer charges persisted in PostgreSQL."
-                              : "Submit text-to-video and image-to-video tasks with Volcengine Seedance 1.5 Pro, manage materials, and track settled video charges."}
+                              ? t(
+                                  "Compare models side-by-side with live streaming throughput, token counts, and settled customer charges persisted in PostgreSQL.",
+                                  "并排对比多个模型的实时流式吞吐、Token 用量与持久化至 PostgreSQL 的已结算客户费用。",
+                                )
+                              : t(
+                                  "Submit text-to-video and image-to-video tasks with Volcengine Seedance 1.5 Pro, manage materials, and track settled video charges.",
+                                  "使用火山引擎 Seedance 1.5 Pro 提交文生视频与图生视频任务，管理素材资产并追踪已结算视频费用。",
+                                )}
                           </p>
                         </div>
                         <div className="demo-header-actions">
@@ -1772,7 +1903,7 @@ export default function LandingContent({
                               onClick={() => setActiveGenerationsMode("chat")}
                             >
                               <IconMessageChatbot size={14} />
-                              <span>Chat comparison</span>
+                              <span>{t("Chat comparison", "对话对比")}</span>
                             </button>
                             <button
                               type="button"
@@ -1784,11 +1915,11 @@ export default function LandingContent({
                               onClick={() => setActiveGenerationsMode("video")}
                             >
                               <Film size={14} />
-                              <span>Seedance video</span>
+                              <span>{t("Seedance video", "Seedance 视频")}</span>
                             </button>
                           </div>
                           <span className="demo-filter-chip">
-                            Key: prod-backend
+                            {t("Key: prod-backend", "密钥：prod-backend")}
                           </span>
                         </div>
                       </div>
@@ -2035,12 +2166,14 @@ export default function LandingContent({
 
                 <div className="preview-caption">
                   <span>
-                    Gateway · Workspace Dashboard · Model Catalog · Docs —
-                    served from one endpoint
+                    {t(
+                      "Gateway · Workspace Dashboard · Model Catalog · Docs — served from one endpoint",
+                      "AI 网关 · 工作空间控制台 · 模型目录 · 文档中心 — 单一端点一体化交付",
+                    )}
                   </span>
                   <Button asChild size="sm" className="cta-primary cta-compact">
                     <a href={links.dashboard}>
-                      Open workspace dashboard
+                      {t("Open workspace dashboard", "进入工作空间控制台")}
                       <IconArrowRight
                         className="cta-arrow"
                         aria-hidden="true"
@@ -2073,8 +2206,8 @@ export default function LandingContent({
                     </span>
                     <span className="pillar-metric">{pillar.metric}</span>
                   </div>
-                  <h3>{pillar.title}</h3>
-                  <p>{pillar.detail}</p>
+                  <h3>{isZh ? pillar.titleZh : pillar.title}</h3>
+                  <p>{isZh ? pillar.detailZh : pillar.detail}</p>
                 </article>
               );
             })}
@@ -2090,18 +2223,40 @@ export default function LandingContent({
       >
         <div className="benchmark-heading" data-reveal>
           <div>
-            <p className="eyebrow">AI GATEWAY PERFORMANCE BENCHMARK</p>
+            <p className="eyebrow">
+              {t("AI GATEWAY PERFORMANCE BENCHMARK", "AI 网关性能基准测试")}
+            </p>
             <h2 id="benchmark-title">
-              3,239 RPS in Rust.
-              <br />
-              10.7× LiteLLM. 3.7× New API.
+              {isZh ? (
+                <>
+                  Rust 驱动 3,239 RPS 峰值吞吐。
+                  <br />
+                  10.7 倍 LiteLLM · 3.7 倍 New API。
+                </>
+              ) : (
+                <>
+                  3,239 RPS in Rust.
+                  <br />
+                  10.7× LiteLLM. 3.7× New API.
+                </>
+              )}
             </h2>
           </div>
           <p>
-            Measured with the open-source <code>ai-gateway-bench</code> harness
-            against a deterministic 0ms mock upstream on Apple M4 with
-            PostgreSQL 17.11—while Niu persists full ACID admission and batched
-            completions.
+            {isZh ? (
+              <>
+                使用开源基准测试工具 <code>ai-gateway-bench</code> 在 Apple M4 与
+                PostgreSQL 17.11 环境下基于确定性 0ms 模拟上游实测——Niu
+                牛元全程执行完整的 ACID 准入与批量结算持久化。
+              </>
+            ) : (
+              <>
+                Measured with the open-source <code>ai-gateway-bench</code>{" "}
+                harness against a deterministic 0ms mock upstream on Apple M4
+                with PostgreSQL 17.11—while Niu persists full ACID admission and
+                batched completions.
+              </>
+            )}
           </p>
         </div>
         <ol className="benchmark-steps">
@@ -2114,8 +2269,8 @@ export default function LandingContent({
             >
               <span className="benchmark-step-num">{item.step}</span>
               <div>
-                <strong>{item.title}</strong>
-                <p>{item.description}</p>
+                <strong>{isZh ? item.titleZh : item.title}</strong>
+                <p>{isZh ? item.descriptionZh : item.description}</p>
               </div>
             </li>
           ))}
@@ -2123,10 +2278,16 @@ export default function LandingContent({
         <div className="benchmark-demo" data-reveal>
           <div className="benchmark-toolbar">
             <span className="sample-label">
-              AI-GATEWAY-BENCH · 0MS MOCK UPSTREAM (36,649 RPS DIRECT BASELINE)
+              {t(
+                "AI-GATEWAY-BENCH · 0MS MOCK UPSTREAM (36,649 RPS DIRECT BASELINE)",
+                "AI-GATEWAY-BENCH · 0MS 模拟上游（36,649 RPS 直连基线）",
+              )}
             </span>
             <span className="benchmark-status">
-              Apple M4 (10-core, 24 GB) · PostgreSQL 17.11 · 0% errors
+              {t(
+                "Apple M4 (10-core, 24 GB) · PostgreSQL 17.11 · 0% errors",
+                "Apple M4 (10 核, 24 GB) · PostgreSQL 17.11 · 0% 错误率",
+              )}
             </span>
           </div>
           <div
@@ -2163,7 +2324,7 @@ export default function LandingContent({
                   nextEl?.focus();
                 }}
               >
-                {suite.label}
+                {isZh && suite.labelZh ? suite.labelZh : suite.label}
               </button>
             ))}
           </div>
@@ -2179,13 +2340,27 @@ export default function LandingContent({
             >
               <div className="benchmark-task">
                 <div>
-                  <span className="small-label">{suite.eyebrow}</span>
-                  <h3>{suite.title}</h3>
-                  <p>{suite.description}</p>
+                  <span className="small-label">
+                    {isZh && suite.eyebrowZh ? suite.eyebrowZh : suite.eyebrow}
+                  </span>
+                  <h3>{isZh && suite.titleZh ? suite.titleZh : suite.title}</h3>
+                  <p>
+                    {isZh && suite.descriptionZh
+                      ? suite.descriptionZh
+                      : suite.description}
+                  </p>
                 </div>
                 <div className="acceptance-rule">
-                  <strong>{suite.ruleTitle}</strong>
-                  <span>{suite.ruleDetail}</span>
+                  <strong>
+                    {isZh && suite.ruleTitleZh
+                      ? suite.ruleTitleZh
+                      : suite.ruleTitle}
+                  </strong>
+                  <span>
+                    {isZh && suite.ruleDetailZh
+                      ? suite.ruleDetailZh
+                      : suite.ruleDetail}
+                  </span>
                 </div>
               </div>
               <div className="model-comparison">
@@ -2224,31 +2399,59 @@ export default function LandingContent({
               <div className="benchmark-verdict">
                 <div className="verdict-number">
                   <strong>{suite.verdictNumber}</strong>
-                  <span>{suite.verdictSub}</span>
+                  <span>
+                    {isZh && suite.verdictSubZh
+                      ? suite.verdictSubZh
+                      : suite.verdictSub}
+                  </span>
                 </div>
                 <div>
-                  <h4>{suite.verdictTitle}</h4>
-                  <p>{suite.verdictBody}</p>
+                  <h4>
+                    {isZh && suite.verdictTitleZh
+                      ? suite.verdictTitleZh
+                      : suite.verdictTitle}
+                  </h4>
+                  <p>
+                    {isZh && suite.verdictBodyZh
+                      ? suite.verdictBodyZh
+                      : suite.verdictBody}
+                  </p>
                 </div>
               </div>
             </div>
           ))}
           <div className="benchmark-method benchmark-method-compact">
             <p>
-              <strong>Fairness note:</strong> Niu v0.2.4 ran with full ACID
-              PostgreSQL pre-dispatch admission &amp; batched completion; New
-              API (45fbb14) ran with <code>MEMORY_CACHE_ENABLED=true</code>;
-              LiteLLM Proxy (v1.104.0) ran in stateless <code>master_key</code>{" "}
-              mode with DB logs disabled. Always qualify your own deployment and
-              workload.
+              {isZh ? (
+                <>
+                  <strong>公平性说明：</strong> Niu v0.2.4 开启完整 PostgreSQL
+                  ACID 转发前准入与批量完成结算；New API (45fbb14) 开启{" "}
+                  <code>MEMORY_CACHE_ENABLED=true</code>；LiteLLM Proxy
+                  (v1.104.0) 运行于无状态 <code>master_key</code>{" "}
+                  模式并关闭数据库日志。生产选型请结合您的实际业务负载进行基准验证。
+                </>
+              ) : (
+                <>
+                  <strong>Fairness note:</strong> Niu v0.2.4 ran with full ACID
+                  PostgreSQL pre-dispatch admission &amp; batched completion; New
+                  API (45fbb14) ran with <code>MEMORY_CACHE_ENABLED=true</code>;
+                  LiteLLM Proxy (v1.104.0) ran in stateless{" "}
+                  <code>master_key</code> mode with DB logs disabled. Always
+                  qualify your own deployment and workload.
+                </>
+              )}
             </p>
             <div className="benchmark-links">
               <a className="text-link" href={links.benchmark}>
-                Full benchmark report &amp; methodology{" "}
+                {t(
+                  "Full benchmark report & methodology",
+                  "完整基准测试报告与方法论",
+                )}{" "}
                 <span aria-hidden="true">→</span>
               </a>
               <a className="text-link" href="/compare/#performance">
-                Side-by-side matrix <span aria-hidden="true">→</span>
+                {t("Side-by-side matrix", "横向对比矩阵")}{" "}
+                <span aria-hidden="true">→</span>
               </a>
             </div>
           </div>
@@ -2263,16 +2466,30 @@ export default function LandingContent({
       >
         <div className="section-heading" data-reveal>
           <div>
-            <p className="eyebrow">COMPLETE OPERATOR PLATFORM</p>
+            <p className="eyebrow">
+              {t("COMPLETE OPERATOR PLATFORM", "完整的模型运营商平台")}
+            </p>
             <h2 id="product-title">
-              Everything required to sell
-              <br />
-              and operate model access.
+              {isZh ? (
+                <>
+                  销售与运营模型 API 服务
+                  <br />
+                  所需的全部核心能力。
+                </>
+              ) : (
+                <>
+                  Everything required to sell
+                  <br />
+                  and operate model access.
+                </>
+              )}
             </h2>
           </div>
           <p>
-            Replace stitched-together proxies, billing scripts, and chat
-            wrappers with one cohesive system backed by PostgreSQL.
+            {t(
+              "Replace stitched-together proxies, billing scripts, and chat wrappers with one cohesive system backed by PostgreSQL.",
+              "告别临时拼凑的转发代理、计费脚本与套壳前端，用一套基于 PostgreSQL 的内聚系统支撑商业闭环。",
+            )}
           </p>
         </div>
         <div className="capability-grid">
@@ -2292,10 +2509,11 @@ export default function LandingContent({
                   </span>
                   <span className="feature-number">{item.number}</span>
                 </div>
-                <h3>{item.title}</h3>
-                <p>{item.description}</p>
+                <h3>{isZh ? item.titleZh : item.title}</h3>
+                <p>{isZh ? item.descriptionZh : item.description}</p>
                 <a className="text-link" href={item.href}>
-                  {item.label} <span aria-hidden="true">→</span>
+                  {isZh ? item.labelZh : item.label}{" "}
+                  <span aria-hidden="true">→</span>
                 </a>
               </article>
             );
@@ -2311,33 +2529,49 @@ export default function LandingContent({
       >
         <div className="container section gateway-grid">
           <div className="gateway-copy" data-reveal>
-            <p className="eyebrow">DROP-IN COMPATIBILITY</p>
+            <p className="eyebrow">
+              {t("DROP-IN COMPATIBILITY", "即插即用协议兼容")}
+            </p>
             <h2 id="gateway-title">
-              One endpoint for SDKs
-              <br />
-              and coding agents.
+              {isZh ? (
+                <>
+                  单一网关端点，无缝接入
+                  <br />
+                  主流 SDK 与编程智能体。
+                </>
+              ) : (
+                <>
+                  One endpoint for SDKs
+                  <br />
+                  and coding agents.
+                </>
+              )}
             </h2>
             <p className="section-description">
-              Point any OpenAI-compatible client, Claude Code, or Codex at your
-              Niu gateway using a scoped workspace API key.
+              {t(
+                "Point any OpenAI-compatible client, Claude Code, or Codex at your Niu gateway using a scoped workspace API key.",
+                "使用工作空间 API 密钥，即可将任意 OpenAI 兼容客户端、Claude Code 或 Codex 直接指向您的 Niu 牛元网关。",
+              )}
             </p>
             <ul className="gateway-features">
               {gatewaySteps.map((item) => (
                 <li key={item.step}>
                   <span className="gateway-step-badge">{item.step}</span>
                   <div>
-                    <strong>{item.title}</strong>
-                    <p>{item.detail}</p>
+                    <strong>{isZh ? item.titleZh : item.title}</strong>
+                    <p>{isZh ? item.detailZh : item.detail}</p>
                   </div>
                 </li>
               ))}
             </ul>
             <div className="gateway-links">
               <a className="text-link" href="/docs/guides/api-quickstart/">
-                API quickstart <span aria-hidden="true">→</span>
+                {t("API quickstart", "API 快速入门")}{" "}
+                <span aria-hidden="true">→</span>
               </a>
               <a className="text-link" href="/docs/guides/sdk-quickstart/">
-                TypeScript SDK <span aria-hidden="true">→</span>
+                {t("TypeScript SDK", "TypeScript SDK 教程")}{" "}
+                <span aria-hidden="true">→</span>
               </a>
             </div>
           </div>
@@ -2376,7 +2610,9 @@ export default function LandingContent({
                 ) : (
                   <IconCopy size={14} aria-hidden="true" />
                 )}
-                <span>{copiedCode ? "Copied" : "Copy"}</span>
+                <span>
+                  {copiedCode ? t("Copied", "已复制") : t("Copy", "复制")}
+                </span>
               </button>
             </div>
             <div className="code-subbar">
@@ -2394,8 +2630,12 @@ export default function LandingContent({
             <div className="code-footnote">
               <span className="status-dot is-live"></span>
               <span>
-                Recorded in PostgreSQL:{" "}
-                <strong>{codeExamples[activeCodeIndex].trace}</strong>
+                {t("Recorded in PostgreSQL:", "PostgreSQL 账本记录：")}{" "}
+                <strong>
+                  {isZh
+                    ? codeExamples[activeCodeIndex].traceZh
+                    : codeExamples[activeCodeIndex].trace}
+                </strong>
               </span>
             </div>
           </div>
@@ -2410,46 +2650,73 @@ export default function LandingContent({
       >
         <div className="section-heading" data-reveal>
           <div>
-            <p className="eyebrow">OPEN-SOURCE ARCHITECTURE &amp; SCOPE</p>
+            <p className="eyebrow">
+              {t("OPEN-SOURCE ARCHITECTURE & SCOPE", "开源架构与准入范围")}
+            </p>
             <h2 id="release-title">
-              Self-host the complete core.
-              <br />
-              Know what is qualified today.
+              {isZh ? (
+                <>
+                  完整自托管开源核心，
+                  <br />
+                  清晰掌握当前版本能力边界。
+                </>
+              ) : (
+                <>
+                  Self-host the complete core.
+                  <br />
+                  Know what is qualified today.
+                </>
+              )}
             </h2>
           </div>
           <p>
-            Niu’s public core is MIT-licensed and runs against your own
-            PostgreSQL instance without private source or license servers.
+            {t(
+              "Niu’s public core is MIT-licensed and runs against your own PostgreSQL instance without private source or license servers.",
+              "Niu 牛元开源核心采用 MIT 许可证，直接连接您自己的 PostgreSQL 实例运行，无需任何私有源码或外部授权服务。",
+            )}
           </p>
         </div>
         <div className="release-grid">
           <article className="release-card" data-reveal data-spotlight>
             <span className="phase available">
-              <span className="status-dot is-live"></span>READY TO DEPLOY &amp;
-              EVALUATE
+              <span className="status-dot is-live"></span>
+              {t("READY TO DEPLOY & EVALUATE", "当前版本已就绪 · 可直接部署评估")}
             </span>
-            <h3>Available in the current build</h3>
+            <h3>{t("Available in the current build", "当前版本已提供的能力")}</h3>
             <ul>
               <li>
-                Rust gateway (/v1/chat/completions, /v1/responses, scoped
-                /v1/messages)
+                {t(
+                  "Rust gateway (/v1/chat/completions, /v1/responses, scoped /v1/messages)",
+                  "Rust 高性能网关（/v1/chat/completions、/v1/responses 与 /v1/messages）",
+                )}
               </li>
               <li>
-                Provider credentials, model mappings, and weighted route pools
+                {t(
+                  "Provider credentials, model mappings, and weighted route pools",
+                  "模型供应商凭据管理、模型映射与加权优先级路由池",
+                )}
               </li>
               <li>
-                Company funds, workspace budgets, and API-key spending holds
+                {t(
+                  "Company funds, workspace budgets, and API-key spending holds",
+                  "企业资金池、工作空间预算上限与 API 密钥转发前额度预占",
+                )}
               </li>
               <li>
-                Attempt-level request logs and independent customer tariff
-                settlement
+                {t(
+                  "Attempt-level request logs and independent customer tariff settlement",
+                  "尝试级（Attempt）请求日志与独立的客户销售费率结算",
+                )}
               </li>
               <li>
-                Public Model Catalog, saved Chat sessions, and Seedance Video UI
+                {t(
+                  "Public Model Catalog, saved Chat sessions, and Seedance Video UI",
+                  "公开模型目录、后端持久化生成对话以及 Seedance 视频生成界面",
+                )}
               </li>
             </ul>
             <a className="text-link" href={links.deployment}>
-              Single-container deployment guide{" "}
+              {t("Single-container deployment guide", "单容器部署指南")}{" "}
               <span aria-hidden="true">→</span>
             </a>
           </article>
@@ -2459,27 +2726,39 @@ export default function LandingContent({
             data-spotlight
             style={stagger(1)}
           >
-            <span className="phase">RELEASE QUALIFICATION IN PROGRESS</span>
-            <h3>Verify against your workload</h3>
+            <span className="phase">
+              {t("RELEASE QUALIFICATION IN PROGRESS", "生产准入持续验证中")}
+            </span>
+            <h3>{t("Verify against your workload", "结合您的业务负载进行准入验证")}</h3>
             <ul>
               <li>
-                End-to-end Provider &amp; protocol conformance across target
-                models
+                {t(
+                  "End-to-end Provider & protocol conformance across target models",
+                  "目标模型在各供应商与协议下的端到端一致性验证",
+                )}
               </li>
               <li>
-                Complete commercial merchant payment and Provider settlement
-                gates
+                {t(
+                  "Complete commercial merchant payment and Provider settlement gates",
+                  "完整的商业商户支付闭环与供应商结算准入",
+                )}
               </li>
               <li>
-                Full Seedance video lifecycle and storage retention
-                qualification
+                {t(
+                  "Full Seedance video lifecycle and storage retention qualification",
+                  "Seedance 视频全生命周期与存储保留策略准入验证",
+                )}
               </li>
               <li>
-                Multi-instance failover, crash recovery, and upgrade acceptance
+                {t(
+                  "Multi-instance failover, crash recovery, and upgrade acceptance",
+                  "多实例故障切换、崩溃恢复与平滑升级验收",
+                )}
               </li>
             </ul>
             <a className="text-link" href={links.release}>
-              Release acceptance matrix <span aria-hidden="true">↗</span>
+              {t("Release acceptance matrix", "查看发布准入矩阵")}{" "}
+              <span aria-hidden="true">↗</span>
             </a>
           </article>
         </div>
@@ -2493,20 +2772,34 @@ export default function LandingContent({
         >
           <div className="section-heading" data-reveal>
             <div>
-              <p className="eyebrow">FROM THE NIU BLOG</p>
+              <p className="eyebrow">
+                {t("FROM THE NIU BLOG", "来自 NIU 牛元博客")}
+              </p>
               <h2 id="landing-blog-title">
-                Engineering notes from
-                <br />
-                the gateway team.
+                {isZh ? (
+                  <>
+                    来自网关工程团队的
+                    <br />
+                    架构与产品实践笔记。
+                  </>
+                ) : (
+                  <>
+                    Engineering notes from
+                    <br />
+                    the gateway team.
+                  </>
+                )}
               </h2>
             </div>
             <div className="landing-blog-intro">
               <p>
-                Gateway performance, financial accounting, and operating model
-                APIs in production.
+                {t(
+                  "Gateway performance, financial accounting, and operating model APIs in production.",
+                  "分享网关性能优化、双盲财务账本设计以及模型 API 生产运营经验。",
+                )}
               </p>
               <a className="text-link" href="/blog/">
-                All articles <span aria-hidden="true">→</span>
+                {t("All articles", "全部文章")} <span aria-hidden="true">→</span>
               </a>
             </div>
           </div>
@@ -2530,17 +2823,22 @@ export default function LandingContent({
                     <time dateTime={post.publishedAt}>{post.dateLabel}</time>
                     <span>{post.readingTime}</span>
                   </div>
-                  <h3>{post.title}</h3>
+                  <h3>
+                    {isZh && post.chineseTitle ? post.chineseTitle : post.title}
+                  </h3>
                   <p>{post.description}</p>
                   <span className="text-link">
-                    Read article <IconArrowRight size={16} aria-hidden="true" />
+                    {t("Read article", "阅读全文")}{" "}
+                    <IconArrowRight size={16} aria-hidden="true" />
                   </span>
                 </div>
                 {latestPosts.length === 1 &&
                   post.highlights &&
                   post.highlights.length > 0 && (
                     <div className="landing-blog-chapters">
-                      <span className="small-label">INSIDE THIS ESSAY</span>
+                      <span className="small-label">
+                        {t("INSIDE THIS ESSAY", "本文核心章节")}
+                      </span>
                       <ol>
                         {post.highlights.map((heading, hIndex) => (
                           <li key={heading}>
@@ -2564,24 +2862,40 @@ export default function LandingContent({
       >
         <div className="section-heading" data-reveal>
           <div>
-            <p className="eyebrow">FREQUENTLY ASKED QUESTIONS</p>
+            <p className="eyebrow">
+              {t("FREQUENTLY ASKED QUESTIONS", "常见问题解答 (FAQ)")}
+            </p>
             <h2 id="faq-title">
-              Key questions before
-              <br />
-              you run in production.
+              {isZh ? (
+                <>
+                  在投入生产环境前
+                  <br />
+                  最受关注的核心问题。
+                </>
+              ) : (
+                <>
+                  Key questions before
+                  <br />
+                  you run in production.
+                </>
+              )}
             </h2>
           </div>
           <div className="faq-intro">
             <p>
-              What operators verify before putting Niu in front of customer
-              traffic and billing.
+              {t(
+                "What operators verify before putting Niu in front of customer traffic and billing.",
+                "模型服务运营商在将 Niu 牛元接入生产流量与客户计费前通常会核实的关键细节。",
+              )}
             </p>
             <div className="faq-intro-links">
               <a className="text-link" href="/docs/">
-                Read the docs <span aria-hidden="true">→</span>
+                {t("Read the docs", "阅读技术文档")}{" "}
+                <span aria-hidden="true">→</span>
               </a>
               <a className="text-link" href={`${links.repo}/issues`}>
-                Ask on GitHub <span aria-hidden="true">↗</span>
+                {t("Ask on GitHub", "在 GitHub 提问")}{" "}
+                <span aria-hidden="true">↗</span>
               </a>
             </div>
           </div>
@@ -2592,15 +2906,20 @@ export default function LandingContent({
               <summary>
                 <span className="faq-meta">
                   <span className="faq-index">{faq.index}</span>
-                  <span className="faq-category">{faq.category}</span>
+                  <span className="faq-category">
+                    {isZh ? faq.categoryZh : faq.category}
+                  </span>
                 </span>
-                <span className="faq-question">{faq.question}</span>
+                <span className="faq-question">
+                  {isZh ? faq.questionZh : faq.question}
+                </span>
                 <span className="faq-toggle" aria-hidden="true" />
               </summary>
               <div className="faq-body">
-                <p>{faq.answer}</p>
+                <p>{isZh ? faq.answerZh : faq.answer}</p>
                 <a className="text-link faq-doc-link" href={faq.linkHref}>
-                  {faq.linkLabel} <span aria-hidden="true">→</span>
+                  {isZh ? faq.linkLabelZh : faq.linkLabel}{" "}
+                  <span aria-hidden="true">→</span>
                 </a>
               </div>
             </details>
@@ -2615,21 +2934,38 @@ export default function LandingContent({
       >
         <div className="closing" data-reveal>
           <span className="closing-glow" aria-hidden="true" />
-          <p className="eyebrow">OPEN-SOURCE AI GATEWAY &amp; WORKSPACE</p>
+          <p className="eyebrow">
+            {t(
+              "OPEN-SOURCE AI GATEWAY & WORKSPACE",
+              "开源 AI 网关与工作空间平台",
+            )}
+          </p>
           <h2 id="closing-title">
-            Deploy Niu and run your
-            <br />
-            <span className="accent">first model route today.</span>
+            {isZh ? (
+              <>
+                立即部署 Niu 牛元，
+                <br />
+                <span className="accent">跑通您的第一条模型路由。</span>
+              </>
+            ) : (
+              <>
+                Deploy Niu and run your
+                <br />
+                <span className="accent">first model route today.</span>
+              </>
+            )}
           </h2>
           <p className="closing-copy">
-            Self-host the MIT core against your own PostgreSQL, or open the
-            hosted workspace dashboard.
+            {t(
+              "Self-host the MIT core against your own PostgreSQL, or open the hosted workspace dashboard.",
+              "连接您自己的 PostgreSQL 私有化部署 MIT 开源核心，或直接体验在线托管工作空间。",
+            )}
           </p>
           <div className="actions hero-actions">
             <Button asChild size="lg" className="cta-primary">
               <a href={links.dashboard}>
                 <IconLayoutDashboard aria-hidden="true" />
-                Open dashboard
+                {t("Open dashboard", "打开控制台")}
                 <IconArrowRight className="cta-arrow" aria-hidden="true" />
               </a>
             </Button>
@@ -2639,12 +2975,12 @@ export default function LandingContent({
               variant="outline"
               className="cta-secondary"
             >
-              <a href={links.quickstart}>Get started</a>
+              <a href={links.quickstart}>{t("Get started", "快速入门")}</a>
             </Button>
             <Button asChild size="lg" variant="ghost" className="cta-ghost">
               <a href={links.repo}>
                 <IconBrandGithub aria-hidden="true" />
-                Star on GitHub
+                {t("Star on GitHub", "GitHub Star")}
               </a>
             </Button>
           </div>

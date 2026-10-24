@@ -25,37 +25,55 @@ export interface GatewayBenchmarkRow {
 export interface GatewayBenchmarkSuite {
   id: string;
   label: string;
+  labelZh?: string;
   eyebrow: string;
+  eyebrowZh?: string;
   title: string;
+  titleZh?: string;
   description: string;
+  descriptionZh?: string;
   ruleTitle: string;
+  ruleTitleZh?: string;
   ruleDetail: string;
+  ruleDetailZh?: string;
   cards: GatewayBenchmarkCard[];
   rows: GatewayBenchmarkRow[];
   verdictNumber: string;
   verdictSub: string;
+  verdictSubZh?: string;
   verdictTitle: string;
+  verdictTitleZh?: string;
   verdictBody: string;
+  verdictBodyZh?: string;
 }
 
 export const benchmarkSteps = [
   {
     step: "01",
     title: "3,238.7 RPS peak throughput",
+    titleZh: "3,238.7 RPS 峰值吞吐",
     description:
       "10.7x LiteLLM Proxy and 3.7x New API peak at c = 64 (/v1/chat/completions), with 31.54 ms p99 tail latency.",
+    descriptionZh:
+      "64 并发 (/v1/chat/completions) 下达 LiteLLM Proxy 的 10.7 倍、New API 的 3.7 倍，p99 尾延迟仅 31.54 ms。",
   },
   {
     step: "02",
     title: "235.9 concurrent SSE streams/s",
+    titleZh: "235.9 并发 SSE 流 / 秒",
     description:
       "9,436 tokens/s at c = 16 with 1.34 ms median inter-token latency (ITL) and 100% SSE chunk preservation.",
+    descriptionZh:
+      "16 并发下达 9,436 Token/s，中位逐字延迟 (ITL) 仅 1.34 ms，SSE 分片保留率 100%。",
   },
   {
     step: "03",
     title: "18.2 MB idle / 26.4 MB peak RSS",
+    titleZh: "18.2 MB 空闲 / 26.4 MB 峰值内存",
     description:
       "7.4x lower peak RAM and 10.7x lower proxy compute cost ($0.014 / 1M requests) while persisting ACID PostgreSQL records.",
+    descriptionZh:
+      "在持久化 PostgreSQL ACID 账本的同时，峰值内存降低 7.4 倍，每百万请求网关计算成本低至 $0.014（降低 10.7 倍）。",
   },
 ];
 
@@ -63,12 +81,19 @@ export const benchmarkSuites: GatewayBenchmarkSuite[] = [
   {
     id: "throughput",
     label: "Throughput & tail latency",
+    labelZh: "吞吐量与尾延迟",
     eyebrow: "CLOSED-LOOP LOAD PROBE · 32 WARMUP + 2,000 REQUESTS PER TIER",
+    eyebrowZh: "闭环压测 · 每梯度 32 次预热 + 2,000 次请求",
     title: "High-concurrency /v1/chat/completions & /v1/messages (c = 1 to 64)",
+    titleZh: "高并发 /v1/chat/completions 与 /v1/messages 吞吐测试 (c = 1 至 64)",
     description:
       "Isolates gateway routing, workspace key verification, protocol handling, and PostgreSQL accounting overhead against a deterministic 0ms mock upstream (36,649 RPS direct baseline).",
+    descriptionZh:
+      "基于确定性 0ms 模拟上游（直连基线 36,649 RPS），独立测量网关路由、工作空间密钥鉴权、协议转换与 PostgreSQL 账本写入开销。",
     ruleTitle: "Durability bar",
+    ruleTitleZh: "持久化标准",
     ruleDetail: "ACID PostgreSQL admission & completion on Niu · 0% errors",
+    ruleDetailZh: "Niu 全程执行 PostgreSQL ACID 准入与结算 · 0% 错误率",
     cards: [
       {
         name: "Niu v0.2.4",
@@ -155,20 +180,32 @@ export const benchmarkSuites: GatewayBenchmarkSuite[] = [
     ],
     verdictNumber: "10.7x",
     verdictSub: "higher peak RPS than LiteLLM Proxy",
+    verdictSubZh: "峰值 RPS 相比 LiteLLM Proxy 的提升倍数",
     verdictTitle:
       "Full ACID PostgreSQL admission and completion batching without sacrificing tail latency.",
+    verdictTitleZh:
+      "在不牺牲尾延迟的前提下，实现完整的 PostgreSQL ACID 准入与批量结算。",
     verdictBody:
       "Niu records pre-dispatch operations and attempts in a single SQL CTE and coalesces up to 64 post-dispatch completions per batch transaction, keeping c = 64 p99 latency at 31.54 ms while LiteLLM Proxy saturates its Python event loop at ~302 RPS.",
+    verdictBodyZh:
+      "Niu 牛元通过单条 SQL CTE 记录转发前操作与尝试，并在单个批量事务中合并最多 64 笔完成结算，将 64 并发下 p99 延迟稳定在 31.54 ms，而 LiteLLM Proxy 在约 302 RPS 时即达到 Python 事件循环瓶颈。",
   },
   {
     id: "streaming",
     label: "SSE token streaming",
+    labelZh: "SSE 流式输出",
     eyebrow: "40 TOKENS / STREAM · 43 SSE EVENTS · CHUNK FIDELITY & ITL",
+    eyebrowZh: "每流 40 Token · 43 个 SSE 事件 · 分片保真度与逐字延迟",
     title: "Concurrent Server-Sent Events (SSE) token streaming (c = 1 & c = 16)",
+    titleZh: "并发 Server-Sent Events (SSE) 流式输出测试 (c = 1 与 c = 16)",
     description:
       "Measures completed SSE streams/sec, delivered tokens/sec, Time-To-First-Token (TTFT), Inter-Token Latency (ITL), and whether the gateway preserves all 43 SSE frames per response.",
+    descriptionZh:
+      "测量每秒完成的 SSE 流数、每秒交付 Token 数、首字延迟 (TTFT)、逐字延迟 (ITL)，以及网关是否完整保留每次响应的全部 43 个 SSE 帧。",
     ruleTitle: "Streaming bar",
+    ruleTitleZh: "流式保真标准",
     ruleDetail: "43 / 43 SSE chunks preserved · 0 dropped events",
+    ruleDetailZh: "43 / 43 个 SSE 分片完整保留 · 0 丢包",
     cards: [
       {
         name: "Niu v0.2.4",
@@ -255,20 +292,32 @@ export const benchmarkSuites: GatewayBenchmarkSuite[] = [
     ],
     verdictNumber: "2.84x",
     verdictSub: "more concurrent SSE streams/sec",
+    verdictSubZh: "并发每秒 SSE 流吞吐提升倍数",
     verdictTitle:
       "Sub-10 microsecond single-stream ITL overhead and 9,436 tokens/sec at c = 16.",
+    verdictTitleZh:
+      "单流逐字转发开销低于 10 微秒，16 并发下达 9,436 Token/秒。",
     verdictBody:
       "Because LiteLLM Proxy instantiates and serializes Python/Pydantic chunk objects on every SSE token event, it adds 194 µs per chunk at c = 1 and plateaus at 83.0 streams/s at c = 16. Niu forwards SSE frames directly through Tokio byte streams while extracting terminal usage.",
+    verdictBodyZh:
+      "LiteLLM Proxy 在每个 SSE 事件上实例化并序列化 Python/Pydantic 对象，单流每分片增加 194 微秒开销并在 16 并发下停滞于 83.0 流/秒。Niu 牛元直接通过 Tokio 字节流零拷贝转发 SSE 帧并提取结束用量。",
   },
   {
     id: "agents",
     label: "Coding agent sessions",
+    labelZh: "编程智能体会话",
     eyebrow: "16 CONCURRENT CODING AGENTS · 30 TURNS EACH · 480 SSE STREAMS",
+    eyebrowZh: "16 个并发编程智能体 · 各执行 30 轮对话 · 共 480 条 SSE 流",
     title: "Multi-turn Claude Code (/v1/messages) & Codex (/v1/chat/completions) sessions",
+    titleZh: "Claude Code (/v1/messages) 与 Codex (/v1/chat/completions) 多轮并发会话",
     description:
       "Simulates 8 and 16 concurrent coding agents executing 30 sequential turns each with conversation context growing from 1.5 KB on turn 1 to 25 KB on turn 30.",
+    descriptionZh:
+      "模拟 8 个与 16 个并发编程智能体各自连续执行 30 轮对话，上下文体积从第 1 轮的 1.5 KB 增长至第 30 轮的 25 KB。",
     ruleTitle: "Workload profile",
+    ruleTitleZh: "负载模型",
     ruleDetail: "16 agents × 30 turns = 480 growing-context SSE streams",
+    ruleDetailZh: "16 个智能体 × 30 轮 = 480 条长上下文递增 SSE 流",
     cards: [
       {
         name: "Niu v0.2.4",
@@ -349,20 +398,32 @@ export const benchmarkSuites: GatewayBenchmarkSuite[] = [
     ],
     verdictNumber: "3.44x",
     verdictSub: "faster 16-agent coding session completion",
+    verdictSubZh: "16 并发智能体会话完成速度提升倍数",
     verdictTitle:
       "Flat session latency when doubling concurrent coding agents from 8 to 16.",
+    verdictTitleZh:
+      "并发编程智能体从 8 个翻倍至 16 个时，单轮会话延迟依然保持平稳。",
     verdictBody:
       "As growing conversation histories reach 25 KB per turn across 16 simultaneous agents, JSON re-parsing and event-loop contention double LiteLLM Proxy's completion time (3.06s to 5.80s). Niu completes all 480 turns in 1.69s with a flat 54 ms median turn time.",
+    verdictBodyZh:
+      "当 16 个并发智能体的历史上下文增长至每轮 25 KB 时，JSON 反复解析与事件循环争用使 LiteLLM Proxy 完成耗时翻倍（3.06 秒升至 5.80 秒）。Niu 牛元仅需 1.69 秒即可完成全部 480 轮请求，中位单轮耗时稳定在 54 ms。",
   },
   {
     id: "efficiency",
     label: "Memory & cost efficiency",
+    labelZh: "内存与计算成本效率",
     eyebrow: "RESIDENT SET SIZE (RSS) & AWS C7G.LARGE ($0.0725/HR) EFFICIENCY",
+    eyebrowZh: "常驻内存 (RSS) 与 AWS c7g.large ($0.0725/小时) 成本效率",
     title: "Memory footprint & proxy compute cost per 1M requests",
+    titleZh: "内存占用与每百万次请求网关计算成本",
     description:
       "Measures idle and peak resident memory (RSS) under 64-worker load and calculates gateway compute cost per 1M proxied requests at 60% target CPU utilization.",
+    descriptionZh:
+      "测量空闲及 64 并发满载下的常驻物理内存 (RSS)，并按 60% 目标 CPU 利用率折算每代理一百万次请求所需的网关计算成本。",
     ruleTitle: "Instance reference",
+    ruleTitleZh: "实例基准",
     ruleDetail: "AWS c7g.large (2 vCPU, 4 GB RAM · $0.0725/hr on-demand)",
+    ruleDetailZh: "AWS c7g.large (2 vCPU, 4 GB 内存 · 按需价格 $0.0725/小时)",
     cards: [
       {
         name: "Niu v0.2.4",
@@ -437,9 +498,14 @@ export const benchmarkSuites: GatewayBenchmarkSuite[] = [
     ],
     verdictNumber: "$0.014",
     verdictSub: "proxy compute cost per 1M requests",
+    verdictSubZh: "每百万次请求网关计算成本",
     verdictTitle:
       "Run high-throughput gateway nodes in under 30 MB of RAM.",
+    verdictTitleZh:
+      "以低于 30 MB 的内存占用运行高吞吐网关节点。",
     verdictBody:
       "Importing Python provider SDKs and tokenizers consumes 158–195 MB per LiteLLM worker before serving traffic. Niu's native Rust binary starts in 18.2 MB and grows by only 8.2 MB under 64-worker saturation.",
+    verdictBodyZh:
+      "LiteLLM 每个工作进程仅导入 Python SDK 与分词器即占用 158–195 MB 内存。Niu 牛元原生 Rust 单二进制启动仅需 18.2 MB，在 64 并发满载下仅增长 8.2 MB。",
   },
 ];
