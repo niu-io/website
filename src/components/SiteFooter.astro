@@ -7,45 +7,51 @@ const markUrl = `${base}/site-assets/brand/niu-mark.png`;
 const footerGroups = [
   {
     title: "Product",
+    titleZh: "产品",
     links: [
-      { label: "Models", href: "/models/" },
-      { label: "Dashboard", href: links.dashboard },
-      { label: "Generations", href: "/docs/reference/generations/" },
-      { label: "Benchmarks", href: links.benchmark },
+      { label: "Models", labelZh: "模型目录", href: "/models/" },
+      { label: "Dashboard", labelZh: "控制台", href: links.dashboard },
+      { label: "Generations", labelZh: "生成工作台", href: "/docs/reference/generations/" },
+      { label: "Benchmarks", labelZh: "性能基准", href: links.benchmark },
     ],
   },
   {
     title: "Developers",
+    titleZh: "开发者",
     links: [
-      { label: "Getting started", href: links.quickstart },
-      { label: "Documentation", href: "/docs/" },
-      { label: "REST API", href: links.api },
-      { label: "JavaScript SDK", href: "/docs/api/sdk/" },
-      { label: "Self-hosting", href: links.deployment },
+      { label: "Getting started", labelZh: "快速开始", href: links.quickstart },
+      { label: "Documentation", labelZh: "文档", href: "/docs/" },
+      { label: "REST API", labelZh: "REST API", href: links.api },
+      { label: "JavaScript SDK", labelZh: "JavaScript SDK", href: "/docs/api/sdk/" },
+      { label: "Self-hosting", labelZh: "私有化部署", href: links.deployment },
     ],
   },
   {
     title: "Resources",
+    titleZh: "资源",
     links: [
-      { label: "Why Niu?", href: "/blog/why-niu/" },
-      { label: "Blog", href: "/blog/" },
-      { label: "Compare gateways", href: links.compare },
-      { label: "Niu vs. OpenRouter", href: "/compare/openrouter/" },
-      { label: "Niu vs. New API", href: "/compare/new-api/" },
+      { label: "Why Niu?", labelZh: "为什么选择牛元？", href: "/blog/why-niu/" },
+      { label: "Blog", labelZh: "博客", href: "/blog/" },
+      { label: "Compare gateways", labelZh: "网关对比", href: links.compare },
+      { label: "Niu vs. OpenRouter", labelZh: "Niu vs. OpenRouter", href: "/compare/openrouter/" },
+      { label: "Niu vs. New API", labelZh: "Niu vs. New API", href: "/compare/new-api/" },
     ],
   },
   {
     title: "Open Source",
+    titleZh: "开源",
     links: [
-      { label: "GitHub", href: links.repo },
-      { label: "Website source", href: "https://github.com/niu-io/website" },
-      { label: "Release matrix", href: links.release },
+      { label: "GitHub", labelZh: "GitHub", href: links.repo },
+      { label: "Website source", labelZh: "官网源码", href: "https://github.com/niu-io/website" },
+      { label: "Release matrix", labelZh: "版本矩阵", href: links.release },
       {
         label: "Third-party notices",
+        labelZh: "第三方声明",
         href: `${links.repo}/blob/main/THIRD-PARTY-NOTICES.md`,
       },
       {
         label: "Brand attribution",
+        labelZh: "品牌署名",
         href: `${base}/site-assets/brand/SOURCE-LICENSE.txt`,
       },
     ],
@@ -63,22 +69,22 @@ const footerGroups = [
             style={`--footer-mark-url: url('${markUrl}')`}
             aria-hidden="true"
           ></span>
-          <span>Niu</span>
+          <span data-en="Niu" data-zh="Niu 牛元">Niu</span>
         </a>
-        <p class="site-footer-tagline">
+        <p class="site-footer-tagline" data-en="Open-source foundations for your model API business." data-zh="面向模型 API 业务的开源基础设施。">
           Open-source foundations for your model API business.
         </p>
-        <p class="site-footer-submeta">MIT License · Self-hosted &amp; cloud</p>
+        <p class="site-footer-submeta" data-en="MIT License · Self-hosted & cloud" data-zh="MIT 开源协议 · 支持私有化部署与云端托管">MIT License · Self-hosted &amp; cloud</p>
       </div>
 
       <nav class="site-footer-columns" aria-label="Footer navigation">
         {footerGroups.map((group) => (
           <div class="site-footer-group">
-            <h3>{group.title}</h3>
+            <h3 data-en={group.title} data-zh={group.titleZh}>{group.title}</h3>
             <ul>
               {group.links.map((item) => (
                 <li>
-                  <a href={item.href}>{item.label}</a>
+                  <a href={item.href} data-en={item.label} data-zh={item.labelZh}>{item.label}</a>
                 </li>
               ))}
             </ul>
@@ -88,3 +94,6 @@ const footerGroups = [
     </div>
   </div>
 </footer>
+<script is:inline>
+(()=>{const sync=()=>{const zh=document.documentElement.dataset.locale==='zh-CN'||document.documentElement.lang==='zh-CN';document.querySelectorAll('footer.site-footer [data-en][data-zh]').forEach(el=>{el.textContent=el.getAttribute(zh?'data-zh':'data-en')||'';});};sync();window.addEventListener('niu-locale-change',sync);window.addEventListener('storage',sync);})();
+</script>

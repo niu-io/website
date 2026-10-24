@@ -4,12 +4,13 @@
     "src/styles/tokens.css": "9b630280a2f0dbf6186a33312e03d6548e8d0467d8b547b68308055fdf1aa092",
     "src/styles/public-header.css": "efd81b52f19bff011bcaddb1c52c784726c8da3138d1bff7f3c118c73f87b351",
     "src/content/public-navigation.json": "cc49a3649789518b221f989dae9976978ca3e3f5a89888afa1f164d1b2e39051",
-    "src/components/PublicHeader.tsx": "a5daa6b4968cbe1f220b5ab89340ac8b5eba797ab155b6fccbfde61738f97e5f",
-    "src/components/SessionLink.tsx": "7010b46645e5aff64a30a216652098b528518334bdb6bba0d3b65f7c7b88ceb4",
+    "src/components/locale.ts": "f0733ca1ade7803640d05b3d60a2b02bc6c2dd107528228b28f85f5bf8d81059",
+    "src/components/PublicHeader.tsx": "8c78c8b4dc49aa2a1af1a28d10a09c9936f32db18d5485d47e85cbba65fae498",
+    "src/components/SessionLink.tsx": "93fb266a290f17e1b3890959a1820169e970876d44a615f11929f0a73f167328",
     "src/components/live-api/session.ts": "fe89a76e3505741e7b30631fea828d54cf80ecb26086c43f3c298ca75c64cf7e",
     "src/content/docs-navigation.ts": "15da10412eda40bcdf866cc082c1888a0df6dfef673deed2d3f5b8e4e2e906a0",
-    "src/components/PublicNavigationMenu.tsx": "667d632be024a57b9ea8ca59c32d396441d3799304e023c5784ace033acc4e82"
+    "src/components/PublicNavigationMenu.tsx": "7676543fe29ac40c2d144b29b3f60436b890facfea0dbad9a18ea890debeaa24"
   },
-  "sourceRevision": "8c12c75a2dc50d278ae280c50dae9ab45307e46d",
+  "sourceRevision": "0dabb1569c6b627e03c3c015197ab2aa35050621",
   "sourceWorkingTreeModified": false
 }

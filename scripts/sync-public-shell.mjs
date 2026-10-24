@@ -13,6 +13,7 @@ const files=[
  ['branding/tokens.css','src/styles/tokens.css'],
  ['branding/public-header.css','src/styles/public-header.css'],
  ['branding/public-navigation.json','src/content/public-navigation.json'],
+ ['apps/dashboard/src/app/locale.ts','src/components/locale.ts'],
  ['apps/docs/src/components/PublicHeader.tsx','src/components/PublicHeader.tsx'],
  ['apps/docs/src/components/SessionLink.tsx','src/components/SessionLink.tsx'],
  ['apps/docs/src/components/live-api/session.ts','src/components/live-api/session.ts'],
@@ -20,7 +21,7 @@ const files=[
  ['apps/docs/src/components/PublicNavigationMenu.tsx','src/components/PublicNavigationMenu.tsx'],
 ];
 const digest=text=>createHash('sha256').update(text).digest('hex');
-const adapt=(text,file)=>file.endsWith('.tsx')?text.replaceAll('../../../dashboard/src/components/ui/', './ui/').replaceAll("'../navigation'","'../content/docs-navigation'").replaceAll("'../../../dashboard/src/components/ui/","'./ui/").replaceAll("'./ThemeMenu'","'./PublicThemeMenu'").replaceAll("'../../../../branding/public-navigation.json'","'../content/website-navigation'"):text;
+const adapt=(text,file)=>file.endsWith('.tsx')?text.replaceAll('../../../dashboard/src/components/ui/', './ui/').replaceAll('../../../dashboard/src/app/locale', './locale').replaceAll("'../navigation'","'../content/docs-navigation'").replaceAll("'../../../dashboard/src/components/ui/","'./ui/").replaceAll("'./ThemeMenu'","'./PublicThemeMenu'").replaceAll("'../../../../branding/public-navigation.json'","'../content/website-navigation'"):text;
 if(!source&&!check)throw new Error('Provide --source <public-niu-checkout> to synchronize.');
 const manifest={sourceRepository:'niu-io/niu',files:{}};
 if(source&&!check){
