@@ -207,7 +207,7 @@ export const faqs = [
       "Niu 牛元通过开放的 niu-plugin-api 契约与 niu-plugin-sdk 保持 Rust 核心数据面的精简。插件以受控的 Unix Socket 进程运行，并通过短效 Ed25519 JWS 签名上下文进行校验，将自定义策略与企业级模块同核心推理延迟完全隔离。",
     linkLabel: "Architecture overview",
     linkLabelZh: "查看架构概览",
-    linkHref: "/docs/concepts/architecture/",
+    linkHref: "https://github.com/niu-io/niu/blob/main/docs/architecture/enterprise-composition.md",
   },
   {
     index: "06",
