@@ -14,7 +14,6 @@ import "../styles/landing-visual.css";
 import LandingContent from "../components/LandingContent";
 import { codeExamples } from "../content/landing";
 import { codeToHtml } from "shiki";
-
 const highlightedCode = await Promise.all(
   codeExamples.map((example) =>
     codeToHtml(example.code, {
@@ -26,45 +25,34 @@ const highlightedCode = await Promise.all(
 
 const latestPosts = publishedPosts(await getCollection("blog"))
   .slice(0, 3)
-  .map(({ id, data, body }) => {
-    const minutes = Math.max(
-      1,
-      Math.round((body ?? "").trim().split(/\s+/).filter(Boolean).length / 220),
-    );
-    const pubDate = new Date(`${data.publishedAt}T00:00:00Z`);
-    return {
-      id,
-      href: `/blog/${id}/`,
-      title: data.title,
-      chineseTitle: data.chineseTitle,
-      description: data.description,
-      category: data.category,
-      publishedAt: data.publishedAt,
-      dateLabel: pubDate.toLocaleDateString("en-US", {
+  .map(({ id, data, body }) => ({
+    href: `/blog/${id}/`,
+    title: data.title,
+    chineseTitle: data.chineseTitle,
+    description: data.description,
+    category: data.category,
+    publishedAt: data.publishedAt,
+    dateLabel: new Date(`${data.publishedAt}T00:00:00Z`).toLocaleDateString(
+      "en-US",
+      {
         year: "numeric",
         month: "long",
         day: "numeric",
         timeZone: "UTC",
-      }),
-      dateLabelZh: pubDate.toLocaleDateString("zh-CN", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-        timeZone: "UTC",
-      }),
-      readingTime: data.readingTime ?? `${minutes} min read`,
-      readingTimeZh: `约 ${minutes} 分钟阅读`,
-      highlights: Array.from((body ?? "").matchAll(/^##\s+(.+)$/gm), (m) =>
-        m[1].trim(),
-      ).slice(0, 4),
-    };
-  });
-
+      },
+    ),
+    readingTime:
+      data.readingTime ??
+      `${Math.max(1, Math.round((body ?? "").trim().split(/\s+/).filter(Boolean).length / 220))} min read`,
+    highlights: Array.from((body ?? "").matchAll(/^##\s+(.+)$/gm), (m) =>
+      m[1].trim(),
+    ).slice(0, 4),
+  }));
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 const asset = (path: string) => `${base}/${path}`;
-const title = "Niu — Full-stack open-source model API platform";
+const title = "Niu — Build your model API business";
 const description =
-  "Full-stack open-source Rust gateway and commercial platform for model API businesses: 3,239 RPS throughput, Smart Model Pools, private margins, 3-tier spend holds, and built-in Chat & Video workspaces.";
+  "Open-source infrastructure for model aggregation businesses. Operate model supply, keep clear accounts, and give customers a service they can trust.";
 const canonical = new URL(`${base}/`, Astro.site);
 ---
 
@@ -89,6 +77,20 @@ const canonical = new URL(`${base}/`, Astro.site);
     />
     <meta name="twitter:card" content="summary_large_image" />
     <title>{title}</title>
+    <script is:inline>
+      (() => {
+        const html = document.documentElement;
+        const syncScroll = () =>
+          html.classList.toggle("is-scrolled", window.scrollY > 8);
+        syncScroll();
+        window.addEventListener("scroll", syncScroll, { passive: true });
+        if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+        html.classList.add("motion-ready");
+        setTimeout(() => {
+          if (!window.__niuMotion) html.classList.remove("motion-ready");
+        }, 3000);
+      })();
+    </script>
   </head>
 
   <body>

@@ -1,1 +1,66 @@
-/* Editorial blog preview styles for the homepage live in landing-visual.css (.niu-editorial-*). */
+.landing-blog-intro {
+  max-width: 54ch;
+}
+
+.landing-blog-intro p {
+  color: var(--muted-foreground);
+  font-size: var(--type-body);
+  line-height: 1.7;
+  margin-bottom: 18px;
+}
+
+.landing-blog-entry {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 48px;
+  padding-block: 32px;
+  border-top: 1px solid var(--border);
+}
+
+.landing-blog-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: var(--muted-foreground);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.landing-blog-meta > span:first-child {
+  color: var(--brand-ink);
+}
+
+.landing-blog-body h3 {
+  max-width: 38ch;
+  margin: 0 0 16px;
+  font-size: clamp(24px, 2.5vw, 32px);
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.025em;
+}
+
+.landing-blog-body h3 a:hover {
+  color: var(--brand-ink);
+}
+
+.landing-blog-body p {
+  max-width: 68ch;
+  margin-bottom: 20px;
+  font-size: var(--type-body);
+  line-height: 1.7;
+  color: var(--muted-foreground);
+}
+
+@media (max-width: 760px) {
+  .landing-blog-entry {
+    grid-template-columns: 1fr;
+    gap: 18px;
+    padding-block: 28px;
+  }
+
+  .landing-blog-meta {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 6px 16px;
+  }
+}

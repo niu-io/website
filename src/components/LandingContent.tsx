@@ -1,1942 +1,3011 @@
-import { useEffect, useState } from "react";
-import {
-  Activity,
-  ArrowRight,
-  ArrowUpRight,
-  Check,
-  ChevronDown,
-  Copy,
-  Database,
-  ExternalLink,
-  FileText,
-  FolderKanban,
-  GitBranch,
-  KeyRound,
-  Layers,
-  Lock,
-  Play,
-  Receipt,
-  RefreshCw,
-  Search,
-  Server,
-  Settings,
-  ShieldCheck,
-  SlidersHorizontal,
-  Terminal,
-  Video,
-  Wallet,
-} from "lucide-react";
-import { IconMessageChatbot, IconSparkles } from "@tabler/icons-react";
-import { Button } from "./ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "./ui/table";
+import { useEffect, useRef, useState } from "react";
+import { CountUp, useLandingMotion } from "./landing-motion";
 import { useLocale } from "./locale";
 import {
-  capabilities,
-  capabilityGroups,
-  codeExamples,
-  faqs,
-  heroPillars,
+  IconArrowRight,
+  IconBolt,
+  IconBook,
+  IconBrandGithub,
+  IconChartLine,
+  IconCheck,
+  IconCoins,
+  IconCopy,
+  IconHistory,
+  IconLayoutDashboard,
+  IconListSearch,
+  IconMessageChatbot,
+  IconPlugConnected,
+  IconRoute,
+  IconScale,
+  IconSearch,
+  IconServerBolt,
+  IconShieldLock,
+  IconSparkles,
+  IconTimeline,
+} from "@tabler/icons-react";
+import {
+  Activity,
+  BarChart3,
+  ChevronsUpDown,
+  Coins,
+  Cpu,
+  CreditCard,
+  Film,
+  FolderKey,
+  KeyRound,
+  List,
+  Palette,
+  PanelLeft,
+  Plus,
+  Receipt,
+  RefreshCw,
+  ScrollText,
+  Settings,
+  ShieldAlert,
+  SlidersHorizontal,
+  Users,
+} from "lucide-react";
+import { Button } from "./ui/button";
+import {
   links,
-  pipelineStages,
-  stackComponents,
+  pillars,
+  capabilities,
+  faqs,
+  codeExamples,
+  heroStats,
 } from "../content/landing";
-import { benchmarkSuites } from "../content/benchmarks";
+import { benchmarkSteps, benchmarkSuites } from "../content/benchmarks";
 
-export interface LandingBlogPost {
-  id?: string;
+const pillarIcons = [IconBolt, IconScale, IconTimeline, IconServerBolt];
+const capabilityIcons = [
+  IconRoute,
+  IconListSearch,
+  IconCoins,
+  IconShieldLock,
+  IconPlugConnected,
+  IconMessageChatbot,
+];
+
+interface LandingPost {
   href: string;
   title: string;
   chineseTitle?: string;
   description: string;
-  category?: string;
+  category: string;
   publishedAt: string;
   dateLabel: string;
-  dateLabelZh?: string;
   readingTime: string;
-  readingTimeZh?: string;
-  highlights: string[];
+  highlights?: string[];
 }
 
-interface Props {
-  latestPosts: LandingBlogPost[];
-  highlightedCode: string[];
-}
+const previewTabs = [
+  {
+    id: "logs",
+    label: "Workspace · Logs",
+    labelZh: "工作空间 · 请求日志",
+    breadcrumb: "Default workspace / Logs",
+    breadcrumbZh: "默认工作空间 / 请求日志",
+    railArea: "workspace" as const,
+  },
+  {
+    id: "routing",
+    label: "Admin · Route pools",
+    labelZh: "管理后台 · 路由池",
+    breadcrumb: "Admin / Route pools",
+    breadcrumbZh: "管理后台 / 路由池",
+    railArea: "admin" as const,
+  },
+  {
+    id: "billing",
+    label: "Admin · Financial statements",
+    labelZh: "管理后台 · 财务报表",
+    breadcrumb: "Admin / Financial statements",
+    breadcrumbZh: "管理后台 / 财务报表",
+    railArea: "admin" as const,
+  },
+  {
+    id: "generations",
+    label: "Generations · Chat & Video",
+    labelZh: "生成对话 · 对话与视频",
+    breadcrumb: "Generations / Chat & Video",
+    breadcrumbZh: "生成对话 / 对话与视频",
+    railArea: "generations" as const,
+  },
+];
 
-const WHY_NIU_ZH = {
-  title:
-    "为什么我们要做 Niu 牛元：把模型 API 做成一门账目清晰、客户信赖的好生意",
-  description:
-    "把客户连上大模型只是第一步。真正留住付费客户，靠的是稳定的多渠道交付、每一笔都解释得清楚的账单，以及客户无需反复找人工支持就能自助使用的完整体验。",
-  category: "产品理念",
-  highlights: [
-    "交付一套每一笔调用都有据可查的模型服务",
-    "算清哪些费用已经结算、哪些异常流仍在待核实",
-    "给客户一套开箱即用、自助管理的工作空间与工作台",
-    "跑在真正全栈开源、可自主掌控的底座之上",
-  ],
-};
+const demoLogRecords = [
+  {
+    time: "Oct 19, 14:22:08",
+    model: "claude-sonnet-4",
+    providerSub: "Anthropic · claude-sonnet-4-20250514",
+    providerBadge: "A",
+    status: "Completed",
+    statusTone: "completed" as const,
+    duration: "1,180 ms",
+    durationSub: "Attempt 2 of 2 · failover",
+    inputTokens: "412",
+    cachedTokens: "256",
+    outputTokens: "128",
+    reasoningTokens: "0",
+    charge: "$0.0180",
+    chargeSub: "Settled tariff",
+    apiKey: "prod-backend",
+    finishReason: "stop",
+    deliveryStatus: "Completed · Customer tariff settled",
+    providerStatus: "HTTP 200 OK",
+    throughput: "128 output tokens · 148.8 tok/s",
+    phases: [
+      {
+        label: "Preparation",
+        duration: "2.1 ms",
+        pct: 6,
+        tone: "prep" as const,
+      },
+      {
+        label: "First output wait",
+        duration: "318 ms",
+        pct: 27,
+        tone: "ttft" as const,
+      },
+      {
+        label: "Output stream",
+        duration: "860 ms",
+        pct: 67,
+        tone: "stream" as const,
+      },
+    ],
+    rawPreview:
+      "POST /v1/chat/completions → pool claude-sonnet-4 (attempt 1 HTTP 401 not charged → attempt 2 Anthropic HTTP 200 settled $0.0180)",
+  },
+  {
+    time: "Oct 19, 14:22:07",
+    model: "claude-sonnet-4",
+    providerSub: "OpenRouter · anthropic/claude-sonnet-4",
+    providerBadge: "OR",
+    status: "Failed · HTTP 401",
+    statusTone: "failed" as const,
+    duration: "3.2 ms",
+    durationSub: "Attempt 1 · route cooldown",
+    inputTokens: "0",
+    cachedTokens: "0",
+    outputTokens: "0",
+    reasoningTokens: "0",
+    charge: "Not charged",
+    chargeSub: "Pre-stream rejection",
+    apiKey: "prod-backend",
+    finishReason: "upstream_auth_error",
+    deliveryStatus: "Not executed · Hold transferred to Attempt 2",
+    providerStatus: "HTTP 401 Unauthorized",
+    throughput: "0 output tokens · Failover triggered",
+    phases: [
+      {
+        label: "Preparation",
+        duration: "1.8 ms",
+        pct: 56,
+        tone: "prep" as const,
+      },
+      {
+        label: "First output wait",
+        duration: "1.4 ms",
+        pct: 44,
+        tone: "failed" as const,
+      },
+      {
+        label: "Output stream",
+        duration: "—",
+        pct: 0,
+        tone: "stream" as const,
+      },
+    ],
+    rawPreview:
+      "Upstream HTTP 401 on candidate claude-sonnet-4-openrouter; route entered 60s auth cooldown and request failed over to claude-sonnet-4-anthropic.",
+  },
+  {
+    time: "Oct 19, 14:19:41",
+    model: "deepseek-r1",
+    providerSub: "OpenRouter · deepseek/deepseek-r1",
+    providerBadge: "DS",
+    status: "Uncertain",
+    statusTone: "uncertain" as const,
+    duration: "4,820 ms",
+    durationSub: "Stream dropped mid-flight",
+    inputTokens: "620",
+    cachedTokens: "0",
+    outputTokens: "—",
+    reasoningTokens: "194",
+    charge: "Unresolved",
+    chargeSub: "Explicitly unbilled",
+    apiKey: "eval-runner",
+    finishReason: "stream_interrupted",
+    deliveryStatus: "Uncertain · Never fabricated as $0.00",
+    providerStatus: "HTTP 200 (SSE interrupted)",
+    throughput: "Partial stream · Reconciliation required",
+    phases: [
+      {
+        label: "Preparation",
+        duration: "2.4 ms",
+        pct: 5,
+        tone: "prep" as const,
+      },
+      {
+        label: "First output wait",
+        duration: "610 ms",
+        pct: 18,
+        tone: "ttft" as const,
+      },
+      {
+        label: "Output stream",
+        duration: "4,207 ms",
+        pct: 77,
+        tone: "uncertain" as const,
+      },
+    ],
+    rawPreview:
+      "SSE stream closed before terminal usage chunk; recorded as Uncertain / Unresolved so customer bills never fake a $0 completion.",
+  },
+];
 
-function GitHubIcon() {
-  return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      aria-hidden="true"
-    >
-      <path d="M12 .5a12 12 0 0 0-3.79 23.39c.6.11.82-.26.82-.58v-2.04c-3.34.73-4.04-1.42-4.04-1.42-.55-1.39-1.33-1.76-1.33-1.76-1.09-.75.08-.73.08-.73 1.2.09 1.84 1.24 1.84 1.24 1.07 1.83 2.81 1.3 3.49 1 .11-.78.42-1.3.76-1.6-2.66-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.13-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6.01 0c2.29-1.55 3.3-1.23 3.3-1.23.66 1.66.25 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58A12 12 0 0 0 12 .5Z" />
-    </svg>
-  );
-}
+const demoRoutePools = [
+  {
+    alias: "claude-sonnet-4",
+    revision: "Revision 4",
+    scopeBadge: "Shared pool",
+    scopeSub: "Shared across workspaces",
+    enabledSummary: "3 of 3 candidates enabled",
+    status: "Enabled",
+    maxAttempts: "Max 2 attempts per request",
+    candidates: [
+      {
+        alias: "claude-sonnet-4-anthropic",
+        provider: "Anthropic Direct",
+        priority: 100,
+        weight: 800,
+        tierShare: "80% primary tier share",
+        sharePct: 80,
+        cooldown: "No active cooldown · 0 / 3 auth failures in 60s",
+        status: "Enabled · Primary",
+        isPrimary: true,
+      },
+      {
+        alias: "claude-sonnet-4-openrouter",
+        provider: "OpenRouter Enterprise",
+        priority: 100,
+        weight: 200,
+        tierShare: "20% primary tier share",
+        sharePct: 20,
+        cooldown: "No active cooldown · 0 / 3 auth failures in 60s",
+        status: "Enabled · Primary",
+        isPrimary: true,
+      },
+      {
+        alias: "claude-sonnet-4-vertex",
+        provider: "Google Vertex AI",
+        priority: 50,
+        weight: 1000,
+        tierShare: "100% standby tier (P50)",
+        sharePct: 100,
+        cooldown: "Standby failover ready · 0 / 3 in 60s",
+        status: "Enabled · Standby",
+        isPrimary: false,
+      },
+    ],
+  },
+  {
+    alias: "gpt-4.1",
+    revision: "Revision 2",
+    scopeBadge: "Shared pool",
+    scopeSub: "Shared across workspaces",
+    enabledSummary: "2 of 2 candidates enabled",
+    status: "Enabled",
+    maxAttempts: "Max 2 attempts per request",
+    candidates: [
+      {
+        alias: "gpt-4.1-openai-direct",
+        provider: "OpenAI Direct",
+        priority: 100,
+        weight: 900,
+        tierShare: "90% primary tier share",
+        sharePct: 90,
+        cooldown: "No active cooldown · 0 / 3 auth failures in 60s",
+        status: "Enabled · Primary",
+        isPrimary: true,
+      },
+      {
+        alias: "gpt-4.1-azure-east",
+        provider: "Azure OpenAI",
+        priority: 50,
+        weight: 1000,
+        tierShare: "100% standby tier (P50)",
+        sharePct: 100,
+        cooldown: "Standby failover ready · 0 / 3 in 60s",
+        status: "Enabled · Standby",
+        isPrimary: false,
+      },
+    ],
+  },
+  {
+    alias: "deepseek-r1",
+    revision: "Revision 5",
+    scopeBadge: "Organization pool",
+    scopeSub: "Private to Acme Robotics",
+    enabledSummary: "3 of 3 candidates enabled",
+    status: "Enabled",
+    maxAttempts: "Max 2 attempts per request",
+    candidates: [
+      {
+        alias: "deepseek-r1-volcengine",
+        provider: "Volcengine Ark",
+        priority: 100,
+        weight: 700,
+        tierShare: "70% primary tier share",
+        sharePct: 70,
+        cooldown: "No active cooldown · 0 / 3 auth failures in 60s",
+        status: "Enabled · Primary",
+        isPrimary: true,
+      },
+      {
+        alias: "deepseek-r1-openrouter",
+        provider: "OpenRouter Enterprise",
+        priority: 100,
+        weight: 300,
+        tierShare: "30% primary tier share",
+        sharePct: 30,
+        cooldown: "No active cooldown · 0 / 3 auth failures in 60s",
+        status: "Enabled · Primary",
+        isPrimary: true,
+      },
+      {
+        alias: "deepseek-r1-together",
+        provider: "Together AI",
+        priority: 50,
+        weight: 1000,
+        tierShare: "100% standby tier (P50)",
+        sharePct: 100,
+        cooldown: "Standby failover ready · 0 / 3 in 60s",
+        status: "Enabled · Standby",
+        isPrimary: false,
+      },
+    ],
+  },
+];
+
+const volumeHistogramBars = [
+  34, 42, 38, 51, 64, 72, 68, 84, 92, 78, 88, 96, 82, 74, 89, 94, 100, 86, 79,
+  91, 85, 76, 88, 95,
+];
+
+const gatewaySteps = [
+  {
+    step: "01",
+    title: "Connect upstream Providers and price your model pools",
+    titleZh: "第一步：接入上游渠道，配置模型池与售价",
+    detail:
+      "Add Anthropic, OpenRouter, or Vertex keys server-side, group them into failover model pools, and set your customer selling rates.",
+    detailZh:
+      "在后台填入 Anthropic、OpenRouter、火山方舟等上游密钥，组合成主备容灾的模型池，并设定对外销售单价或透传规则。",
+  },
+  {
+    step: "02",
+    title: "Issue workspace API keys with model & budget limits",
+    titleZh: "第二步：为客户或团队签发专属 API 密钥",
+    detail:
+      "Create customer workspaces and scoped API keys with per-key spending caps and authorized model lists.",
+    detailZh:
+      "一键创建客户工作空间与 API 密钥，按需限制可调用的模型范围、并发与消费额度上限。",
+  },
+  {
+    step: "03",
+    title: "Change one Base URL—Niu handles failover and billing",
+    titleZh: "第三步：改一行地址直接调用，自动完成扣费与对账",
+    detail:
+      "Clients stream responses with zero code changes while Niu handles automatic failover, token metering, and real-time billing.",
+    detailZh:
+      "客户端无需改动业务代码即可流式调用；网关自动完成主备切换、Token 计量、实时扣费与毛利统计。",
+  },
+];
 
 export default function LandingContent({
   latestPosts,
   highlightedCode,
-}: Props) {
-  const { isZh: rawIsZh } = useLocale();
-  const [hydrated, setHydrated] = useState(false);
-  useEffect(() => {
-    setHydrated(true);
-  }, []);
-  const isZh = hydrated && rawIsZh;
-  const t = <E, Z>(enText: E, zhText: Z): E | Z => (isZh ? zhText : enText);
-  const [previewTab, setPreviewTab] = useState<string>("pools");
-  const [poolBillingMode, setPoolBillingMode] = useState<"pool" | "candidate">(
-    "pool",
-  );
-  const [selectedLogIndex, setSelectedLogIndex] = useState<number>(0);
-  const [benchmarkId, setBenchmarkId] = useState<string>(
-    benchmarkSuites[0]?.id ?? "throughput",
-  );
-  const [codeTab, setCodeTab] = useState<string>(codeExamples[0]?.id ?? "curl");
-  const [copiedId, setCopiedId] = useState<string | null>(null);
+}: {
+  latestPosts: LandingPost[];
+  highlightedCode: string[];
+}) {
+  const { isZh, t } = useLocale();
+  const [activePreviewIndex, setActivePreviewIndex] = useState(0);
+  const [previewPaused, setPreviewPaused] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [selectedLogIndex, setSelectedLogIndex] = useState(0);
+  const [showVolumeChart, setShowVolumeChart] = useState(true);
+  const [activeLogTab, setActiveLogTab] = useState<
+    "response" | "request" | "raw"
+  >("response");
+  const [selectedPoolIndex, setSelectedPoolIndex] = useState(0);
+  const [activeFinancialTab, setActiveFinancialTab] = useState<
+    "pnl" | "providers"
+  >("pnl");
+  const [activeGenerationsMode, setActiveGenerationsMode] = useState<
+    "chat" | "video"
+  >("chat");
+  const [activeSuiteIndex, setActiveSuiteIndex] = useState(0);
+  const [activeCodeIndex, setActiveCodeIndex] = useState(0);
+  const [copiedCode, setCopiedCode] = useState(false);
+  const mainRef = useRef<HTMLElement>(null);
+  useLandingMotion(mainRef);
+  const stagger = (i: number) => ({ "--i": i }) as React.CSSProperties;
 
-  const handleCopy = async (id: string, text: string) => {
-    try {
-      await navigator.clipboard.writeText(text);
-      setCopiedId(id);
-      window.setTimeout(() => {
-        setCopiedId((prev) => (prev === id ? null : prev));
-      }, 1800);
-    } catch {
-      /* Clipboard unavailable in restricted contexts */
-    }
+  useEffect(() => {
+    if (previewPaused) return;
+    if (
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    )
+      return;
+    const timer = window.setInterval(() => {
+      setActivePreviewIndex((prev) => (prev + 1) % previewTabs.length);
+    }, 6500);
+    return () => window.clearInterval(timer);
+  }, [previewPaused, activePreviewIndex]);
+
+  const handleCopyCode = () => {
+    const snippet = codeExamples[activeCodeIndex]?.code;
+    if (!snippet || typeof navigator === "undefined" || !navigator.clipboard)
+      return;
+    void navigator.clipboard.writeText(snippet).then(() => {
+      setCopiedCode(true);
+      window.setTimeout(() => setCopiedCode(false), 1800);
+    });
   };
 
-  const logEntries = [
-    {
-      model: "claude-sonnet-4",
-      time: t("Today, 14:22:08", "今天 14:22:08"),
-      keyName: "prod-coding-agent",
-      statusTone: "ok" as const,
-      statusLabel: t("Completed · 200", "已完成 · 200"),
-      charge: "$0.0180",
-      latency: "1,180 ms",
-      inputTokens: "1,840",
-      cachedTokens: "512",
-      outputTokens: "960",
-      prepMs: "1.9 ms",
-      ttftMs: "312 ms",
-      streamMs: "866 ms",
-      throughput: "148.8 tok/s",
-      settlement: t(
-        "Settled at workspace retail tariff",
-        "已按工作空间零售费率结算",
-      ),
-      attemptsSummary: t(
-        "Attempt #1 upstream HTTP 429 (3.1 ms, $0.00 not charged) → Automatic failover to Attempt #2 HTTP 200 OK (settled $0.0180).",
-        "第 1 次尝试上游返回 HTTP 429（耗时 3.1 ms，未扣费）→ 自动无感切换至第 2 次尝试 HTTP 200 OK（按客户零售价结算 $0.0180）。",
-      ),
-    },
-    {
-      model: "gpt-4.1",
-      time: t("Today, 14:20:41", "今天 14:20:41"),
-      keyName: "ci-batch-runner",
-      statusTone: "warn" as const,
-      statusLabel: t("Quota Hold · 402", "预算护栏拦截 · 402"),
-      charge: t("Not charged", "未扣费 ($0.00)"),
-      latency: "1.8 ms",
-      inputTokens: "12,400",
-      cachedTokens: "0",
-      outputTokens: "0",
-      prepMs: "1.8 ms",
-      ttftMs: "—",
-      streamMs: "—",
-      throughput: "—",
-      settlement: t(
-        "Rejected before upstream dispatch",
-        "转发前准入拦截 · 零上游消耗",
-      ),
-      attemptsSummary: t(
-        "Pre-dispatch PostgreSQL hold detected API key monthly cap ($50.00 / $50.00). Rejected in 1.8 ms before sending tokens upstream.",
-        "转发前 PostgreSQL 预占检测到该 API 密钥已触及月度上限（$50.00 / $50.00），在 1.8 ms 内直接拦截，未产生任何上游调用消耗。",
-      ),
-    },
-    {
-      model: "deepseek-r1",
-      time: t("Today, 14:19:12", "今天 14:19:12"),
-      keyName: "research-notebook",
-      statusTone: "pending" as const,
-      statusLabel: t("Stream Dropped · Unresolved", "流式中断 · 待核实"),
-      charge: t("Unresolved hold", "待核实（暂不扣费）"),
-      latency: "4,820 ms",
-      inputTokens: "2,150",
-      cachedTokens: "0",
-      outputTokens: t("Unknown", "缺少流尾凭证"),
-      prepMs: "2.1 ms",
-      ttftMs: "640 ms",
-      streamMs: "4,178 ms",
-      throughput: "—",
-      settlement: t(
-        "Flagged unresolved — never fake $0 or blind debit",
-        "保留在途记录待核实 · 绝不盲扣或伪造 0 元账单",
-      ),
-      attemptsSummary: t(
-        "Upstream TCP stream closed after 19 SSE chunks before terminal usage arrived. Preserved for reconciliation without blind retry.",
-        "上游连接在返回 19 个 SSE 分片后意外断开，未收到最终用量事件。系统诚实标记为「待核实」供对账，绝不盲目重试导致重复扣费。",
-      ),
-    },
-  ];
-
-  const activeLog = logEntries[selectedLogIndex] ?? logEntries[0];
-
-  const poolCandidates = [
-    {
-      rank: "#1",
-      provider: "Anthropic Direct",
-      route: "claude-sonnet-4-20250514",
-      rule: t("Default + >128k context", "主力默认 + >128k 长上下文"),
-      share: "78.4%",
-      ttft: "312 ms",
-      costRate: "$2.40 / $12.00",
-      retailRate:
-        poolBillingMode === "pool" ? "$3.00 / $15.00" : "$3.10 / $15.50",
-      margin: poolBillingMode === "pool" ? "+20.0%" : "+22.6%",
-      status: t("Healthy", "健康"),
-    },
-    {
-      rank: "#2",
-      provider: "OpenRouter Enterprise",
-      route: "anthropic/claude-sonnet-4",
-      rule: t("30% weighted + tool calls", "30% 权重分流 + 工具调用"),
-      share: "21.6%",
-      ttft: "386 ms",
-      costRate: "$2.55 / $12.75",
-      retailRate:
-        poolBillingMode === "pool" ? "$3.00 / $15.00" : "$2.95 / $14.80",
-      margin: poolBillingMode === "pool" ? "+15.0%" : "+13.8%",
-      status: t("Healthy", "健康"),
-    },
-    {
-      rank: "#3",
-      provider: "AWS Bedrock (us-east-1)",
-      route: "us.anthropic.claude-sonnet-4-v1",
-      rule: t("Failover standby (429/5xx)", "主渠道异常秒级兜底"),
-      share: "0.0%",
-      ttft: "350 ms",
-      costRate: "$3.00 / $15.00",
-      retailRate:
-        poolBillingMode === "pool" ? "$3.00 / $15.00" : "$3.20 / $16.00",
-      margin: poolBillingMode === "pool" ? "0.0% (SLA)" : "+6.3%",
-      status: t("Standby", "热备待命"),
-    },
-  ];
+  const activeTab = previewTabs[activePreviewIndex] ?? previewTabs[0];
+  const selectedLog = demoLogRecords[selectedLogIndex] ?? demoLogRecords[0];
+  const selectedPool = demoRoutePools[selectedPoolIndex] ?? demoRoutePools[0];
 
   return (
-    <main id="main" className="niu-landing">
-      {/* =====================================================================
-          SECTION 1: FIRST VIEWPORT — AUTHORITATIVE OPENING + CONSOLE STAGE
-      ===================================================================== */}
-      <section className="niu-hero-section">
-        <div className="container">
-          <div className="niu-hero-header">
-            <div className="niu-hero-copy">
-              <p className="niu-meta-line">
-                <span className="niu-meta-tag">MIT</span>
-                <span>
-                  {t(
-                    "Full-Stack Open Source · Rust Gateway + Operator Console + Chat & Video Studio",
-                    "MIT 全栈开源 · Rust 高性能网关 + 商业运营后台 + 对话与视频工作台",
-                  )}
-                </span>
-              </p>
-
-              <h1 className="niu-hero-title">
-                {t(
-                  "Run a profitable model API business ",
-                  <>
-                    把大模型 API 做成一门
-                    <span className="whitespace-nowrap">好生意，</span>
-                  </>,
-                )}
-                <span className="niu-title-accent">
-                  {t("on one open-source stack.", "一套开源系统全部跑通。")}
-                </span>
-              </h1>
-
-              <p className="niu-hero-lead">
-                {t(
-                  "Niu combines a 3,239 RPS Rust gateway with the commercial operations LiteLLM and channel relays leave out: Smart Model Pools, private upstream margins, pre-dispatch balance protection, and a ready-to-use customer workspace.",
-                  "告别简陋的命令行转发与糊涂账。Niu 牛元用 Rust 原生打造 10 倍并发性能的 AI 网关，内置智能模型池、进销价格分离、三级并发余额风控，以及开箱即用的多模型对话与视频工作台。",
-                )}
-              </p>
-
-              <div className="niu-hero-cta">
-                <Button asChild size="lg" className="niu-btn-primary">
-                  <a href={links.dashboard}>
-                    <span>{t("Open dashboard", "打开控制台")}</span>
-                    <ArrowRight aria-hidden="true" />
-                  </a>
-                </Button>
-                <Button
-                  asChild
-                  variant="outline"
-                  size="lg"
-                  className="niu-btn-outline"
-                >
-                  <a href={links.deployment}>
-                    <span>
-                      {t("Deploy single container", "单容器私有化部署")}
-                    </span>
-                  </a>
-                </Button>
-                <a
-                  className="niu-inline-repo-link"
-                  href={links.repo}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <GitHubIcon />
-                  <span>{t("GitHub (niu-io/niu)", "GitHub 开源仓库")}</span>
-                  <ArrowUpRight className="size-3.5" aria-hidden="true" />
-                </a>
-              </div>
-            </div>
-
-            <aside
-              className="niu-hero-ledger"
-              aria-label={t(
-                "Three core competitive advantages",
-                "三大核心竞争力",
+    <main id="main" ref={mainRef}>
+      {/* 1. HERO + INTERACTIVE PRODUCT PREVIEW + 4 CORE COMPETITIVE PILLARS */}
+      <section className="hero-stage" aria-labelledby="hero-title">
+        <div className="hero-backdrop" aria-hidden="true">
+          <span className="hero-grid" />
+          <span className="hero-glow" />
+        </div>
+        <div className="hero container">
+          <a
+            className="release-link hero-enter"
+            style={stagger(0)}
+            href="#product"
+          >
+            <span className="release-tag">{t("Why Niu", "核心优势")}</span>
+            <span>
+              {t(
+                "Full-stack open source · 10× performance · Rich commercial features",
+                "全栈开源 · 10 倍性能 · 丰富商业化功能",
               )}
+            </span>
+            <IconArrowRight size={14} aria-hidden="true" />
+          </a>
+          <h1 id="hero-title" className="hero-enter" style={stagger(1)}>
+            {isZh ? (
+              <>
+                从模型转发到商业变现，
+                <br />
+                <span className="accent">一套系统全部跑通。</span>
+              </>
+            ) : (
+              <>
+                Build and run your
+                <br />
+                <span className="accent">model API business.</span>
+              </>
+            )}
+          </h1>
+          <p className="hero-description hero-enter" style={stagger(2)}>
+            {t(
+              "The full-stack open-source AI gateway in Rust—combining 10× proxy throughput with smart model pools, flexible retail pricing, customer balance controls, and built-in Chat & Video workspaces.",
+              "基于 Rust 打造的全栈开源 AI 网关——兼具 10 倍于传统代理的并发性能，内置智能模型池、灵活加价计费、多级余额风控与对话/视频工作台。",
+            )}
+          </p>
+          <div className="actions hero-actions hero-enter" style={stagger(3)}>
+            <Button asChild size="lg" className="cta-primary">
+              <a href={links.dashboard}>
+                <IconLayoutDashboard aria-hidden="true" />
+                {t("Open dashboard", "打开控制台")}
+                <IconArrowRight className="cta-arrow" aria-hidden="true" />
+              </a>
+            </Button>
+            <Button
+              asChild
+              size="lg"
+              variant="outline"
+              className="cta-secondary"
             >
-              {heroPillars.map((item) => (
-                <div key={item.id} className="niu-ledger-row">
-                  <div className="niu-ledger-top">
-                    <span className="niu-ledger-tag">
-                      {t(item.tag, item.tagZh)}
-                    </span>
-                  </div>
-                  <h2 className="niu-ledger-title">
-                    {t(item.title, item.titleZh)}
-                  </h2>
-                  <p className="niu-ledger-detail">
-                    {t(item.detail, item.detailZh)}
-                  </p>
-                </div>
-              ))}
-            </aside>
+              <a href={links.quickstart}>{t("Get started", "快速入门")}</a>
+            </Button>
+            <Button asChild size="lg" variant="ghost" className="cta-ghost">
+              <a href={links.repo}>
+                <IconBrandGithub aria-hidden="true" />
+                {t("Star on GitHub", "GitHub Star")}
+              </a>
+            </Button>
           </div>
+          <p className="hero-sublinks hero-enter" style={stagger(4)}>
+            <a href={links.compare}>{t("Compare gateways", "网关对比")}</a>
+            <span aria-hidden="true">·</span>
+            <a href="/models/">{t("Browse models", "浏览模型目录")}</a>
+            <span aria-hidden="true">·</span>
+            <a href="/blog/why-niu/">{t("Why Niu?", "为什么选择牛元？")}</a>
+          </p>
 
-          {/* LIVE INTERACTIVE PRODUCT STAGE (Starts inside first viewport) */}
-          <div className="niu-stage-shell" id="console-preview">
-            <Tabs
-              value={previewTab}
-              onValueChange={setPreviewTab}
-              className="niu-stage-tabs"
+          <dl className="hero-stats" aria-label="Measured gateway results">
+            {heroStats.map((stat, i) => (
+              <div key={stat.label} data-reveal style={stagger(i)}>
+                <dt>{isZh ? stat.labelZh : stat.label}</dt>
+                <dd>
+                  <CountUp value={stat.value} />
+                </dd>
+              </div>
+            ))}
+          </dl>
+
+          {/* Interactive Product UI Preview Window — Actual Niu Dashboard v0.2.23 Replica */}
+          <div
+            className="preview-frame"
+            data-paused={previewPaused ? "true" : undefined}
+            data-reveal
+            onMouseEnter={() => setPreviewPaused(true)}
+            onMouseLeave={() => setPreviewPaused(false)}
+            onFocusCapture={() => setPreviewPaused(true)}
+            onBlurCapture={(e) => {
+              if (!e.currentTarget.contains(e.relatedTarget as Node | null)) {
+                setPreviewPaused(false);
+              }
+            }}
+          >
+            <div
+              className={`product-preview demo-dashboard-shell${sidebarCollapsed ? " is-sidebar-collapsed" : ""}`}
+              aria-label="Interactive Niu dashboard preview"
             >
-              <div className="niu-stage-topbar">
-                <div className="niu-stage-identity">
-                  <span className="niu-stage-brand-mark" aria-hidden="true" />
-                  <span className="niu-stage-brand-text">
-                    {t("Niu Console", "Niu 牛元控制台")}
-                  </span>
-                  <span className="niu-stage-divider" aria-hidden="true">
-                    /
-                  </span>
-                  <span className="niu-stage-context">
-                    {previewTab === "pools" &&
-                      t(
-                        "Admin · Model Pools · claude-sonnet-4",
-                        "管理后台 · 智能模型池 · claude-sonnet-4",
-                      )}
-                    {previewTab === "logs" &&
-                      t(
-                        "Workspace: default · Request Logs",
-                        "客户工作空间: default · 全链路日志",
-                      )}
-                    {previewTab === "finance" &&
-                      t(
-                        "Admin · Financial P&L Ledger",
-                        "管理后台 · 经营损益与渠道毛利",
-                      )}
-                    {previewTab === "studio" &&
-                      t(
-                        "Workspace: default · Chat & Video Studio",
-                        "客户工作空间: default · 对话与视频工作台",
-                      )}
+              {/* 1. Left Product Rail (AppLayout.tsx .app-rail) */}
+              <aside
+                className="mock-nav-rail demo-app-rail"
+                aria-label="Product rail navigation"
+              >
+                <button
+                  type="button"
+                  className="mock-nav-home"
+                  title="Niu Dashboard"
+                  onClick={() => setActivePreviewIndex(0)}
+                >
+                  <img
+                    src="/site-assets/brand/niu-mark.png"
+                    alt="Niu"
+                    width="26"
+                    height="26"
+                  />
+                </button>
+                <div className="mock-nav-items">
+                  <button
+                    type="button"
+                    className={`mock-rail-btn${activeTab.railArea === "workspace" ? " is-active" : ""}`}
+                    aria-label="Workspace"
+                    title="Workspace · Logs"
+                    onClick={() => setActivePreviewIndex(0)}
+                  >
+                    <FolderKey size={18} />
+                  </button>
+                  <button
+                    type="button"
+                    className={`mock-rail-btn${activeTab.railArea === "generations" ? " is-active" : ""}`}
+                    aria-label="Generations"
+                    title="Generations · Chat & Video"
+                    onClick={() => setActivePreviewIndex(3)}
+                  >
+                    <IconSparkles size={19} stroke={1.75} />
+                  </button>
+                  <button
+                    type="button"
+                    className="mock-rail-btn"
+                    aria-label="Activity & Logs"
+                    title="Workspace · Logs & Timing"
+                    onClick={() => setActivePreviewIndex(0)}
+                  >
+                    <IconChartLine size={19} stroke={1.75} />
+                  </button>
+                  <button
+                    type="button"
+                    className="mock-rail-btn"
+                    aria-label="Route Pools"
+                    title="Admin · Route pools"
+                    onClick={() => setActivePreviewIndex(1)}
+                  >
+                    <Cpu size={18} />
+                  </button>
+                </div>
+                <div className="demo-rail-footer">
+                  <button
+                    type="button"
+                    className={`mock-rail-btn${activeTab.railArea === "admin" ? " is-active" : ""}`}
+                    aria-label="Admin"
+                    title="Admin · Route pools & Financial statements"
+                    onClick={() =>
+                      setActivePreviewIndex(activePreviewIndex === 1 ? 2 : 1)
+                    }
+                  >
+                    <IconShieldLock size={19} stroke={1.75} />
+                  </button>
+                  <button
+                    type="button"
+                    className="mock-rail-btn"
+                    aria-label="Providers"
+                    title="Admin · Providers & Route pools"
+                    onClick={() => setActivePreviewIndex(1)}
+                  >
+                    <IconPlugConnected size={19} stroke={1.75} />
+                  </button>
+                  <span className="demo-rail-avatar" title="Operator account">
+                    H
                   </span>
                 </div>
+              </aside>
 
-                <TabsList className="niu-stage-tablist">
-                  <TabsTrigger value="pools">
-                    <GitBranch className="size-3.5" aria-hidden="true" />
-                    <span>{t("Model Pools", "智能模型池")}</span>
-                  </TabsTrigger>
-                  <TabsTrigger value="logs">
-                    <Activity className="size-3.5" aria-hidden="true" />
-                    <span>{t("Request Logs", "全链路日志")}</span>
-                  </TabsTrigger>
-                  <TabsTrigger value="finance">
-                    <Receipt className="size-3.5" aria-hidden="true" />
-                    <span>{t("Margins & P&L", "进销损益账本")}</span>
-                  </TabsTrigger>
-                  <TabsTrigger value="studio">
-                    <IconSparkles className="size-3.5" aria-hidden="true" />
-                    <span>{t("Chat & Video", "对话与视频工作台")}</span>
-                  </TabsTrigger>
-                </TabsList>
-              </div>
-
-              <div className="niu-stage-frame">
-                {/* Authentic Niu Left Rail + Contextual Sidebar */}
-                <aside className="niu-app-chrome" aria-hidden="true">
-                  <div className="niu-app-rail">
-                    <span
-                      className={`niu-rail-icon ${previewTab === "logs" ? "is-active" : ""}`}
-                    >
-                      <FolderKanban className="size-4" />
-                    </span>
-                    <span
-                      className={`niu-rail-icon ${previewTab === "studio" ? "is-active" : ""}`}
-                    >
-                      <IconSparkles className="size-4" />
-                    </span>
-                    <span
-                      className={`niu-rail-icon ${previewTab === "pools" || previewTab === "finance" ? "is-active" : ""}`}
-                    >
-                      <ShieldCheck className="size-4" />
-                    </span>
-                  </div>
-
-                  <div className="niu-app-sidebar">
-                    <div className="niu-scope-dropdown">
-                      <span className="niu-scope-avatar">
-                        {previewTab === "pools" || previewTab === "finance"
-                          ? "A"
-                          : "W"}
-                      </span>
-                      <span className="niu-scope-label">
-                        {previewTab === "pools" || previewTab === "finance"
-                          ? t("Platform Admin", "平台管理后台")
-                          : t("Default Workspace", "默认工作空间")}
-                      </span>
-                      <ChevronDown className="size-3.5 text-muted-foreground" />
-                    </div>
-
-                    {previewTab === "pools" || previewTab === "finance" ? (
-                      <ul className="niu-sidebar-nav">
-                        <li>
-                          <Server className="size-3.5" />
-                          <span>{t("Providers", "模型供应商")}</span>
-                        </li>
-                        <li
-                          className={previewTab === "pools" ? "is-active" : ""}
+              {/* 2. Contextual Second-Level Sidebar (AppLayout.tsx .niu-workspace-sidebar) */}
+              {!sidebarCollapsed && (
+                <aside
+                  className="demo-context-sidebar"
+                  aria-label="Section navigation"
+                >
+                  {activeTab.railArea === "workspace" && (
+                    <>
+                      <div className="demo-sidebar-header">
+                        <button
+                          type="button"
+                          className="demo-workspace-switcher"
+                          onClick={() => setActivePreviewIndex(0)}
                         >
-                          <GitBranch className="size-3.5" />
-                          <span>{t("Model Pools", "智能模型池")}</span>
-                        </li>
-                        <li>
-                          <Layers className="size-3.5" />
-                          <span>{t("Retail Tariffs", "对客销售定价")}</span>
-                        </li>
-                        <li
-                          className={
-                            previewTab === "finance" ? "is-active" : ""
+                          <span className="demo-ws-badge">D</span>
+                          <span className="demo-ws-name">
+                            {t("Default workspace", "默认工作空间")}
+                          </span>
+                          <ChevronsUpDown size={13} aria-hidden="true" />
+                        </button>
+                      </div>
+                      <nav
+                        className="demo-sidebar-nav"
+                        aria-label="Workspace menu"
+                      >
+                        <button
+                          type="button"
+                          className="demo-sidebar-item"
+                          onClick={() => setActivePreviewIndex(0)}
+                        >
+                          <Activity size={15} />
+                          <span>{t("Overview", "概览")}</span>
+                        </button>
+                        <button
+                          type="button"
+                          className="demo-sidebar-item"
+                          onClick={() => setActivePreviewIndex(0)}
+                        >
+                          <KeyRound size={15} />
+                          <span>{t("API keys", "API 密钥")}</span>
+                        </button>
+                        <button
+                          type="button"
+                          className="demo-sidebar-item is-active"
+                          onClick={() => setActivePreviewIndex(0)}
+                        >
+                          <List size={15} />
+                          <span>{t("Logs", "请求日志")}</span>
+                        </button>
+                        <button
+                          type="button"
+                          className="demo-sidebar-item"
+                          onClick={() => {
+                            setActivePreviewIndex(3);
+                            setActiveGenerationsMode("video");
+                          }}
+                        >
+                          <Film size={15} />
+                          <span>{t("Video", "视频生成")}</span>
+                        </button>
+                        <button
+                          type="button"
+                          className="demo-sidebar-item"
+                          onClick={() => setActivePreviewIndex(0)}
+                        >
+                          <ShieldAlert size={15} />
+                          <span>{t("Guardrails", "安全护栏")}</span>
+                        </button>
+                        <button
+                          type="button"
+                          className="demo-sidebar-item"
+                          onClick={() => setActivePreviewIndex(0)}
+                        >
+                          <BarChart3 size={15} />
+                          <span>{t("Activity", "活动监控")}</span>
+                        </button>
+                        <button
+                          type="button"
+                          className="demo-sidebar-item"
+                          onClick={() => setActivePreviewIndex(2)}
+                        >
+                          <Coins size={15} />
+                          <span>{t("Billing", "账单计费")}</span>
+                        </button>
+                        <button
+                          type="button"
+                          className="demo-sidebar-item"
+                          onClick={() => setActivePreviewIndex(0)}
+                        >
+                          <Users size={15} />
+                          <span>{t("Users", "成员管理")}</span>
+                        </button>
+                        <button
+                          type="button"
+                          className="demo-sidebar-item"
+                          onClick={() => setActivePreviewIndex(0)}
+                        >
+                          <Settings size={15} />
+                          <span>{t("Settings", "工作空间设置")}</span>
+                        </button>
+                      </nav>
+                      <div className="demo-sidebar-footer">
+                        <a href="/docs/" className="demo-sidebar-item">
+                          <IconBook size={15} />
+                          <span>{t("Documentation", "开发文档")}</span>
+                        </a>
+                      </div>
+                    </>
+                  )}
+
+                  {activeTab.railArea === "admin" && (
+                    <>
+                      <div className="demo-sidebar-header">
+                        <span className="demo-sidebar-title">
+                          {t("Admin", "管理后台")}
+                        </span>
+                      </div>
+                      <nav className="demo-sidebar-nav" aria-label="Admin menu">
+                        <button
+                          type="button"
+                          className="demo-sidebar-item"
+                          onClick={() => setActivePreviewIndex(1)}
+                        >
+                          <IconPlugConnected size={15} />
+                          <span>{t("Providers", "模型供应商")}</span>
+                        </button>
+                        <button
+                          type="button"
+                          className={`demo-sidebar-item${activePreviewIndex === 1 ? " is-active" : ""}`}
+                          onClick={() => setActivePreviewIndex(1)}
+                        >
+                          <IconRoute size={15} />
+                          <span>{t("Route pools", "路由池")}</span>
+                        </button>
+                        <button
+                          type="button"
+                          className={`demo-sidebar-item${activePreviewIndex === 2 ? " is-active" : ""}`}
+                          onClick={() => setActivePreviewIndex(2)}
+                        >
+                          <IconCoins size={15} />
+                          <span>{t("Financial statements", "财务报表")}</span>
+                        </button>
+                        <button
+                          type="button"
+                          className="demo-sidebar-item"
+                          onClick={() => setActivePreviewIndex(2)}
+                        >
+                          <Users size={15} />
+                          <span>{t("Customer accounts", "客户账户")}</span>
+                        </button>
+                        <button
+                          type="button"
+                          className="demo-sidebar-item"
+                          onClick={() => setActivePreviewIndex(2)}
+                        >
+                          <Receipt size={15} />
+                          <span>{t("Customer pricing", "客户定价")}</span>
+                        </button>
+                        <button
+                          type="button"
+                          className="demo-sidebar-item"
+                          onClick={() => setActivePreviewIndex(2)}
+                        >
+                          <CreditCard size={15} />
+                          <span>{t("Payment gateways", "支付网关")}</span>
+                        </button>
+                        <button
+                          type="button"
+                          className="demo-sidebar-item"
+                          onClick={() => setActivePreviewIndex(1)}
+                        >
+                          <Palette size={15} />
+                          <span>{t("Branding & theme", "品牌与主题")}</span>
+                        </button>
+                        <button
+                          type="button"
+                          className="demo-sidebar-item"
+                          onClick={() => setActivePreviewIndex(1)}
+                        >
+                          <ScrollText size={15} />
+                          <span>{t("Audit logs", "审计日志")}</span>
+                        </button>
+                      </nav>
+                      <div className="demo-sidebar-footer">
+                        <a href="/docs/" className="demo-sidebar-item">
+                          <IconBook size={15} />
+                          <span>{t("Documentation", "开发文档")}</span>
+                        </a>
+                      </div>
+                    </>
+                  )}
+
+                  {activeTab.railArea === "generations" && (
+                    <>
+                      <div className="demo-sidebar-header demo-sidebar-header-gen">
+                        <span className="demo-sidebar-title">
+                          {t("Generations", "生成对话")}
+                        </span>
+                        <button
+                          type="button"
+                          className="demo-new-gen-btn"
+                          onClick={() =>
+                            setActiveGenerationsMode(
+                              activeGenerationsMode === "chat"
+                                ? "video"
+                                : "chat",
+                            )
                           }
                         >
-                          <Receipt className="size-3.5" />
-                          <span>{t("Financial P&L", "财务损益报表")}</span>
-                        </li>
-                        <li>
-                          <FolderKanban className="size-3.5" />
-                          <span>{t("Workspaces", "客户工作空间")}</span>
-                        </li>
-                        <li className="niu-sidebar-bottom">
-                          <Settings className="size-3.5" />
-                          <span>{t("Admin Settings", "系统管理设置")}</span>
-                        </li>
-                      </ul>
-                    ) : (
-                      <ul className="niu-sidebar-nav">
-                        <li>
-                          <KeyRound className="size-3.5" />
-                          <span>{t("API Keys", "API 密钥")}</span>
-                        </li>
-                        <li
-                          className={previewTab === "logs" ? "is-active" : ""}
-                        >
-                          <Activity className="size-3.5" />
-                          <span>{t("Request Logs", "请求日志")}</span>
-                        </li>
-                        <li
-                          className={previewTab === "studio" ? "is-active" : ""}
-                        >
-                          <IconMessageChatbot className="size-3.5" />
-                          <span>{t("Chat & Video", "对话与视频")}</span>
-                        </li>
-                        <li>
-                          <ShieldCheck className="size-3.5" />
-                          <span>{t("Spend Guardrails", "预算风控护栏")}</span>
-                        </li>
-                        <li>
-                          <Wallet className="size-3.5" />
-                          <span>{t("Billing & Credits", "账单与额度")}</span>
-                        </li>
-                        <li className="niu-sidebar-bottom">
-                          <Settings className="size-3.5" />
-                          <span>{t("Workspace Settings", "工作空间设置")}</span>
-                        </li>
-                      </ul>
-                    )}
-                  </div>
-                </aside>
-
-                {/* TAB 1: ADMIN MODEL POOLS (#117 Unified Model Pools) */}
-                <TabsContent value="pools" className="niu-stage-canvas">
-                  <div className="niu-canvas-head">
-                    <div>
-                      <div className="niu-canvas-title-row">
-                        <h3>claude-sonnet-4</h3>
-                        <span className="niu-status-pill is-ok">
-                          {t("Published as model", "已作为对外模型发布")}
-                        </span>
-                        <span className="niu-status-pill">
-                          {t("Public catalog: On", "公开模型目录可见")}
-                        </span>
+                          <Plus size={13} />
+                          <span>{t("New generation", "新建会话")}</span>
+                        </button>
                       </div>
-                      <p className="niu-canvas-sub">
-                        {t(
-                          'Applications call model: "claude-sonnet-4" directly. Conditional rules route across 3 approved Providers while keeping purchase costs private.',
-                          '客户端直接调用 model: "claude-sonnet-4"。网关按请求特征在 3 条已准入供应商渠道间智能分流与容灾，采购底价对客户严格保密。',
-                        )}
-                      </p>
-                    </div>
-
-                    <div
-                      className="niu-mode-switch"
-                      role="group"
-                      aria-label={t("Pool billing mode", "模型池计费模式")}
-                    >
-                      <button
-                        type="button"
-                        className={
-                          poolBillingMode === "pool" ? "is-active" : ""
-                        }
-                        onClick={() => setPoolBillingMode("pool")}
+                      <nav
+                        className="demo-sidebar-nav"
+                        aria-label="Saved generation sessions"
                       >
-                        {t("Unified Pool Tariff", "统一模型定价")}
-                      </button>
-                      <button
-                        type="button"
-                        className={
-                          poolBillingMode === "candidate" ? "is-active" : ""
-                        }
-                        onClick={() => setPoolBillingMode("candidate")}
-                      >
-                        {t("Candidate Pass-Through", "按命中模型计费")}
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="niu-kpi-strip">
-                    <div>
-                      <span>
-                        {t("Customer billing mode", "当前对客计费策略")}
-                      </span>
-                      <strong>
-                        {poolBillingMode === "pool"
-                          ? t(
-                              "$3.00 / $15.00 per 1M tok",
-                              "$3.00 / $15.00 / 百万 Token",
-                            )
-                          : t(
-                              "Matched route retail rate",
-                              "按实际命中渠道零售价结算",
-                            )}
-                      </strong>
-                    </div>
-                    <div>
-                      <span>
-                        {t("Pre-dispatch quota hold", "转发前保守预占上限")}
-                      </span>
-                      <strong>
-                        {poolBillingMode === "pool"
-                          ? t("$0.0480 max / call", "$0.0480 / 次（防刷穿）")
-                          : t("$0.0512 upper bound", "$0.0512 候选最高值预占")}
-                      </strong>
-                    </div>
-                    <div>
-                      <span>
-                        {t("24h failover recovery", "24h 自动容灾恢复")}
-                      </span>
-                      <strong>
-                        {t(
-                          "100% (14 upstream 429s)",
-                          "100%（14 次上游限流无感切换）",
-                        )}
-                      </strong>
-                    </div>
-                    <div>
-                      <span>
-                        {t(
-                          "Blended net margin (Admin only)",
-                          "综合净毛利率（仅管理员可见）",
-                        )}
-                      </span>
-                      <strong className="is-positive">
-                        {poolBillingMode === "pool" ? "+18.9%" : "+20.7%"}
-                      </strong>
-                    </div>
-                  </div>
-
-                  <div className="niu-rules-bar">
-                    <span className="niu-rules-label">
-                      <SlidersHorizontal
-                        className="size-3.5"
-                        aria-hidden="true"
-                      />
-                      {t("Conditional rules:", "条件分流规则：")}
-                    </span>
-                    <code>
-                      {t(
-                        "1. context > 128k ∨ thinking → Anthropic Direct",
-                        "1. 上下文 > 128k 或 深度思考 → Anthropic Direct 直连",
-                      )}
-                    </code>
-                    <code>
-                      {t(
-                        "2. tool_calls ∨ json_schema → 70% Anthropic / 30% OpenRouter",
-                        "2. 工具调用 或 结构化 JSON → 70% Anthropic / 30% OpenRouter",
-                      )}
-                    </code>
-                  </div>
-
-                  <div className="niu-table-surface">
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead>{t("Priority", "优先级")}</TableHead>
-                          <TableHead>
-                            {t(
-                              "Candidate Provider & route",
-                              "候选供应商与路由",
-                            )}
-                          </TableHead>
-                          <TableHead>
-                            {t("Rule & share", "匹配规则与命中率")}
-                          </TableHead>
-                          <TableHead>{t("TTFT p50", "首字延迟")}</TableHead>
-                          <TableHead>
-                            {t("Provider cost (Admin)", "采购底价（保密）")}
-                          </TableHead>
-                          <TableHead>{t("Retail price", "对客售价")}</TableHead>
-                          <TableHead>{t("Net margin", "净毛利")}</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {poolCandidates.map((row) => (
-                          <TableRow key={row.provider}>
-                            <TableCell className="niu-mono">
-                              {row.rank}
-                            </TableCell>
-                            <TableCell>
-                              <div className="niu-cell-primary">
-                                {row.provider}
-                              </div>
-                              <div className="niu-cell-sub niu-mono">
-                                {row.route}
-                              </div>
-                            </TableCell>
-                            <TableCell>
-                              <div className="niu-cell-primary">{row.rule}</div>
-                              <div className="niu-cell-sub">
-                                {t(
-                                  `Hit share: ${row.share}`,
-                                  `命中占比: ${row.share}`,
-                                )}
-                              </div>
-                            </TableCell>
-                            <TableCell className="niu-mono">
-                              {row.ttft}
-                            </TableCell>
-                            <TableCell className="niu-mono">
-                              {row.costRate}
-                            </TableCell>
-                            <TableCell className="niu-mono">
-                              {row.retailRate}
-                            </TableCell>
-                            <TableCell>
-                              <span className="niu-margin-chip">
-                                {row.margin}
-                              </span>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </div>
-                </TabsContent>
-
-                {/* TAB 2: CUSTOMER WORKSPACE REQUEST LOGS (Interactive master-detail) */}
-                <TabsContent value="logs" className="niu-stage-canvas">
-                  <div className="niu-canvas-head">
-                    <div>
-                      <div className="niu-canvas-title-row">
-                        <h3>{t("Request Logs", "请求日志")}</h3>
-                        <span className="niu-status-pill">
-                          {t(
-                            "Customer workspace view · Zero upstream cost leakage",
-                            "客户工作空间视角 · 严禁暴露上游供应商与采购底价",
-                          )}
-                        </span>
-                      </div>
-                      <p className="niu-canvas-sub">
-                        {t(
-                          "Select any request row below to inspect its pre-dispatch hold, failover attempts, stage timings, and settled customer charge.",
-                          "点击下方任意一条请求记录，即可查看对应的转发前额度预占、故障切换链路、分段耗时与对客结算凭证。",
-                        )}
-                      </p>
-                    </div>
-                    <div className="niu-toolbar-icons" aria-hidden="true">
-                      <span className="niu-icon-btn">
-                        <Search className="size-3.5" />
-                      </span>
-                      <span className="niu-icon-btn">
-                        <RefreshCw className="size-3.5" />
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="niu-logs-split">
-                    <div
-                      className="niu-logs-list"
-                      role="listbox"
-                      aria-label={t("Sample requests", "示例请求列表")}
-                    >
-                      {logEntries.map((item, idx) => (
                         <button
-                          key={item.model + item.time}
                           type="button"
-                          role="option"
-                          aria-selected={selectedLogIndex === idx}
-                          className={`niu-log-row ${selectedLogIndex === idx ? "is-selected" : ""}`}
-                          onClick={() => setSelectedLogIndex(idx)}
+                          className={`demo-session-item${activeGenerationsMode === "chat" ? " is-active" : ""}`}
+                          onClick={() => setActiveGenerationsMode("chat")}
                         >
-                          <div className="niu-log-row-main">
-                            <span className="niu-log-model">{item.model}</span>
-                            <span className="niu-log-meta">
-                              {item.time} · {t("Key:", "密钥:")} {item.keyName}
-                            </span>
-                          </div>
-                          <div className="niu-log-row-status">
-                            <span
-                              className={`niu-status-pill is-${item.statusTone}`}
-                            >
-                              {item.statusLabel}
-                            </span>
-                          </div>
-                          <div className="niu-log-row-charge">
-                            <strong>{item.charge}</strong>
-                            <span>{item.latency}</span>
+                          <IconMessageChatbot size={15} />
+                          <div>
+                            <strong>
+                              {t(
+                                "Production API architecture",
+                                "生产级 API 架构设计",
+                              )}
+                            </strong>
+                            <small>claude-sonnet-4 + gpt-4.1 · 2m</small>
                           </div>
                         </button>
-                      ))}
-                    </div>
-
-                    <div className="niu-log-drawer">
-                      <div className="niu-drawer-head">
-                        <div>
-                          <span className="niu-drawer-kicker">
-                            {t("Request Evidence", "请求结算与追踪凭证")}
-                          </span>
-                          <h4>{activeLog.model}</h4>
-                        </div>
-                        <span
-                          className={`niu-status-pill is-${activeLog.statusTone}`}
+                        <button
+                          type="button"
+                          className={`demo-session-item${activeGenerationsMode === "video" ? " is-active" : ""}`}
+                          onClick={() => setActiveGenerationsMode("video")}
                         >
-                          {activeLog.statusLabel}
-                        </span>
-                      </div>
-
-                      <div className="niu-drawer-grid">
-                        <div>
-                          <span>{t("Gateway latency", "网关总耗时")}</span>
-                          <strong>{activeLog.latency}</strong>
-                        </div>
-                        <div>
-                          <span>{t("Customer charge", "客户账单扣费")}</span>
-                          <strong>{activeLog.charge}</strong>
-                        </div>
-                        <div>
-                          <span>
-                            {t("Input / Cached tok", "输入 / 缓存 Token")}
-                          </span>
-                          <strong>
-                            {activeLog.inputTokens} / {activeLog.cachedTokens}
-                          </strong>
-                        </div>
-                        <div>
-                          <span>{t("Output tokens", "输出 Token")}</span>
-                          <strong>{activeLog.outputTokens}</strong>
-                        </div>
-                      </div>
-
-                      <div className="niu-timing-breakdown">
-                        <div className="niu-timing-row">
-                          <span>
-                            {t("Admission & quota hold", "准入校验与额度预占")}
-                          </span>
-                          <strong>{activeLog.prepMs}</strong>
-                        </div>
-                        <div className="niu-timing-row">
-                          <span>
-                            {t(
-                              "First token wait (TTFT)",
-                              "首字响应等待 (TTFT)",
-                            )}
-                          </span>
-                          <strong>{activeLog.ttftMs}</strong>
-                        </div>
-                        <div className="niu-timing-row">
-                          <span>{t("SSE output stream", "流式输出传输")}</span>
-                          <strong>
-                            {activeLog.streamMs}
-                            {activeLog.throughput !== "—"
-                              ? ` (${activeLog.throughput})`
-                              : ""}
-                          </strong>
-                        </div>
-                      </div>
-
-                      <div className="niu-drawer-evidence">
-                        <span>{activeLog.settlement}</span>
-                        <p>{activeLog.attemptsSummary}</p>
-                      </div>
-                    </div>
-                  </div>
-                </TabsContent>
-
-                {/* TAB 3: ADMIN FINANCIAL P&L LEDGER */}
-                <TabsContent value="finance" className="niu-stage-canvas">
-                  <div className="niu-canvas-head">
-                    <div>
-                      <div className="niu-canvas-title-row">
-                        <h3>
+                          <Film size={15} />
+                          <div>
+                            <strong>
+                              {t(
+                                "Seedance 1.5 Pro studio",
+                                "Seedance 1.5 Pro 视频工作台",
+                              )}
+                            </strong>
+                            <small>seedance-1-5-pro · 1080p · 6m</small>
+                          </div>
+                        </button>
+                        <button
+                          type="button"
+                          className="demo-session-item"
+                          onClick={() => setActiveGenerationsMode("chat")}
+                        >
+                          <IconMessageChatbot size={15} />
+                          <div>
+                            <strong>
+                              {t(
+                                "Guardrail & retry audit",
+                                "安全护栏与重试审计",
+                              )}
+                            </strong>
+                            <small>deepseek-r1 · 1h ago</small>
+                          </div>
+                        </button>
+                      </nav>
+                      <div className="demo-sidebar-footer">
+                        <span className="demo-sidebar-muted">
                           {t(
-                            "Statement of Operations & Margin Ledger",
-                            "平台经营损益与渠道毛利账本",
+                            "PostgreSQL session sync active",
+                            "PostgreSQL 会话实时同步已启用",
                           )}
-                        </h3>
-                        <span className="niu-status-pill is-ok">
-                          {t("Admin confidential", "仅平台管理员可见")}
                         </span>
                       </div>
-                      <p className="niu-canvas-sub">
-                        {t(
-                          "Reconcile settled customer retail charges against upstream Provider procurement costs and live pre-dispatch holds in real time.",
-                          "实时对账已结算的对客销售收入、上游供应商渠道采购支出与在途冻结额度，每一分毛利与未决敞口都清晰可查。",
-                        )}
-                      </p>
-                    </div>
-                  </div>
+                    </>
+                  )}
+                </aside>
+              )}
 
-                  <div className="niu-kpi-strip">
-                    <div>
-                      <span>
-                        {t(
-                          "Settled customer revenue (30d)",
-                          "对客已结算收入 (30天)",
-                        )}
-                      </span>
-                      <strong>$14,820.40</strong>
-                    </div>
-                    <div>
-                      <span>
-                        {t(
-                          "Upstream Provider cost (30d)",
-                          "上游渠道采购成本 (30天)",
-                        )}
-                      </span>
-                      <strong>$11,190.10</strong>
-                    </div>
-                    <div>
-                      <span>
-                        {t("Platform net gross profit", "平台净毛利与毛利率")}
-                      </span>
-                      <strong className="is-positive">$3,630.30 (24.5%)</strong>
-                    </div>
-                    <div>
-                      <span>
-                        {t(
-                          "In-flight reservations & unresolved",
-                          "在途预占与待核实敞口",
-                        )}
-                      </span>
-                      <strong>
-                        {t(
-                          "$42.80 held · 1 unresolved",
-                          "$42.80 预占 · 1 笔待核实",
-                        )}
-                      </strong>
-                    </div>
+              {/* 3. Main Content Column (Header Bar + Implemented Page Canvas + Footer Bar) */}
+              <div className="mock-workspace demo-main-column">
+                <div className="preview-toolbar demo-topbar">
+                  <div className="preview-brand demo-breadcrumb-bar">
+                    <button
+                      type="button"
+                      className="demo-sidebar-toggle"
+                      aria-label={
+                        sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"
+                      }
+                      title={
+                        sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"
+                      }
+                      onClick={() => setSidebarCollapsed((prev) => !prev)}
+                    >
+                      <PanelLeft size={15} />
+                    </button>
+                    <span className="demo-topbar-sep" aria-hidden="true" />
+                    <span className="status-dot is-live" aria-hidden="true" />
+                    <span className="demo-breadcrumb-text">
+                      {isZh ? activeTab.breadcrumbZh : activeTab.breadcrumb}
+                    </span>
                   </div>
-
-                  <div className="niu-table-surface">
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead>
-                            {t("Published Model / Pool", "对外模型 / 模型池")}
-                          </TableHead>
-                          <TableHead>
-                            {t("Settled calls", "已结算调用")}
-                          </TableHead>
-                          <TableHead>
-                            {t("Customer revenue", "客户结算收入")}
-                          </TableHead>
-                          <TableHead>
-                            {t("Provider procurement", "渠道采购成本")}
-                          </TableHead>
-                          <TableHead>{t("Net profit", "净毛利额")}</TableHead>
-                          <TableHead>{t("Gross margin", "毛利率")}</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        <TableRow>
-                          <TableCell className="niu-mono">
-                            claude-sonnet-4
-                          </TableCell>
-                          <TableCell className="niu-mono">412,900</TableCell>
-                          <TableCell className="niu-mono">$7,432.20</TableCell>
-                          <TableCell className="niu-mono">$6,027.50</TableCell>
-                          <TableCell className="niu-mono">$1,404.70</TableCell>
-                          <TableCell>
-                            <span className="niu-margin-chip">+18.9%</span>
-                          </TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell className="niu-mono">gpt-4.1</TableCell>
-                          <TableCell className="niu-mono">289,450</TableCell>
-                          <TableCell className="niu-mono">$4,631.20</TableCell>
-                          <TableCell className="niu-mono">$3,334.46</TableCell>
-                          <TableCell className="niu-mono">$1,296.74</TableCell>
-                          <TableCell>
-                            <span className="niu-margin-chip">+28.0%</span>
-                          </TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell className="niu-mono">
-                            seedance-1.5-pro
-                          </TableCell>
-                          <TableCell className="niu-mono">11,487</TableCell>
-                          <TableCell className="niu-mono">$2,757.00</TableCell>
-                          <TableCell className="niu-mono">$1,828.14</TableCell>
-                          <TableCell className="niu-mono">$928.86</TableCell>
-                          <TableCell>
-                            <span className="niu-margin-chip">+33.7%</span>
-                          </TableCell>
-                        </TableRow>
-                      </TableBody>
-                    </Table>
-                  </div>
-                </TabsContent>
-
-                {/* TAB 4: BUILT-IN CHAT & VIDEO WORKSPACE */}
-                <TabsContent value="studio" className="niu-stage-canvas">
-                  <div className="niu-canvas-head">
-                    <div>
-                      <div className="niu-canvas-title-row">
-                        <h3>
-                          {t(
-                            "Generations · Multi-Model Chat & Video Studio",
-                            "生成工作台 · 多模型对话与视频生成",
-                          )}
-                        </h3>
-                        <span className="niu-status-pill is-ok">
-                          {t("PostgreSQL persisted", "服务端云端持久化")}
-                        </span>
-                      </div>
-                      <p className="niu-canvas-sub">
-                        {t(
-                          "Customers test models, run multi-turn chats, and generate Seedance videos right inside Niu—no third-party ChatUI wrapper required.",
-                          "客户无需部署任何第三方套壳前端，登录工作空间即可直接使用多模型对话与 Seedance 异步视频生成，会话与资产全程保存在服务端。",
-                        )}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="niu-studio-split">
-                    <div className="niu-studio-panel">
-                      <div className="niu-studio-panel-head">
-                        <span>
-                          <IconMessageChatbot
-                            className="size-4"
+                  <div
+                    className="preview-tabs"
+                    role="tablist"
+                    aria-label="Product surface views"
+                  >
+                    {previewTabs.map((tab, i) => (
+                      <button
+                        key={tab.id}
+                        type="button"
+                        role="tab"
+                        aria-selected={activePreviewIndex === i}
+                        onClick={() => setActivePreviewIndex(i)}
+                      >
+                        <span>{isZh ? tab.labelZh : tab.label}</span>
+                        {activePreviewIndex === i && (
+                          <i
+                            className="preview-tab-progress"
                             aria-hidden="true"
                           />
-                          {t("Saved Chat Session", "持久化多模型对话")}
-                        </span>
-                        <code className="niu-mono">claude-sonnet-4</code>
-                      </div>
-                      <div className="niu-chat-thread">
-                        <div className="niu-chat-msg is-user">
-                          <span>{t("User", "客户提问")}</span>
-                          <p>
-                            {t(
-                              "Compare PostgreSQL CTE batching vs per-request commits under 64 concurrent workers.",
-                              "对比 64 并发下 PostgreSQL 单条 CTE 批量提交与逐请求独立事务的尾延迟差异。",
-                            )}
-                          </p>
-                        </div>
-                        <div className="niu-chat-msg is-assistant">
-                          <span>
-                            claude-sonnet-4 ·{" "}
-                            {t(
-                              "TTFT 312 ms · Retail charge $0.0142",
-                              "首字 312 ms · 账单扣费 $0.0142",
-                            )}
-                          </span>
-                          <p>
-                            {t(
-                              "Coalescing post-dispatch completions up to 64 operations per batch eliminates WAL fsync contention, keeping p99 latency at 31.5 ms while preserving pre-dispatch admission durability.",
-                              "将最多 64 笔响应完成结算合并至单次批量提交，可显著消除高并发下 WAL 刷盘锁争用，在保证转发前准入持久化的同时将 p99 稳定在 31.5 ms。",
-                            )}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                </div>
 
-                    <div className="niu-studio-panel">
-                      <div className="niu-studio-panel-head">
-                        <span>
-                          <Video className="size-4" aria-hidden="true" />
-                          {t("Async Video Task", "异步视频生成任务")}
-                        </span>
-                        <code className="niu-mono">seedance-1.5-pro</code>
+                <div className="preview-body demo-canvas-body">
+                  {/* SURFACE 0: WORKSPACE / LOGS & REQUEST DETAILS SHEET (GatewayActivity.tsx + RequestTiming.tsx) */}
+                  {activePreviewIndex === 0 && (
+                    <div className="investigation demo-page-surface">
+                      <div className="demo-page-header">
+                        <div>
+                          <div className="demo-page-title-row">
+                            <h2>{t("Logs", "请求日志")}</h2>
+                            <span className="demo-count-badge">
+                              {t("1,428 requests", "1,428 条请求")}
+                            </span>
+                          </div>
+                          <p className="demo-page-subtitle">
+                            {t(
+                              "Inspect every workspace operation, upstream route-pool attempt, phase latency, and settled customer tariff.",
+                              "检视工作空间的每一次请求操作、上游路由池尝试、分阶段延迟与已结算的客户费率。",
+                            )}
+                          </p>
+                        </div>
+                        <div className="demo-header-actions">
+                          <button
+                            type="button"
+                            className="demo-action-btn"
+                            onClick={() => setShowVolumeChart((v) => !v)}
+                          >
+                            <BarChart3 size={13} />
+                            <span>
+                              {showVolumeChart
+                                ? t("Hide volume", "隐藏趋势")
+                                : t("Request volume", "请求趋势")}
+                            </span>
+                          </button>
+                          <button
+                            type="button"
+                            className="demo-action-btn"
+                            onClick={() => setSelectedLogIndex(1)}
+                          >
+                            <ShieldAlert size={13} />
+                            <span>{t("Blocked & failed", "拦截与失败")}</span>
+                          </button>
+                          <button
+                            type="button"
+                            className="demo-icon-btn"
+                            aria-label="Refresh requests"
+                            onClick={() =>
+                              setSelectedLogIndex(
+                                (prev) => (prev + 1) % demoLogRecords.length,
+                              )
+                            }
+                          >
+                            <RefreshCw size={13} />
+                          </button>
+                        </div>
                       </div>
-                      <div className="niu-video-preview">
-                        <div className="niu-video-frame">
-                          <span className="niu-video-play" aria-hidden="true">
-                            <Play className="size-4 fill-current" />
-                          </span>
-                          <div className="niu-video-spec">
-                            <strong>1080p · 24 fps · 00:05</strong>
+
+                      {showVolumeChart && (
+                        <div
+                          className="demo-volume-strip"
+                          aria-label="Request volume over last 24 hours"
+                        >
+                          <div className="demo-volume-header">
                             <span>
                               {t(
-                                "Prompt: Warm studio lighting over precision brass server rack",
-                                "提示词：暖色摄影棚光线下精密运转的金属服务器机柜特写",
+                                "Request volume · Last 24 hours",
+                                "请求量趋势 · 过去 24 小时",
+                              )}
+                            </span>
+                            <span>
+                              {t(
+                                "99.8% completed · 2 bounded failovers · 1 uncertain stream",
+                                "99.8% 已完成 · 2 次有界故障转移 · 1 次状态未定流",
                               )}
                             </span>
                           </div>
-                        </div>
-                        <div className="niu-video-meta">
-                          <span>
-                            {t(
-                              "Status: Completed & archived",
-                              "状态：生成完成并已归档资产",
-                            )}
-                          </span>
-                          <strong>
-                            {t("Settled: $0.2400", "已结算: $0.2400")}
-                          </strong>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </TabsContent>
-              </div>
-            </Tabs>
-          </div>
-        </div>
-      </section>
-
-      {/* =====================================================================
-          SECTION 2: 4-STAGE REQUEST ARCHITECTURE PIPELINE
-      ===================================================================== */}
-      <section
-        className="niu-section niu-pipeline-section"
-        id="architecture"
-        aria-labelledby="pipeline-heading"
-      >
-        <div className="container">
-          <div className="niu-section-head-inline">
-            <h2 id="pipeline-heading">
-              {t(
-                "What happens inside Niu in under 2 ms of gateway overhead",
-                <>
-                  一次 API 调用，在{" "}
-                  <span className="whitespace-nowrap">Niu 牛元</span>
-                  内部经历的 4 步商业闭环
-                </>,
-              )}
-            </h2>
-            <p>
-              {t(
-                "Every request passes through protocol validation, atomic budget reservation, conditional Provider routing, and separated dual-ledger settlement.",
-                "不到 2 毫秒的网关转发开销内，自动完成多协议接入、并发余额预占、智能模型池选路与进销分离记账。",
-              )}
-            </p>
-          </div>
-
-          <ol className="niu-pipeline-grid">
-            {pipelineStages.map((stage, index) => (
-              <li key={stage.protocol} className="niu-pipeline-step">
-                <div className="niu-pipeline-step-top">
-                  <span className="niu-step-index">{index + 1}</span>
-                  <code className="niu-pipeline-proto">{stage.protocol}</code>
-                </div>
-                <h3>{t(stage.title, stage.titleZh)}</h3>
-                <p>{t(stage.detail, stage.detailZh)}</p>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </section>
-
-      {/* =====================================================================
-          SECTION 3: PILLAR I — 10X RUST PERFORMANCE BENCHMARKS (#benchmark)
-      ===================================================================== */}
-      <section
-        className="niu-section niu-benchmark-section"
-        id="benchmark"
-        aria-labelledby="benchmark-heading"
-      >
-        <div className="container">
-          <div className="niu-split-header">
-            <div>
-              <h2 id="benchmark-heading">
-                {t(
-                  "3,239 RPS on a single node — 10.7× LiteLLM and 3.7× New API.",
-                  "单机 3,239 RPS 峰值吞吐，10.7 倍于 LiteLLM · 3.7 倍于 New API。",
-                )}
-              </h2>
-            </div>
-            <p>
-              {t(
-                "High-concurrency AI traffic should wait on model inference, never on a Python GIL or GC pause in your gateway. Measured with ai-gateway-bench against a deterministic 0ms mock upstream while keeping Niu's PostgreSQL ACID ledger enabled.",
-                "高并发流量下，网关自己绝不能成为瓶颈。使用开源基准工具 ai-gateway-bench 实测：即使全程开启 PostgreSQL 准入与扣费账本，Rust 原生架构依然保持毫秒级尾延迟与 18.2 MB 极低空闲内存。",
-              )}
-            </p>
-          </div>
-
-          <Tabs
-            value={benchmarkId}
-            onValueChange={setBenchmarkId}
-            className="niu-bench-tabs"
-          >
-            <div className="niu-bench-Controls">
-              <TabsList className="niu-bench-tablist">
-                {benchmarkSuites.map((suite) => (
-                  <TabsTrigger key={suite.id} value={suite.id}>
-                    {t(suite.label, suite.labelZh ?? suite.label)}
-                  </TabsTrigger>
-                ))}
-              </TabsList>
-              <span className="niu-bench-env">
-                {t(
-                  "Apple M4 (10-core, 24 GB) · PostgreSQL 17.11 · 0% errors",
-                  "实测环境：Apple M4 (10 核, 24 GB) · PostgreSQL 17.11 · 0% 错误率",
-                )}
-              </span>
-            </div>
-
-            {benchmarkSuites.map((suite) => (
-              <TabsContent
-                key={suite.id}
-                value={suite.id}
-                className="niu-bench-panel"
-              >
-                <div className="niu-bench-summary-bar">
-                  <div>
-                    <p className="niu-bench-probe">
-                      {t(suite.eyebrow, suite.eyebrowZh ?? suite.eyebrow)}
-                    </p>
-                    <h3>{t(suite.title, suite.titleZh ?? suite.title)}</h3>
-                    <p className="niu-bench-desc">
-                      {t(
-                        suite.description,
-                        suite.descriptionZh ?? suite.description,
-                      )}
-                    </p>
-                  </div>
-                  <div className="niu-bench-rule">
-                    <span>
-                      {t(suite.ruleTitle, suite.ruleTitleZh ?? suite.ruleTitle)}
-                    </span>
-                    <strong>
-                      {t(
-                        suite.ruleDetail,
-                        suite.ruleDetailZh ?? suite.ruleDetail,
-                      )}
-                    </strong>
-                  </div>
-                </div>
-
-                {/* Horizontal Bar Comparison */}
-                <div className="niu-bench-bars">
-                  {suite.cards.map((card) => (
-                    <div
-                      key={card.name}
-                      className={`niu-bench-bar-row ${card.isWinner ? "is-niu" : ""}`}
-                    >
-                      <div className="niu-bench-bar-meta">
-                        <div className="niu-bench-bar-name">
-                          <strong>{card.name}</strong>
-                          <span>
-                            {t(card.runtime, card.runtimeZh ?? card.runtime)}
-                          </span>
-                        </div>
-                        <div className="niu-bench-bar-metric">
-                          <span className="niu-bench-badge">
-                            {t(card.badge, card.badgeZh ?? card.badge)}
-                          </span>
-                          <strong>
-                            {t(
-                              card.primaryMetric,
-                              card.primaryMetricZh ?? card.primaryMetric,
-                            )}
-                          </strong>
-                        </div>
-                      </div>
-
-                      <div className="niu-bench-track" aria-hidden="true">
-                        <div
-                          className="niu-bench-fill"
-                          style={{ width: `${Math.max(card.barPercent, 4)}%` }}
-                        />
-                      </div>
-
-                      <div className="niu-bench-bar-foot">
-                        <span>
-                          {t(
-                            card.primaryUnit,
-                            card.primaryUnitZh ?? card.primaryUnit,
-                          )}
-                        </span>
-                        <span>
-                          {t(
-                            card.primarySubtext,
-                            card.primarySubtextZh ?? card.primarySubtext,
-                          )}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Detailed Workload Table */}
-                <div className="niu-table-surface niu-bench-table">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>
-                          {t("Measured workload / tier", "实测负载梯度与指标")}
-                        </TableHead>
-                        <TableHead>Niu v0.2.4 (Rust)</TableHead>
-                        <TableHead>New API 45fbb14 (Go)</TableHead>
-                        <TableHead>LiteLLM v1.104.0 (Python)</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {suite.rows.map((row) => (
-                        <TableRow
-                          key={row.metric}
-                          className={row.isKeyRow ? "is-key-row" : undefined}
-                        >
-                          <TableCell className="niu-cell-metric">
-                            {t(row.metric, row.metricZh ?? row.metric)}
-                          </TableCell>
-                          <TableCell className="niu-cell-winner">
-                            <div className="niu-mono font-semibold">
-                              {t(row.niu, row.niuZh ?? row.niu)}
-                            </div>
-                            {row.niuSub && (
-                              <div className="niu-cell-sub niu-mono">
-                                {t(row.niuSub, row.niuSubZh ?? row.niuSub)}
-                              </div>
-                            )}
-                          </TableCell>
-                          <TableCell>
-                            <div className="niu-mono">
-                              {t(row.newApi, row.newApiZh ?? row.newApi)}
-                            </div>
-                            {row.newApiSub && (
-                              <div className="niu-cell-sub niu-mono">
-                                {t(
-                                  row.newApiSub,
-                                  row.newApiSubZh ?? row.newApiSub,
-                                )}
-                              </div>
-                            )}
-                          </TableCell>
-                          <TableCell>
-                            <div className="niu-mono">
-                              {t(row.litellm, row.litellmZh ?? row.litellm)}
-                            </div>
-                            {row.litellmSub && (
-                              <div className="niu-cell-sub niu-mono">
-                                {t(
-                                  row.litellmSub,
-                                  row.litellmSubZh ?? row.litellmSub,
-                                )}
-                              </div>
-                            )}
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
-
-                {/* Engineering Root-Cause Takeaway + Methodology Link */}
-                <div className="niu-bench-takeaway">
-                  <div className="niu-takeaway-stat">
-                    <strong>{suite.verdictNumber}</strong>
-                    <span>
-                      {t(
-                        suite.verdictSub,
-                        suite.verdictSubZh ?? suite.verdictSub,
-                      )}
-                    </span>
-                  </div>
-                  <div className="niu-takeaway-copy">
-                    <h4>
-                      {t(
-                        suite.verdictTitle,
-                        suite.verdictTitleZh ?? suite.verdictTitle,
-                      )}
-                    </h4>
-                    <p>
-                      {t(
-                        suite.verdictBody,
-                        suite.verdictBodyZh ?? suite.verdictBody,
-                      )}
-                    </p>
-                  </div>
-                </div>
-              </TabsContent>
-            ))}
-          </Tabs>
-
-          <div className="niu-methodology-note">
-            <p>
-              <strong>{t("Methodology note:", "公平性与方法论说明：")}</strong>{" "}
-              {t(
-                "Archived synthetic loopback measurements: Niu v0.2.4 ran with PostgreSQL ACID admission & batched completion; New API (45fbb14) ran with MEMORY_CACHE_ENABLED=true; LiteLLM Proxy (v1.104.0) ran stateless with database spend logging disabled. Qualify capacity with your production workload.",
-                "以上为本地回环 0ms 模拟上游归档实测：Niu v0.2.4 开启完整 PostgreSQL ACID 准入与批量完成结算；New API (45fbb14) 开启内存缓存；LiteLLM Proxy (v1.104.0) 关闭数据库日志运行于无状态模式。生产部署请结合实际业务负载评估容量。",
-              )}
-            </p>
-            <div className="niu-methodology-links">
-              <a className="niu-text-link" href={links.benchmark}>
-                <span>
-                  {t("Full benchmark report", "阅读完整基准测试报告")}
-                </span>
-                <ArrowRight className="size-3.5" aria-hidden="true" />
-              </a>
-              <a className="niu-text-link" href={links.compare}>
-                <span>
-                  {t(
-                    "Compare Niu vs. New API & OpenRouter",
-                    "查看网关横向对比矩阵",
-                  )}
-                </span>
-                <ArrowRight className="size-3.5" aria-hidden="true" />
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* =====================================================================
-          SECTION 4: PILLAR II — COMMERCIALIZATION MATRIX (#product)
-      ===================================================================== */}
-      <section
-        className="niu-section niu-commercial-section"
-        id="product"
-        aria-labelledby="commercial-heading"
-      >
-        <div className="container">
-          <div className="niu-commercial-layout">
-            <div className="niu-commercial-sticky">
-              <h2 id="commercial-heading">
-                {t(
-                  "Stop cobbling scripts together. Run a real model business.",
-                  <>
-                    不用再东拼西凑，
-                    <span className="whitespace-nowrap">一套系统</span>搞定
-                    <span className="whitespace-nowrap">模型商业化运营。</span>
-                  </>,
-                )}
-              </h2>
-              <p>
-                {t(
-                  "Forwarding an API key takes an afternoon. Operating multi-Provider failover, private retail margins, concurrent balance holds, and customer self-service is where homemade proxies break down.",
-                  "写一个转发脚本只需要半天；但要管好多家上游容灾、守住不外泄的渠道毛利、防住高并发刷穿余额，还要给客户提供好用的控制台和工作台——Niu 牛元把这些商业化能力全部原生做进了系统底座。",
-                )}
-              </p>
-              <div className="niu-commercial-actions">
-                <Button asChild variant="outline">
-                  <a href={links.models}>
-                    <span>
-                      {t("Explore public model catalog", "浏览公开模型目录")}
-                    </span>
-                    <ArrowRight aria-hidden="true" />
-                  </a>
-                </Button>
-              </div>
-            </div>
-
-            <div className="niu-commercial-domains">
-              {capabilityGroups.map((group) => {
-                const items = capabilities.filter((c) => c.group === group.id);
-                return (
-                  <div key={group.id} className="niu-domain-block">
-                    <div className="niu-domain-header">
-                      <h3>{t(group.title, group.titleZh)}</h3>
-                      <p>{t(group.summary, group.summaryZh)}</p>
-                    </div>
-
-                    <div className="niu-domain-items">
-                      {items.map((cap) => (
-                        <article key={cap.href} className="niu-cap-row">
-                          <div className="niu-cap-main">
-                            <code className="niu-cap-proof">
-                              {t(cap.proof, cap.proofZh)}
-                            </code>
-                            <h4>{t(cap.title, cap.titleZh)}</h4>
-                            <p>{t(cap.description, cap.descriptionZh)}</p>
-                          </div>
-                          <div className="niu-cap-action">
-                            <a className="niu-text-link" href={cap.href}>
-                              <span>{t(cap.label, cap.labelZh)}</span>
-                              <ArrowRight
-                                className="size-3.5"
-                                aria-hidden="true"
+                          <div className="demo-volume-bars">
+                            {volumeHistogramBars.map((val, idx) => (
+                              <span
+                                key={idx}
+                                className={`demo-vol-bar${idx === 21 ? " has-warn" : ""}`}
+                                style={{ height: `${val}%` }}
                               />
-                            </a>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      <div className="demo-logs-split">
+                        {/* Left: Gateway Request Table */}
+                        <div className="demo-logs-table-pane">
+                          <div className="demo-subtoolbar">
+                            <div className="demo-subtoolbar-left">
+                              <span
+                                className="demo-toolbar-icon-pill"
+                                title="Filter requests"
+                              >
+                                <IconSearch size={13} />
+                              </span>
+                              <span className="demo-filter-chip is-active">
+                                {t("All statuses", "全部状态")}
+                              </span>
+                              <span className="demo-filter-chip">
+                                {t(
+                                  "Pool: claude-sonnet-4",
+                                  "路由池：claude-sonnet-4",
+                                )}
+                              </span>
+                            </div>
+                            <div className="demo-subtoolbar-right">
+                              <span className="demo-filter-chip">
+                                {t("All time", "全部时间")}
+                              </span>
+                              <span
+                                className="demo-toolbar-icon-pill"
+                                title="Columns"
+                              >
+                                <SlidersHorizontal size={13} />
+                              </span>
+                            </div>
+                          </div>
+
+                          <div className="comparison-scroll demo-table-scroll">
+                            <table
+                              className="comparison-matrix demo-data-table"
+                              aria-label="Workspace request logs"
+                            >
+                              <thead>
+                                <tr>
+                                  <th>{t("Model & time", "模型与时间")}</th>
+                                  <th>{t("Status", "状态")}</th>
+                                  <th className="is-right">
+                                    {t("Charge & latency", "客户费用与延迟")}
+                                  </th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {demoLogRecords.map((row, idx) => {
+                                  const isSelected = idx === selectedLogIndex;
+                                  return (
+                                    <tr
+                                      key={`${row.time}-${row.status}`}
+                                      className={`demo-clickable-row${isSelected ? " matrix-selected" : ""}`}
+                                      onClick={() => setSelectedLogIndex(idx)}
+                                    >
+                                      <td>
+                                        <div className="demo-model-cell">
+                                          <span className="demo-provider-avatar">
+                                            {row.providerBadge}
+                                          </span>
+                                          <div>
+                                            <strong>{row.model}</strong>
+                                            <small>
+                                              {row.time.replace("Oct 19, ", "")}{" "}
+                                              ·{" "}
+                                              {row.providerSub.split(" · ")[0]}
+                                            </small>
+                                          </div>
+                                        </div>
+                                      </td>
+                                      <td>
+                                        <span
+                                          className={`demo-status-pill is-${row.statusTone}`}
+                                        >
+                                          <i className="demo-status-dot" />
+                                          {row.status}
+                                        </span>
+                                      </td>
+                                      <td className="is-right">
+                                        <strong
+                                          className={`demo-charge-text is-${row.statusTone}`}
+                                        >
+                                          {row.charge}
+                                        </strong>
+                                        <small>{row.duration}</small>
+                                      </td>
+                                    </tr>
+                                  );
+                                })}
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+
+                        {/* Right: Request Details Drawer (GatewayActivity.tsx Sheet + RequestTiming.tsx) */}
+                        <aside
+                          className="demo-request-drawer"
+                          aria-label="Request details"
+                        >
+                          <div className="demo-drawer-header">
+                            <div>
+                              <span className="demo-drawer-eyebrow">
+                                {t("Request details", "请求详情")}
+                              </span>
+                              <h3>
+                                <span className="demo-nowrap">
+                                  {selectedLog.model}
+                                </span>{" "}
+                                <small>· {selectedLog.time}</small>
+                              </h3>
+                            </div>
+                            <span
+                              className={`demo-status-pill is-${selectedLog.statusTone}`}
+                            >
+                              <i className="demo-status-dot" />
+                              {selectedLog.status}
+                            </span>
+                          </div>
+
+                          <div className="demo-drawer-metrics">
+                            <div>
+                              <span>{t("Gateway latency", "网关延迟")}</span>
+                              <strong>{selectedLog.duration}</strong>
+                            </div>
+                            <div>
+                              <span>{t("Customer charge", "客户费用")}</span>
+                              <strong>{selectedLog.charge}</strong>
+                            </div>
+                            <div>
+                              <span>{t("Input tokens", "输入 Token")}</span>
+                              <strong>
+                                {selectedLog.inputTokens}{" "}
+                                <small>
+                                  {t("Cached", "缓存")}{" "}
+                                  {selectedLog.cachedTokens}
+                                </small>
+                              </strong>
+                            </div>
+                            <div>
+                              <span>{t("Output tokens", "输出 Token")}</span>
+                              <strong>
+                                {selectedLog.outputTokens}{" "}
+                                <small>
+                                  {t("Reason", "推理")}{" "}
+                                  {selectedLog.reasoningTokens}
+                                </small>
+                              </strong>
+                            </div>
+                          </div>
+
+                          {/* RequestTiming.tsx component replica */}
+                          <div className="demo-timing-card">
+                            <div className="demo-timing-header">
+                              <strong>
+                                {t("Request timing", "请求耗时分解")}
+                              </strong>
+                              <span>
+                                {t("Gateway latency:", "网关延迟：")}{" "}
+                                {selectedLog.duration}
+                              </span>
+                            </div>
+                            <div className="demo-timing-rows">
+                              {selectedLog.phases.map((phase) => (
+                                <div
+                                  key={phase.label}
+                                  className="demo-timing-row"
+                                >
+                                  <div className="demo-timing-label">
+                                    <span>{phase.label}</span>
+                                    <strong>{phase.duration}</strong>
+                                  </div>
+                                  <div className="demo-timing-track">
+                                    <span
+                                      className={`demo-timing-bar is-${phase.tone}`}
+                                      style={{ width: `${phase.pct}%` }}
+                                    />
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                            <div className="demo-timing-footer">
+                              <span>{selectedLog.throughput}</span>
+                              <span>
+                                {t("Total:", "总计：")} {selectedLog.duration}
+                              </span>
+                            </div>
+                          </div>
+
+                          <dl className="demo-drawer-dl">
+                            <div>
+                              <dt>{t("Provider model", "供应商模型")}</dt>
+                              <dd>{selectedLog.providerSub}</dd>
+                            </div>
+                            <div>
+                              <dt>{t("Provider status", "上游状态")}</dt>
+                              <dd>{selectedLog.providerStatus}</dd>
+                            </div>
+                            <div>
+                              <dt>{t("Delivery & billing", "交付与计费")}</dt>
+                              <dd>{selectedLog.deliveryStatus}</dd>
+                            </div>
+                            <div>
+                              <dt>{t("API key", "API 密钥")}</dt>
+                              <dd className="demo-mono-cell">
+                                {selectedLog.apiKey}
+                              </dd>
+                            </div>
+                          </dl>
+
+                          <div className="demo-drawer-tabs">
+                            {(["response", "request", "raw"] as const).map(
+                              (tabKey) => (
+                                <button
+                                  key={tabKey}
+                                  type="button"
+                                  className={
+                                    activeLogTab === tabKey
+                                      ? "is-active"
+                                      : undefined
+                                  }
+                                  onClick={() => setActiveLogTab(tabKey)}
+                                >
+                                  {tabKey === "response"
+                                    ? t("Response", "响应")
+                                    : tabKey === "request"
+                                      ? t("Request", "请求")
+                                      : t("Raw trace", "原始追踪")}
+                                </button>
+                              ),
+                            )}
+                          </div>
+                          <div className="demo-drawer-code">
+                            {activeLogTab === "response" && (
+                              <code>{selectedLog.rawPreview}</code>
+                            )}
+                            {activeLogTab === "request" && (
+                              <code>{`POST /v1/chat/completions · model: "${selectedLog.model}" · stream: true · key: ${selectedLog.apiKey}`}</code>
+                            )}
+                            {activeLogTab === "raw" && (
+                              <code>{`finish_reason: "${selectedLog.finishReason}" · status: "${selectedLog.status}" · charge: "${selectedLog.charge}"`}</code>
+                            )}
+                          </div>
+                        </aside>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* SURFACE 1: ADMIN / ROUTE POOLS (features/route-pools/page.tsx) */}
+                  {activePreviewIndex === 1 && (
+                    <div className="investigation demo-page-surface">
+                      <div className="demo-page-header">
+                        <div>
+                          <div className="demo-page-title-row">
+                            <h2>{t("Route pools", "路由池")}</h2>
+                            <span className="demo-count-badge">
+                              {t("3 active pools", "3 个活跃路由池")}
+                            </span>
+                          </div>
+                          <p className="demo-page-subtitle">
+                            {t(
+                              "Group multiple Provider model mappings under a single Niu alias with priority tiers and weighted selection. Highest eligible priority wins, with weighted selection inside that tier.",
+                              "将多个供应商模型映射聚合在单一 Niu 别名下，按优先级分层与权重分配流量：最高可用优先级胜出，同层内按权重均衡。",
+                            )}
+                          </p>
+                        </div>
+                        <div className="demo-header-actions">
+                          <button
+                            type="button"
+                            className="demo-action-btn"
+                            onClick={() => setActivePreviewIndex(2)}
+                          >
+                            <IconPlugConnected size={13} />
+                            <span>{t("Providers", "模型供应商")}</span>
+                          </button>
+                          <button
+                            type="button"
+                            className="demo-action-btn is-primary"
+                            onClick={() =>
+                              setSelectedPoolIndex(
+                                (prev) => (prev + 1) % demoRoutePools.length,
+                              )
+                            }
+                          >
+                            <Plus size={13} />
+                            <span>{t("Create route pool", "新建路由池")}</span>
+                          </button>
+                        </div>
+                      </div>
+
+                      <div className="demo-subtoolbar">
+                        <div className="demo-subtoolbar-left">
+                          <span
+                            className="demo-toolbar-icon-pill"
+                            title="Search route pools"
+                          >
+                            <IconSearch size={13} />
+                          </span>
+                          <span className="demo-filter-chip is-active">
+                            {t("All scopes (3)", "全部范围 (3)")}
+                          </span>
+                          <span className="demo-filter-chip">
+                            {t("Shared pools (2)", "共享路由池 (2)")}
+                          </span>
+                          <span className="demo-filter-chip">
+                            {t("Organization pools (1)", "组织路由池 (1)")}
+                          </span>
+                        </div>
+                        <div className="demo-subtoolbar-right">
+                          <span className="demo-toolbar-meta">
+                            {t(
+                              "Click a route pool to inspect candidate priority & weights",
+                              "点击路由池以检视候选路由的优先级与权重",
+                            )}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="comparison-scroll demo-table-scroll">
+                        <table
+                          className="comparison-matrix demo-data-table"
+                          aria-label="Model route pools"
+                        >
+                          <thead>
+                            <tr>
+                              <th>{t("Pool alias", "路由池别名")}</th>
+                              <th>{t("Scope", "共享范围")}</th>
+                              <th>{t("Candidate routes", "候选路由")}</th>
+                              <th>{t("Status", "状态")}</th>
+                              <th>{t("Actions", "操作")}</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {demoRoutePools.map((pool, idx) => {
+                              const isSelected = idx === selectedPoolIndex;
+                              return (
+                                <tr
+                                  key={pool.alias}
+                                  className={`demo-clickable-row${isSelected ? " matrix-selected" : ""}`}
+                                  onClick={() => setSelectedPoolIndex(idx)}
+                                >
+                                  <td>
+                                    <div className="demo-pool-alias-cell">
+                                      <IconRoute size={15} />
+                                      <div>
+                                        <strong>{pool.alias}</strong>
+                                        <small>{pool.revision}</small>
+                                      </div>
+                                    </div>
+                                  </td>
+                                  <td>
+                                    <span className="demo-outline-badge">
+                                      {pool.scopeBadge}
+                                    </span>
+                                    <small>{pool.scopeSub}</small>
+                                  </td>
+                                  <td>
+                                    <div className="demo-candidate-pills">
+                                      {pool.candidates.map((cand) => (
+                                        <span
+                                          key={cand.alias}
+                                          className="demo-candidate-pill"
+                                        >
+                                          <strong>{cand.alias}</strong>
+                                          <span>
+                                            P{cand.priority} · W{cand.weight}
+                                          </span>
+                                        </span>
+                                      ))}
+                                    </div>
+                                    <small>{pool.enabledSummary}</small>
+                                  </td>
+                                  <td>
+                                    <span className="demo-status-pill is-completed">
+                                      <i className="demo-status-dot" />
+                                      {pool.status}
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <div className="demo-row-actions">
+                                      <button
+                                        type="button"
+                                        className="demo-action-btn is-sm"
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          setSelectedPoolIndex(idx);
+                                        }}
+                                      >
+                                        Edit pool
+                                      </button>
+                                      <span
+                                        className="demo-toolbar-icon-pill"
+                                        title="Revision history"
+                                      >
+                                        <IconHistory size={13} />
+                                      </span>
+                                    </div>
+                                  </td>
+                                </tr>
+                              );
+                            })}
+                          </tbody>
+                        </table>
+                      </div>
+
+                      {/* Selected Pool Candidate Route Inspector */}
+                      <div className="demo-pool-inspector">
+                        <div className="demo-pool-inspector-header">
+                          <div>
+                            <span className="demo-drawer-eyebrow">
+                              Candidate routes · {selectedPool.alias} (
+                              {selectedPool.revision})
+                            </span>
+                            <h3>
+                              Priority tier weights &amp; temporary auth
+                              cooldown state
+                            </h3>
+                          </div>
+                          <span className="demo-outline-badge">
+                            {selectedPool.maxAttempts}
+                          </span>
+                        </div>
+                        <div className="demo-pool-candidates-grid">
+                          {selectedPool.candidates.map((cand) => (
+                            <div
+                              key={cand.alias}
+                              className={`demo-candidate-card${cand.isPrimary ? " is-primary-tier" : ""}`}
+                            >
+                              <div className="demo-candidate-card-top">
+                                <strong>{cand.alias}</strong>
+                                <span className="demo-outline-badge">
+                                  Priority {cand.priority}
+                                </span>
+                              </div>
+                              <p className="demo-candidate-provider">
+                                {cand.provider}
+                              </p>
+                              <div className="route-weight-cell">
+                                <span>
+                                  Weight {cand.weight} · {cand.tierShare}
+                                </span>
+                                <i className="route-weight-bar">
+                                  <b
+                                    style={{
+                                      width: `${cand.sharePct}%`,
+                                      opacity: cand.isPrimary ? 1 : 0.45,
+                                    }}
+                                  />
+                                </i>
+                              </div>
+                              <div className="demo-candidate-meta">
+                                <span>{cand.cooldown}</span>
+                                <strong>{cand.status}</strong>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* SURFACE 2: ADMIN / FINANCIAL STATEMENTS (features/commercial-position/page.tsx) */}
+                  {activePreviewIndex === 2 && (
+                    <div className="investigation demo-page-surface">
+                      <div className="demo-page-header">
+                        <div>
+                          <div className="demo-page-title-row">
+                            <h2>{t("Financial statements", "财务报表")}</h2>
+                            <span className="demo-count-badge">
+                              {t("Accrual + Cash flow", "权责发生制 + 现金流")}
+                            </span>
+                          </div>
+                          <p className="demo-page-subtitle">
+                            {t(
+                              "October 2026 (Month to date) · Compared against Sept 2026 (same MTD span) · Personal owner-funded calls are excluded from commercial revenue and cost.",
+                              "2026 年 10 月（月初至今）· 对比 2026 年 9 月同期 · 个人所有者自付调用已从商业收入与成本中剔除。",
+                            )}
+                          </p>
+                        </div>
+                        <div className="demo-header-actions">
+                          <span className="demo-filter-chip">
+                            {t(
+                              "Month to date (Current month)",
+                              "月初至今（当月）",
+                            )}
+                          </span>
+                          <span className="demo-filter-chip">
+                            {t("Currency: $ USD", "币种：$ USD")}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Line Tabs: Financial summary (P&L) | Provider positions */}
+                      <div
+                        className="demo-line-tabs"
+                        role="tablist"
+                        aria-label="Financial statement views"
+                      >
+                        <button
+                          type="button"
+                          role="tab"
+                          aria-selected={activeFinancialTab === "pnl"}
+                          className={
+                            activeFinancialTab === "pnl"
+                              ? "is-active"
+                              : undefined
+                          }
+                          onClick={() => setActiveFinancialTab("pnl")}
+                        >
+                          {t(
+                            "Financial summary (Statement of operations)",
+                            "财务汇总（损益表 P&L）",
+                          )}
+                        </button>
+                        <button
+                          type="button"
+                          role="tab"
+                          aria-selected={activeFinancialTab === "providers"}
+                          className={
+                            activeFinancialTab === "providers"
+                              ? "is-active"
+                              : undefined
+                          }
+                          onClick={() => setActiveFinancialTab("providers")}
+                        >
+                          {t(
+                            "Provider positions (3 active Providers)",
+                            "供应商结算头寸（3 家活跃供应商）",
+                          )}
+                        </button>
+                      </div>
+
+                      {/* Layer 1: 4 Executive KPI Cards from commercial-position/page.tsx */}
+                      <div className="demo-kpi-grid">
+                        <article className="demo-kpi-card">
+                          <div className="demo-kpi-top">
+                            <span>
+                              {t("Net recognized revenue", "已确认净收入")}
+                            </span>
+                            <span className="demo-outline-badge">
+                              {t("Income", "收入")}
+                            </span>
+                          </div>
+                          <strong>$48,920.40</strong>
+                          <div className="demo-kpi-foot">
+                            <span className="demo-delta-badge is-positive">
+                              {t("+18.4% vs prior MTD", "较上月同期 +18.4%")}
+                            </span>
+                            <small>
+                              {t(
+                                "Gross $51,240.00 · Gift -$2,139.60",
+                                "总额 $51,240.00 · 赠金抵扣 -$2,139.60",
+                              )}
+                            </small>
                           </div>
                         </article>
-                      ))}
+                        <article className="demo-kpi-card">
+                          <div className="demo-kpi-top">
+                            <span>
+                              {t(
+                                "Cost of supply (Provider payable)",
+                                "模型供给成本（应付供应商）",
+                              )}
+                            </span>
+                            <span className="demo-outline-badge">COGS</span>
+                          </div>
+                          <strong>$34,610.85</strong>
+                          <div className="demo-kpi-foot">
+                            <span className="demo-delta-badge">
+                              {t("+14.1% vs prior MTD", "较上月同期 +14.1%")}
+                            </span>
+                            <small>
+                              {t(
+                                "128,450 settled commercial calls",
+                                "128,450 次已结算商业调用",
+                              )}
+                            </small>
+                          </div>
+                        </article>
+                        <article className="demo-kpi-card is-highlighted">
+                          <div className="demo-kpi-top">
+                            <span>
+                              {t("Platform net contribution", "平台净贡献毛利")}
+                            </span>
+                            <span className="demo-outline-badge">
+                              {t("29.3% margin", "29.3% 毛利率")}
+                            </span>
+                          </div>
+                          <strong>$14,309.55</strong>
+                          <div className="demo-kpi-foot">
+                            <span className="demo-delta-badge is-positive">
+                              {t("+30.2% vs prior MTD", "较上月同期 +30.2%")}
+                            </span>
+                            <small>
+                              {t(
+                                "Net revenue minus Provider payable",
+                                "净收入减去应付供应商成本",
+                              )}
+                            </small>
+                          </div>
+                        </article>
+                        <article className="demo-kpi-card">
+                          <div className="demo-kpi-top">
+                            <span>
+                              {t("Verified cash receipts", "已核验现金收款")}
+                            </span>
+                            <span className="demo-outline-badge">
+                              {t("Cash flow", "现金流")}
+                            </span>
+                          </div>
+                          <strong>$62,400.00</strong>
+                          <div className="demo-kpi-foot">
+                            <span className="demo-delta-badge is-positive">
+                              {t(
+                                "Prepaid wallet: $19,840.20",
+                                "预付钱包余额：$19,840.20",
+                              )}
+                            </span>
+                            <small>
+                              {t(
+                                "Zero supplier cost leaked to customer API",
+                                "上游采购成本对客户 API 零泄露",
+                              )}
+                            </small>
+                          </div>
+                        </article>
+                      </div>
+
+                      {/* Layer 2: Statement of Operations (P&L) OR Provider Positions */}
+                      {activeFinancialTab === "pnl" ? (
+                        <div className="comparison-scroll demo-table-scroll">
+                          <table
+                            className="comparison-matrix demo-data-table"
+                            aria-label="Statement of operations (P&L)"
+                          >
+                            <thead>
+                              <tr>
+                                <th>
+                                  Statement of operations (P&amp;L) line item
+                                </th>
+                                <th>Current MTD</th>
+                                <th>Prior MTD</th>
+                                <th>Change</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td>Gross customer usage charges</td>
+                                <td>$51,240.00</td>
+                                <td>$43,180.00</td>
+                                <td>
+                                  <span className="demo-delta-text is-positive">
+                                    +18.7%
+                                  </span>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  Less: Customer balance refunds &amp;
+                                  adjustments
+                                </td>
+                                <td>-$180.00</td>
+                                <td>-$240.00</td>
+                                <td>
+                                  <span className="demo-delta-text">
+                                    -25.0%
+                                  </span>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  Less: Consumed promotional gift allowance
+                                </td>
+                                <td>-$2,139.60</td>
+                                <td>-$1,620.00</td>
+                                <td>
+                                  <span className="demo-delta-text">
+                                    +32.1%
+                                  </span>
+                                </td>
+                              </tr>
+                              <tr className="demo-summary-row">
+                                <td>
+                                  <strong>
+                                    Net recognized customer revenue
+                                  </strong>
+                                </td>
+                                <td>
+                                  <strong>$48,920.40</strong>
+                                </td>
+                                <td>
+                                  <strong>$41,320.00</strong>
+                                </td>
+                                <td>
+                                  <span className="demo-delta-text is-positive">
+                                    <strong>+18.4%</strong>
+                                  </span>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  Less: Provider payable (Cost of model supply)
+                                </td>
+                                <td>-$34,610.85</td>
+                                <td>-$30,330.20</td>
+                                <td>
+                                  <span className="demo-delta-text">
+                                    +14.1%
+                                  </span>
+                                </td>
+                              </tr>
+                              <tr className="matrix-selected demo-summary-row">
+                                <td>
+                                  <strong>
+                                    Platform net contribution (Gross profit)
+                                  </strong>
+                                </td>
+                                <td>
+                                  <strong>$14,309.55</strong>
+                                </td>
+                                <td>
+                                  <strong>$10,989.80</strong>
+                                </td>
+                                <td>
+                                  <span className="demo-delta-text is-positive">
+                                    <strong>+30.2% (+2.7 pp margin)</strong>
+                                  </span>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      ) : (
+                        <div className="comparison-scroll demo-table-scroll">
+                          <table
+                            className="comparison-matrix demo-data-table"
+                            aria-label="Provider commercial positions"
+                          >
+                            <thead>
+                              <tr>
+                                <th>Provider</th>
+                                <th>Approved offers</th>
+                                <th>Settled requests</th>
+                                <th>Customer revenue</th>
+                                <th>Provider payable</th>
+                                <th>Net contribution</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr className="matrix-selected">
+                                <td>
+                                  <strong>Anthropic Direct</strong>
+                                  <small>claude-sonnet-4, claude-opus-4</small>
+                                </td>
+                                <td>4 active offers</td>
+                                <td>64,120</td>
+                                <td>$26,480.00</td>
+                                <td>$18,536.00</td>
+                                <td>
+                                  <strong>$7,944.00 (30.0%)</strong>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <strong>OpenRouter Enterprise</strong>
+                                  <small>deepseek-r1, qwen-2.5-coder</small>
+                                </td>
+                                <td>6 active offers</td>
+                                <td>49,810</td>
+                                <td>$14,120.40</td>
+                                <td>$10,307.85</td>
+                                <td>
+                                  <strong>$3,812.55 (27.0%)</strong>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <strong>Volcengine Ark</strong>
+                                  <small>seedance-1-5-pro, doubao-pro</small>
+                                </td>
+                                <td>3 active offers</td>
+                                <td>14,520</td>
+                                <td>$8,320.00</td>
+                                <td>$5,767.00</td>
+                                <td>
+                                  <strong>$2,553.00 (30.7%)</strong>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      )}
                     </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      </section>
+                  )}
 
-      {/* =====================================================================
-          SECTION 5: PILLAR III (A) — DROP-IN DEVELOPER & AGENT WORKBENCH
-      ===================================================================== */}
-      <section
-        className="niu-section niu-developer-section"
-        id="gateway"
-        aria-labelledby="developer-heading"
-      >
-        <div className="container">
-          <div className="niu-developer-grid">
-            <div className="niu-developer-copy">
-              <h2 id="developer-heading">
-                {t(
-                  "Change one Base URL. Connect SDKs, Claude Code, and Codex.",
-                  <>
-                    改一行 Base URL，
-                    <span className="whitespace-nowrap">无缝接入</span>
-                    现有应用与编程智能体。
-                  </>,
-                )}
-              </h2>
-              <p>
-                {t(
-                  "Speak native OpenAI and Anthropic protocols without proprietary SDK lock-in—or use the typed @niu/sdk when you want full workspace and management APIs.",
-                  "原生兼容 OpenAI 与 Anthropic 核心协议，无需改造业务代码即可接入 Claude Code、Codex 与现有应用；同时也提供强类型的官方 @niu/sdk。",
-                )}
-              </p>
+                  {/* SURFACE 3: GENERATIONS · CHAT COMPARISON & SEEDANCE VIDEO (PlaygroundView.tsx + VideoView.tsx) */}
+                  {activePreviewIndex === 3 && (
+                    <div className="investigation demo-page-surface">
+                      <div className="demo-page-header">
+                        <div>
+                          <div className="demo-page-title-row">
+                            <h2>
+                              {activeGenerationsMode === "chat"
+                                ? t("Chat comparison", "多模型对话对比")
+                                : t(
+                                    "Video · Seedance 1.5 Pro",
+                                    "视频生成 · Seedance 1.5 Pro",
+                                  )}
+                            </h2>
+                            <span className="demo-count-badge">
+                              {activeGenerationsMode === "chat"
+                                ? t("2 models side-by-side", "双模型并排对比")
+                                : t("Async video studio", "异步视频工作台")}
+                            </span>
+                          </div>
+                          <p className="demo-page-subtitle">
+                            {activeGenerationsMode === "chat"
+                              ? t(
+                                  "Compare models side-by-side with live streaming throughput, token counts, and settled customer charges persisted in PostgreSQL.",
+                                  "并排对比多个模型的实时流式吞吐、Token 用量与持久化至 PostgreSQL 的已结算客户费用。",
+                                )
+                              : t(
+                                  "Submit text-to-video and image-to-video tasks with Volcengine Seedance 1.5 Pro, manage materials, and track settled video charges.",
+                                  "使用火山引擎 Seedance 1.5 Pro 提交文生视频与图生视频任务，管理素材资产并追踪已结算视频费用。",
+                                )}
+                          </p>
+                        </div>
+                        <div className="demo-header-actions">
+                          <div
+                            className="demo-mode-segmented"
+                            role="group"
+                            aria-label="Generations mode"
+                          >
+                            <button
+                              type="button"
+                              className={
+                                activeGenerationsMode === "chat"
+                                  ? "is-active"
+                                  : undefined
+                              }
+                              onClick={() => setActiveGenerationsMode("chat")}
+                            >
+                              <IconMessageChatbot size={14} />
+                              <span>{t("Chat comparison", "对话对比")}</span>
+                            </button>
+                            <button
+                              type="button"
+                              className={
+                                activeGenerationsMode === "video"
+                                  ? "is-active"
+                                  : undefined
+                              }
+                              onClick={() => setActiveGenerationsMode("video")}
+                            >
+                              <Film size={14} />
+                              <span>
+                                {t("Seedance video", "Seedance 视频")}
+                              </span>
+                            </button>
+                          </div>
+                          <span className="demo-filter-chip">
+                            {t("Key: prod-backend", "密钥：prod-backend")}
+                          </span>
+                        </div>
+                      </div>
 
-              <ol className="niu-onboarding-steps">
-                <li>
-                  <span className="niu-step-num">1</span>
-                  <div>
-                    <h3>
-                      {t(
-                        "Boot Niu against PostgreSQL",
-                        "单容器启动 Niu 并连接 PostgreSQL",
-                      )}
-                    </h3>
-                    <p>
-                      {t(
-                        "One Docker image serves the Rust gateway, admin console, customer workspaces, catalog, and docs.",
-                        "一个标准 Docker 镜像同时启动高性能网关、管理后台、客户工作空间、公开目录与文档。",
-                      )}
-                    </p>
-                  </div>
-                </li>
-                <li>
-                  <span className="niu-step-num">2</span>
-                  <div>
-                    <h3>
-                      {t(
-                        "Create a Model Pool & set retail pricing",
-                        "配置供应商渠道并发布智能模型池",
-                      )}
-                    </h3>
-                    <p>
-                      {t(
-                        "Encrypt Provider keys with AES-256-GCM, define failover rules, and publish your customer tariff.",
-                        "使用 AES-256-GCM 加密托管上游密钥，设定主备容灾规则与对客销售价格。",
-                      )}
-                    </p>
-                  </div>
-                </li>
-                <li>
-                  <span className="niu-step-num">3</span>
-                  <div>
-                    <h3>
-                      {t(
-                        "Issue scoped workspace API keys",
-                        "签发工作空间密钥，立即对外提供服务",
-                      )}
-                    </h3>
-                    <p>
-                      {t(
-                        "Customers connect apps or coding agents immediately with per-key spend caps and real-time logs.",
-                        "客户拿到密钥即可连接应用或编程智能体，享受密钥级预算护栏与实时扣费明细。",
-                      )}
-                    </p>
-                  </div>
-                </li>
-              </ol>
+                      {activeGenerationsMode === "chat" ? (
+                        <>
+                          <div className="demo-chat-prompt-bar">
+                            <span className="demo-prompt-role">
+                              User prompt
+                            </span>
+                            <p>
+                              Compare bounded route-pool failover vs
+                              unconditional retries when an upstream Provider
+                              returns HTTP 401 before streaming starts.
+                            </p>
+                          </div>
 
-              <div className="niu-developer-links">
-                <a className="niu-text-link" href={links.api}>
-                  <span>{t("REST API reference", "REST API 接口文档")}</span>
-                  <ArrowRight className="size-3.5" aria-hidden="true" />
-                </a>
-                <a className="niu-text-link" href={links.sdk}>
+                          <div className="demo-chat-compare-grid">
+                            <article className="demo-chat-model-card is-primary">
+                              <div className="demo-chat-card-header">
+                                <div className="demo-model-cell">
+                                  <span className="demo-provider-avatar">
+                                    A
+                                  </span>
+                                  <div>
+                                    <strong>claude-sonnet-4</strong>
+                                    <small>Anthropic · Pool revision 4</small>
+                                  </div>
+                                </div>
+                                <span className="demo-status-pill is-completed">
+                                  <i className="demo-status-dot" />
+                                  Completed · 1,180 ms
+                                </span>
+                              </div>
+                              <div className="demo-chat-card-body">
+                                <p>
+                                  <strong>Bounded failover</strong> only retries
+                                  when the upstream rejection occurs before any
+                                  SSE body bytes are committed. On{" "}
+                                  <code>HTTP 401</code>, Niu places the failing
+                                  candidate route into a 60s auth cooldown and
+                                  dispatches Attempt 2 without double-charging
+                                  the workspace.
+                                </p>
+                              </div>
+                              <div className="demo-chat-card-footer">
+                                <span>412 prompt → 128 output tokens</span>
+                                <span>148.8 tok/s</span>
+                                <strong>Customer charge: $0.0180</strong>
+                              </div>
+                            </article>
+
+                            <article className="demo-chat-model-card">
+                              <div className="demo-chat-card-header">
+                                <div className="demo-model-cell">
+                                  <span className="demo-provider-avatar">
+                                    OA
+                                  </span>
+                                  <div>
+                                    <strong>gpt-4.1</strong>
+                                    <small>
+                                      OpenAI Direct · Pool revision 2
+                                    </small>
+                                  </div>
+                                </div>
+                                <span className="demo-status-pill is-completed">
+                                  <i className="demo-status-dot" />
+                                  Completed · 940 ms
+                                </span>
+                              </div>
+                              <div className="demo-chat-card-body">
+                                <p>
+                                  <strong>Pre-stream vs mid-stream:</strong>{" "}
+                                  Pre-stream <code>401/429/503</code> errors can
+                                  safely fail over within the route pool’s{" "}
+                                  <code>max_attempts</code> cap. If a stream
+                                  drops after tokens are emitted, Niu records
+                                  the state as{" "}
+                                  <code>Uncertain / Unresolved</code>.
+                                </p>
+                              </div>
+                              <div className="demo-chat-card-footer">
+                                <span>412 prompt → 116 output tokens</span>
+                                <span>162.4 tok/s</span>
+                                <strong>Customer charge: $0.0142</strong>
+                              </div>
+                            </article>
+                          </div>
+
+                          <div className="comparison-scroll demo-table-scroll">
+                            <table
+                              className="comparison-matrix demo-data-table"
+                              aria-label="Comparison summary"
+                            >
+                              <thead>
+                                <tr>
+                                  <th>Comparison summary metric</th>
+                                  <th>claude-sonnet-4</th>
+                                  <th>gpt-4.1</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr>
+                                  <td>Client round-trip &amp; attempts</td>
+                                  <td>
+                                    1,180 ms (2 attempts · seamless failover)
+                                  </td>
+                                  <td>940 ms (1 attempt · primary route)</td>
+                                </tr>
+                                <tr>
+                                  <td>Prompt / output tokens</td>
+                                  <td>540 total (412 prompt · 128 output)</td>
+                                  <td>528 total (412 prompt · 116 output)</td>
+                                </tr>
+                                <tr className="matrix-selected">
+                                  <td>
+                                    <strong>Settled customer charge</strong>
+                                  </td>
+                                  <td>
+                                    <strong>$0.0180</strong>
+                                  </td>
+                                  <td>
+                                    <strong>$0.0142</strong>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </>
+                      ) : (
+                        <div className="demo-video-studio-grid">
+                          <div className="demo-video-stage-card">
+                            <div className="demo-video-preview-canvas">
+                              <div className="demo-video-badge-row">
+                                <span className="demo-video-pill">
+                                  seedance-1-5-pro
+                                </span>
+                                <span className="demo-video-pill">
+                                  1080p · 16:9 · 5s · 24 fps
+                                </span>
+                                <span className="demo-video-pill">
+                                  Audio generated
+                                </span>
+                              </div>
+                              <div className="demo-video-play-center">
+                                <Film size={24} />
+                                <span>
+                                  Rendered MP4 ready · 1920×1080 · 42.0s
+                                  generation time
+                                </span>
+                              </div>
+                              <div className="demo-video-prompt-overlay">
+                                <small>
+                                  SAVED PROMPT &amp; CAMERA DIRECTION
+                                </small>
+                                <p>
+                                  “Aerial dusk tracking shot over an illuminated
+                                  container port, cinematic reflections on wet
+                                  asphalt, volumetric coastal fog, smooth gimbal
+                                  motion.”
+                                </p>
+                              </div>
+                            </div>
+                            <div className="demo-video-controls-bar">
+                              <span className="demo-filter-chip is-active">
+                                Model: seedance-1-5-pro
+                              </span>
+                              <span className="demo-filter-chip">
+                                Resolution: 1080p
+                              </span>
+                              <span className="demo-filter-chip">
+                                Aspect: 16:9
+                              </span>
+                              <span className="demo-filter-chip">
+                                Duration: 5s
+                              </span>
+                              <span className="demo-filter-chip">
+                                Materials: 4 approved assets
+                              </span>
+                            </div>
+                          </div>
+
+                          <div className="demo-video-side-cards">
+                            <div className="demo-timing-card">
+                              <div className="demo-timing-header">
+                                <strong>Video lifecycle</strong>
+                                <span className="demo-status-pill is-completed">
+                                  <i className="demo-status-dot" />
+                                  Succeeded
+                                </span>
+                              </div>
+                              <dl className="demo-drawer-dl">
+                                <div>
+                                  <dt>Submitted</dt>
+                                  <dd>Oct 19, 14:16:02</dd>
+                                </div>
+                                <div>
+                                  <dt>Completed</dt>
+                                  <dd>Oct 19, 14:16:44 (42.0s)</dd>
+                                </div>
+                                <div>
+                                  <dt>Provider tools</dt>
+                                  <dd>
+                                    Materials &amp; Human verification active
+                                  </dd>
+                                </div>
+                              </dl>
+                            </div>
+
+                            <div className="demo-timing-card">
+                              <div className="demo-timing-header">
+                                <strong>Video billing</strong>
+                                <span>Tariff settled</span>
+                              </div>
+                              <dl className="demo-drawer-dl">
+                                <div>
+                                  <dt>Billing status</dt>
+                                  <dd>Settled debit</dd>
+                                </div>
+                                <div>
+                                  <dt>Quoted estimate</dt>
+                                  <dd>$0.2400</dd>
+                                </div>
+                                <div>
+                                  <dt>Settled customer charge</dt>
+                                  <dd>
+                                    <strong>$0.2400</strong>
+                                  </dd>
+                                </div>
+                                <div>
+                                  <dt>API key</dt>
+                                  <dd className="demo-mono-cell">
+                                    prod-backend
+                                  </dd>
+                                </div>
+                              </dl>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+
+                <div className="preview-caption">
                   <span>
-                    {t("TypeScript SDK guide", "TypeScript SDK 指南")}
+                    {t(
+                      "Gateway · Workspace Dashboard · Model Catalog · Docs — served from one endpoint",
+                      "AI 网关 · 工作空间控制台 · 模型目录 · 文档中心 — 单一端点一体化交付",
+                    )}
                   </span>
-                  <ArrowRight className="size-3.5" aria-hidden="true" />
-                </a>
-              </div>
-            </div>
-
-            <div className="niu-code-workbench">
-              <Tabs
-                value={codeTab}
-                onValueChange={setCodeTab}
-                className="niu-code-tabs"
-              >
-                <div className="niu-code-topbar">
-                  <TabsList className="niu-code-tablist">
-                    {codeExamples.map((ex) => (
-                      <TabsTrigger key={ex.id} value={ex.id}>
-                        {t(ex.label, ex.labelZh ?? ex.label)}
-                      </TabsTrigger>
-                    ))}
-                  </TabsList>
-
-                  {codeExamples.map((ex) =>
-                    ex.id === codeTab ? (
-                      <button
-                        key={ex.id}
-                        type="button"
-                        className="niu-copy-btn"
-                        onClick={() => handleCopy(ex.id, ex.code)}
-                      >
-                        {copiedId === ex.id ? (
-                          <>
-                            <Check className="size-3.5" aria-hidden="true" />
-                            <span>{t("Copied", "已复制")}</span>
-                          </>
-                        ) : (
-                          <>
-                            <Copy className="size-3.5" aria-hidden="true" />
-                            <span>{t("Copy", "复制代码")}</span>
-                          </>
-                        )}
-                      </button>
-                    ) : null,
-                  )}
-                </div>
-
-                {codeExamples.map((ex, idx) => (
-                  <TabsContent
-                    key={ex.id}
-                    value={ex.id}
-                    className="niu-code-panel"
-                  >
-                    <div className="niu-code-endpoint">
-                      <Terminal className="size-3.5" aria-hidden="true" />
-                      <code>{ex.endpoint}</code>
-                    </div>
-                    <div
-                      className="niu-shiki-wrap"
-                      dangerouslySetInnerHTML={{
-                        __html: highlightedCode[idx] ?? "",
-                      }}
-                    />
-                    <div className="niu-code-trace">
-                      <span>{t("Execution trace", "网关执行链路")}</span>
-                      <p>{t(ex.trace, ex.traceZh ?? ex.trace)}</p>
-                    </div>
-                  </TabsContent>
-                ))}
-              </Tabs>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* =====================================================================
-          SECTION 6: PILLAR III (B) — FULL-STACK OPEN SOURCE & RELEASE LEDGER
-      ===================================================================== */}
-      <section
-        className="niu-section niu-oss-section"
-        id="release"
-        aria-labelledby="oss-heading"
-      >
-        <div className="container">
-          <div className="niu-split-header">
-            <div>
-              <h2 id="oss-heading">
-                {t(
-                  "Truly full-stack MIT open source — zero black-box dependencies.",
-                  "真正全栈 MIT 开源交付，私有化部署不留黑盒。",
-                )}
-              </h2>
-            </div>
-            <p>
-              {t(
-                "Unlike freemium gateways that lock multi-tenant workspaces, pricing, or admin consoles behind enterprise licenses, Niu ships the complete product in the public repository.",
-                "拒绝「核心功能全靠商业版解锁」的伪开源套路。从底层 Rust 网关到管理后台、客户工作空间、公开模型目录与对话视频工作台，全部在公共仓库以 MIT 协议完整开源。",
-              )}
-            </p>
-          </div>
-
-          <div className="niu-oss-grid">
-            <div className="niu-oss-modules">
-              <h3 className="niu-subledger-heading">
-                <Database className="size-4" aria-hidden="true" />
-                <span>
-                  {t(
-                    "What ships inside one Niu container + PostgreSQL",
-                    "单容器 + PostgreSQL 开箱包含的完整模块",
-                  )}
-                </span>
-              </h3>
-              <dl className="niu-module-list">
-                {stackComponents.map((item) => (
-                  <div key={item.module} className="niu-module-row">
-                    <dt>
-                      <code>{item.module}</code>
-                      <span>{t(item.role, item.roleZh)}</span>
-                    </dt>
-                    <dd>{t(item.detail, item.detailZh)}</dd>
-                  </div>
-                ))}
-              </dl>
-            </div>
-
-            <div className="niu-oss-readiness">
-              <h3 className="niu-subledger-heading">
-                <Lock className="size-4" aria-hidden="true" />
-                <span>
-                  {t(
-                    "Transparent production readiness & qualification",
-                    "坦诚透明的功能就绪度与准入进展",
-                  )}
-                </span>
-              </h3>
-
-              <div className="niu-readiness-block">
-                <h4>
-                  <span className="niu-dot-ok" aria-hidden="true" />
-                  {t("Ready to deploy today", "现已就绪，可直接部署上线")}
-                </h4>
-                <ul>
-                  <li>
-                    {t(
-                      "OpenAI (/v1/chat/completions, /v1/responses, /v1/embeddings) & Anthropic (/v1/messages) routing",
-                      "OpenAI（对话、Responses、向量）与 Anthropic（/v1/messages）原生路由转发",
-                    )}
-                  </li>
-                  <li>
-                    {t(
-                      "Smart Model Pools with trait rules, dual billing modes & live margin audit",
-                      "智能模型池（条件规则分流、统一/透传双计费模式、渠道延迟与毛利审计）",
-                    )}
-                  </li>
-                  <li>
-                    {t(
-                      "Separated cost vs. retail tariffs, 3-tier pre-dispatch holds & attempt-level logs",
-                      "进销价格严格隔离、三级并发额度预占防刷穿、全链路日志与异常断流对账",
-                    )}
-                  </li>
-                  <li>
-                    {t(
-                      "Multi-tenant customer workspaces, public catalog & saved Chat / Seedance Video studio",
-                      "多租户客户工作空间、公开模型目录，以及服务端持久化的对话与 Seedance 视频工作台",
-                    )}
-                  </li>
-                </ul>
-              </div>
-
-              <div className="niu-readiness-block is-ongoing">
-                <h4>
-                  <span className="niu-dot-ongoing" aria-hidden="true" />
-                  {t(
-                    "Tracked in public release qualification",
-                    "公开持续推进中的商业化准入项",
-                  )}
-                </h4>
-                <p>
-                  {t(
-                    "Merchant payment settlement lifecycles, automated Provider payout reconciliation, and multi-region HA failover drills are tracked openly in our release acceptance matrix—never overstated as finished before verification.",
-                    "第三方支付渠道到账闭环、供应商自动分账结算与多节点跨区高可用演练均在公开的发布准入矩阵中透明追踪——绝不把尚未完成端到端验收的能力夸大包装。",
-                  )}
-                </p>
-                <div className="niu-readiness-links">
-                  <a className="niu-text-link" href={links.releaseDocs}>
-                    <span>
-                      {t("Release acceptance matrix", "查看发布准入矩阵")}
-                    </span>
-                    <ArrowRight className="size-3.5" aria-hidden="true" />
-                  </a>
-                  <a
-                    className="niu-text-link"
-                    href={links.repo}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    <span>{t("Inspect MIT source", "检视 GitHub 源码")}</span>
-                    <ExternalLink className="size-3.5" aria-hidden="true" />
-                  </a>
+                  <Button asChild size="sm" className="cta-primary cta-compact">
+                    <a href={links.dashboard}>
+                      {t("Open workspace dashboard", "进入工作空间控制台")}
+                      <IconArrowRight
+                        className="cta-arrow"
+                        aria-hidden="true"
+                      />
+                    </a>
+                  </Button>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* =====================================================================
-          SECTION 7: EDITORIAL ESSAY (WHY NIU?)
-      ===================================================================== */}
-      {latestPosts.length > 0 && (
-        <section
-          className="niu-section niu-editorial-section"
-          id="why-niu"
-          aria-labelledby="editorial-heading"
-        >
-          <div className="container">
-            {latestPosts.slice(0, 1).map((post) => {
-              const isWhyNiu =
-                post.id === "why-niu" || post.href.includes("why-niu");
-              const displayTitle =
-                isZh && isWhyNiu
-                  ? WHY_NIU_ZH.title
-                  : isZh && post.chineseTitle
-                    ? post.chineseTitle
-                    : post.title;
-              const displayDesc =
-                isZh && isWhyNiu ? WHY_NIU_ZH.description : post.description;
-              const displayCategory =
-                isZh && isWhyNiu
-                  ? WHY_NIU_ZH.category
-                  : (post.category ?? t("Engineering", "工程与产品"));
-              const displayHighlights =
-                isZh && isWhyNiu ? WHY_NIU_ZH.highlights : post.highlights;
-
+          {/* 4 Core Competitive Advantages */}
+          <div
+            className="pillars-grid"
+            aria-label="Core competitive advantages"
+          >
+            {pillars.map((pillar, index) => {
+              const PillarIcon = pillarIcons[index];
               return (
-                <article key={post.href} className="niu-editorial-feature">
-                  <div className="niu-editorial-main">
-                    <div className="niu-editorial-meta">
-                      <span className="niu-editorial-tag">
-                        <FileText className="size-3.5" aria-hidden="true" />
-                        {displayCategory}
-                      </span>
-                      <time dateTime={post.publishedAt}>
-                        {isZh
-                          ? (post.dateLabelZh ?? post.dateLabel)
-                          : post.dateLabel}
-                      </time>
-                      <span>
-                        {isZh
-                          ? (post.readingTimeZh ?? post.readingTime)
-                          : post.readingTime}
-                      </span>
-                    </div>
-
-                    <h2 id="editorial-heading">
-                      <a href={post.href}>{displayTitle}</a>
-                    </h2>
-                    <p>{displayDesc}</p>
-
-                    <div className="niu-editorial-actions">
-                      <a className="niu-text-link" href={post.href}>
-                        <span>
-                          {t("Read the full essay", "阅读完整产品阐述")}
-                        </span>
-                        <ArrowRight className="size-3.5" aria-hidden="true" />
-                      </a>
-                      <a className="niu-text-link" href="/blog/">
-                        <span>{t("All articles", "浏览全部博客")}</span>
-                        <ArrowRight className="size-3.5" aria-hidden="true" />
-                      </a>
-                    </div>
+                <article
+                  key={pillar.index}
+                  className="pillar-card"
+                  data-reveal
+                  data-spotlight
+                  style={stagger(index)}
+                >
+                  <div className="pillar-top">
+                    <span className="pillar-icon" aria-hidden="true">
+                      <PillarIcon size={20} stroke={1.75} />
+                    </span>
+                    <span className="pillar-metric">
+                      {isZh ? pillar.metricZh : pillar.metric}
+                    </span>
                   </div>
-
-                  {displayHighlights.length > 0 && (
-                    <div className="niu-editorial-outline">
-                      <span>{t("Key topics covered", "文章核心探讨议题")}</span>
-                      <ul>
-                        {displayHighlights.map((item) => (
-                          <li key={item}>
-                            <a href={post.href}>{item}</a>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
+                  <h3>{isZh ? pillar.titleZh : pillar.title}</h3>
+                  <p>{isZh ? pillar.detailZh : pillar.detail}</p>
                 </article>
               );
             })}
           </div>
-        </section>
-      )}
+        </div>
+      </section>
 
-      {/* =====================================================================
-          SECTION 8: PRODUCTION FAQ (#faq)
-      ===================================================================== */}
+      {/* 2. PERFORMANCE BENCHMARK (VISUAL CARDS + VERDICT) */}
       <section
-        className="niu-section niu-faq-section"
-        id="faq"
-        aria-labelledby="faq-heading"
+        className="section container benchmark-section"
+        id="benchmark"
+        aria-labelledby="benchmark-title"
       >
-        <div className="container">
-          <div className="niu-faq-layout">
-            <div className="niu-faq-intro">
-              <h2 id="faq-heading">
-                {t(
-                  "Answers to real operator questions.",
-                  <>
-                    <span className="whitespace-nowrap">选型与商业化</span>
-                    <span className="whitespace-nowrap">常见疑问解答。</span>
-                  </>,
-                )}
-              </h2>
-              <p>
-                {t(
-                  "How Niu compares to Python/Go proxies, protects your upstream margins, reconciles dropped streams, and deploys on your own servers.",
-                  "关于性能差异、采购底价保密、流式断连对账以及全栈私有化部署的核心细节。",
-                )}
-              </p>
-              <a className="niu-text-link" href={links.compare}>
-                <span>
-                  {t(
-                    "Detailed comparison vs. New API & OpenRouter",
-                    "查看与 New API / OpenRouter 的详细对比",
-                  )}
-                </span>
-                <ArrowRight className="size-3.5" aria-hidden="true" />
-              </a>
-            </div>
-
-            <div className="niu-faq-list">
-              {faqs.map((item, idx) => (
-                <details
-                  key={item.question}
-                  className="niu-faq-item"
-                  open={idx === 0}
-                >
-                  <summary>
-                    <div className="niu-faq-q">
-                      <span className="niu-faq-cat">
-                        {t(item.category, item.categoryZh)}
-                      </span>
-                      <h3>{t(item.question, item.questionZh)}</h3>
+        <div className="benchmark-heading" data-reveal>
+          <div>
+            <p className="eyebrow">
+              {t(
+                "10× PERFORMANCE · MEASURED BENCHMARKS",
+                "10 倍性能优势 · 实测数据说话",
+              )}
+            </p>
+            <h2 id="benchmark-title">
+              {isZh ? (
+                <>
+                  单机 3,239 RPS 峰值吞吐，
+                  <br />
+                  10.7 倍于 LiteLLM · 3.7 倍于 New API。
+                </>
+              ) : (
+                <>
+                  3,239 RPS in Rust.
+                  <br />
+                  10.7× LiteLLM. 3.7× New API.
+                </>
+              )}
+            </h2>
+          </div>
+          <p>
+            {isZh ? (
+              <>
+                为什么用 Rust
+                重写网关？因为高并发下网关自己绝不能成为瓶颈。使用开源基准工具{" "}
+                <code>ai-gateway-bench</code>{" "}
+                实测，即使完整开启数据库记账与额度风控，Niu
+                牛元依然保持毫秒级延迟与 18 MB 极低内存占用。
+              </>
+            ) : (
+              <>
+                Why Rust? Because your gateway should never be the bottleneck.
+                Measured with <code>ai-gateway-bench</code> on Apple M4 with
+                PostgreSQL 17.11, Niu sustains 3,239 RPS with full database
+                accounting and 18.2 MB idle RAM.
+              </>
+            )}
+          </p>
+        </div>
+        <ol className="benchmark-steps">
+          {benchmarkSteps.map((item, index) => (
+            <li
+              key={item.step}
+              data-reveal
+              data-spotlight
+              style={stagger(index)}
+            >
+              <span className="benchmark-step-num">{item.step}</span>
+              <div>
+                <strong>{isZh ? item.titleZh : item.title}</strong>
+                <p>{isZh ? item.descriptionZh : item.description}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+        <div className="benchmark-demo" data-reveal>
+          <div className="benchmark-toolbar">
+            <span className="sample-label">
+              {t(
+                "AI-GATEWAY-BENCH · 0MS MOCK UPSTREAM (36,649 RPS DIRECT BASELINE)",
+                "AI-GATEWAY-BENCH · 0MS 模拟上游（36,649 RPS 直连基线）",
+              )}
+            </span>
+            <span className="benchmark-status">
+              {t(
+                "Apple M4 (10-core, 24 GB) · PostgreSQL 17.11 · 0% errors",
+                "Apple M4 (10 核, 24 GB) · PostgreSQL 17.11 · 0% 错误率",
+              )}
+            </span>
+          </div>
+          <div
+            className="benchmark-tabs"
+            role="tablist"
+            aria-label="Choose a benchmark workload"
+          >
+            {benchmarkSuites.map((suite, index) => (
+              <button
+                key={suite.id}
+                type="button"
+                role="tab"
+                id={`benchmark-tab-${suite.id}`}
+                aria-controls={`benchmark-panel-${suite.id}`}
+                aria-selected={index === activeSuiteIndex}
+                tabIndex={index === activeSuiteIndex ? 0 : -1}
+                onClick={() => setActiveSuiteIndex(index)}
+                onKeyDown={(e) => {
+                  let next = index;
+                  if (e.key === "ArrowRight")
+                    next = (index + 1) % benchmarkSuites.length;
+                  else if (e.key === "ArrowLeft")
+                    next =
+                      (index - 1 + benchmarkSuites.length) %
+                      benchmarkSuites.length;
+                  else if (e.key === "Home") next = 0;
+                  else if (e.key === "End") next = benchmarkSuites.length - 1;
+                  else return;
+                  e.preventDefault();
+                  setActiveSuiteIndex(next);
+                  const nextEl = document.getElementById(
+                    `benchmark-tab-${benchmarkSuites[next].id}`,
+                  );
+                  nextEl?.focus();
+                }}
+              >
+                {isZh && suite.labelZh ? suite.labelZh : suite.label}
+              </button>
+            ))}
+          </div>
+          {benchmarkSuites.map((suite, index) => (
+            <div
+              key={suite.id}
+              className="benchmark-panel"
+              role="tabpanel"
+              id={`benchmark-panel-${suite.id}`}
+              aria-labelledby={`benchmark-tab-${suite.id}`}
+              hidden={index !== activeSuiteIndex}
+              tabIndex={0}
+            >
+              <div className="benchmark-task">
+                <div>
+                  <span className="small-label">
+                    {isZh && suite.eyebrowZh ? suite.eyebrowZh : suite.eyebrow}
+                  </span>
+                  <h3>{isZh && suite.titleZh ? suite.titleZh : suite.title}</h3>
+                  <p>
+                    {isZh && suite.descriptionZh
+                      ? suite.descriptionZh
+                      : suite.description}
+                  </p>
+                </div>
+                <div className="acceptance-rule">
+                  <strong>
+                    {isZh && suite.ruleTitleZh
+                      ? suite.ruleTitleZh
+                      : suite.ruleTitle}
+                  </strong>
+                  <span>
+                    {isZh && suite.ruleDetailZh
+                      ? suite.ruleDetailZh
+                      : suite.ruleDetail}
+                  </span>
+                </div>
+              </div>
+              <div className="model-comparison">
+                {suite.cards.map((card) => (
+                  <article
+                    key={card.name}
+                    className={`model-result${card.isWinner ? " model-winner" : ""}`}
+                    data-spotlight
+                  >
+                    <div className="model-title">
+                      <div>
+                        <h4>{card.name}</h4>
+                        <p>{card.runtime}</p>
+                      </div>
+                      <span className="model-verdict">{card.badge}</span>
                     </div>
-                    <ChevronDown
-                      className="niu-faq-chevron size-4"
-                      aria-hidden="true"
-                    />
-                  </summary>
-                  <div className="niu-faq-a">
-                    <p>{t(item.answer, item.answerZh)}</p>
-                    <a className="niu-text-link" href={item.linkHref}>
-                      <span>{t(item.linkLabel, item.linkLabelZh)}</span>
-                      <ArrowRight className="size-3.5" aria-hidden="true" />
-                    </a>
-                  </div>
-                </details>
-              ))}
+                    <div className="per-result">
+                      <span>{card.primaryUnit}</span>
+                      <strong>{card.primaryMetric}</strong>
+                      <small>{card.primarySubtext}</small>
+                    </div>
+                    <div className="fusion-cost-bar" aria-hidden="true">
+                      <i style={{ width: `${card.barPercent}%` }} />
+                    </div>
+                    <dl className="model-facts">
+                      {card.facts.map((fact) => (
+                        <div key={fact.label}>
+                          <dt>{fact.label}</dt>
+                          <dd>{fact.value}</dd>
+                        </div>
+                      ))}
+                    </dl>
+                  </article>
+                ))}
+              </div>
+              <div className="benchmark-verdict">
+                <div className="verdict-number">
+                  <strong>{suite.verdictNumber}</strong>
+                  <span>
+                    {isZh && suite.verdictSubZh
+                      ? suite.verdictSubZh
+                      : suite.verdictSub}
+                  </span>
+                </div>
+                <div>
+                  <h4>
+                    {isZh && suite.verdictTitleZh
+                      ? suite.verdictTitleZh
+                      : suite.verdictTitle}
+                  </h4>
+                  <p>
+                    {isZh && suite.verdictBodyZh
+                      ? suite.verdictBodyZh
+                      : suite.verdictBody}
+                  </p>
+                </div>
+              </div>
+            </div>
+          ))}
+          <div className="benchmark-method benchmark-method-compact">
+            <p>
+              {isZh ? (
+                <>
+                  <strong>公平性说明：</strong> Niu v0.2.4 开启完整 PostgreSQL
+                  ACID 转发前准入与批量完成结算；New API (45fbb14) 开启{" "}
+                  <code>MEMORY_CACHE_ENABLED=true</code>；LiteLLM Proxy
+                  (v1.104.0) 运行于无状态 <code>master_key</code>{" "}
+                  模式并关闭数据库日志。生产选型请结合您的实际业务负载进行基准验证。
+                </>
+              ) : (
+                <>
+                  <strong>Fairness note:</strong> Niu v0.2.4 ran with full ACID
+                  PostgreSQL pre-dispatch admission &amp; batched completion;
+                  New API (45fbb14) ran with{" "}
+                  <code>MEMORY_CACHE_ENABLED=true</code>; LiteLLM Proxy
+                  (v1.104.0) ran in stateless <code>master_key</code> mode with
+                  DB logs disabled. Always qualify your own deployment and
+                  workload.
+                </>
+              )}
+            </p>
+            <div className="benchmark-links">
+              <a className="text-link" href={links.benchmark}>
+                {t(
+                  "Full benchmark report & methodology",
+                  "完整基准测试报告与方法论",
+                )}{" "}
+                <span aria-hidden="true">→</span>
+              </a>
+              <a className="text-link" href="/compare/#performance">
+                {t("Side-by-side matrix", "横向对比矩阵")}{" "}
+                <span aria-hidden="true">→</span>
+              </a>
             </div>
           </div>
         </div>
       </section>
 
-      {/* =====================================================================
-          SECTION 9: FOCUSED CLOSING ACTION
-      ===================================================================== */}
+      {/* 3. SIX CORE CAPABILITIES */}
       <section
-        className="niu-closing-section"
-        aria-labelledby="closing-heading"
+        className="section container"
+        id="product"
+        aria-labelledby="product-title"
       >
-        <div className="container">
-          <div className="niu-closing-surface">
-            <div className="niu-closing-copy">
-              <h2 id="closing-heading">
+        <div className="section-heading" data-reveal>
+          <div>
+            <p className="eyebrow">
+              {t("RICH COMMERCIAL CAPABILITIES", "丰富商业化功能 · 全栈闭环")}
+            </p>
+            <h2 id="product-title">
+              {isZh ? (
+                <>
+                  不用再东拼西凑，
+                  <br />
+                  一套系统搞定模型商业化。
+                </>
+              ) : (
+                <>
+                  Stop stitching tools together.
+                  <br />
+                  Run your model business in one stack.
+                </>
+              )}
+            </h2>
+          </div>
+          <p>
+            {t(
+              "Skip the fragile mix of proxy scripts, billing cron jobs, and chat wrappers. Niu ships routing, pricing, quota controls, and customer workspaces out of the box.",
+              "省去自己拼凑转发脚本、计费定时任务和套壳前端的麻烦，开箱即享生产级模型池路由、灵活定价、余额风控与客户工作台。",
+            )}
+          </p>
+        </div>
+        <div className="capability-grid">
+          {capabilities.map((item, index) => {
+            const CapabilityIcon = capabilityIcons[index];
+            return (
+              <article
+                key={item.href}
+                className="capability"
+                data-reveal
+                data-spotlight
+                style={stagger(index % 3)}
+              >
+                <div className="capability-top">
+                  <span className="capability-icon" aria-hidden="true">
+                    <CapabilityIcon size={20} stroke={1.75} />
+                  </span>
+                  <span className="feature-number">{item.number}</span>
+                </div>
+                <h3>{isZh ? item.titleZh : item.title}</h3>
+                <p>{isZh ? item.descriptionZh : item.description}</p>
+                <a className="text-link" href={item.href}>
+                  {isZh ? item.labelZh : item.label}{" "}
+                  <span aria-hidden="true">→</span>
+                </a>
+              </article>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* 4. DROP-IN API QUICKSTART */}
+      <section
+        className="gateway-section"
+        id="gateway"
+        aria-labelledby="gateway-title"
+      >
+        <div className="container section gateway-grid">
+          <div className="gateway-copy" data-reveal>
+            <p className="eyebrow">
+              {t("DROP-IN COMPATIBILITY", "零代码改造 · 即插即用")}
+            </p>
+            <h2 id="gateway-title">
+              {isZh ? (
+                <>
+                  改一行接口地址，
+                  <br />
+                  无缝接入所有 SDK 与编程助手。
+                </>
+              ) : (
+                <>
+                  One endpoint for SDKs
+                  <br />
+                  and coding agents.
+                </>
+              )}
+            </h2>
+            <p className="section-description">
+              {t(
+                "Point any OpenAI-compatible client, Claude Code, or Codex at your Niu gateway using a scoped workspace API key.",
+                "无需修改现有业务代码，只需把 Base URL 指向您的 Niu 牛元网关，即可直接连接各类应用、Claude Code 与 Codex。",
+              )}
+            </p>
+            <ul className="gateway-features">
+              {gatewaySteps.map((item) => (
+                <li key={item.step}>
+                  <span className="gateway-step-badge">{item.step}</span>
+                  <div>
+                    <strong>{isZh ? item.titleZh : item.title}</strong>
+                    <p>{isZh ? item.detailZh : item.detail}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+            <div className="gateway-links">
+              <a className="text-link" href="/docs/guides/api-quickstart/">
+                {t("API quickstart", "API 快速入门")}{" "}
+                <span aria-hidden="true">→</span>
+              </a>
+              <a className="text-link" href="/docs/guides/sdk-quickstart/">
+                {t("TypeScript SDK", "TypeScript SDK 教程")}{" "}
+                <span aria-hidden="true">→</span>
+              </a>
+            </div>
+          </div>
+          <div className="code-card" data-reveal style={stagger(1)}>
+            <div className="code-heading">
+              <span className="code-window" aria-hidden="true">
+                <i />
+                <i />
+                <i />
+              </span>
+              <div
+                className="code-tabs"
+                role="tablist"
+                aria-label="Integration examples"
+              >
+                {codeExamples.map((example, idx) => (
+                  <button
+                    key={example.id}
+                    type="button"
+                    role="tab"
+                    aria-selected={activeCodeIndex === idx}
+                    onClick={() => setActiveCodeIndex(idx)}
+                  >
+                    {example.label}
+                  </button>
+                ))}
+              </div>
+              <button
+                type="button"
+                className="code-copy-btn"
+                onClick={handleCopyCode}
+                aria-label="Copy code snippet"
+              >
+                {copiedCode ? (
+                  <IconCheck size={14} aria-hidden="true" />
+                ) : (
+                  <IconCopy size={14} aria-hidden="true" />
+                )}
+                <span>
+                  {copiedCode ? t("Copied", "已复制") : t("Copy", "复制")}
+                </span>
+              </button>
+            </div>
+            <div className="code-subbar">
+              <span>{codeExamples[activeCodeIndex].endpoint}</span>
+              <span>TLS / Localhost · Bearer Workspace Key</span>
+            </div>
+            {/* Build-time Shiki HTML from our own source snippets; no runtime highlighter. */}
+            <div
+              key={codeExamples[activeCodeIndex].id}
+              className="highlighted-example"
+              dangerouslySetInnerHTML={{
+                __html: highlightedCode[activeCodeIndex],
+              }}
+            />
+            <div className="code-footnote">
+              <span className="status-dot is-live"></span>
+              <span>
+                {t("Recorded in PostgreSQL:", "PostgreSQL 账本记录：")}{" "}
+                <strong>
+                  {isZh
+                    ? codeExamples[activeCodeIndex].traceZh
+                    : codeExamples[activeCodeIndex].trace}
+                </strong>
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 5. SELF-HOSTED ARCHITECTURE & EVALUATION SCOPE */}
+      <section
+        className="section container"
+        id="release"
+        aria-labelledby="release-title"
+      >
+        <div className="section-heading" data-reveal>
+          <div>
+            <p className="eyebrow">
+              {t(
+                "FULL-STACK OPEN SOURCE · SELF-HOSTED",
+                "全栈开源 · 私有化自托管",
+              )}
+            </p>
+            <h2 id="release-title">
+              {isZh ? (
+                <>
+                  全栈代码开源可控，
+                  <br />
+                  单容器连上数据库即可上线。
+                </>
+              ) : (
+                <>
+                  Full-stack open source.
+                  <br />
+                  Deploy with a single PostgreSQL database.
+                </>
+              )}
+            </h2>
+          </div>
+          <p>
+            {t(
+              "The gateway, dashboard, model catalog, and docs are MIT-licensed with zero black-box dependencies or license servers—your data stays 100% yours.",
+              "网关、管理控制台、模型目录与文档站点全部采用 MIT 开源许可，无黑盒依赖、无外部授权服务器，业务数据 100% 掌握在您自己手中。",
+            )}
+          </p>
+        </div>
+        <div className="release-grid">
+          <article className="release-card" data-reveal data-spotlight>
+            <span className="phase available">
+              <span className="status-dot is-live"></span>
+              {t("READY TO DEPLOY TODAY", "开箱即用 · 立即部署")}
+            </span>
+            <h3>
+              {t("Included in the open-source stack", "全栈开源版本已内置能力")}
+            </h3>
+            <ul>
+              <li>
                 {t(
-                  "Ready to launch your own model API platform?",
-                  "准备好搭建属于你自己的模型 API 商业平台了吗？",
+                  "High-speed Rust gateway (/v1/chat/completions, /v1/responses, /v1/messages)",
+                  "Rust 高性能网关（兼容 /v1/chat/completions、/v1/responses 与 /v1/messages）",
+                )}
+              </li>
+              <li>
+                {t(
+                  "Smart Model Pools with conditional routing, failover, and strategy audit",
+                  "智能模型池（支持条件分流、主备容灾切换与毛利/延迟策略审计）",
+                )}
+              </li>
+              <li>
+                {t(
+                  "Company balance, workspace budgets, and per-key spend protection",
+                  "企业账户余额、工作空间预算上限与 API 密钥并发防刷穿保护",
+                )}
+              </li>
+              <li>
+                {t(
+                  "Full-trace request logs and separated cost vs. customer retail billing",
+                  "全链路调用明细日志，以及采购底价与对客售价完全分离的计费账本",
+                )}
+              </li>
+              <li>
+                {t(
+                  "Public Model Catalog, saved multi-model Chat, and Seedance Video studio",
+                  "公开模型目录、云端同步的多模型对话，以及 Seedance 视频生成工作台",
+                )}
+              </li>
+            </ul>
+            <a className="text-link" href={links.deployment}>
+              {t("Single-container deployment guide", "查看单容器部署指南")}{" "}
+              <span aria-hidden="true">→</span>
+            </a>
+          </article>
+          <article
+            className="release-card upcoming"
+            data-reveal
+            data-spotlight
+            style={stagger(1)}
+          >
+            <span className="phase">
+              {t("CONTINUOUS PRODUCTION QUALIFICATION", "生产级准入持续演进")}
+            </span>
+            <h3>
+              {t(
+                "Transparent engineering roadmap",
+                "公开透明的生产准入与演进清单",
+              )}
+            </h3>
+            <ul>
+              <li>
+                {t(
+                  "Continuous protocol & edge-case verification across upstream Providers",
+                  "持续扩展各家上游供应商与新模型的协议兼容性验证",
+                )}
+              </li>
+              <li>
+                {t(
+                  "Commercial payment gateways and automated Provider settlement workflows",
+                  "更多在线支付充值渠道与上游供应商自动结算闭环",
+                )}
+              </li>
+              <li>
+                {t(
+                  "Async video generation lifecycle and media retention policies",
+                  "异步视频生成全生命周期管理与媒体存储保留策略",
+                )}
+              </li>
+              <li>
+                {t(
+                  "Multi-node high availability, crash recovery, and zero-downtime upgrades",
+                  "多节点高可用部署、故障自动恢复与零停机平滑升级验证",
+                )}
+              </li>
+            </ul>
+            <a className="text-link" href={links.release}>
+              {t("Release acceptance matrix", "查看发布准入矩阵")}{" "}
+              <span aria-hidden="true">↗</span>
+            </a>
+          </article>
+        </div>
+      </section>
+
+      {/* 6. LATEST BLOG POSTS */}
+      {latestPosts.length > 0 && (
+        <section
+          className="section container landing-blog"
+          aria-labelledby="landing-blog-title"
+        >
+          <div className="section-heading" data-reveal>
+            <div>
+              <p className="eyebrow">
+                {t("FROM THE NIU BLOG", "来自 NIU 牛元博客")}
+              </p>
+              <h2 id="landing-blog-title">
+                {isZh ? (
+                  <>
+                    来自网关工程团队的
+                    <br />
+                    架构与产品实践笔记。
+                  </>
+                ) : (
+                  <>
+                    Engineering notes from
+                    <br />
+                    the gateway team.
+                  </>
                 )}
               </h2>
+            </div>
+            <div className="landing-blog-intro">
               <p>
                 {t(
-                  "Try the live workspace console immediately, or self-host the entire MIT stack with Docker and PostgreSQL in five minutes.",
-                  "立即打开在线控制台体验完整流程，或使用 Docker 连接 PostgreSQL 在五分钟内完成全栈私有化部署。",
+                  "Gateway performance, financial accounting, and operating model APIs in production.",
+                  "分享网关性能优化、双盲财务账本设计以及模型 API 生产运营经验。",
                 )}
               </p>
+              <a className="text-link" href="/blog/">
+                {t("All articles", "全部文章")}{" "}
+                <span aria-hidden="true">→</span>
+              </a>
             </div>
-
-            <div className="niu-closing-actions">
-              <Button asChild size="lg" className="niu-btn-primary">
-                <a href={links.dashboard}>
-                  <span>{t("Open dashboard", "打开控制台")}</span>
-                  <ArrowRight aria-hidden="true" />
-                </a>
-              </Button>
-              <Button
-                asChild
-                variant="outline"
-                size="lg"
-                className="niu-btn-outline"
+          </div>
+          <div
+            className={`landing-blog-list${latestPosts.length === 1 ? " is-single" : ""}`}
+          >
+            {latestPosts.map((post, index) => (
+              <a
+                key={post.href}
+                className="landing-blog-card"
+                href={post.href}
+                data-reveal
+                data-spotlight
+                style={stagger(index)}
               >
-                <a href={links.quickstart}>
-                  <span>{t("Read quickstart guide", "查看快速入门指南")}</span>
-                </a>
-              </Button>
+                <div className="landing-blog-main">
+                  <div className="landing-blog-meta">
+                    <span className="landing-blog-category">
+                      {post.category}
+                    </span>
+                    <time dateTime={post.publishedAt}>{post.dateLabel}</time>
+                    <span>{post.readingTime}</span>
+                  </div>
+                  <h3>
+                    {isZh && post.chineseTitle ? post.chineseTitle : post.title}
+                  </h3>
+                  <p>{post.description}</p>
+                  <span className="text-link">
+                    {t("Read article", "阅读全文")}{" "}
+                    <IconArrowRight size={16} aria-hidden="true" />
+                  </span>
+                </div>
+                {latestPosts.length === 1 &&
+                  post.highlights &&
+                  post.highlights.length > 0 && (
+                    <div className="landing-blog-chapters">
+                      <span className="small-label">
+                        {t("INSIDE THIS ESSAY", "本文核心章节")}
+                      </span>
+                      <ol>
+                        {post.highlights.map((heading, hIndex) => (
+                          <li key={heading}>
+                            <span>{String(hIndex + 1).padStart(2, "0")}</span>
+                            <strong>{heading}</strong>
+                          </li>
+                        ))}
+                      </ol>
+                    </div>
+                  )}
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* 7. CONCISE FAQ */}
+      <section
+        className="section container faq-section"
+        aria-labelledby="faq-title"
+      >
+        <div className="section-heading" data-reveal>
+          <div>
+            <p className="eyebrow">
+              {t("FREQUENTLY ASKED QUESTIONS", "常见问题解答 (FAQ)")}
+            </p>
+            <h2 id="faq-title">
+              {isZh ? (
+                <>
+                  在投入生产环境前
+                  <br />
+                  最受关注的核心问题。
+                </>
+              ) : (
+                <>
+                  Key questions before
+                  <br />
+                  you run in production.
+                </>
+              )}
+            </h2>
+          </div>
+          <div className="faq-intro">
+            <p>
+              {t(
+                "What operators verify before putting Niu in front of customer traffic and billing.",
+                "模型服务运营商在将 Niu 牛元接入生产流量与客户计费前通常会核实的关键细节。",
+              )}
+            </p>
+            <div className="faq-intro-links">
+              <a className="text-link" href="/docs/">
+                {t("Read the docs", "阅读技术文档")}{" "}
+                <span aria-hidden="true">→</span>
+              </a>
+              <a className="text-link" href={`${links.repo}/issues`}>
+                {t("Ask on GitHub", "在 GitHub 提问")}{" "}
+                <span aria-hidden="true">↗</span>
+              </a>
             </div>
+          </div>
+        </div>
+        <div className="faq-list" data-reveal>
+          {faqs.map((faq, idx) => (
+            <details key={faq.question} open={idx === 0 || undefined}>
+              <summary>
+                <span className="faq-meta">
+                  <span className="faq-index">{faq.index}</span>
+                  <span className="faq-category">
+                    {isZh ? faq.categoryZh : faq.category}
+                  </span>
+                </span>
+                <span className="faq-question">
+                  {isZh ? faq.questionZh : faq.question}
+                </span>
+                <span className="faq-toggle" aria-hidden="true" />
+              </summary>
+              <div className="faq-body">
+                <p>{isZh ? faq.answerZh : faq.answer}</p>
+                <a className="text-link faq-doc-link" href={faq.linkHref}>
+                  {isZh ? faq.linkLabelZh : faq.linkLabel}{" "}
+                  <span aria-hidden="true">→</span>
+                </a>
+              </div>
+            </details>
+          ))}
+        </div>
+      </section>
+
+      {/* 8. CLOSING CTA */}
+      <section
+        className="closing-stage container"
+        aria-labelledby="closing-title"
+      >
+        <div className="closing" data-reveal>
+          <span className="closing-glow" aria-hidden="true" />
+          <p className="eyebrow">
+            {t(
+              "FULL-STACK OPEN SOURCE · 10× PERFORMANCE · COMMERCIAL-READY",
+              "全栈开源 · 10 倍性能 · 丰富商业化功能",
+            )}
+          </p>
+          <h2 id="closing-title">
+            {isZh ? (
+              <>
+                立即部署 Niu 牛元，
+                <br />
+                <span className="accent">开启您的模型 API 商业服务。</span>
+              </>
+            ) : (
+              <>
+                Deploy Niu today and
+                <br />
+                <span className="accent">launch your model API service.</span>
+              </>
+            )}
+          </h2>
+          <p className="closing-copy">
+            {t(
+              "Self-host the full MIT stack with your own PostgreSQL in minutes, or try the live workspace console right now.",
+              "几分钟内连接您自己的 PostgreSQL 私有化部署全栈开源系统，或立即进入在线控制台体验完整功能。",
+            )}
+          </p>
+          <div className="actions hero-actions">
+            <Button asChild size="lg" className="cta-primary">
+              <a href={links.dashboard}>
+                <IconLayoutDashboard aria-hidden="true" />
+                {t("Open dashboard", "打开控制台")}
+                <IconArrowRight className="cta-arrow" aria-hidden="true" />
+              </a>
+            </Button>
+            <Button
+              asChild
+              size="lg"
+              variant="outline"
+              className="cta-secondary"
+            >
+              <a href={links.quickstart}>{t("Get started", "快速入门")}</a>
+            </Button>
+            <Button asChild size="lg" variant="ghost" className="cta-ghost">
+              <a href={links.repo}>
+                <IconBrandGithub aria-hidden="true" />
+                {t("Star on GitHub", "GitHub Star")}
+              </a>
+            </Button>
           </div>
         </div>
       </section>
