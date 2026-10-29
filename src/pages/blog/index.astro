@@ -1,10 +1,16 @@
 ---
-import { getCollection } from "astro:content";
+import { getCollection, render } from "astro:content";
 import { publishedPosts } from "../../content/blog-policy";
-import { IconPin } from "@tabler/icons-react";
+import { IconArrowRight, IconPin } from "@tabler/icons-react";
 import BlogLayout from "../../layouts/BlogLayout.astro";
 
 const posts = publishedPosts(await getCollection("blog"));
+const entries = await Promise.all(
+  posts.map(async (post) => {
+    const { headings } = await render(post);
+    return { post, sections: headings.filter((heading) => heading.depth === 2) };
+  }),
+);
 
 function formatDate(isoDate: string): string {
   const [year, month, day] = isoDate.split("-").map(Number);
@@ -41,20 +47,23 @@ function getReadingTime(body: string | undefined, explicit?: string): string {
   </header>
 
   <section class="blog-list" aria-label="Published articles">
-    {posts.map((post) => {
+    {entries.map(({ post, sections }) => {
       const href = `/blog/${post.id}/`;
       const readingTime = getReadingTime(post.body, post.data.readingTime);
       return (
         <article class="blog-entry">
-          <div class="blog-entry-meta">
-            {post.data.pinned && <span class="blog-pinned"><IconPin size={14} aria-hidden="true" /><span data-en="Pinned" data-zh="置顶">Pinned</span></span>}
-            <span class="blog-entry-category">{post.data.category}</span>
-            <time datetime={post.data.publishedAt}>
-              {formatDate(post.data.publishedAt)}
-            </time>
-            <span>{readingTime}</span>
-          </div>
           <div class="blog-entry-body">
+            <div class="blog-entry-meta">
+              {post.data.pinned && (
+                <span class="blog-pinned">
+                  <IconPin size={13} aria-hidden="true" />
+                  <span data-en="Pinned" data-zh="置顶">Pinned</span>
+                </span>
+              )}
+              <span class="blog-entry-category">{post.data.category}</span>
+              <time datetime={post.data.publishedAt}>{formatDate(post.data.publishedAt)}</time>
+              <span>{readingTime}</span>
+            </div>
             <h2>
               <a href={href}>{post.data.title}</a>
             </h2>
@@ -64,10 +73,32 @@ function getReadingTime(body: string | undefined, explicit?: string): string {
               </p>
             )}
             <p class="blog-entry-summary">{post.data.description}</p>
-            <a class="blog-read-link" href={href} data-en="Read article" data-zh="阅读全文">
-              Read article
-            </a>
+            <div class="blog-entry-footer">
+              <span class="blog-byline">
+                <span class="blog-byline-avatar" aria-hidden="true">
+                  <img src="/site-assets/brand/niu-mark.png" alt="" width="20" height="20" />
+                </span>
+                <span class="blog-byline-author">{post.data.author}</span>
+              </span>
+              <a class="blog-read-link" href={href} aria-label={`Read article: ${post.data.title}`}>
+                <span data-en="Read article" data-zh="阅读全文">Read article</span>
+                <IconArrowRight size={15} aria-hidden="true" />
+              </a>
+            </div>
           </div>
+          {sections.length > 1 && (
+            <nav class="blog-entry-outline" aria-label={`${post.data.title} sections`}>
+              <p data-en="In this article" data-zh="本文内容">In this article</p>
+              <ol>
+                {sections.map((section, index) => (
+                  <li>
+                    <span class="blog-entry-outline-index">{String(index + 1).padStart(2, "0")}</span>
+                    <a href={`${href}#${section.slug}`}>{section.text}</a>
+                  </li>
+                ))}
+              </ol>
+            </nav>
+          )}
         </article>
       );
     })}

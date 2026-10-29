@@ -109,8 +109,10 @@ html.is-scrolled .public-header {
 }
 .release-tag {
   display: inline-flex;
+  flex: 0 0 auto;
   align-items: center;
   height: 24px;
+  white-space: nowrap;
   padding: 0 10px;
   border-radius: 999px;
   background: linear-gradient(135deg, var(--cta-from), var(--cta-to));
@@ -737,16 +739,22 @@ html.is-scrolled .public-header {
 .code-card pre {
   flex: 1;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   padding: 26px 24px;
   animation: panel-in 0.3s ease both;
 }
 .code-footnote {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 8px;
   border-top: 1px solid var(--data-divider);
   background: color-mix(in oklab, var(--muted) 40%, var(--card));
+}
+
+/* Keep the live dot on the first line when the trace wraps. */
+.code-footnote > .status-dot {
+  flex: 0 0 auto;
+  margin-top: calc((1lh - 6px) / 2);
 }
 
 /* ---------- Closing CTA ---------- */

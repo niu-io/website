@@ -79,22 +79,24 @@ export default function CompareBenchmark() {
           ))}
         </TableBody>
       </Table>
-      <p>
+      <p className="compare-note">
         {t(
           "Configurations differ: Niu records PostgreSQL admission and batched completion; New API uses cached token access and batched usage logging; LiteLLM Proxy uses an in-memory master key with database spend logging disabled. PostgreSQL synchronous_commit was off. Consult the full report before interpreting these figures.",
           "配置差异说明：Niu 牛元记录 PostgreSQL 转发前准入与批量完成结算；New API 启用内存缓存与批量日志；LiteLLM Proxy 使用内存 master_key 并关闭数据库日志。详细方法论请参阅完整基准报告。",
         )}
       </p>
-      <Button asChild variant="outline">
-        <a href="/docs/guides/gateway-benchmarks/">
-          {t("Read the full benchmark", "阅读完整基准测试报告")}
-        </a>
-      </Button>{" "}
-      <Button asChild variant="outline">
-        <a href="https://github.com/niu-io/niu/blob/main/docs/reference/gateway-performance-benchmark.md">
-          {t("Methodology and reproduction steps", "测试方法论与复现步骤")}
-        </a>
-      </Button>
+      <div className="compare-actions">
+        <Button asChild variant="outline">
+          <a href="/docs/guides/gateway-benchmarks/">
+            {t("Read the full benchmark", "阅读完整基准测试报告")}
+          </a>
+        </Button>
+        <Button asChild variant="outline">
+          <a href="https://github.com/niu-io/niu/blob/main/docs/reference/gateway-performance-benchmark.md">
+            {t("Methodology and reproduction steps", "测试方法论与复现步骤")}
+          </a>
+        </Button>
+      </div>
     </section>
   );
 }

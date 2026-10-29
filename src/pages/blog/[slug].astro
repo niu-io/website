@@ -1,5 +1,6 @@
 ---
 import { getCollection, render } from "astro:content";
+import { IconArrowUp, IconLink } from "@tabler/icons-react";
 import { publishedPosts } from "../../content/blog-policy";
 import BlogLayout from "../../layouts/BlogLayout.astro";
 import BlogArticleFooter from "../../components/BlogArticleFooter";
@@ -13,7 +14,8 @@ export async function getStaticPaths() {
 }
 
 const { post } = Astro.props;
-const { Content } = await render(post);
+const { Content, headings } = await render(post);
+const sections = headings.filter((heading) => heading.depth === 2);
 
 function formatDate(isoDate: string): string {
   const [year, month, day] = isoDate.split("-").map(Number);
@@ -33,6 +35,8 @@ function getReadingTime(body: string | undefined, explicit?: string): string {
 }
 
 const readingTime = getReadingTime(post.body, post.data.readingTime);
+const published = formatDate(post.data.publishedAt);
+const updated = post.data.updatedAt ? formatDate(post.data.updatedAt) : null;
 ---
 
 <BlogLayout
@@ -42,25 +46,11 @@ const readingTime = getReadingTime(post.body, post.data.readingTime);
 >
   <article class="blog-article">
     <header class="blog-article-header">
-      <a class="blog-back" href="/blog/" data-en="← All articles" data-zh="← 返回全部文章">
-        ← All articles
-      </a>
-      <div class="blog-article-meta">
-        <span class="blog-entry-category">{post.data.category}</span>
-        <time datetime={post.data.publishedAt}>
-          {formatDate(post.data.publishedAt)}
-        </time>
-        <span>{readingTime}</span>
-        <span>{post.data.author}</span>
-        {post.data.updatedAt && (
-          <span>
-            Updated{" "}
-            <time datetime={post.data.updatedAt}>
-              {formatDate(post.data.updatedAt)}
-            </time>
-          </span>
-        )}
-      </div>
+      <nav class="blog-breadcrumb" aria-label="Breadcrumb">
+        <a href="/blog/" data-en="Blog" data-zh="博客">Blog</a>
+        <span aria-hidden="true">/</span>
+        <span>{post.data.category}</span>
+      </nav>
       <h1>{post.data.title}</h1>
       {post.data.chineseTitle && (
         <p class="blog-article-zh" lang="zh-CN">
@@ -68,15 +58,83 @@ const readingTime = getReadingTime(post.body, post.data.readingTime);
         </p>
       )}
       <p class="blog-article-lead">{post.data.description}</p>
+      <div class="blog-byline">
+        <span class="blog-byline-avatar" aria-hidden="true">
+          <img src="/site-assets/brand/niu-mark.png" alt="" width="20" height="20" />
+        </span>
+        <span class="blog-byline-author">{post.data.author}</span>
+        <span class="blog-byline-dot" aria-hidden="true">·</span>
+        <time datetime={post.data.publishedAt}>{published}</time>
+        <span class="blog-byline-dot" aria-hidden="true">·</span>
+        <span>{readingTime}</span>
+      </div>
     </header>
 
-    <div class="blog-prose">
-      <Content />
+    <div class="blog-article-layout">
+      <div class="blog-prose">
+        <Content />
+      </div>
+
+      <aside class="blog-rail" aria-label="Article details">
+        <dl class="blog-rail-facts">
+          <div>
+            <dt data-en="Published" data-zh="发布">Published</dt>
+            <dd><time datetime={post.data.publishedAt}>{published}</time></dd>
+          </div>
+          {updated && (
+            <div>
+              <dt data-en="Updated" data-zh="更新">Updated</dt>
+              <dd><time datetime={post.data.updatedAt}>{updated}</time></dd>
+            </div>
+          )}
+          <div>
+            <dt data-en="Reading time" data-zh="阅读时长">Reading time</dt>
+            <dd>{readingTime}</dd>
+          </div>
+        </dl>
+        {sections.length > 1 && (
+          <nav class="blog-toc" aria-labelledby="blog-toc-title">
+            <p id="blog-toc-title" data-en="On this page" data-zh="本文目录">On this page</p>
+            <ol>
+              {sections.map((section) => (
+                <li><a href={`#${section.slug}`} data-toc-link={section.slug}>{section.text}</a></li>
+              ))}
+            </ol>
+          </nav>
+        )}
+        <div class="blog-rail-actions">
+          <button type="button" class="blog-rail-action" data-copy-link>
+            <IconLink size={15} aria-hidden="true" />
+            <span data-copy-label data-en="Copy link" data-zh="复制链接">Copy link</span>
+          </button>
+          <a class="blog-rail-action" href="#main">
+            <IconArrowUp size={15} aria-hidden="true" />
+            <span data-en="Back to top" data-zh="回到顶部">Back to top</span>
+          </a>
+        </div>
+      </aside>
     </div>
 
     <BlogArticleFooter client:load />
     <script is:inline>
-      (()=>{const sync=()=>{const zh=document.documentElement.dataset.locale==='zh-CN'||document.documentElement.lang==='zh-CN';document.querySelectorAll('.blog-article [data-en][data-zh]').forEach(el=>{el.textContent=el.getAttribute(zh?'data-zh':'data-en')||'';});};sync();window.addEventListener('niu-locale-change',sync);window.addEventListener('storage',sync);})();
+      (()=>{
+        const isZh=()=>document.documentElement.dataset.locale==='zh-CN'||document.documentElement.lang==='zh-CN';
+        const sync=()=>{const zh=isZh();document.querySelectorAll('.blog-article [data-en][data-zh]').forEach(el=>{el.textContent=el.getAttribute(zh?'data-zh':'data-en')||'';});};
+        sync();window.addEventListener('niu-locale-change',sync);window.addEventListener('storage',sync);
+        const copy=document.querySelector('[data-copy-link]');
+        const label=copy?.querySelector('[data-copy-label]');
+        copy?.addEventListener('click',async()=>{
+          try{await navigator.clipboard.writeText(location.href.split('#')[0]);if(label)label.textContent=isZh()?'已复制':'Copied';}
+          catch{if(label)label.textContent=isZh()?'复制失败':'Copy failed';}
+          setTimeout(()=>{if(label)label.textContent=label.getAttribute(isZh()?'data-zh':'data-en')||'';},1800);
+        });
+        const links=[...document.querySelectorAll('[data-toc-link]')];
+        if(!links.length||!('IntersectionObserver' in window))return;
+        const targets=links.map(link=>document.getElementById(link.dataset.tocLink)).filter(Boolean);
+        const mark=id=>links.forEach(link=>link.toggleAttribute('aria-current',link.dataset.tocLink===id));
+        const observer=new IntersectionObserver(entries=>{const visible=entries.filter(entry=>entry.isIntersecting).sort((a,b)=>a.boundingClientRect.top-b.boundingClientRect.top);if(visible[0])mark(visible[0].target.id);},{rootMargin:'-96px 0px -65% 0px'});
+        targets.forEach(target=>observer.observe(target));
+      })();
     </script>
   </article>
 </BlogLayout>
