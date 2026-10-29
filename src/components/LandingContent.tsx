@@ -377,30 +377,30 @@ const volumeHistogramBars = [
 const gatewaySteps = [
   {
     step: "01",
-    title: "Bind upstream Provider credentials to a route pool alias",
-    titleZh: "将上游供应商凭据绑定至路由池模型别名",
+    title: "Connect upstream Providers and price your model pools",
+    titleZh: "第一步：接入上游渠道，配置模型池与售价",
     detail:
-      "Keep Anthropic, OpenRouter, and Vertex credentials encrypted server-side behind one customer model name.",
+      "Add Anthropic, OpenRouter, or Vertex keys server-side, group them into failover model pools, and set your customer selling rates.",
     detailZh:
-      "将 Anthropic、OpenRouter 与 Vertex 等密钥在服务端加密托管，统一暴露为面向客户的单一模型名称。",
+      "在后台填入 Anthropic、OpenRouter、火山方舟等上游密钥，组合成主备容灾的模型池，并设定对外销售单价或透传规则。",
   },
   {
     step: "02",
-    title: "Issue a workspace API key with model grants and spending caps",
-    titleZh: "签发具备模型授权与消费上限的工作空间 API 密钥",
+    title: "Issue workspace API keys with model & budget limits",
+    titleZh: "第二步：为客户或团队签发专属 API 密钥",
     detail:
-      "Scope each key to authorized models and reserve company, workspace, and key budgets before dispatch.",
+      "Create customer workspaces and scoped API keys with per-key spending caps and authorized model lists.",
     detailZh:
-      "按密钥限定可调用的模型范围，并在转发前同步校验企业、工作空间与密钥三级预算。",
+      "一键创建客户工作空间与 API 密钥，按需限制可调用的模型范围、并发与消费额度上限。",
   },
   {
     step: "03",
-    title: "Stream responses while Niu settles usage and customer charges",
-    titleZh: "流式返回响应并实时完成用量与客户费率结算",
+    title: "Change one Base URL—Niu handles failover and billing",
+    titleZh: "第三步：改一行地址直接调用，自动完成扣费与对账",
     detail:
-      "Every call links its operation, upstream attempts, SSE token count, and settled customer tariff in PostgreSQL.",
+      "Clients stream responses with zero code changes while Niu handles automatic failover, token metering, and real-time billing.",
     detailZh:
-      "每次请求均在 PostgreSQL 中关联操作记录、上游尝试、SSE Token 用量以及已结算的客户费率。",
+      "客户端无需改动业务代码即可流式调用；网关自动完成主备切换、Token 计量、实时扣费与毛利统计。",
   },
 ];
 
@@ -473,13 +473,13 @@ export default function LandingContent({
           <a
             className="release-link hero-enter"
             style={stagger(0)}
-            href="#benchmark"
+            href="#product"
           >
-            <span className="release-tag">{t("Benchmark", "性能基准")}</span>
+            <span className="release-tag">{t("Why Niu", "核心优势")}</span>
             <span>
               {t(
-                "MIT open source · 3,239 RPS Rust gateway · 10.7× LiteLLM",
-                "MIT 开源 · 3,239 RPS Rust 网关 · 10.7 倍 LiteLLM 吞吐",
+                "Full-stack open source · 10× performance · Rich commercial features",
+                "全栈开源 · 10 倍性能 · 丰富商业化功能",
               )}
             </span>
             <IconArrowRight size={14} aria-hidden="true" />
@@ -487,9 +487,9 @@ export default function LandingContent({
           <h1 id="hero-title" className="hero-enter" style={stagger(1)}>
             {isZh ? (
               <>
-                构建并运营您的
+                从模型转发到商业变现，
                 <br />
-                <span className="accent">模型 API 商业服务。</span>
+                <span className="accent">一套系统全部跑通。</span>
               </>
             ) : (
               <>
@@ -501,8 +501,8 @@ export default function LandingContent({
           </h1>
           <p className="hero-description hero-enter" style={stagger(2)}>
             {t(
-              "High-throughput Rust AI gateway with independent customer tariffs, attempt-level request evidence, and self-service Chat & Video workspaces.",
-              "高吞吐 Rust AI 网关，内置独立客户定价体系、尝试级全链路请求证据，以及自助式生成对话与视频工作空间。",
+              "The full-stack open-source AI gateway in Rust—combining 10× proxy throughput with smart model pools, flexible retail pricing, customer balance controls, and built-in Chat & Video workspaces.",
+              "基于 Rust 打造的全栈开源 AI 网关——兼具 10 倍于传统代理的并发性能，内置智能模型池、灵活加价计费、多级余额风控与对话/视频工作台。",
             )}
           </p>
           <div className="actions hero-actions hero-enter" style={stagger(3)}>
@@ -1013,9 +1013,7 @@ export default function LandingContent({
                             onClick={() => setSelectedLogIndex(1)}
                           >
                             <ShieldAlert size={13} />
-                            <span>
-                              {t("Blocked & failed", "拦截与失败")}
-                            </span>
+                            <span>{t("Blocked & failed", "拦截与失败")}</span>
                           </button>
                           <button
                             type="button"
@@ -1078,7 +1076,10 @@ export default function LandingContent({
                                 {t("All statuses", "全部状态")}
                               </span>
                               <span className="demo-filter-chip">
-                                {t("Pool: claude-sonnet-4", "路由池：claude-sonnet-4")}
+                                {t(
+                                  "Pool: claude-sonnet-4",
+                                  "路由池：claude-sonnet-4",
+                                )}
                               </span>
                             </div>
                             <div className="demo-subtoolbar-right">
@@ -1195,7 +1196,8 @@ export default function LandingContent({
                               <strong>
                                 {selectedLog.inputTokens}{" "}
                                 <small>
-                                  {t("Cached", "缓存")} {selectedLog.cachedTokens}
+                                  {t("Cached", "缓存")}{" "}
+                                  {selectedLog.cachedTokens}
                                 </small>
                               </strong>
                             </div>
@@ -1521,7 +1523,7 @@ export default function LandingContent({
                     </div>
                   )}
 
-                      {/* SURFACE 2: ADMIN / FINANCIAL STATEMENTS (features/commercial-position/page.tsx) */}
+                  {/* SURFACE 2: ADMIN / FINANCIAL STATEMENTS (features/commercial-position/page.tsx) */}
                   {activePreviewIndex === 2 && (
                     <div className="investigation demo-page-surface">
                       <div className="demo-page-header">
@@ -1915,7 +1917,9 @@ export default function LandingContent({
                               onClick={() => setActiveGenerationsMode("video")}
                             >
                               <Film size={14} />
-                              <span>{t("Seedance video", "Seedance 视频")}</span>
+                              <span>
+                                {t("Seedance video", "Seedance 视频")}
+                              </span>
                             </button>
                           </div>
                           <span className="demo-filter-chip">
@@ -2204,7 +2208,9 @@ export default function LandingContent({
                     <span className="pillar-icon" aria-hidden="true">
                       <PillarIcon size={20} stroke={1.75} />
                     </span>
-                    <span className="pillar-metric">{pillar.metric}</span>
+                    <span className="pillar-metric">
+                      {isZh ? pillar.metricZh : pillar.metric}
+                    </span>
                   </div>
                   <h3>{isZh ? pillar.titleZh : pillar.title}</h3>
                   <p>{isZh ? pillar.detailZh : pillar.detail}</p>
@@ -2224,14 +2230,17 @@ export default function LandingContent({
         <div className="benchmark-heading" data-reveal>
           <div>
             <p className="eyebrow">
-              {t("AI GATEWAY PERFORMANCE BENCHMARK", "AI 网关性能基准测试")}
+              {t(
+                "10× PERFORMANCE · MEASURED BENCHMARKS",
+                "10 倍性能优势 · 实测数据说话",
+              )}
             </p>
             <h2 id="benchmark-title">
               {isZh ? (
                 <>
-                  Rust 驱动 3,239 RPS 峰值吞吐。
+                  单机 3,239 RPS 峰值吞吐，
                   <br />
-                  10.7 倍 LiteLLM · 3.7 倍 New API。
+                  10.7 倍于 LiteLLM · 3.7 倍于 New API。
                 </>
               ) : (
                 <>
@@ -2245,16 +2254,18 @@ export default function LandingContent({
           <p>
             {isZh ? (
               <>
-                使用开源基准测试工具 <code>ai-gateway-bench</code> 在 Apple M4 与
-                PostgreSQL 17.11 环境下基于确定性 0ms 模拟上游实测——Niu
-                牛元全程执行完整的 ACID 准入与批量结算持久化。
+                为什么用 Rust
+                重写网关？因为高并发下网关自己绝不能成为瓶颈。使用开源基准工具{" "}
+                <code>ai-gateway-bench</code>{" "}
+                实测，即使完整开启数据库记账与额度风控，Niu
+                牛元依然保持毫秒级延迟与 18 MB 极低内存占用。
               </>
             ) : (
               <>
-                Measured with the open-source <code>ai-gateway-bench</code>{" "}
-                harness against a deterministic 0ms mock upstream on Apple M4
-                with PostgreSQL 17.11—while Niu persists full ACID admission and
-                batched completions.
+                Why Rust? Because your gateway should never be the bottleneck.
+                Measured with <code>ai-gateway-bench</code> on Apple M4 with
+                PostgreSQL 17.11, Niu sustains 3,239 RPS with full database
+                accounting and 18.2 MB idle RAM.
               </>
             )}
           </p>
@@ -2433,11 +2444,12 @@ export default function LandingContent({
               ) : (
                 <>
                   <strong>Fairness note:</strong> Niu v0.2.4 ran with full ACID
-                  PostgreSQL pre-dispatch admission &amp; batched completion; New
-                  API (45fbb14) ran with <code>MEMORY_CACHE_ENABLED=true</code>;
-                  LiteLLM Proxy (v1.104.0) ran in stateless{" "}
-                  <code>master_key</code> mode with DB logs disabled. Always
-                  qualify your own deployment and workload.
+                  PostgreSQL pre-dispatch admission &amp; batched completion;
+                  New API (45fbb14) ran with{" "}
+                  <code>MEMORY_CACHE_ENABLED=true</code>; LiteLLM Proxy
+                  (v1.104.0) ran in stateless <code>master_key</code> mode with
+                  DB logs disabled. Always qualify your own deployment and
+                  workload.
                 </>
               )}
             </p>
@@ -2467,28 +2479,28 @@ export default function LandingContent({
         <div className="section-heading" data-reveal>
           <div>
             <p className="eyebrow">
-              {t("COMPLETE OPERATOR PLATFORM", "完整的模型运营商平台")}
+              {t("RICH COMMERCIAL CAPABILITIES", "丰富商业化功能 · 全栈闭环")}
             </p>
             <h2 id="product-title">
               {isZh ? (
                 <>
-                  销售与运营模型 API 服务
+                  不用再东拼西凑，
                   <br />
-                  所需的全部核心能力。
+                  一套系统搞定模型商业化。
                 </>
               ) : (
                 <>
-                  Everything required to sell
+                  Stop stitching tools together.
                   <br />
-                  and operate model access.
+                  Run your model business in one stack.
                 </>
               )}
             </h2>
           </div>
           <p>
             {t(
-              "Replace stitched-together proxies, billing scripts, and chat wrappers with one cohesive system backed by PostgreSQL.",
-              "告别临时拼凑的转发代理、计费脚本与套壳前端，用一套基于 PostgreSQL 的内聚系统支撑商业闭环。",
+              "Skip the fragile mix of proxy scripts, billing cron jobs, and chat wrappers. Niu ships routing, pricing, quota controls, and customer workspaces out of the box.",
+              "省去自己拼凑转发脚本、计费定时任务和套壳前端的麻烦，开箱即享生产级模型池路由、灵活定价、余额风控与客户工作台。",
             )}
           </p>
         </div>
@@ -2530,14 +2542,14 @@ export default function LandingContent({
         <div className="container section gateway-grid">
           <div className="gateway-copy" data-reveal>
             <p className="eyebrow">
-              {t("DROP-IN COMPATIBILITY", "即插即用协议兼容")}
+              {t("DROP-IN COMPATIBILITY", "零代码改造 · 即插即用")}
             </p>
             <h2 id="gateway-title">
               {isZh ? (
                 <>
-                  单一网关端点，无缝接入
+                  改一行接口地址，
                   <br />
-                  主流 SDK 与编程智能体。
+                  无缝接入所有 SDK 与编程助手。
                 </>
               ) : (
                 <>
@@ -2550,7 +2562,7 @@ export default function LandingContent({
             <p className="section-description">
               {t(
                 "Point any OpenAI-compatible client, Claude Code, or Codex at your Niu gateway using a scoped workspace API key.",
-                "使用工作空间 API 密钥，即可将任意 OpenAI 兼容客户端、Claude Code 或 Codex 直接指向您的 Niu 牛元网关。",
+                "无需修改现有业务代码，只需把 Base URL 指向您的 Niu 牛元网关，即可直接连接各类应用、Claude Code 与 Codex。",
               )}
             </p>
             <ul className="gateway-features">
@@ -2651,28 +2663,31 @@ export default function LandingContent({
         <div className="section-heading" data-reveal>
           <div>
             <p className="eyebrow">
-              {t("OPEN-SOURCE ARCHITECTURE & SCOPE", "开源架构与准入范围")}
+              {t(
+                "FULL-STACK OPEN SOURCE · SELF-HOSTED",
+                "全栈开源 · 私有化自托管",
+              )}
             </p>
             <h2 id="release-title">
               {isZh ? (
                 <>
-                  完整自托管开源核心，
+                  全栈代码开源可控，
                   <br />
-                  清晰掌握当前版本能力边界。
+                  单容器连上数据库即可上线。
                 </>
               ) : (
                 <>
-                  Self-host the complete core.
+                  Full-stack open source.
                   <br />
-                  Know what is qualified today.
+                  Deploy with a single PostgreSQL database.
                 </>
               )}
             </h2>
           </div>
           <p>
             {t(
-              "Niu’s public core is MIT-licensed and runs against your own PostgreSQL instance without private source or license servers.",
-              "Niu 牛元开源核心采用 MIT 许可证，直接连接您自己的 PostgreSQL 实例运行，无需任何私有源码或外部授权服务。",
+              "The gateway, dashboard, model catalog, and docs are MIT-licensed with zero black-box dependencies or license servers—your data stays 100% yours.",
+              "网关、管理控制台、模型目录与文档站点全部采用 MIT 开源许可，无黑盒依赖、无外部授权服务器，业务数据 100% 掌握在您自己手中。",
             )}
           </p>
         </div>
@@ -2680,43 +2695,45 @@ export default function LandingContent({
           <article className="release-card" data-reveal data-spotlight>
             <span className="phase available">
               <span className="status-dot is-live"></span>
-              {t("READY TO DEPLOY & EVALUATE", "当前版本已就绪 · 可直接部署评估")}
+              {t("READY TO DEPLOY TODAY", "开箱即用 · 立即部署")}
             </span>
-            <h3>{t("Available in the current build", "当前版本已提供的能力")}</h3>
+            <h3>
+              {t("Included in the open-source stack", "全栈开源版本已内置能力")}
+            </h3>
             <ul>
               <li>
                 {t(
-                  "Rust gateway (/v1/chat/completions, /v1/responses, scoped /v1/messages)",
-                  "Rust 高性能网关（/v1/chat/completions、/v1/responses 与 /v1/messages）",
+                  "High-speed Rust gateway (/v1/chat/completions, /v1/responses, /v1/messages)",
+                  "Rust 高性能网关（兼容 /v1/chat/completions、/v1/responses 与 /v1/messages）",
                 )}
               </li>
               <li>
                 {t(
-                  "Provider credentials, model mappings, and weighted route pools",
-                  "模型供应商凭据管理、模型映射与加权优先级路由池",
+                  "Smart Model Pools with conditional routing, failover, and strategy audit",
+                  "智能模型池（支持条件分流、主备容灾切换与毛利/延迟策略审计）",
                 )}
               </li>
               <li>
                 {t(
-                  "Company funds, workspace budgets, and API-key spending holds",
-                  "企业资金池、工作空间预算上限与 API 密钥转发前额度预占",
+                  "Company balance, workspace budgets, and per-key spend protection",
+                  "企业账户余额、工作空间预算上限与 API 密钥并发防刷穿保护",
                 )}
               </li>
               <li>
                 {t(
-                  "Attempt-level request logs and independent customer tariff settlement",
-                  "尝试级（Attempt）请求日志与独立的客户销售费率结算",
+                  "Full-trace request logs and separated cost vs. customer retail billing",
+                  "全链路调用明细日志，以及采购底价与对客售价完全分离的计费账本",
                 )}
               </li>
               <li>
                 {t(
-                  "Public Model Catalog, saved Chat sessions, and Seedance Video UI",
-                  "公开模型目录、后端持久化生成对话以及 Seedance 视频生成界面",
+                  "Public Model Catalog, saved multi-model Chat, and Seedance Video studio",
+                  "公开模型目录、云端同步的多模型对话，以及 Seedance 视频生成工作台",
                 )}
               </li>
             </ul>
             <a className="text-link" href={links.deployment}>
-              {t("Single-container deployment guide", "单容器部署指南")}{" "}
+              {t("Single-container deployment guide", "查看单容器部署指南")}{" "}
               <span aria-hidden="true">→</span>
             </a>
           </article>
@@ -2727,32 +2744,37 @@ export default function LandingContent({
             style={stagger(1)}
           >
             <span className="phase">
-              {t("RELEASE QUALIFICATION IN PROGRESS", "生产准入持续验证中")}
+              {t("CONTINUOUS PRODUCTION QUALIFICATION", "生产级准入持续演进")}
             </span>
-            <h3>{t("Verify against your workload", "结合您的业务负载进行准入验证")}</h3>
+            <h3>
+              {t(
+                "Transparent engineering roadmap",
+                "公开透明的生产准入与演进清单",
+              )}
+            </h3>
             <ul>
               <li>
                 {t(
-                  "End-to-end Provider & protocol conformance across target models",
-                  "目标模型在各供应商与协议下的端到端一致性验证",
+                  "Continuous protocol & edge-case verification across upstream Providers",
+                  "持续扩展各家上游供应商与新模型的协议兼容性验证",
                 )}
               </li>
               <li>
                 {t(
-                  "Complete commercial merchant payment and Provider settlement gates",
-                  "完整的商业商户支付闭环与供应商结算准入",
+                  "Commercial payment gateways and automated Provider settlement workflows",
+                  "更多在线支付充值渠道与上游供应商自动结算闭环",
                 )}
               </li>
               <li>
                 {t(
-                  "Full Seedance video lifecycle and storage retention qualification",
-                  "Seedance 视频全生命周期与存储保留策略准入验证",
+                  "Async video generation lifecycle and media retention policies",
+                  "异步视频生成全生命周期管理与媒体存储保留策略",
                 )}
               </li>
               <li>
                 {t(
-                  "Multi-instance failover, crash recovery, and upgrade acceptance",
-                  "多实例故障切换、崩溃恢复与平滑升级验收",
+                  "Multi-node high availability, crash recovery, and zero-downtime upgrades",
+                  "多节点高可用部署、故障自动恢复与零停机平滑升级验证",
                 )}
               </li>
             </ul>
@@ -2799,7 +2821,8 @@ export default function LandingContent({
                 )}
               </p>
               <a className="text-link" href="/blog/">
-                {t("All articles", "全部文章")} <span aria-hidden="true">→</span>
+                {t("All articles", "全部文章")}{" "}
+                <span aria-hidden="true">→</span>
               </a>
             </div>
           </div>
@@ -2936,8 +2959,8 @@ export default function LandingContent({
           <span className="closing-glow" aria-hidden="true" />
           <p className="eyebrow">
             {t(
-              "OPEN-SOURCE AI GATEWAY & WORKSPACE",
-              "开源 AI 网关与工作空间平台",
+              "FULL-STACK OPEN SOURCE · 10× PERFORMANCE · COMMERCIAL-READY",
+              "全栈开源 · 10 倍性能 · 丰富商业化功能",
             )}
           </p>
           <h2 id="closing-title">
@@ -2945,20 +2968,20 @@ export default function LandingContent({
               <>
                 立即部署 Niu 牛元，
                 <br />
-                <span className="accent">跑通您的第一条模型路由。</span>
+                <span className="accent">开启您的模型 API 商业服务。</span>
               </>
             ) : (
               <>
-                Deploy Niu and run your
+                Deploy Niu today and
                 <br />
-                <span className="accent">first model route today.</span>
+                <span className="accent">launch your model API service.</span>
               </>
             )}
           </h2>
           <p className="closing-copy">
             {t(
-              "Self-host the MIT core against your own PostgreSQL, or open the hosted workspace dashboard.",
-              "连接您自己的 PostgreSQL 私有化部署 MIT 开源核心，或直接体验在线托管工作空间。",
+              "Self-host the full MIT stack with your own PostgreSQL in minutes, or try the live workspace console right now.",
+              "几分钟内连接您自己的 PostgreSQL 私有化部署全栈开源系统，或立即进入在线控制台体验完整功能。",
             )}
           </p>
           <div className="actions hero-actions">

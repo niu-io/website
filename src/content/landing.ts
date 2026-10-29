@@ -13,126 +13,138 @@ export const links = {
 
 // Same measured values as the benchmark section (ai-gateway-bench, c = 64).
 export const heroStats = [
-  { value: "3,239", label: "requests / second", labelZh: "请求 / 秒 (RPS)" },
-  { value: "10.7×", label: "LiteLLM Proxy throughput", labelZh: "LiteLLM Proxy 吞吐倍数" },
-  { value: "31.5 ms", label: "p99 latency at c = 64", labelZh: "64 并发下 p99 延迟" },
-  { value: "18.2 MB", label: "idle memory (RSS)", labelZh: "空闲常驻内存 (RSS)" },
+  { value: "3,239", label: "requests / second", labelZh: "单机峰值并发 (RPS)" },
+  {
+    value: "10.7×",
+    label: "faster than LiteLLM",
+    labelZh: "吞吐性能超越 LiteLLM",
+  },
+  { value: "31.5 ms", label: "p99 tail latency", labelZh: "64 并发 p99 延迟" },
+  {
+    value: "18.2 MB",
+    label: "idle RAM footprint",
+    labelZh: "极低空闲内存占用",
+  },
 ];
 
 export const pillars = [
   {
     index: "01",
-    metric: "3,239 RPS · 31.5 ms p99",
-    title: "Rust gateway data plane",
-    titleZh: "Rust 高性能网关数据面",
+    metric: "3,239 RPS · 18.2 MB RAM",
+    metricZh: "3,239 RPS · 18 MB 内存",
+    title: "10× throughput, tiny footprint",
+    titleZh: "10 倍吞吐性能，极低资源占用",
     detail:
-      "10.7× LiteLLM Proxy & 3.7× New API peak throughput at c = 64, idling at 18.2 MB RSS with ACID PostgreSQL persistence.",
+      "3,239 RPS at c = 64—10.7× LiteLLM Proxy and 3.7× New API—while idling at just 18.2 MB RAM with full PostgreSQL persistence.",
     detailZh:
-      "64 并发下峰值吞吐达 LiteLLM Proxy 的 10.7 倍、New API 的 3.7 倍；空闲内存仅 18.2 MB RSS，并完整持久化 PostgreSQL ACID 账本。",
+      "单机 64 并发实测达 3,239 RPS，吞吐量是 LiteLLM 的 10.7 倍、New API 的 3.7 倍；空闲内存仅 18 MB，高峰流量稳如磐石。",
   },
   {
     index: "02",
-    metric: "Supply ≠ Customer Tariff",
-    title: "Three-way financial isolation",
-    titleZh: "三方财务边界严格隔离",
+    metric: "Cost ≠ Retail Price",
+    metricZh: "采购底价 ≠ 客户售价",
+    title: "Buy low, price freely",
+    titleZh: "进销价格分离，守住平台毛利",
     detail:
-      "Price customer workspaces independently of Provider offers. Keep procurement rates private in platform administration.",
+      "Set customer selling prices independently from upstream Provider costs. Price model pools as custom models or pass through per-route rates—without ever exposing your margins.",
     detailZh:
-      "客户工作空间售价与上游模型供应商报价完全解耦；采购成本、预算与平台毛利严格锁定在平台管理后台。",
+      "上游渠道采购底价与面向客户的销售价完全解耦。支持作为自定义模型统一定价或按命中模型分别计费，客户永远看不到您的底价与利润率。",
   },
   {
     index: "03",
-    metric: "Operation → Attempt → Charge",
-    title: "Attempt-level request evidence",
-    titleZh: "尝试级（Attempt）全链路请求证据",
+    metric: "Zero Mystery Bills",
+    metricZh: "笔笔可查 · 拒绝糊涂账",
+    title: "Every call & charge accounted for",
+    titleZh: "每笔调用与扣费都算得明白",
     detail:
-      "Trace every call across route pool candidates, upstream attempts, token counts, and explicit settled vs. unresolved charge states.",
+      "See every routing attempt, failover hop, TTFT, and token count. Interrupted streams stay explicitly flagged rather than silently billed or zeroed out.",
     detailZh:
-      "逐笔追踪路由池候选节点、上游调用尝试、Token 用量，以及已结算与待核实计费状态。",
+      "从首次尝试、故障自动切换到最终 Token 结算全程留痕；流式中途断连的异常请求明确标记待核实，绝不偷偷扣费或伪造 0 元糊涂账。",
   },
   {
     index: "04",
-    metric: "API + Catalog + Generations",
-    title: "Complete self-hosted product",
-    titleZh: "完整的私有化模型服务产品",
+    metric: "Gateway + Console + Studio",
+    metricZh: "网关 + 控制台 + 工作台",
+    title: "Full-stack open source, ready on day one",
+    titleZh: "全栈开源交付，开箱即用",
     detail:
-      "Serve OpenAI/Anthropic endpoints, a public model catalog, workspace budget caps, and saved Chat & Seedance Video workspaces.",
+      "More than a bare CLI proxy—ship the gateway, operator console, public model catalog, customer workspaces, and saved Chat & Video studio from one container.",
     detailZh:
-      "开箱即用提供 OpenAI/Anthropic 兼容接口、公开模型目录、工作空间额度管控，以及持久化对话与 Seedance 视频生成工作台。",
+      "不只是简陋的命令行转发工具——单个容器即完整交付高性能网关、管理后台、公开模型目录、多租户工作空间，以及在线对话与视频工作台。",
   },
 ];
 
 export const capabilities = [
   {
     number: "01",
-    title: "Route pools & Provider supply",
-    titleZh: "模型路由池与供应商供给",
+    title: "Smart Model Pools & auto-failover",
+    titleZh: "智能模型池与主备无感容灾",
     description:
-      "Bind customer-facing model aliases to weighted, prioritized Provider mappings while keeping upstream credentials server-side.",
+      "Combine multiple Providers behind one callable model name with conditional routing rules, weighted failover, and built-in strategy & margin auditing.",
     descriptionZh:
-      "将面向客户的模型别名绑定到带优先级与权重的供应商路由池，上游密钥全程加密保存在服务端。",
+      "把多个供应商渠道组合成一个对外模型名，支持按上下文长度、视觉或工具调用自动分流，上游报错秒级切换，还能一键审计各渠道延迟与净毛利。",
     label: "Models & routing",
-    labelZh: "模型与路由",
+    labelZh: "了解模型池与路由",
     href: "/docs/configuration/models/",
   },
   {
     number: "02",
-    title: "Attempt-level request logs",
-    titleZh: "尝试级请求日志与诊断",
+    title: "Full-trace logs & instant debugging",
+    titleZh: "全链路日志与客诉秒级定位",
     description:
-      "Inspect every attempt, status code, TTFT, and token count. Uncertain mid-stream disconnects stay explicit instead of silently zeroed.",
+      "See which Provider failed, why failover triggered, exact TTFT, and token charges at a glance—making customer support and upstream debugging effortless.",
     descriptionZh:
-      "查看每次上游尝试、状态码、首字延迟（TTFT）与 Token 计数；流式中途断开的异常状态清晰可查，绝不静默清零。",
+      "哪家上游报错、为什么触发重试、首字延迟（TTFT）多少、扣了多少钱一目了然；异常断流独立标记，排查问题不再盲人摸象。",
     label: "Request evidence",
-    labelZh: "请求证据与日志",
+    labelZh: "查看日志与诊断机制",
     href: "/docs/concepts/execution-observation/",
   },
   {
     number: "03",
-    title: "Independent customer tariffs",
-    titleZh: "独立的客户销售定价体系",
+    title: "Flexible pricing & private margins",
+    titleZh: "灵活加价销售与底价保密",
     description:
-      "Decouple workspace selling prices from Provider purchase offers so customer bills never expose your procurement costs or margins.",
+      "Charge custom model rates, workspace Credits, or per-candidate pass-through tariffs. Upstream purchase costs and platform margins stay strictly in admin view.",
     descriptionZh:
-      "将客户工作空间销售价目与供应商采购报价完全分离，客户账单与接口永远不会泄露采购成本与平台毛利。",
+      "支持自定义模型零售价、工作空间额度（Credits）或按命中模型分别计费；采购底价与平台毛利仅管理员可见，对客账单清晰透明。",
     label: "Usage & billing",
-    labelZh: "用量与计费",
+    labelZh: "了解定价与计费体系",
     href: "/docs/concepts/performance-and-cost/",
   },
   {
     number: "04",
-    title: "Pre-dispatch spending holds",
-    titleZh: "转发前额度预占与预算风控",
+    title: "Multi-level quota & spend protection",
+    titleZh: "多级预算风控，杜绝余额刷穿",
     description:
-      "Enforce company, workspace, and API-key spending caps before upstream dispatch—counting in-flight reservations against active limits.",
+      "Enforce company, workspace, and API-key spending caps with real-time in-flight holds before upstream dispatch—preventing concurrent balance overruns.",
     descriptionZh:
-      "在请求发往上游前强制校验企业、工作空间与 API 密钥三级额度上限，在途并发预占实时计入可用预算。",
+      "支持企业、工作空间、API 密钥三级消费上限；请求发往上游前实时锁定在途预占额度，彻底防止高并发下账户余额被刷穿。",
     label: "Access & limits",
-    labelZh: "权限与额度控制",
+    labelZh: "了解权限与额度风控",
     href: "/docs/security/overview/",
   },
   {
     number: "05",
-    title: "Drop-in OpenAI & Anthropic APIs",
-    titleZh: "无缝兼容 OpenAI 与 Anthropic 接口",
+    title: "Drop-in for SDKs & coding agents",
+    titleZh: "改一行地址，无缝接入现有应用",
     description:
-      "Connect existing SDKs and coding agents (Claude Code, Codex) via /v1/chat/completions, /v1/responses, and scoped /v1/messages.",
+      "Native OpenAI (/v1/chat/completions, /v1/responses) and Anthropic (/v1/messages) compatibility. Change one Base URL to connect Claude Code, Codex, or your app.",
     descriptionZh:
-      "通过 /v1/chat/completions、/v1/responses 与 /v1/messages 直接接入现有 SDK 及 Claude Code、Codex 等编程智能体。",
+      "原生兼容 OpenAI（/v1/chat/completions、/v1/responses）与 Anthropic（/v1/messages）接口，改一行 Base URL 即可丝滑接入 Claude Code、Codex 与各类应用。",
     label: "API & SDK",
-    labelZh: "API 与 SDK 教程",
+    labelZh: "查看 API 与接入指南",
     href: "/docs/guides/api-quickstart/",
   },
   {
     number: "06",
-    title: "Saved Chat & Video workspaces",
-    titleZh: "持久化生成对话与视频工作空间",
+    title: "Built-in Chat & Video workspace",
+    titleZh: "自带多模型对话与视频工作台",
     description:
-      "Give customers persistent backend-saved Chat sessions and asynchronous Seedance video job tracking with authorized result downloads.",
+      "Give customers a ready-to-use, server-persisted Chat playground and Seedance video studio without deploying a separate frontend wrapper.",
     descriptionZh:
-      "为客户提供后端持久化的多模型对话会话、Seedance 异步视频生成任务追踪以及受权成片下载。",
+      "无需额外部署套壳前端，直接为客户提供云端同步的多模型对话与 Seedance 视频生成工作台，开箱即可体验、测试与交付。",
     label: "Generations",
-    labelZh: "生成对话与视频",
+    labelZh: "了解对话与视频工作台",
     href: "/docs/reference/generations/",
   },
 ];
@@ -140,85 +152,85 @@ export const capabilities = [
 export const faqs = [
   {
     index: "01",
-    category: "Architecture",
-    categoryZh: "系统架构",
-    question: "How does Niu differ from LiteLLM Proxy and New API?",
-    questionZh: "Niu 牛元与 LiteLLM Proxy、New API 有何核心区别？",
+    category: "Why Niu",
+    categoryZh: "核心选型对比",
+    question: "Why choose Niu over LiteLLM Proxy or New API?",
+    questionZh: "为什么选择 Niu 牛元，而不是 LiteLLM 或 New API？",
     answer:
-      "LiteLLM Proxy is a Python developer proxy (~302 RPS at c=64, 158 MB idle RSS); New API is a Go channel relay (~866 RPS peak, shared user/channel quota model). Niu is a Rust AI gateway (3,238.7 RPS at c=64, 18.2 MB idle RSS) purpose-built for model API businesses—separating Provider offers from customer tariffs, enforcing pre-dispatch spending holds, and shipping saved Chat and Video workspaces.",
+      "LiteLLM Proxy is a Python developer tool (~302 RPS at c=64, 158 MB idle RAM) without independent retail pricing; New API is a Go channel relay (~866 RPS peak) with shared multiplier quotas. Niu is a full-stack Rust gateway (3,239 RPS, 18.2 MB idle RAM) built for commercial model services—with separated cost vs. retail tariffs, conditional model pools, pre-dispatch balance protection, and built-in Chat & Video workspaces.",
     answerZh:
-      "LiteLLM Proxy 是面向开发者的 Python 代理（64 并发约 302 RPS，空闲内存 158 MB）；New API 是 Go 渠道转发程序（峰值约 866 RPS，采用共享额度模型）。Niu 牛元是专为模型 API 商业化运营打造的 Rust 网关（64 并发达 3,238.7 RPS，空闲内存仅 18.2 MB），原生实现供应商采购价与客户售价隔离、转发前预算预占，并内置持久化对话与视频工作台。",
+      "LiteLLM 是面向开发者的 Python 转发工具（64 并发仅约 302 RPS，空闲内存 158 MB），缺乏独立的商业销售定价体系；New API 是 Go 渠道中转程序（峰值约 866 RPS），采购价与售价混用倍率。Niu 牛元是用 Rust 从头构建的全栈开源商业网关（实测 3,239 RPS、空闲内存仅 18 MB），原生支持进销价格分离、条件模型池、并发余额防刷穿，并自带对话与视频工作台。",
     linkLabel: "Compare gateways",
     linkLabelZh: "查看网关详细对比",
     linkHref: "/compare/",
   },
   {
     index: "02",
-    category: "Commercial boundary",
-    categoryZh: "商业数据边界",
-    question: "Can customers see my upstream Provider prices or margins?",
-    questionZh: "客户能否看到我的上游供应商采购价或平台利润？",
+    category: "Profit & privacy",
+    categoryZh: "底价与利润保密",
+    question: "Can customers ever see my upstream costs or profit margins?",
+    questionZh: "我的上游采购底价和渠道利润会被客户看到吗？",
     answer:
-      "No. Customer workspace reports, logs, and API responses only expose customer-facing tariffs and charges. Provider purchase rates, procurement budgets, and platform margins are restricted to platform administration.",
+      "Never. Customer workspaces, usage logs, and API responses only show your customer-facing prices and charges. Upstream Provider identities, purchase rates, and platform margins remain strictly locked in the admin console.",
     answerZh:
-      "绝不会。客户工作空间的报表、请求日志和 API 响应仅展示面向客户的销售价格与扣费金额。供应商采购单价、采购预算及平台毛利严格限制在平台管理后台。",
+      "绝对不会。客户在工作空间控制台、账单明细和 API 响应中，只能看到您对外设定的模型售价和实际扣费金额。上游供应商是谁、采购底价多少、平台赚了多少毛利，全部严格锁定在管理员后台。",
     linkLabel: "Usage & billing boundary",
     linkLabelZh: "了解计费与商业边界",
     linkHref: "/docs/concepts/performance-and-cost/",
   },
   {
     index: "03",
-    category: "Stream reliability",
-    categoryZh: "流式计费可靠性",
-    question: "What happens when an upstream stream drops mid-response?",
-    questionZh: "当上游流式响应中途意外断开时会发生什么？",
+    category: "Billing accuracy",
+    categoryZh: "流式计费准确性",
+    question: "What happens if an upstream stream drops halfway through?",
+    questionZh: "如果上游流式输出到一半意外断开了，会不会乱扣费？",
     answer:
-      "Niu records pre-dispatch admission in PostgreSQL and never blindly replays an uncertain request that may have already executed upstream. If usage evidence is missing after a disconnect, the attempt and charge remain explicitly unresolved rather than fabricating a $0 bill.",
+      "No mystery charges and no fake $0 bills. Niu records pre-dispatch state in PostgreSQL and never blindly replays a request that may have already run upstream. If a stream drops without usage evidence, the call is explicitly flagged as unresolved for review.",
     answerZh:
-      "Niu 牛元在转发前即于 PostgreSQL 记录准入状态，绝不盲目重放可能已在上游执行的非幂等请求。若流式中断后缺失用量证据，该次尝试与费用会明确标记为待核实状态，而不会伪造 0 元账单。",
+      "不会乱扣费，更不会算糊涂账。Niu 牛元在转发前会先记录准入状态，绝不盲目重试可能已经产生费用的请求。如果流式响应中途意外断开且缺少用量凭证，系统会将其明确标记为「待核实」状态，既不会多扣客户钱，也不会伪造 0 元成功账单。",
     linkLabel: "Request evidence contract",
-    linkLabelZh: "了解请求证据机制",
+    linkLabelZh: "了解请求与对账机制",
     linkHref: "/docs/concepts/execution-observation/",
   },
   {
     index: "04",
-    category: "Self-hosting",
-    categoryZh: "私有化自托管",
-    question: "Can I self-host the entire stack without private dependencies?",
-    questionZh: "能否在不依赖任何私有服务的情况下完整自托管？",
+    category: "Full-stack open source",
+    categoryZh: "全栈开源与自托管",
+    question: "Is the full stack truly open source for self-hosting?",
+    questionZh: "真的是全栈开源吗？私有化部署会不会被卡脖子？",
     answer:
-      "Yes. The public gateway, dashboard, model catalog, and documentation run together against a single PostgreSQL database. Niu-owned public code is MIT-licensed and requires no external license service.",
+      "Yes. The Rust gateway, admin console, customer workspace dashboard, model catalog, and docs are all MIT-licensed and run together against a single PostgreSQL database—with zero license servers or private dependencies.",
     answerZh:
-      "可以。公共网关、控制台、模型目录与文档站点只需连接单个 PostgreSQL 数据库即可完整运行。Niu 牛元开源核心采用 MIT 许可证，无需连接任何外部授权服务器。",
+      "真正全栈开源。核心 Rust 网关、管理后台、客户工作空间控制台、模型目录和文档站点全部采用 MIT 开源协议，只需连接一个标准 PostgreSQL 数据库即可单容器完整运行，不需要连接任何外部授权服务器。",
     linkLabel: "Single-container deployment",
-    linkLabelZh: "单容器部署指南",
+    linkLabelZh: "查看单容器部署指南",
     linkHref: "/docs/deployment/single-container/",
   },
   {
     index: "05",
     category: "Extensibility",
-    categoryZh: "插件与扩展性",
-    question:
-      "How do plugins and commercial extensions integrate without bloating the core?",
-    questionZh: "插件与商业扩展如何在不拖慢核心网关的前提下集成？",
+    categoryZh: "插件与定制扩展",
+    question: "How can we extend Niu for custom billing or internal systems?",
+    questionZh: "如果需要对接自有计费或企业内部系统，如何定制扩展？",
     answer:
-      "Niu keeps its Rust data plane lean and extensible through the open niu-plugin-api contract and niu-plugin-sdk. Plugins run as supervised Unix-socket services verified with short-lived Ed25519 JWS request contexts, isolating custom policies, webhooks, and enterprise modules from core inference latency.",
+      "Niu provides an open plugin contract (niu-plugin-api and niu-plugin-sdk). Plugins run as supervised Unix-socket processes verified with short-lived Ed25519 JWS tokens—letting you add custom auth, webhooks, and enterprise policies without slowing down core routing.",
     answerZh:
-      "Niu 牛元通过开放的 niu-plugin-api 契约与 niu-plugin-sdk 保持 Rust 核心数据面的精简。插件以受控的 Unix Socket 进程运行，并通过短效 Ed25519 JWS 签名上下文进行校验，将自定义策略与企业级模块同核心推理延迟完全隔离。",
+      "Niu 牛元提供开放的插件接口（niu-plugin-api 与 niu-plugin-sdk）。插件作为独立受控进程通过高速本地套接字（Unix Socket）与网关通信，既能灵活挂载自定义鉴权、回调和企业级策略，又不会拖慢核心网关的转发性能。",
     linkLabel: "Architecture overview",
-    linkLabelZh: "查看架构概览",
-    linkHref: "https://github.com/niu-io/niu/blob/main/docs/architecture/enterprise-composition.md",
+    linkLabelZh: "查看插件架构说明",
+    linkHref:
+      "https://github.com/niu-io/niu/blob/main/docs/architecture/enterprise-composition.md",
   },
   {
     index: "06",
-    category: "Release scope",
-    categoryZh: "版本准入范围",
-    question: "What is ready to evaluate today vs. still under qualification?",
-    questionZh: "当前版本哪些能力已可投入评估，哪些仍在准入验证？",
+    category: "Production readiness",
+    categoryZh: "功能就绪度",
+    question: "What is ready to deploy today?",
+    questionZh: "现在可以直接部署上线吗？哪些商业功能已经就绪？",
     answer:
-      "Model route pools, workspace API keys, spending caps, request/charge accounting, and saved Chat & Video interfaces are available in the current build. Full first-release qualification across all commercial payment, Provider settlement, and recovery gates is tracked in the release matrix.",
+      "Model pools (with conditional routing & strategy audit), workspace API keys, independent customer pricing, budget holds, attempt-level logs, and saved Chat & Video workspaces are ready to deploy today. Ongoing payment gateway and multi-node qualification is tracked in our public release matrix.",
     answerZh:
-      "模型路由池、工作空间 API 密钥、预算上限、请求/费用账本以及持久化对话与视频工作台均已在当前版本提供。商业支付、供应商结算与故障恢复的完整准入矩阵在发布清单中持续追踪。",
+      "多渠道模型池（含条件路由与毛利审计）、工作空间与 API 密钥管理、独立客户定价、预算防超支风控、全链路请求日志，以及在线对话和 Seedance 视频工作台均已就绪并可立即部署。更多商业支付渠道与多节点高可用验收进度可在发布准入清单中实时查看。",
     linkLabel: "Release acceptance matrix",
     linkLabelZh: "查看发布准入矩阵",
     linkHref:
