@@ -398,7 +398,7 @@ const gatewaySteps = [
     detail:
       "Clients stream responses with zero code changes while Niu handles automatic failover, token metering, and real-time billing.",
     detailZh:
-      "按文档接入流式调用，集中查看请求状态、Token 用量、耗时与费用。",
+      "按文档接入流式调用，集中查看请求状态、词元 用量、耗时与费用。",
   },
 ];
 
@@ -485,9 +485,9 @@ export default function LandingContent({
           <h1 id="hero-title" className="hero-enter" style={stagger(1)}>
             {isZh ? (
               <>
-                让每一份 Token，
+                让每个词元
                 <br />
-                <span className="accent">发挥更大价值。</span>
+                <span className="accent">发挥更大价值</span>
               </>
             ) : (
               <>
@@ -500,7 +500,7 @@ export default function LandingContent({
           <p className="hero-description hero-enter" style={stagger(2)}>
             {t(
               "The Token Platform for developers and teams. Access models with performance and reliability, and keep token usage and spending under control.",
-              "面向开发者与团队的 Token 平台。高效、可靠地接入模型，集中管理密钥、用量与预算，让每次调用和支出都有据可查。",
+              "面向开发者与团队的 词元平台。高效、可靠地接入模型，集中管理密钥、用量与预算，让每次调用和支出都有据可查。",
             )}
           </p>
           <div className="actions hero-actions hero-enter" style={stagger(3)}>
@@ -1157,7 +1157,7 @@ export default function LandingContent({
                               <strong>{selectedLog.charge}</strong>
                             </div>
                             <div>
-                              <span>{t("Input tokens", "输入 Token")}</span>
+                              <span>{t("Input 词元", "输入 词元")}</span>
                               <strong>
                                 {selectedLog.inputTokens}{" "}
                                 <small>
@@ -1167,7 +1167,7 @@ export default function LandingContent({
                               </strong>
                             </div>
                             <div>
-                              <span>{t("Output tokens", "输出 Token")}</span>
+                              <span>{t("Output 词元", "输出 词元")}</span>
                               <strong>
                                 {selectedLog.outputTokens}{" "}
                                 <small>
@@ -1846,7 +1846,7 @@ export default function LandingContent({
                             {activeGenerationsMode === "chat"
                               ? t(
                                   "Compare models side-by-side with live streaming throughput, token counts, and settled customer charges persisted in PostgreSQL.",
-                                  "并排对比多个模型的实时流式吞吐、Token 用量与持久化至 PostgreSQL 的已结算客户费用。",
+                                  "并排对比多个模型的实时流式吞吐、词元 用量与持久化至 PostgreSQL 的已结算客户费用。",
                                 )
                               : t(
                                   "Submit text-to-video and image-to-video tasks with Volcengine Seedance 1.5 Pro, manage materials, and track settled video charges.",
@@ -2444,7 +2444,7 @@ export default function LandingContent({
         <div className="section-heading" data-reveal>
           <div>
             <p className="eyebrow">
-              {t("YOUR TOKEN WORKSPACE", "围绕 Token 使用的一站式工作空间")}
+              {t("YOUR TOKEN WORKSPACE", "围绕词元使用的一站式工作空间")}
             </p>
             <h2 id="product-title">
               {isZh ? (
@@ -2687,7 +2687,7 @@ export default function LandingContent({
               <li>
                 {t(
                   "Request logs, token usage and customer-facing charges",
-                  "请求明细日志、Token 用量与实际调用费用",
+                  "请求明细日志、词元 用量与实际调用费用",
                 )}
               </li>
               <li>
@@ -2782,7 +2782,7 @@ export default function LandingContent({
               <p>
                 {t(
                   "Model access, token usage and reliable API integration in practice.",
-                  "分享模型接入、Token 用量管理与调用可靠性的工程实践。",
+                  "分享模型接入、词元 用量管理与调用可靠性的工程实践。",
                 )}
               </p>
               <a className="text-link" href="/blog/">
@@ -2933,7 +2933,7 @@ export default function LandingContent({
               <>
                 开始使用 Niu 牛元，
                 <br />
-                <span className="accent">让 Token 使用更有条理。</span>
+                <span className="accent">让词元使用更有条理。</span>
               </>
             ) : (
               <>

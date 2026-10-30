@@ -15,7 +15,7 @@ export const capabilities = [
     "title": "Request logs & usage evidence",
     "titleZh": "调用日志与用量凭证",
     "description": "Inspect request status, token counts, timing and charges without stitching together separate dashboards.",
-    "descriptionZh": "集中查看请求状态、Token 数量、耗时与费用，减少在多个控制台之间切换。",
+    "descriptionZh": "集中查看请求状态、词元 数量、耗时与费用，减少在多个控制台之间切换。",
     "label": "Request evidence",
     "labelZh": "查看日志与诊断机制",
     "href": "/docs/concepts/execution-observation/"
@@ -70,7 +70,7 @@ export const codeExamples = [
     "endpoint": "POST /v1/chat/completions",
     "code": "curl http://localhost:2555/v1/chat/completions \\\n  -H \"Authorization: Bearer $NIU_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"model\": \"claude-sonnet-4\",\n    \"messages\": [{\"role\": \"user\", \"content\": \"Check Q3 p99.\"}],\n    \"stream\": true\n  }'",
     "trace": "Operation → Attempt #1 (Anthropic 200 OK) → 40 SSE tok → Settled Customer Charge ($0.018)",
-    "traceZh": "Operation → Attempt #1 (Anthropic 200 OK) → 40 SSE Token → 客户费率已结算 ($0.018)"
+    "traceZh": "Operation → Attempt #1 (Anthropic 200 OK) → 40 SSE词元→ 客户费率已结算 ($0.018)"
   },
   {
     "id": "sdk",
@@ -100,7 +100,7 @@ export const faqs = [
     "question": "Who is Niu for?",
     "questionZh": "Niu 牛元适合谁？",
     "answer": "Niu is a token management platform for developers and teams using model APIs. Access models, manage workspace keys and budgets, and inspect usage and request charges from one workspace.",
-    "answerZh": "Niu 牛元是面向模型 API 使用者的 Token 管理平台，帮助开发者与团队接入模型、管理工作空间密钥和预算，并集中查看用量与调用费用。",
+    "answerZh": "Niu 牛元是面向模型 API 使用者的 词元管理平台，帮助开发者与团队接入模型、管理工作空间密钥和预算，并集中查看用量与调用费用。",
     "linkLabel": "Browse models",
     "linkLabelZh": "浏览模型",
     "linkHref": "/models/"
@@ -110,9 +110,9 @@ export const faqs = [
     "category": "Economy",
     "categoryZh": "经济性",
     "question": "How can I control token spending?",
-    "questionZh": "如何控制 Token 支出？",
+    "questionZh": "如何控制词元支出？",
     "answer": "Check the listed model price, review actual token usage and charges, and set workspace and key-level budgets. Prices and availability depend on the configured offers; Niu does not promise every model is cheaper.",
-    "answerZh": "先查看模型标价，再结合实际 Token 用量和费用设置工作空间与密钥预算。价格与可用性取决于已配置的模型报价，不承诺每个模型都更便宜。",
+    "answerZh": "先查看模型标价，再结合实际词元用量和费用设置工作空间与密钥预算。价格与可用性取决于已配置的模型报价，不承诺每个模型都更便宜。",
     "linkLabel": "Usage & budgets",
     "linkLabelZh": "了解用量与预算",
     "linkHref": "/docs/concepts/performance-and-cost/"
@@ -225,9 +225,9 @@ export const pillars = [
     "metric": "Economy",
     "metricZh": "经济性",
     "title": "Keep token spending visible",
-    "titleZh": "让 Token 支出清晰可控",
+    "titleZh": "让词元支出清晰可控",
     "detail": "Review model prices, token usage and request charges. Set workspace and API-key budgets before usage grows.",
-    "detailZh": "查看模型价格、Token 用量与逐次调用费用，通过工作空间和 API 密钥预算管理支出。"
+    "detailZh": "查看模型价格、词元 用量与逐次调用费用，通过工作空间和 API 密钥预算管理支出。"
   },
   {
     "index": "04",
