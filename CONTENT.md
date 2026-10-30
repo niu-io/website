@@ -31,6 +31,6 @@ Keep the first-release qualification statement concise and link to the public ac
 
 ## Public shell
 
-Landing, Models, Docs, API, SDK and Compare use the same navigation definition and header geometry. Desktop is one row; narrow viewports use a hamburger and a floating menu. No second navigation row and no decorative diagonal arrows on links/buttons. Docs has its article tree within the floating menu. Theme preference survives section navigation; the public search entry opens Docs search.
+Landing, Models, Docs, API, SDK and Compare use the same navigation definition, controls and header height. Marketing pages center the navigation inside the existing page container; Docs and the catalog retain their full-width navigation shell. Header backgrounds remain full width. Desktop is one row; narrow viewports use a hamburger and a floating menu. No second navigation row and no decorative diagonal arrows on links/buttons. Docs has its article tree within the floating menu. Theme preference survives section navigation; the public search entry opens Docs search.
 
 Marketing source stays in this repository. Docs/catalog import Niu's canonical public shell styles and navigation; this website ships a checked snapshot, with no build dependency on an adjacent public checkout.

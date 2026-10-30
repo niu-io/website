@@ -1,0 +1,22 @@
+/* Marketing navigation follows the existing page container. The shared
+   shell stays full width in Docs and the catalog. */
+.public-header {
+  padding-inline: 0;
+}
+
+.public-header > .docs-header {
+  width: min(var(--page-width), calc(100% - 64px));
+  margin-inline: auto;
+}
+
+@media (max-width: 760px) {
+  .public-header > .docs-header {
+    width: calc(100% - 36px);
+  }
+}
+
+@media (max-width: 390px) {
+  .public-header > .docs-header {
+    width: calc(100% - 28px);
+  }
+}

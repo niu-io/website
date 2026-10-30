@@ -1,8 +1,8 @@
 ---
+import NiuBrand from "./NiuBrand";
 import { links } from "../content/landing";
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
-const markUrl = `${base}/site-assets/brand/niu-mark.png`;
 
 const footerGroups = [
   {
@@ -64,12 +64,7 @@ const footerGroups = [
     <div class="site-footer-grid">
       <div class="site-footer-meta">
         <a class="site-footer-brand" href="/" aria-label="Niu home">
-          <span
-            class="site-footer-mark"
-            style={`--footer-mark-url: url('${markUrl}')`}
-            aria-hidden="true"
-          ></span>
-          <span data-en="Niu" data-zh="Niu 牛元">Niu</span>
+          <NiuBrand />
         </a>
         <p class="site-footer-tagline" data-en="Open-source foundations for your model API business." data-zh="面向模型 API 业务的开源基础设施。">
           Open-source foundations for your model API business.

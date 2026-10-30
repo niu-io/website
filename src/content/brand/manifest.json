@@ -1,0 +1,758 @@
+{
+  "version": 1,
+  "brand": "Niu 牛元",
+  "palette": {
+    "gold": "#FFC857",
+    "amber": "#FFB547",
+    "tangerine": "#FF914D",
+    "orange": "#FF7A36",
+    "coral": "#F87863",
+    "salmon": "#FF8A75",
+    "marigold": "#FFB52E",
+    "ink": "#202124",
+    "white": "#F7F7F8",
+    "dark": "#121314",
+    "light": "#FAFAF9"
+  },
+  "sources": [
+    {
+      "file": "sources/MAPLE-MONO-OFL.txt",
+      "sha256": "eb2d28d2e565a0757e3d64e34ebb452e75a0cad87c0ab3faf4e08ba7596de902"
+    },
+    {
+      "file": "sources/OPEN-HUNINN-OFL.txt",
+      "sha256": "5df6de36ba2fe26119ac161edbed97c62a9da3c1493f6930b9d9af7f5c93004b"
+    },
+    {
+      "file": "sources/SOURCE-LICENSE.txt",
+      "sha256": "b170d6bf8e8835dd357e011681db028f4d51e2fb0ea892058f56e01fb39b8273"
+    },
+    {
+      "file": "sources/lettering.json",
+      "sha256": "fc6debb273bfbc43b0f3380f4f0b077b265d2f9c0c3212157a150ae02b39a39d"
+    },
+    {
+      "file": "sources/mark-paths.json",
+      "sha256": "f79d017058642b56acf8b1df1042eef9ec225fbabe4bf57bacd43105059ae97f"
+    }
+  ],
+  "assets": [
+    {
+      "file": "svg/niu-mark-color.svg",
+      "width": 512,
+      "height": 512,
+      "format": "svg",
+      "transparent": true,
+      "sha256": "ce181446a384a46c741a4a805931946ec77c2b2c3c25f801a037b6f2e0a918c2",
+      "bytes": 10019
+    },
+    {
+      "file": "png/niu-mark-color.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "sha256": "4ff254f73bd098c41eccaa9f78440592749bf6a44196f86d85851e874dbc8491",
+      "bytes": 22353
+    },
+    {
+      "file": "png/niu-mark-color@2x.png",
+      "width": 1024,
+      "height": 1024,
+      "format": "png",
+      "transparent": true,
+      "sha256": "b080a35eab989058fd798c6628614d9753375f9dfd716c3000201ba3098fa62f",
+      "bytes": 51909
+    },
+    {
+      "file": "svg/niu-mark-ink.svg",
+      "width": 512,
+      "height": 512,
+      "format": "svg",
+      "transparent": true,
+      "sha256": "1a9375f02f757c326d82524513587df2e55636b7f08640433a7c2397bba332ff",
+      "bytes": 10019
+    },
+    {
+      "file": "png/niu-mark-ink.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "sha256": "a36d4b42ef782e678294a1c9e9accf945f6feb6f0d2509d02bd18bcc34f668b4",
+      "bytes": 19808
+    },
+    {
+      "file": "png/niu-mark-ink@2x.png",
+      "width": 1024,
+      "height": 1024,
+      "format": "png",
+      "transparent": true,
+      "sha256": "cd24b28f747ecbf3aa04785be0ba42cc8c4ecc11afcfc29addeb3de5162c6aa1",
+      "bytes": 47855
+    },
+    {
+      "file": "svg/niu-mark-white.svg",
+      "width": 512,
+      "height": 512,
+      "format": "svg",
+      "transparent": true,
+      "sha256": "27b88b9febc7aa73fc6f3d4b5250641e551cc1c9b5128bfb7b96c1b0a41726b2",
+      "bytes": 10019
+    },
+    {
+      "file": "png/niu-mark-white.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": true,
+      "sha256": "dd7de6e08b2a8fab378b4df90cb9b7938c3ad47ffb967b4af6666b9cceb08599",
+      "bytes": 19247
+    },
+    {
+      "file": "png/niu-mark-white@2x.png",
+      "width": 1024,
+      "height": 1024,
+      "format": "png",
+      "transparent": true,
+      "sha256": "2ae37d4910e72ac5acddf7d82950460bc8964214211d67216019ea04cd899351",
+      "bytes": 46384
+    },
+    {
+      "file": "svg/niu-lockup-on-dark.svg",
+      "width": 506,
+      "height": 128,
+      "format": "svg",
+      "transparent": true,
+      "sha256": "aa3fa6f25c6718a9dd9a5d800fcf6633f08414494570c9e72272d165e9cc510d",
+      "bytes": 14506
+    },
+    {
+      "file": "png/niu-lockup-on-dark.png",
+      "width": 506,
+      "height": 128,
+      "format": "png",
+      "transparent": true,
+      "sha256": "5369dbd508a00bee213040d2c6a9a4cf7b0cf34e1ef1ce7c10bffebb7c19214c",
+      "bytes": 10017
+    },
+    {
+      "file": "png/niu-lockup-on-dark@2x.png",
+      "width": 1012,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "sha256": "732d0633064dce45286f9b6627386d18edacbd7f7b86b1b5ffac305deab44ef4",
+      "bytes": 22110
+    },
+    {
+      "file": "svg/niu-lockup-en-on-dark.svg",
+      "width": 312,
+      "height": 128,
+      "format": "svg",
+      "transparent": true,
+      "sha256": "8d33940edeee5370afc8a89d56825b68a3d1abc39e1b69654a00a46da0f9b1a6",
+      "bytes": 12465
+    },
+    {
+      "file": "png/niu-lockup-en-on-dark.png",
+      "width": 312,
+      "height": 128,
+      "format": "png",
+      "transparent": true,
+      "sha256": "0201e5be06c4d04f4ad569d8d38033d3b80d80507dbf6d712a3fe643cafe35f4",
+      "bytes": 7518
+    },
+    {
+      "file": "png/niu-lockup-en-on-dark@2x.png",
+      "width": 624,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "sha256": "3b9b727e8ac06ee2bf5ee178d82f3b8017b334c73693070c712210978aa9b70e",
+      "bytes": 16634
+    },
+    {
+      "file": "svg/niu-stacked-on-dark.svg",
+      "width": 400,
+      "height": 320,
+      "format": "svg",
+      "transparent": true,
+      "sha256": "9661e58252aa0c7f3e0fae7335789b986161f86ee8b2289f68df4157d740acfe",
+      "bytes": 14507
+    },
+    {
+      "file": "png/niu-stacked-on-dark.png",
+      "width": 400,
+      "height": 320,
+      "format": "png",
+      "transparent": true,
+      "sha256": "1036aad73c32036ffa200906682a4f57d94cc969f3a3507f9cd4cc5c561cd1a2",
+      "bytes": 13627
+    },
+    {
+      "file": "png/niu-stacked-on-dark@2x.png",
+      "width": 800,
+      "height": 640,
+      "format": "png",
+      "transparent": true,
+      "sha256": "41592067ac4c4161c21ceb3e595b4a4ccef9a43076b8ec7b21f51cbf1df2d9c8",
+      "bytes": 29902
+    },
+    {
+      "file": "svg/niu-lockup-on-light.svg",
+      "width": 506,
+      "height": 128,
+      "format": "svg",
+      "transparent": true,
+      "sha256": "031a5898981805de9a9885c2f1c7977d92830a6438fce3c723b26933a1325b54",
+      "bytes": 14506
+    },
+    {
+      "file": "png/niu-lockup-on-light.png",
+      "width": 506,
+      "height": 128,
+      "format": "png",
+      "transparent": true,
+      "sha256": "a72de557caef158ad19d70be28c7a1a5810c94e5f9b90c9a831dc7e918d957fc",
+      "bytes": 10246
+    },
+    {
+      "file": "png/niu-lockup-on-light@2x.png",
+      "width": 1012,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "sha256": "f8bddeb6baee58da648b7dad805e86171434e236d5d91ac2f09b266229a15913",
+      "bytes": 22682
+    },
+    {
+      "file": "svg/niu-lockup-en-on-light.svg",
+      "width": 312,
+      "height": 128,
+      "format": "svg",
+      "transparent": true,
+      "sha256": "2a6b90e9c70da8f9d6733ec17401940b122bef3070244b2743dbd16aea86c462",
+      "bytes": 12465
+    },
+    {
+      "file": "png/niu-lockup-en-on-light.png",
+      "width": 312,
+      "height": 128,
+      "format": "png",
+      "transparent": true,
+      "sha256": "dc737ea298df3831d68bd5ac50b20c892a2224761fa486a7766d98dc454e50f6",
+      "bytes": 7666
+    },
+    {
+      "file": "png/niu-lockup-en-on-light@2x.png",
+      "width": 624,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "sha256": "cd5a068f5b17871e877279c82b31ce3c23872d29a680e5764ae96f9c91588347",
+      "bytes": 16965
+    },
+    {
+      "file": "svg/niu-stacked-on-light.svg",
+      "width": 400,
+      "height": 320,
+      "format": "svg",
+      "transparent": true,
+      "sha256": "4c2d96e2b264eaa88589548b8992fb73b42255b3e49e5f645c168aa71335741d",
+      "bytes": 14507
+    },
+    {
+      "file": "png/niu-stacked-on-light.png",
+      "width": 400,
+      "height": 320,
+      "format": "png",
+      "transparent": true,
+      "sha256": "f8994a8df123023ec43ebf9b7539a7140208489c6ed89aee5b1bf742f6a6424b",
+      "bytes": 13877
+    },
+    {
+      "file": "png/niu-stacked-on-light@2x.png",
+      "width": 800,
+      "height": 640,
+      "format": "png",
+      "transparent": true,
+      "sha256": "3f2f018c5e57dc0f28cf7e710b941690725a64b54a5d05bc6aafe4b4eed440ed",
+      "bytes": 30297
+    },
+    {
+      "file": "svg/niu-lockup-mono-ink.svg",
+      "width": 506,
+      "height": 128,
+      "format": "svg",
+      "transparent": true,
+      "sha256": "ef98c7843ebf776bce5bea41202dbf5b18638662a8a857bfdfdf0c1b9f7ff767",
+      "bytes": 14506
+    },
+    {
+      "file": "png/niu-lockup-mono-ink.png",
+      "width": 506,
+      "height": 128,
+      "format": "png",
+      "transparent": true,
+      "sha256": "0ecb7a0e562fd0933a5462c5711ba35f076bc2076f0091e30b579ab1bdfebe9a",
+      "bytes": 8747
+    },
+    {
+      "file": "png/niu-lockup-mono-ink@2x.png",
+      "width": 1012,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "sha256": "d548ba1ef9ec28a35eeff9788fca1b6ef66162c92bbf578303fb4f08379e6656",
+      "bytes": 20203
+    },
+    {
+      "file": "svg/niu-lockup-en-mono-ink.svg",
+      "width": 312,
+      "height": 128,
+      "format": "svg",
+      "transparent": true,
+      "sha256": "95aa1f61ef3ee7f8da5e16a3645e656fdf5a69888f7c15d2f6eba1249ceaf0c6",
+      "bytes": 12465
+    },
+    {
+      "file": "png/niu-lockup-en-mono-ink.png",
+      "width": 312,
+      "height": 128,
+      "format": "png",
+      "transparent": true,
+      "sha256": "4d4739b192f1d675b9335ee6ffc38a07a61a520904ff75d32ab2cb7b6f94550d",
+      "bytes": 6331
+    },
+    {
+      "file": "png/niu-lockup-en-mono-ink@2x.png",
+      "width": 624,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "sha256": "a39f34e92660d9bf2ca97fa90eaf4ed21a7620977246e6fe2b95faa8f7a923c6",
+      "bytes": 14731
+    },
+    {
+      "file": "svg/niu-stacked-mono-ink.svg",
+      "width": 400,
+      "height": 320,
+      "format": "svg",
+      "transparent": true,
+      "sha256": "a83b9d96edb5858c6e8b81f20c220cc8521c2458cc29ec7578563bc645338cbe",
+      "bytes": 14507
+    },
+    {
+      "file": "png/niu-stacked-mono-ink.png",
+      "width": 400,
+      "height": 320,
+      "format": "png",
+      "transparent": true,
+      "sha256": "f8896f4681b364e7f670810c2fbcd9c961c1d910fd42fe4d4f789764151233f3",
+      "bytes": 12399
+    },
+    {
+      "file": "png/niu-stacked-mono-ink@2x.png",
+      "width": 800,
+      "height": 640,
+      "format": "png",
+      "transparent": true,
+      "sha256": "aecaa1a9faaddaba95042a23d6e7ce735ed6a6c78f9152d872a2bbf2e0a525f6",
+      "bytes": 28395
+    },
+    {
+      "file": "svg/niu-lockup-mono-white.svg",
+      "width": 506,
+      "height": 128,
+      "format": "svg",
+      "transparent": true,
+      "sha256": "77ccf769ca1c19bceb2d33d190c71f736d40ea33f64efde75fd77201694f6f2f",
+      "bytes": 14506
+    },
+    {
+      "file": "png/niu-lockup-mono-white.png",
+      "width": 506,
+      "height": 128,
+      "format": "png",
+      "transparent": true,
+      "sha256": "138827cbb191a2d570bb802ee0ddee76c58996bad1017ef3608490b9f85d54d7",
+      "bytes": 8506
+    },
+    {
+      "file": "png/niu-lockup-mono-white@2x.png",
+      "width": 1012,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "sha256": "1a55b22d26164dd2f07501abc6a77659144996f2206691b92cbc16db3855b384",
+      "bytes": 19589
+    },
+    {
+      "file": "svg/niu-lockup-en-mono-white.svg",
+      "width": 312,
+      "height": 128,
+      "format": "svg",
+      "transparent": true,
+      "sha256": "6d727c25c01c33961bbcf36a134491c2ff76847bd9e6d40e70071b7992ceff56",
+      "bytes": 12465
+    },
+    {
+      "file": "png/niu-lockup-en-mono-white.png",
+      "width": 312,
+      "height": 128,
+      "format": "png",
+      "transparent": true,
+      "sha256": "b53d1090ce3e5e695073e23a8654c6afd6bd3657dce753acffe2b785db02962d",
+      "bytes": 6154
+    },
+    {
+      "file": "png/niu-lockup-en-mono-white@2x.png",
+      "width": 624,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "sha256": "7f1b9f44c68fd98cd231a02a48420f491c37e4338e5e37ed06b664de51968a94",
+      "bytes": 14316
+    },
+    {
+      "file": "svg/niu-stacked-mono-white.svg",
+      "width": 400,
+      "height": 320,
+      "format": "svg",
+      "transparent": true,
+      "sha256": "06f16527f41601ed42942b852b9b55ef7f0a0cd994e04c6ccbb0b01ca0b480d2",
+      "bytes": 14507
+    },
+    {
+      "file": "png/niu-stacked-mono-white.png",
+      "width": 400,
+      "height": 320,
+      "format": "png",
+      "transparent": true,
+      "sha256": "1970d4ae7094b74cd14a4955efe7e35af92aebd2f418ce910a600f1c15510902",
+      "bytes": 11987
+    },
+    {
+      "file": "png/niu-stacked-mono-white@2x.png",
+      "width": 800,
+      "height": 640,
+      "format": "png",
+      "transparent": true,
+      "sha256": "fd67241db57943eacd93b7dce6e0dcab4d757984e347ac2f5da8d976bdbd871e",
+      "bytes": 27442
+    },
+    {
+      "file": "svg/niu-wordmark-on-dark.svg",
+      "width": 448,
+      "height": 112,
+      "format": "svg",
+      "transparent": true,
+      "sha256": "10e0582e96c091dadc1cac4257239e0f36a65e9f294070aed1e43d0affaab553",
+      "bytes": 4660
+    },
+    {
+      "file": "png/niu-wordmark-on-dark.png",
+      "width": 448,
+      "height": 112,
+      "format": "png",
+      "transparent": true,
+      "sha256": "131b3f36cc0b60c1e9e93ac76394495a242055e19ff84b53ce495fa2c2cd9c0e",
+      "bytes": 5927
+    },
+    {
+      "file": "png/niu-wordmark-on-dark@2x.png",
+      "width": 896,
+      "height": 224,
+      "format": "png",
+      "transparent": true,
+      "sha256": "270a3e4b5f675b9ee86321d3f9610f150580c405fd1a6f8c93c8a50dd556b62b",
+      "bytes": 13612
+    },
+    {
+      "file": "svg/niu-wordmark-on-light.svg",
+      "width": 448,
+      "height": 112,
+      "format": "svg",
+      "transparent": true,
+      "sha256": "8ff0b7846e3bbea902ad0506d6fb907ee1be2f956cbcaee43b22e96cec09e0a8",
+      "bytes": 4660
+    },
+    {
+      "file": "png/niu-wordmark-on-light.png",
+      "width": 448,
+      "height": 112,
+      "format": "png",
+      "transparent": true,
+      "sha256": "13a56c9b622ca3f8d4ff6cb021ac618e31c4de1e5c5a178833c6940edd1ab168",
+      "bytes": 6143
+    },
+    {
+      "file": "png/niu-wordmark-on-light@2x.png",
+      "width": 896,
+      "height": 224,
+      "format": "png",
+      "transparent": true,
+      "sha256": "03c474f05659e249c995f13e12e0afe683487ff70215526a6884e0c27cb5d038",
+      "bytes": 14115
+    },
+    {
+      "file": "svg/niu-wordmark-en-on-dark.svg",
+      "width": 208,
+      "height": 112,
+      "format": "svg",
+      "transparent": true,
+      "sha256": "136572ba6167f862cc0e50a72fd3bd78334dff7b2c2b35c64cbbf296b1d568cf",
+      "bytes": 2619
+    },
+    {
+      "file": "png/niu-wordmark-en-on-dark.png",
+      "width": 208,
+      "height": 112,
+      "format": "png",
+      "transparent": true,
+      "sha256": "8fb0c69184244f383891dd0e46288b867e6d53fb9ffce37d84e8b32673eafcc5",
+      "bytes": 3041
+    },
+    {
+      "file": "png/niu-wordmark-en-on-dark@2x.png",
+      "width": 416,
+      "height": 224,
+      "format": "png",
+      "transparent": true,
+      "sha256": "dd991a6c22cba642b3706f6ff54b479631f61930d63618740b77cf25121ecf56",
+      "bytes": 6994
+    },
+    {
+      "file": "svg/niu-wordmark-en-on-light.svg",
+      "width": 208,
+      "height": 112,
+      "format": "svg",
+      "transparent": true,
+      "sha256": "9d7bb7b63c098e12b76f0c92c8a99906185f1a7903793d3b99126878de57139d",
+      "bytes": 2619
+    },
+    {
+      "file": "png/niu-wordmark-en-on-light.png",
+      "width": 208,
+      "height": 112,
+      "format": "png",
+      "transparent": true,
+      "sha256": "6f1ca5aa3265ef9b5fe8a30ffbed663d9f955d062d9cb1a4ce20d49c85a2a191",
+      "bytes": 3138
+    },
+    {
+      "file": "png/niu-wordmark-en-on-light@2x.png",
+      "width": 416,
+      "height": 224,
+      "format": "png",
+      "transparent": true,
+      "sha256": "87f968d235d6e055dae6af75db494adf4f4727d996e9a16e71ff7873966522fc",
+      "bytes": 7265
+    },
+    {
+      "file": "icons/favicon-16.png",
+      "width": 16,
+      "height": 16,
+      "format": "png",
+      "transparent": true,
+      "sha256": "ce02c6c2ca40e6bbcec51b5d0646f93d52cc9edc91a6f9fa0d132cdf186208cf",
+      "bytes": 616
+    },
+    {
+      "file": "icons/favicon-24.png",
+      "width": 24,
+      "height": 24,
+      "format": "png",
+      "transparent": true,
+      "sha256": "f157e97895be5b9430dd89e8354939a6ef1f3a81df86f012372c5b6b82eb6686",
+      "bytes": 916
+    },
+    {
+      "file": "icons/favicon-32.png",
+      "width": 32,
+      "height": 32,
+      "format": "png",
+      "transparent": true,
+      "sha256": "e0ac87f6436b581b712433b1e2ec132966318e80278d4d063d75f8c4ad8cb150",
+      "bytes": 1244
+    },
+    {
+      "file": "icons/favicon-48.png",
+      "width": 48,
+      "height": 48,
+      "format": "png",
+      "transparent": true,
+      "sha256": "6279eaf2395bb3aec07ea535f458f6fcec3718d663848caf10aa18a6efd04810",
+      "bytes": 1876
+    },
+    {
+      "file": "icons/favicon-64.png",
+      "width": 64,
+      "height": 64,
+      "format": "png",
+      "transparent": true,
+      "sha256": "029d84e291e3b13dd49b8dd38d6914cf0d0c2bf1d37eccb77327fb712bd7bed2",
+      "bytes": 2449
+    },
+    {
+      "file": "icons/favicon-128.png",
+      "width": 128,
+      "height": 128,
+      "format": "png",
+      "transparent": true,
+      "sha256": "bb6c6c1a97f0a2fd62320c986f5fd846c16064eb0d70fab25eb168abecbdff26",
+      "bytes": 4853
+    },
+    {
+      "file": "icons/favicon-256.png",
+      "width": 256,
+      "height": 256,
+      "format": "png",
+      "transparent": true,
+      "sha256": "c374d75734868aaf83b8205705b397ee250090cf89c48c391509a98c1fc2950d",
+      "bytes": 9992
+    },
+    {
+      "file": "icons/favicon.ico",
+      "format": "ico",
+      "sizes": [
+        16,
+        32,
+        48,
+        64,
+        128,
+        256
+      ],
+      "transparent": true,
+      "sha256": "bedf959e2cd50dd9b55edd26402d97a219717198c313b8fe8fac5d7804d519d2",
+      "bytes": 21132
+    },
+    {
+      "file": "icons/apple-touch-icon.png",
+      "width": 180,
+      "height": 180,
+      "format": "png",
+      "transparent": false,
+      "sha256": "bae499ddd7473851e8a09317cfd2a18374b1e4f17a6dba93e71e3242755a36ad",
+      "bytes": 6752
+    },
+    {
+      "file": "icons/app-icon-192.png",
+      "width": 192,
+      "height": 192,
+      "format": "png",
+      "transparent": false,
+      "sha256": "4a41a59d9ef29197dd98df432edb33bcc1f56798221baf933013df7ad0bd6fc5",
+      "bytes": 7291
+    },
+    {
+      "file": "icons/app-icon-512.png",
+      "width": 512,
+      "height": 512,
+      "format": "png",
+      "transparent": false,
+      "sha256": "2dabdadb86a3c63dd4f7d84f6949544f848acc68f9fc7b2c818c1e509563e260",
+      "bytes": 24594
+    },
+    {
+      "file": "icons/avatar-1024.png",
+      "width": 1024,
+      "height": 1024,
+      "format": "png",
+      "transparent": false,
+      "sha256": "8b57b1cc560f8e648b12cd7a737aadd99fdef8f111c3a845a696fd0346b65939",
+      "bytes": 63155
+    },
+    {
+      "file": "svg/niu-social-en-dark.svg",
+      "width": 1200,
+      "height": 630,
+      "format": "svg",
+      "transparent": false,
+      "sha256": "04d22a92ac0c2f122dd6eb6538136f96a04be99fd143a82beaa30775a94eb58b",
+      "bytes": 12566
+    },
+    {
+      "file": "png/niu-social-en-dark-1200x630.png",
+      "width": 1200,
+      "height": 630,
+      "format": "png",
+      "transparent": false,
+      "sha256": "e41ff4a3cf93151bf20c3504d9a7eb04fed6c130abaca04cc490e287ef07cbf6",
+      "bytes": 31003
+    },
+    {
+      "file": "svg/niu-social-en-light.svg",
+      "width": 1200,
+      "height": 630,
+      "format": "svg",
+      "transparent": false,
+      "sha256": "a13004f2ad094f0609d1ef7bea51d1ae9ca12fb0a45422e70fe0bb051cd4b24c",
+      "bytes": 12566
+    },
+    {
+      "file": "png/niu-social-en-light-1200x630.png",
+      "width": 1200,
+      "height": 630,
+      "format": "png",
+      "transparent": false,
+      "sha256": "abd8f3e1ab2a400a84db7f133b7e531b9a6c076f4574f0b564d4ad301ffe88c9",
+      "bytes": 30102
+    },
+    {
+      "file": "svg/niu-social-dark.svg",
+      "width": 1200,
+      "height": 630,
+      "format": "svg",
+      "transparent": false,
+      "sha256": "4d2da3f0282e4686c7e2b5fbe4544fa94424f5a5392bc75a97bc9601d8c4b052",
+      "bytes": 14607
+    },
+    {
+      "file": "png/niu-social-dark-1200x630.png",
+      "width": 1200,
+      "height": 630,
+      "format": "png",
+      "transparent": false,
+      "sha256": "46f1c535418de35277b632dd0e418240b71c5a30da0b34f99e9ec6233973f0d6",
+      "bytes": 35064
+    },
+    {
+      "file": "svg/niu-social-light.svg",
+      "width": 1200,
+      "height": 630,
+      "format": "svg",
+      "transparent": false,
+      "sha256": "d2bf33e0ace53c23fc4f036e2c0411ab1ce42769a53ccbabccebbc0739390ec2",
+      "bytes": 14607
+    },
+    {
+      "file": "png/niu-social-light-1200x630.png",
+      "width": 1200,
+      "height": 630,
+      "format": "png",
+      "transparent": false,
+      "sha256": "71f9e87173605e519e0cba2365f2a29904d82ad9a2e4d32cdac7ba7e7d048ce1",
+      "bytes": 34241
+    },
+    {
+      "file": "preview/niu-brand-sheet-dark.png",
+      "width": 1200,
+      "height": 1000,
+      "format": "png",
+      "transparent": false,
+      "sha256": "60db49dbd40dbf0d2369a54b33360cfe5efbe053e4e9a81c2926315d9c529dc7",
+      "bytes": 88826
+    },
+    {
+      "file": "preview/niu-brand-sheet-light.png",
+      "width": 1200,
+      "height": 1000,
+      "format": "png",
+      "transparent": false,
+      "sha256": "8b128eed25eaeae31bfc25fbab3089741f9f1c6a2318107b549b574d5317fb23",
+      "bytes": 86371
+    }
+  ]
+}

@@ -97,3 +97,11 @@ pinOrder: 0
 - This is a static site: content changes and future publication dates require a
   new build and deployment. There is no automatic scheduler or browser admin yet.
 - Run `pnpm test` and `pnpm check` before publishing. CI runs these checks on every pull request.
+
+### Synchronize brand assets
+
+`node scripts/sync-public-shell.mjs --source <public-niu-checkout> --brand-only`
+updates the shared logo renderer, outline sources, identity styles, favicon,
+standalone mark, English share image and font notices. It preserves unrelated
+shell snapshots. Regular builds verify snapshotted bytes without another checkout.
+English renders Niu; Chinese renders Niu 牛元.
