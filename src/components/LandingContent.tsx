@@ -27,8 +27,6 @@ import {
   Activity,
   BarChart3,
   ChevronsUpDown,
-  Coins,
-  Cpu,
   CreditCard,
   Film,
   FolderKey,
@@ -377,21 +375,21 @@ const volumeHistogramBars = [
 const gatewaySteps = [
   {
     step: "01",
-    title: "Connect upstream Providers and price your model pools",
-    titleZh: "第一步：接入上游渠道，配置模型池与售价",
+    title: "Choose a model for your application",
+    titleZh: "第一步：选择适合应用的模型",
     detail:
-      "Add Anthropic, OpenRouter, or Vertex keys server-side, group them into failover model pools, and set your customer selling rates.",
+      "Browse available models, check capabilities and prices, and choose the model that fits your workload.",
     detailZh:
-      "在后台填入 Anthropic、OpenRouter、火山方舟等上游密钥，组合成主备容灾的模型池，并设定对外销售单价或透传规则。",
+      "浏览可用模型，核对能力与价格，选择适合实际工作负载的模型。",
   },
   {
     step: "02",
     title: "Issue workspace API keys with model & budget limits",
-    titleZh: "第二步：为客户或团队签发专属 API 密钥",
+    titleZh: "第二步：为应用配置密钥与预算",
     detail:
-      "Create customer workspaces and scoped API keys with per-key spending caps and authorized model lists.",
+      "Create a workspace API key, limit its model access, and set a spending cap for your application.",
     detailZh:
-      "一键创建客户工作空间与 API 密钥，按需限制可调用的模型范围、并发与消费额度上限。",
+      "创建工作空间 API 密钥，限制可调用的模型范围，并为应用设置消费上限。",
   },
   {
     step: "03",
@@ -400,7 +398,7 @@ const gatewaySteps = [
     detail:
       "Clients stream responses with zero code changes while Niu handles automatic failover, token metering, and real-time billing.",
     detailZh:
-      "客户端无需改动业务代码即可流式调用；网关自动完成主备切换、Token 计量、实时扣费与毛利统计。",
+      "按文档接入流式调用，集中查看请求状态、Token 用量、耗时与费用。",
   },
 ];
 
@@ -442,7 +440,7 @@ export default function LandingContent({
     )
       return;
     const timer = window.setInterval(() => {
-      setActivePreviewIndex((prev) => (prev + 1) % previewTabs.length);
+      setActivePreviewIndex((prev) => prev === 0 ? 3 : 0);
     }, 6500);
     return () => window.clearInterval(timer);
   }, [previewPaused, activePreviewIndex]);
@@ -478,8 +476,8 @@ export default function LandingContent({
             <span className="release-tag">{t("Why Niu", "核心优势")}</span>
             <span>
               {t(
-                "Full-stack open source · 10× performance · Rich commercial features",
-                "全栈开源 · 10 倍性能 · 丰富商业化功能",
+                "Performance · Reliability · Economy",
+                "性能 · 可靠性 · 经济性",
               )}
             </span>
             <IconArrowRight size={14} aria-hidden="true" />
@@ -487,22 +485,22 @@ export default function LandingContent({
           <h1 id="hero-title" className="hero-enter" style={stagger(1)}>
             {isZh ? (
               <>
-                从模型转发到商业变现，
+                让每一份 Token，
                 <br />
-                <span className="accent">一套系统全部跑通。</span>
+                <span className="accent">用得高效、可靠、经济。</span>
               </>
             ) : (
               <>
-                Build and run your
+                Token management
                 <br />
-                <span className="accent">model API business.</span>
+                <span className="accent">platform.</span>
               </>
             )}
           </h1>
           <p className="hero-description hero-enter" style={stagger(2)}>
             {t(
-              "The full-stack open-source AI gateway in Rust—combining 10× proxy throughput with smart model pools, flexible retail pricing, customer balance controls, and built-in Chat & Video workspaces.",
-              "基于 Rust 打造的全栈开源 AI 网关——兼具 10 倍于传统代理的并发性能，内置智能模型池、灵活加价计费、多级余额风控与对话/视频工作台。",
+              "A token management platform for developers and teams. Access model APIs, manage keys and budgets, and understand every request, token and charge.",
+              "面向开发者与团队的 Token 管理平台。统一接入模型 API，管理密钥与预算，让每次调用、Token 用量和费用都有据可查。",
             )}
           </p>
           <div className="actions hero-actions hero-enter" style={stagger(3)}>
@@ -611,38 +609,12 @@ export default function LandingContent({
                   >
                     <IconChartLine size={19} stroke={1.75} />
                   </button>
-                  <button
-                    type="button"
-                    className="mock-rail-btn"
-                    aria-label="Route Pools"
-                    title="Admin · Route pools"
-                    onClick={() => setActivePreviewIndex(1)}
-                  >
-                    <Cpu size={18} />
-                  </button>
+
                 </div>
                 <div className="demo-rail-footer">
-                  <button
-                    type="button"
-                    className={`mock-rail-btn${activeTab.railArea === "admin" ? " is-active" : ""}`}
-                    aria-label="Admin"
-                    title="Admin · Route pools & Financial statements"
-                    onClick={() =>
-                      setActivePreviewIndex(activePreviewIndex === 1 ? 2 : 1)
-                    }
-                  >
-                    <IconShieldLock size={19} stroke={1.75} />
-                  </button>
-                  <button
-                    type="button"
-                    className="mock-rail-btn"
-                    aria-label="Providers"
-                    title="Admin · Providers & Route pools"
-                    onClick={() => setActivePreviewIndex(1)}
-                  >
-                    <IconPlugConnected size={19} stroke={1.75} />
-                  </button>
-                  <span className="demo-rail-avatar" title="Operator account">
+
+
+                  <span className="demo-rail-avatar" title="Your account">
                     H
                   </span>
                 </div>
@@ -724,14 +696,7 @@ export default function LandingContent({
                           <BarChart3 size={15} />
                           <span>{t("Activity", "活动监控")}</span>
                         </button>
-                        <button
-                          type="button"
-                          className="demo-sidebar-item"
-                          onClick={() => setActivePreviewIndex(2)}
-                        >
-                          <Coins size={15} />
-                          <span>{t("Billing", "账单计费")}</span>
-                        </button>
+
                         <button
                           type="button"
                           className="demo-sidebar-item"
@@ -752,7 +717,7 @@ export default function LandingContent({
                       <div className="demo-sidebar-footer">
                         <a href="/docs/" className="demo-sidebar-item">
                           <IconBook size={15} />
-                          <span>{t("Documentation", "开发文档")}</span>
+                          <span>{t("Docs", "开发文档")}</span>
                         </a>
                       </div>
                     </>
@@ -834,7 +799,7 @@ export default function LandingContent({
                       <div className="demo-sidebar-footer">
                         <a href="/docs/" className="demo-sidebar-item">
                           <IconBook size={15} />
-                          <span>{t("Documentation", "开发文档")}</span>
+                          <span>{t("Docs", "开发文档")}</span>
                         </a>
                       </div>
                     </>
@@ -955,7 +920,7 @@ export default function LandingContent({
                     role="tablist"
                     aria-label="Product surface views"
                   >
-                    {previewTabs.map((tab, i) => (
+                    {previewTabs.map((tab, i) => ({tab, i})).filter(({i}) => i === 0 || i === 3).map(({tab, i}) => (
                       <button
                         key={tab.id}
                         type="button"
@@ -2479,28 +2444,28 @@ export default function LandingContent({
         <div className="section-heading" data-reveal>
           <div>
             <p className="eyebrow">
-              {t("RICH COMMERCIAL CAPABILITIES", "丰富商业化功能 · 全栈闭环")}
+              {t("YOUR TOKEN WORKSPACE", "围绕 Token 使用的一站式工作空间")}
             </p>
             <h2 id="product-title">
               {isZh ? (
                 <>
-                  不用再东拼西凑，
+                  模型接入、调用与管理，
                   <br />
-                  一套系统搞定模型商业化。
+                  在一个工作空间完成。
                 </>
               ) : (
                 <>
-                  Stop stitching tools together.
+                  Access, use and manage models.
                   <br />
-                  Run your model business in one stack.
+                  Keep usage in one workspace.
                 </>
               )}
             </h2>
           </div>
           <p>
             {t(
-              "Skip the fragile mix of proxy scripts, billing cron jobs, and chat wrappers. Niu ships routing, pricing, quota controls, and customer workspaces out of the box.",
-              "省去自己拼凑转发脚本、计费定时任务和套壳前端的麻烦，开箱即享生产级模型池路由、灵活定价、余额风控与客户工作台。",
+              "Connect your applications, try models in Chat, and manage keys, budgets and request history together.",
+              "接入现有应用，在对话中试用模型，集中管理密钥、预算和调用记录。",
             )}
           </p>
         </div>
@@ -2710,7 +2675,7 @@ export default function LandingContent({
               <li>
                 {t(
                   "Smart Model Pools with conditional routing, failover, and strategy audit",
-                  "智能模型池（支持条件分流、主备容灾切换与毛利/延迟策略审计）",
+                  "模型路由（支持条件分流、有界故障切换与逐次尝试记录）",
                 )}
               </li>
               <li>
@@ -2721,8 +2686,8 @@ export default function LandingContent({
               </li>
               <li>
                 {t(
-                  "Full-trace request logs and separated cost vs. customer retail billing",
-                  "全链路调用明细日志，以及采购底价与对客售价完全分离的计费账本",
+                  "Request logs, token usage and customer-facing charges",
+                  "请求明细日志、Token 用量与实际调用费用",
                 )}
               </li>
               <li>
@@ -2816,8 +2781,8 @@ export default function LandingContent({
             <div className="landing-blog-intro">
               <p>
                 {t(
-                  "Gateway performance, financial accounting, and operating model APIs in production.",
-                  "分享网关性能优化、双盲财务账本设计以及模型 API 生产运营经验。",
+                  "Model access, token usage and reliable API integration in practice.",
+                  "分享模型接入、Token 用量管理与调用可靠性的工程实践。",
                 )}
               </p>
               <a className="text-link" href="/blog/">
@@ -2907,8 +2872,8 @@ export default function LandingContent({
           <div className="faq-intro">
             <p>
               {t(
-                "What operators verify before putting Niu in front of customer traffic and billing.",
-                "模型服务运营商在将 Niu 牛元接入生产流量与客户计费前通常会核实的关键细节。",
+                "What developers and teams need to know before connecting their applications.",
+                "开发者和团队在接入应用前需要了解的关键问题。",
               )}
             </p>
             <div className="faq-intro-links">
@@ -2959,29 +2924,29 @@ export default function LandingContent({
           <span className="closing-glow" aria-hidden="true" />
           <p className="eyebrow">
             {t(
-              "FULL-STACK OPEN SOURCE · 10× PERFORMANCE · COMMERCIAL-READY",
-              "全栈开源 · 10 倍性能 · 丰富商业化功能",
+              "PERFORMANCE · RELIABILITY · ECONOMY",
+              "性能 · 可靠性 · 经济性",
             )}
           </p>
           <h2 id="closing-title">
             {isZh ? (
               <>
-                立即部署 Niu 牛元，
+                开始使用 Niu 牛元，
                 <br />
-                <span className="accent">开启您的模型 API 商业服务。</span>
+                <span className="accent">让 Token 使用更有条理。</span>
               </>
             ) : (
               <>
-                Deploy Niu today and
+                Put your tokens to work.
                 <br />
-                <span className="accent">launch your model API service.</span>
+                <span className="accent">Keep usage under control.</span>
               </>
             )}
           </h2>
           <p className="closing-copy">
             {t(
-              "Self-host the full MIT stack with your own PostgreSQL in minutes, or try the live workspace console right now.",
-              "几分钟内连接您自己的 PostgreSQL 私有化部署全栈开源系统，或立即进入在线控制台体验完整功能。",
+              "Browse models, create a workspace API key and start calling. You can also self-host the open-source stack.",
+              "浏览模型，创建工作空间 API 密钥并开始调用；也可以自行部署开源版本。",
             )}
           </p>
           <div className="actions hero-actions">

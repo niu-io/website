@@ -50,9 +50,9 @@ const latestPosts = publishedPosts(await getCollection("blog"))
   }));
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 const asset = (path: string) => `${base}/${path}`;
-const title = "Niu — Build your model API business";
+const title = "Niu — Token management platform";
 const description =
-  "Open-source infrastructure for model aggregation businesses. Operate model supply, keep clear accounts, and give customers a service they can trust.";
+  "A token management platform for developers and teams. Access model APIs with performance, reliability and clear control over token usage and spending.";
 const canonical = new URL(`${base}/`, Astro.site);
 ---
 

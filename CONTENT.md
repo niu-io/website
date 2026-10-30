@@ -4,11 +4,11 @@ Reviewed October 14, 2026. This baseline follows the public [Niu product focus](
 
 ## Positioning
 
-Niu serves developers and teams using model APIs in applications. Lead with model access, clear usage and accountable spending. Lower-cost access through qualified Supplier offers is the commercial direction; it is not evidence that an offer is currently cheaper or that every model is available.
+Niu is a Token management platform for developers and teams consuming model APIs. Lead with performance, reliability and economy: model access, request evidence, clear token usage, spending and budgets. Do not position the landing page as a token resale or model API business platform. Lower-cost access through qualified Supplier offers is the commercial direction; it is not evidence that an offer is currently cheaper or that every model is available.
 
 The main workflow is connect model supply → issue a workspace key → make a model request → inspect usage/customer charges. Include saved Chat and Video management, supported video job status and authorized result access. Niu handles model requests; external applications own their tasks, tools and outcomes.
 
-Product name: Niu. Keep niu.io only in actual domain URLs/configuration. Primary action: Get started. Secondary: Browse models. Docs, API, SDK and Compare remain separate navigation entries alongside Models.
+Product name: Niu. Keep niu.io only in actual domain URLs/configuration. Primary action: Get started. Secondary: Browse models. Marketing navigation has one Docs entry alongside Blog, Models and Compare; API and SDK references are reached within Docs. Use Docs for navigation labels.
 
 ## Current capability evidence
 

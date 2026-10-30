@@ -13,7 +13,7 @@ export default function NiuBrand({ variant = 'lockup', locale, className = '' }:
   return <span className={`niu-brand ${className}`} data-brand-locale={locale ?? 'auto'} aria-hidden="true">
     {(['en', 'zh-CN'] as const).filter(language => !locale || locale === language).map(language => <svg key={language} data-brand-language={language} viewBox={`0 0 ${language === 'en' ? 312 : 506} 128`} focusable="false">
       {mark}
-      <g transform="translate(148 20) scale(0.8)" fill="currentColor">
+      <g transform={`translate(${lettering.lockupPlacement.x} ${lettering.lockupPlacement.y}) scale(${lettering.lockupPlacement.scale})`} fill="currentColor">
         {lettering.latin.map(glyph => <path key={glyph.character} d={glyph.path} />)}
         {language === 'zh-CN' && <g transform={`translate(${lettering.chineseOffset.x} ${lettering.chineseOffset.y})`} stroke="currentColor" strokeWidth={lettering.chineseStrokeWidth} strokeLinejoin="round">{lettering.chinese.map(glyph => <path key={glyph.character} d={glyph.path} />)}</g>}
       </g>
