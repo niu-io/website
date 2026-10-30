@@ -34,21 +34,21 @@ export default function CompareBenchmark() {
       <h2 id="performance-title">{t("Niu, New API and LiteLLM Proxy", "Niu 牛元、New API 与 LiteLLM Proxy")}</h2>
       <p>
         {t(
-          "Our published benchmark covers throughput, tail latency, SSE streaming, multi-turn coding sessions and memory. The archived figures below use Niu v0.2.4, New API 45fbb14 and LiteLLM Proxy v1.104.0.",
-          "公开的性能基准测试涵盖吞吐量、尾延迟、SSE 流式传输、多轮编程智能体会话及内存占用。下方归档数据基于 Niu v0.2.4、New API 45fbb14 与 LiteLLM Proxy v1.104.0。",
+          "Archived runs: Niu v0.2.4, New API 45fbb14 and LiteLLM Proxy v1.104.0.",
+          "历史测试版本：Niu v0.2.4、New API 45fbb14、LiteLLM Proxy v1.104.0。",
         )}
       </p>
       <p>
         {t(
-          "Apple M4 (10-core, 24 GB), macOS arm64, PostgreSQL 17.11, loopback networking and a deterministic zero-delay mock upstream. These are historical synthetic measurements, unverified for the current release; they do not establish current end-to-end performance or production capacity. OpenRouter was not included in this run.",
-          "测试环境：Apple M4（10 核，24 GB）、macOS arm64、PostgreSQL 17.11、本地回环网络及确定性零延迟模拟上游。以下为历史基准测量数据，不代表生产端到端模型推理延迟；OpenRouter 未包含在此项本地网关测试中。",
+          "Apple M4, 24 GB · PostgreSQL 17.11 · local zero-delay mock upstream. Historical synthetic results, not current-release or production capacity claims. OpenRouter was not tested.",
+          "Apple M4、24 GB · PostgreSQL 17.11 · 本地零延迟模拟上游。历史合成测试，不代表当前版本或生产容量；未测试 OpenRouter。",
         )}
       </p>
       <Table className="compare-table">
         <TableCaption>
           {t(
-            "Archived measurements from the published report. RPS means requests per second; p99 is the 99th-percentile latency. Coding sessions are simulated workloads, not completed coding tasks.",
-            "公开基准报告中的归档测量结果。RPS 表示每秒请求数；p99 表示第 99 百分位尾延迟。",
+            "RPS: requests/second · p99: 99th-percentile latency · coding sessions: simulated workloads.",
+            "RPS：每秒请求数 · p99：第 99 百分位延迟 · 编程会话为模拟负载。",
           )}
         </TableCaption>
         <TableHeader>
@@ -81,8 +81,8 @@ export default function CompareBenchmark() {
       </Table>
       <p className="compare-note">
         {t(
-          "Configurations differ: Niu records PostgreSQL admission and batched completion; New API uses cached token access and batched usage logging; LiteLLM Proxy uses an in-memory master key with database spend logging disabled. PostgreSQL synchronous_commit was off. Consult the full report before interpreting these figures.",
-          "配置差异说明：Niu 牛元记录 PostgreSQL 转发前准入与批量完成结算；New API 启用内存缓存与批量日志；LiteLLM Proxy 使用内存 master_key 并关闭数据库日志。详细方法论请参阅完整基准报告。",
+          "Different configurations: Niu used PostgreSQL admission and batched completion; New API used token caching and batched logs; LiteLLM used an in-memory master key without database spend logs. PostgreSQL synchronous_commit was off.",
+          "配置不同：Niu 牛元使用 PostgreSQL 准入与批量结算；New API 使用令牌缓存与批量日志；LiteLLM 使用内存 master_key，关闭数据库消费日志。PostgreSQL synchronous_commit 关闭。",
         )}
       </p>
       <div className="compare-actions">

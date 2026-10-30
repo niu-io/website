@@ -1,6 +1,7 @@
 ---
 title: "Why Niu? A Token Management Platform for Developers and Teams"
 description: "Performance, reliability and economy for people using model APIs. Access models, manage token spending and understand every request."
+cover: "/site-assets/blog/why-niu-v3.webp"
 status: "published"
 pinned: true
 pinOrder: 0

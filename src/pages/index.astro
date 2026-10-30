@@ -8,6 +8,7 @@ import "../styles/public-header.css";
 import SiteHeader from "../components/SiteHeader.astro";
 import SiteFooter from "../components/SiteFooter.astro";
 import { getCollection } from "astro:content";
+import { formatDate, readingTime } from "../content/blog-format";
 import { publishedPosts } from "../content/blog-policy";
 import "../styles/landing-blog.css";
 import "../styles/landing-visual.css";
@@ -23,12 +24,17 @@ const highlightedCode = await Promise.all(
   ),
 );
 
+const blogTranslations = publishedPosts(await getCollection("blogTranslations"));
 const latestPosts = publishedPosts(await getCollection("blog"))
   .slice(0, 3)
   .map(({ id, data, body }) => ({
     href: `/blog/${id}/`,
     title: data.title,
-    chineseTitle: data.chineseTitle,
+    chineseTitle: blogTranslations.find(post => post.id === id)?.data.title ?? data.chineseTitle,
+    chineseDescription: blogTranslations.find(post => post.id === id)?.data.description,
+    chineseDateLabel: formatDate(data.publishedAt, "zh-CN"),
+    chineseReadingTime: readingTime(blogTranslations.find(post => post.id === id)?.body ?? body, "zh-CN"),
+    chineseCategory: blogTranslations.find(post => post.id === id)?.data.category,
     description: data.description,
     category: data.category,
     publishedAt: data.publishedAt,

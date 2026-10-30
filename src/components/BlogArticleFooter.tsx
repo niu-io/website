@@ -6,20 +6,22 @@ export default function BlogArticleFooter() {
   return (
     <footer className="blog-article-footer">
       <div>
-        <h2>{t("Build your model API business", "构建并运营您的模型 API 商业服务")}</h2>
+        <h2>{t("Make your first model request", "开始你的第一次模型请求")}</h2>
         <p>
           {t(
-            "Evaluate model delivery, clear accounts, and the experience you can offer customers.",
-            "评估模型路由交付、清晰的财务账本，以及您可以为客户提供的完整产品体验。",
+            "Connect an application, explore models and understand your token usage.",
+            "接入应用、探索模型，并了解你的词元用量。",
           )}
         </p>
       </div>
       <div className="blog-article-actions">
         <Button asChild>
-          <a href="/docs/guides/api-quickstart/">{t("Get started", "快速入门")}</a>
+          <a href="/docs/getting-started/">{t("Get started", "快速入门")}</a>
         </Button>
         <Button asChild variant="outline">
-          <a href="https://github.com/niu-io/niu">{t("View on GitHub", "在 GitHub 查看")}</a>
+          <a href="https://github.com/niu-io/niu">
+            {t("View on GitHub", "在 GitHub 查看")}
+          </a>
         </Button>
       </div>
     </footer>

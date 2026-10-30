@@ -36,3 +36,9 @@ Landing, Models, Docs, API, SDK and Compare use the same navigation definition, 
 Marketing source stays in this repository. Docs/catalog import Niu's canonical public shell styles and navigation; this website ships a checked snapshot, with no build dependency on an adjacent public checkout.
 
 Chinese product copy uses 词元 for Token. The Chinese headline is split into “让每个词元” and “发挥更大价值”, with no comma. English retains Token.
+
+## Blog translations and covers
+
+Blog articles use English Markdown in `src/content/blog` and matching Simplified Chinese Markdown in `src/content/blog-translations`, with the same file ID. Both collections use the same metadata schema and publication policy. Preserve section order between translations so a language change can retain the corresponding linked section. Missing translations fall back to English. The existing header language choice controls article metadata, contents and body, and also localizes the landing-page previews.
+
+Set `cover` on the English article to a website-owned `/site-assets/blog/` image; the index, article and social metadata reuse it. Prefer text-free abstract editorial artwork using Niu colors. Do not put explanatory labels, fabricated charts or benchmark results into cover art. Generation provenance belongs in the website source, alongside the article assets.

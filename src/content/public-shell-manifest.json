@@ -4,7 +4,7 @@
     "src/styles/tokens.css": "9b630280a2f0dbf6186a33312e03d6548e8d0467d8b547b68308055fdf1aa092",
     "src/styles/public-header.css": "09220dbd546396fdb7f9c4fb66037782871f7c69f26a3aa2486518d6137aa9f6",
     "src/content/public-navigation.json": "cc49a3649789518b221f989dae9976978ca3e3f5a89888afa1f164d1b2e39051",
-    "src/components/locale.ts": "e10b76d5701b489115c2f1fa5b3ce4279fe91ad5248778e34003286557893a92",
+    "src/components/locale.ts": "9e9361a42bc54bb5bb2efd1e1f5e5010410a25ee1c5e2ba0ee30e1844ae185ca",
     "src/components/PublicHeader.tsx": "a3703614e6bc861bab9d50250db560fd3e641eb334d963d6f10b2a3c15cb7a7f",
     "src/components/SessionLink.tsx": "93fb266a290f17e1b3890959a1820169e970876d44a615f11929f0a73f167328",
     "src/components/live-api/session.ts": "fe89a76e3505741e7b30631fea828d54cf80ecb26086c43f3c298ca75c64cf7e",
@@ -25,5 +25,7 @@
   "sourceRevision": "d1c8c2282e8dd0303349ba04875b69e158a46fdf",
   "sourceWorkingTreeModified": false,
   "brandSourceRevision": "e1b0063b3c168ad4fdaad9ea52717f833fc93ddc",
-  "brandSourceWorkingTreeModified": false
+  "brandSourceWorkingTreeModified": false,
+  "localeSourceRevision": "47cffaa5c01e227494436d25be3eda4ae025538c",
+  "localeSourceWorkingTreeModified": true
 }

@@ -13,12 +13,25 @@ import SiteFooter from "../components/SiteFooter.astro";
 interface Props {
   title: string;
   description: string;
+  image?: string;
+  chineseTitle?: string;
+  chineseDescription?: string;
   ogType?: "website" | "article";
 }
 
-const { title, description, ogType = "website" } = Astro.props;
+const {
+  title,
+  description,
+  image,
+  chineseTitle = title,
+  chineseDescription = description,
+  ogType = "website",
+} = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
-const socialImage = new URL("/site-assets/brand/niu-social-en-dark.png", Astro.site);
+const socialImage = new URL(
+  image ?? "/site-assets/brand/niu-social-en-dark.png",
+  Astro.site,
+);
 ---
 
 <!doctype html>
@@ -26,13 +39,31 @@ const socialImage = new URL("/site-assets/brand/niu-social-en-dark.png", Astro.s
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>{title} — Niu</title>
-    <meta name="description" content={description} />
+    <title
+      data-en={`${title} — Niu`}
+      data-zh={`${chineseTitle} — Niu 牛元`}
+    >{title} — Niu</title>
+    <meta
+      name="description"
+      content={description}
+      data-en={description}
+      data-zh={chineseDescription}
+    />
     <link rel="canonical" href={canonical} />
     <link rel="icon" href="/favicon.ico" />
     <meta property="og:type" content={ogType} />
-    <meta property="og:title" content={`${title} — Niu`} />
-    <meta property="og:description" content={description} />
+    <meta
+      property="og:title"
+      content={`${title} — Niu`}
+      data-en={`${title} — Niu`}
+      data-zh={`${chineseTitle} — Niu 牛元`}
+    />
+    <meta
+      property="og:description"
+      content={description}
+      data-en={description}
+      data-zh={chineseDescription}
+    />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={socialImage} />
     <meta name="twitter:card" content="summary_large_image" />
@@ -46,5 +77,23 @@ const socialImage = new URL("/site-assets/brand/niu-social-en-dark.png", Astro.s
       <slot />
     </main>
     <SiteFooter />
+    <script>
+      const syncMetadata = () => {
+        const key =
+          document.documentElement.dataset.locale === "zh-CN"
+            ? "data-zh"
+            : "data-en";
+        document
+          .querySelectorAll<HTMLElement>("head [data-en][data-zh]")
+          .forEach((el) => {
+            const value = el.getAttribute(key) ?? "";
+            if (el.tagName === "META") el.setAttribute("content", value);
+            else el.textContent = value;
+          });
+      };
+      syncMetadata();
+      window.addEventListener("niu-locale-change", syncMetadata);
+      window.addEventListener("storage", syncMetadata);
+    </script>
   </body>
 </html>

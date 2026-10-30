@@ -9,11 +9,11 @@ export default function CompareOverview() {
     <>
       <header className="compare-intro">
         <p className="compare-eyebrow">{t("Compare", "能力对比")}</p>
-        <h1>{t("Niu, New API and OpenRouter", "Niu 牛元、New API 与 OpenRouter 对比")}</h1>
+        <h1>{t("Niu, LiteLLM and OpenRouter", "Niu 牛元、LiteLLM 与 OpenRouter 对比")}</h1>
         <p>
           {t(
-            "From your first model call to ongoing application operations: Niu combines Provider management, workspace budgets, transparent usage and billing, and text/video generation management. Compare it with New API for a straightforward start and OpenRouter for hosted model access.",
-            "从第一次模型调用到持续生产运营：Niu 牛元集成了供应商管理、工作空间预算、透明的用量与计费账本，以及生成对话与视频工作台。将其与适合轻量起步的 New API 及托管模型服务 OpenRouter 进行全面对比。",
+            "From your first model call to ongoing application operations: Niu combines Provider management, workspace budgets, transparent usage and billing, and text/video generation management. Compare it with LiteLLM for self-hosted gateway and SDK workflows, and OpenRouter for hosted model access.",
+            "从第一次模型调用到持续生产运营：Niu 牛元集成了供应商管理、工作空间预算、透明的用量与计费账本，以及生成对话与视频工作台。与提供自托管网关及 Python SDK 的 LiteLLM，以及托管模型服务 OpenRouter 对比。",
           )}
         </p>
       </header>

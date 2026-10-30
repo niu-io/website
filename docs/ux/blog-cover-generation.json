@@ -1,0 +1,15 @@
+{
+  "generator": "Built-in image_gen",
+  "reviewed": "2026-10-30",
+  "style": "Abstract editorial art; ivory, graphite and warm orange; no text or explanatory diagrams.",
+  "assets": [
+    {
+      "file": "why-niu-v3.webp",
+      "prompt": "Create an abstract premium editorial cover for a sophisticated AI infrastructure brand. Ultra abstract, artistic, not educational. Wide 16:9 landscape. On a warm ivory background, hundreds of very fine graphite filaments and luminous burnt-orange strands sweep in from the left, converge into an elegant narrow sculptural waist near the center, then fan out in broad silky flowing ribbons toward the right. Like a long exposure of carefully controlled energy or a high-end optical sculpture, subtly suggesting aggregation and routing without depicting a diagram. Beautiful visual tension, restrained material detail, fine grain, soft shadow, matte ivory and charcoal with precise warm orange #ed682b accents. Intentional asymmetry, art-directed curves, strong negative space, sophisticated composition readable at thumbnail scale. Absolutely no words, text, letters, numbers, labels, symbols, arrows, diagrams, devices, servers, screens, charts, architectural doorways, bridges, balls, coins or logos. Not a tech explainer. No neon blue or purple, no generic AI brain. Output only full-bleed artwork."
+    },
+    {
+      "file": "compare-v3.webp",
+      "prompt": "Create an ultra-abstract premium editorial cover in a warm ivory, graphite and burnt orange #ed682b palette for a sophisticated AI infrastructure brand. Wide 16:9 landscape. An arresting sculptural rhythm of many slim elongated matte graphite fins and fine orange light traces, arranged in several flowing parallel bands that become progressively tighter and denser across the composition; small crisp orange streaks contrast with long soft motion trails. Evoke cadence, measured speed, load and precision through repetition, interval and motion alone. Like a high-end kinetic art installation photographed with controlled long exposure, minimal and exquisitely art directed, soft studio shadows and subtle grain, generous ivory negative space. Complement an editorial cover of flowing convergent filaments; same palette and quiet artistic confidence but clearly distinct rhythm and silhouette. Absolutely no words, text, letters, numbers, labels, symbols, arrows, charts, graphs, gauges, stopwatches, diagrams, devices, servers, screens, architectural doorways, bridges, balls, coins or logos. No educational explainer, no infographic, no dashboard. No neon blue/purple. Output only full-bleed abstract artwork."
+    }
+  ]
+}

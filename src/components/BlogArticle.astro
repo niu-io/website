@@ -1,0 +1,143 @@
+---
+import { render } from "astro:content";
+import type { CollectionEntry } from "astro:content";
+import { IconArrowUp, IconLink } from "@tabler/icons-react";
+import { Button } from "./ui/button";
+import {
+  formatDate,
+  readingTime as estimateReadingTime,
+} from "../content/blog-format";
+interface Props {
+  post: CollectionEntry<"blog"> | CollectionEntry<"blogTranslations">;
+  locale: "en" | "zh-CN";
+  cover?: string;
+}
+const { post, locale, cover } = Astro.props;
+const { Content, headings } = await render(post);
+const sections = headings.filter((heading) => heading.depth === 2);
+const readingTime =
+  locale === "en" && post.data.readingTime
+    ? post.data.readingTime
+    : estimateReadingTime(post.body, locale);
+const published = formatDate(post.data.publishedAt, locale);
+const updated = post.data.updatedAt
+  ? formatDate(post.data.updatedAt, locale)
+  : null;
+---
+
+<article class="blog-article" data-blog-language={locale} lang={locale}>
+  <header class="blog-article-header">
+    <nav class="blog-breadcrumb" aria-label="Breadcrumb">
+      <a href="/blog/" data-en="Blog" data-zh="博客">
+        Blog
+      </a>
+      <span aria-hidden="true">/</span>
+      <span>{post.data.category}</span>
+    </nav>
+    <h1>{post.data.title}</h1>
+
+    <p class="blog-article-lead">{post.data.description}</p>
+    <div class="blog-byline">
+      <span class="blog-byline-avatar" aria-hidden="true">
+        <img
+          src="/site-assets/brand/niu-mark.png"
+          alt=""
+          width="20"
+          height="20"
+        />
+      </span>
+      <span class="blog-byline-author">{post.data.author}</span>
+      <span class="blog-byline-dot" aria-hidden="true">
+        ·
+      </span>
+      <time datetime={post.data.publishedAt}>{published}</time>
+      <span class="blog-byline-dot" aria-hidden="true">
+        ·
+      </span>
+      <span>{readingTime}</span>
+    </div>
+  </header>
+
+  {cover && (
+    <img
+      class="blog-article-cover"
+      src={cover}
+      alt=""
+      width="1672"
+      height="941"
+    />
+  )}
+  <div class="blog-article-layout">
+    <div class="blog-prose">
+      <Content />
+    </div>
+
+    <aside class="blog-rail" aria-label="Article details">
+      <dl class="blog-rail-facts">
+        <div>
+          <dt data-en="Published" data-zh="发布">
+            Published
+          </dt>
+          <dd>
+            <time datetime={post.data.publishedAt}>{published}</time>
+          </dd>
+        </div>
+        {updated && (
+          <div>
+            <dt data-en="Updated" data-zh="更新">
+              Updated
+            </dt>
+            <dd>
+              <time datetime={post.data.updatedAt}>{updated}</time>
+            </dd>
+          </div>
+        )}
+        <div>
+          <dt data-en="Reading time" data-zh="阅读时长">
+            Reading time
+          </dt>
+          <dd>{readingTime}</dd>
+        </div>
+      </dl>
+      {sections.length > 1 && (
+        <nav class="blog-toc" aria-labelledby={`blog-toc-title-${locale}`}>
+          <p
+            id={`blog-toc-title-${locale}`}
+            data-en="On this page"
+            data-zh="本文目录"
+          >
+            On this page
+          </p>
+          <ol>
+            {sections.map((section) => (
+              <li>
+                <a href={`#${section.slug}`} data-toc-link={section.slug}>
+                  {section.text}
+                </a>
+              </li>
+            ))}
+          </ol>
+        </nav>
+      )}
+      <div class="blog-rail-actions">
+        <Button
+          type="button"
+          variant="ghost"
+          className="blog-rail-action"
+          data-copy-link
+        >
+          <IconLink size={15} aria-hidden="true" />
+          <span data-copy-label data-en="Copy link" data-zh="复制链接">
+            Copy link
+          </span>
+        </Button>
+        <a class="blog-rail-action" href="#main">
+          <IconArrowUp size={15} aria-hidden="true" />
+          <span data-en="Back to top" data-zh="回到顶部">
+            Back to top
+          </span>
+        </a>
+      </div>
+    </aside>
+  </div>
+</article>

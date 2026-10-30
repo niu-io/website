@@ -1,109 +1,130 @@
 ---
-import { getCollection, render } from "astro:content";
+import { getCollection } from "astro:content";
 import { publishedPosts } from "../../content/blog-policy";
-import { IconArrowRight, IconPin } from "@tabler/icons-react";
+import { formatDate, readingTime } from "../../content/blog-format";
+import { IconArrowRight } from "@tabler/icons-react";
 import BlogLayout from "../../layouts/BlogLayout.astro";
-
 const posts = publishedPosts(await getCollection("blog"));
-const entries = await Promise.all(
-  posts.map(async (post) => {
-    const { headings } = await render(post);
-    return { post, sections: headings.filter((heading) => heading.depth === 2) };
-  }),
-);
-
-function formatDate(isoDate: string): string {
-  const [year, month, day] = isoDate.split("-").map(Number);
-  return new Date(Date.UTC(year, month - 1, day)).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    timeZone: "UTC",
-  });
-}
-
-function getReadingTime(body: string | undefined, explicit?: string): string {
-  if (explicit) return explicit;
-  const words = (body ?? "").trim().split(/\s+/).filter(Boolean).length;
-  const minutes = Math.max(1, Math.round(words / 220));
-  return `${minutes} min read`;
-}
+const translations = publishedPosts(await getCollection("blogTranslations"));
 ---
 
 <BlogLayout
   title="Blog"
-  description="Product and engineering notes on operating a model API business: delivery, accounting and customer trust."
+  chineseTitle="博客"
+  description="Ideas and engineering behind better model access, reliable requests and clear token spending."
+  chineseDescription="关于模型接入、可靠请求与清晰词元开支的产品思考和工程实践。"
 >
   <header class="blog-intro">
-    <p class="blog-eyebrow" data-en="Blog" data-zh="博客">Blog</p>
-    <h1 data-en="Building a model API business" data-zh="构建并运营模型 API 商业服务">Building a model API business</h1>
+    <p class="blog-eyebrow" data-en="The Niu blog" data-zh="牛元博客">
+      The Niu blog
+    </p>
+    <h1 data-en="Make every token count." data-zh="让每个词元发挥更大价值">
+      Make every token count.
+    </h1>
     <p
-      data-en="Product and engineering decisions behind model delivery, clear accounts, and a service customers can trust."
-      data-zh="围绕模型路由交付、清晰的财务账本与可信赖客户服务背后的产品与工程实践。"
+      data-en="Ideas, decisions and engineering behind better model access."
+      data-zh="关于模型接入的产品思考、架构选择与工程实践。"
     >
-      Product and engineering decisions behind model delivery, clear accounts,
-      and a service customers can trust.
+      Ideas, decisions and engineering behind better model access.
     </p>
   </header>
-
-  <section class="blog-list" aria-label="Published articles">
-    {entries.map(({ post, sections }) => {
+  <section class="blog-list" aria-label="Blog">
+    {posts.map((post) => {
+      const zh = translations.find((item) => item.id === post.id);
       const href = `/blog/${post.id}/`;
-      const readingTime = getReadingTime(post.body, post.data.readingTime);
       return (
         <article class="blog-entry">
+          <a
+            class={`blog-cover ${post.id === "compare" ? "blog-cover-compare" : ""}`}
+            href={href}
+            tabindex="-1"
+            aria-hidden="true"
+          >
+            {post.data.cover && (
+              <img
+                src={post.data.cover}
+                alt=""
+                width="1672"
+                height="941"
+                loading="eager"
+              />
+            )}
+          </a>
           <div class="blog-entry-body">
             <div class="blog-entry-meta">
-              {post.data.pinned && (
-                <span class="blog-pinned">
-                  <IconPin size={13} aria-hidden="true" />
-                  <span data-en="Pinned" data-zh="置顶">Pinned</span>
-                </span>
-              )}
-              <span class="blog-entry-category">{post.data.category}</span>
-              <time datetime={post.data.publishedAt}>{formatDate(post.data.publishedAt)}</time>
-              <span>{readingTime}</span>
+              <span
+                class="blog-entry-category"
+                data-en={post.data.category}
+                data-zh={zh?.data.category ?? post.data.category}
+              >
+                {post.data.category}
+              </span>
+              <time
+                datetime={post.data.publishedAt}
+                data-en={formatDate(post.data.publishedAt)}
+                data-zh={formatDate(post.data.publishedAt, "zh-CN")}
+              >
+                {formatDate(post.data.publishedAt)}
+              </time>
+              <span
+                data-en={readingTime(post.body)}
+                data-zh={readingTime(zh?.body ?? post.body, "zh-CN")}
+              >
+                {readingTime(post.body)}
+              </span>
             </div>
             <h2>
-              <a href={href}>{post.data.title}</a>
+              <a
+                href={href}
+                data-en={post.data.title}
+                data-zh={zh?.data.title ?? post.data.title}
+              >
+                {post.data.title}
+              </a>
             </h2>
-            {post.data.chineseTitle && (
-              <p class="blog-entry-zh" lang="zh-CN">
-                {post.data.chineseTitle}
-              </p>
-            )}
-            <p class="blog-entry-summary">{post.data.description}</p>
+            <p
+              class="blog-entry-summary"
+              data-en={post.data.description}
+              data-zh={zh?.data.description ?? post.data.description}
+            >
+              {post.data.description}
+            </p>
             <div class="blog-entry-footer">
               <span class="blog-byline">
-                <span class="blog-byline-avatar" aria-hidden="true">
-                  <img src="/site-assets/brand/niu-mark.png" alt="" width="20" height="20" />
+                <span
+                  class="blog-byline-author"
+                  data-en={post.data.author}
+                  data-zh={zh?.data.author ?? post.data.author}
+                >
+                  {post.data.author}
                 </span>
-                <span class="blog-byline-author">{post.data.author}</span>
               </span>
-              <a class="blog-read-link" href={href} aria-label={`Read article: ${post.data.title}`}>
-                <span data-en="Read article" data-zh="阅读全文">Read article</span>
-                <IconArrowRight size={15} aria-hidden="true" />
+              <a class="blog-read-link" href={href}>
+                <span data-en="Read article" data-zh="阅读全文">
+                  Read article
+                </span>
+                <IconArrowRight size={16} aria-hidden="true" />
               </a>
             </div>
           </div>
-          {sections.length > 1 && (
-            <nav class="blog-entry-outline" aria-label={`${post.data.title} sections`}>
-              <p data-en="In this article" data-zh="本文内容">In this article</p>
-              <ol>
-                {sections.map((section, index) => (
-                  <li>
-                    <span class="blog-entry-outline-index">{String(index + 1).padStart(2, "0")}</span>
-                    <a href={`${href}#${section.slug}`}>{section.text}</a>
-                  </li>
-                ))}
-              </ol>
-            </nav>
-          )}
         </article>
       );
     })}
   </section>
-  <script is:inline>
-    (()=>{const sync=()=>{const zh=document.documentElement.dataset.locale==='zh-CN'||document.documentElement.lang==='zh-CN';document.querySelectorAll('main [data-en][data-zh]').forEach(el=>{el.textContent=el.getAttribute(zh?'data-zh':'data-en')||'';});};sync();window.addEventListener('niu-locale-change',sync);window.addEventListener('storage',sync);})();
+  <script>
+    const sync = () => {
+      const key =
+        document.documentElement.dataset.locale === "zh-CN"
+          ? "data-zh"
+          : "data-en";
+      document
+        .querySelectorAll<HTMLElement>("main [data-en][data-zh]")
+        .forEach((el) => {
+          el.textContent = el.getAttribute(key) ?? "";
+        });
+    };
+    sync();
+    window.addEventListener("niu-locale-change", sync);
+    window.addEventListener("storage", sync);
   </script>
 </BlogLayout>

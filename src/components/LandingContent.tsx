@@ -68,6 +68,10 @@ interface LandingPost {
   href: string;
   title: string;
   chineseTitle?: string;
+  chineseDescription?: string;
+  chineseCategory?: string;
+  chineseDateLabel?: string;
+  chineseReadingTime?: string;
   description: string;
   category: string;
   publishedAt: string;
@@ -2806,15 +2810,15 @@ export default function LandingContent({
                 <div className="landing-blog-main">
                   <div className="landing-blog-meta">
                     <span className="landing-blog-category">
-                      {post.category}
+                      {isZh && post.chineseCategory ? post.chineseCategory : post.category}
                     </span>
-                    <time dateTime={post.publishedAt}>{post.dateLabel}</time>
-                    <span>{post.readingTime}</span>
+                    <time dateTime={post.publishedAt}>{isZh && post.chineseDateLabel ? post.chineseDateLabel : post.dateLabel}</time>
+                    <span>{isZh && post.chineseReadingTime ? post.chineseReadingTime : post.readingTime}</span>
                   </div>
                   <h3>
                     {isZh && post.chineseTitle ? post.chineseTitle : post.title}
                   </h3>
-                  <p>{post.description}</p>
+                  <p>{isZh && post.chineseDescription ? post.chineseDescription : post.description}</p>
                   <span className="text-link">
                     {t("Read article", "阅读全文")}{" "}
                     <IconArrowRight size={16} aria-hidden="true" />

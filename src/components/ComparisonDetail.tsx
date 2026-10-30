@@ -69,7 +69,7 @@ export default function ComparisonDetail({
           ))}
         </TableBody>
       </Table>
-      {comparison.slug === "new-api" && <CompareBenchmark />}
+      {comparison.slug === "litellm" && <CompareBenchmark />}
       <section className="compare-section">
         <h2>{t("Why choose Niu?", "为什么选择 Niu 牛元？")}</h2>
         <Table className="compare-table decision-table">

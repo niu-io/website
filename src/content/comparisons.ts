@@ -1,39 +1,51 @@
-export const reviewed = "October 13, 2026";
+export const reviewed = "October 30, 2026";
 export const comparisons = [
   {
-    "slug": "new-api",
-    "name": "New API",
-    "intro": "New API is a straightforward way to try a model gateway. Choose Niu when model access becomes part of your business: manage Providers, application budgets, usage and customer billing in one place, with video jobs and saved generation history alongside text APIs. Niu is built for ongoing operation, beyond a first API call.",
+    "slug": "litellm",
+    "name": "LiteLLM",
+    "intro": "Compare two self-hosted gateways by operating model. Niu focuses on Provider management, workspace budgets and customer-charge accounting. LiteLLM offers a Proxy and Python SDK with broad Provider integrations, virtual keys, spend tracking and configurable routing. Choose against the capabilities you need today.",
     "rows": [
       {
         "category": "Access & billing",
         "feature": "From experimentation to ongoing operation",
         "niu": "Provider management, company/workspace/key budgets, request accounting and text/video generation management",
-        "alternative": "Straightforward channel configuration, API keys and a playground for getting started"
+        "alternative": "Self-hosted Proxy and Python SDK with virtual keys, spend tracking and an admin UI"
+      },
+      {
+        "category": "Model access",
+        "feature": "Video generation management",
+        "niu": "Create and track supported video jobs, restore saved inputs and history, and preview/download available results with workspace-key authorization",
+        "alternative": "Supported video endpoints depend on the configured model and Provider"
       },
       {
         "category": "Access & billing",
         "feature": "Application keys",
         "niu": "Workspace keys with model grants, expiry, revocation and rotation",
-        "alternative": "API keys with restrictions; users/groups"
+        "alternative": "Virtual keys with model access, budgets and expiry"
       },
       {
         "category": "Access & billing",
         "feature": "Spending controls",
         "niu": "Company funds plus independent workspace/key caps; outstanding reservations count",
-        "alternative": "Quotas and subscriptions"
+        "alternative": "Key, user and team budgets; configurable budget duration"
       },
       {
         "category": "Access & billing",
         "feature": "Pricing",
         "niu": "Customer tariffs are separate from Provider offers; unresolved charges stay unknown",
-        "alternative": "Expression pricing and cache accounting"
+        "alternative": "Model cost tracking with configurable pricing"
       },
       {
         "category": "Observability",
         "feature": "Request history",
         "niu": "PostgreSQL records: model, key, status, reported tokens, timing and customer charge",
-        "alternative": "Usage logs and audit logs"
+        "alternative": "Spend logs and configurable logging integrations"
+      },
+      {
+        "category": "Observability",
+        "feature": "Inspecting retries",
+        "niu": "Each recorded attempt remains distinguishable from the request",
+        "alternative": "Retry and fallback configuration; logging depends on configured integrations"
       },
       {
         "category": "Model access",
@@ -45,139 +57,101 @@ export const comparisons = [
         "category": "Model access",
         "feature": "Model names",
         "niu": "Aliases mapped to configured upstream models",
-        "alternative": "Configured models and channel mappings"
+        "alternative": "Model aliases in model_list map to upstream deployments"
       },
       {
         "category": "Model access",
         "feature": "Upstream credentials",
         "niu": "Provider businesses with separate credentials and model mappings",
-        "alternative": "Channels; multiple upstream keys"
+        "alternative": "Provider credentials configured per deployment"
       },
       {
         "category": "Model access",
         "feature": "Routing",
         "niu": "Configured pools with priorities and weights",
-        "alternative": "Channel priorities, weights and affinity"
+        "alternative": "Load balancing across deployments with configurable strategies"
       },
       {
         "category": "Model access",
         "feature": "Retries and fallbacks",
         "niu": "Bounded Chat failover after a qualified OpenRouter 401; no generic replay of uncertain requests",
-        "alternative": "Configured retries and channel affinity"
-      },
-      {
-        "category": "Model access",
-        "feature": "Native text protocols",
-        "niu": "Chat and Responses; Messages/Gemini require explicitly opted-in mappings and have bounded supported subsets",
-        "alternative": "Chat, Responses, Messages and Gemini conversion"
-      },
-      {
-        "category": "Model access",
-        "feature": "Realtime / WebSocket",
-        "niu": "No public Realtime endpoint in the current contract",
-        "alternative": "Realtime and Responses WebSocket endpoints"
-      },
-      {
-        "category": "Model access",
-        "feature": "Dedicated audio APIs",
-        "niu": "No public speech/transcription endpoints in the current contract",
-        "alternative": "Speech, transcription and translation endpoints"
-      },
-      {
-        "category": "Model access",
-        "feature": "Reranking API",
-        "niu": "No public rerank endpoint in the current contract",
-        "alternative": "POST /v1/rerank"
-      },
-      {
-        "category": "Model access",
-        "feature": "Video generation management",
-        "niu": "Create and track supported video jobs, restore saved inputs and history, and preview/download available results with workspace-key authorization",
-        "alternative": "Video/image task APIs through JavaScript plugins; available workflows depend on the plugin"
+        "alternative": "Configurable retries, cooldowns, timeouts and fallbacks"
       },
       {
         "category": "Model access",
         "feature": "Function tools",
         "niu": "Opt-in route support; the caller executes requested tools",
-        "alternative": "Tools where model/channel conversion supports them"
+        "alternative": "Tool calling for supported models; caller executes tools"
       },
       {
         "category": "Setup",
         "feature": "Where it runs",
         "niu": "Your own gateway deployment",
-        "alternative": "Your own gateway deployment"
+        "alternative": "Self-hosted Proxy or Python SDK in your application"
       },
       {
         "category": "Setup",
         "feature": "Database",
         "niu": "PostgreSQL is required",
-        "alternative": "SQLite, MySQL or PostgreSQL"
+        "alternative": "PostgreSQL required for Proxy virtual-key management"
       },
       {
         "category": "Setup",
         "feature": "Source code",
         "niu": "Public core under MIT",
-        "alternative": "AGPL-3.0"
-      },
-      {
-        "category": "Setup",
-        "feature": "Performance benchmark archive",
-        "niu": "v0.2.4 historical synthetic run; see the performance section below",
-        "alternative": "45fbb14 historical synthetic run; current-release performance unverified"
+        "alternative": "Open-source core; review separate enterprise licensing terms"
       }
     ],
     "decisions": [
       {
-        "need": "Move an application beyond API experimentation",
-        "niu": "Manage access, budgets, request records and customer charges as an ongoing workflow",
-        "alternative": "Start quickly with channel and API-key configuration",
-        "choice": "Choose Niu for ongoing application operations"
+        "need": "Use a Python SDK inside an existing application",
+        "niu": "Gateway accessed through HTTP APIs",
+        "alternative": "Python SDK alongside the self-hosted Proxy",
+        "choice": "Choose LiteLLM for the Python SDK"
       },
       {
-        "need": "Manage video generation alongside text access",
-        "niu": "Saved inputs/history, job status and authorized result preview/download for supported routes",
-        "alternative": "Plugin-based video/image tasks",
-        "choice": "Choose Niu for integrated video management"
+        "need": "Configure retries and fallbacks across deployments",
+        "niu": "Bounded Chat failover after a qualified OpenRouter 401",
+        "alternative": "Configurable retries, cooldowns and fallbacks",
+        "choice": "Choose LiteLLM when broader routing controls are required"
       },
       {
-        "need": "Manage a shared company budget across applications",
-        "niu": "Shared company funds with independent workspace and key spending caps; pending reservations count",
-        "alternative": "User/group quotas and subscriptions",
-        "choice": "Choose Niu for company \u2192 workspace \u2192 key spending control"
+        "need": "Separate customer charges from Provider purchase rates",
+        "niu": "Customer tariffs independent of Provider offers; persisted customer-charge records",
+        "alternative": "Model cost tracking and configurable pricing; validate your billing requirements",
+        "choice": "Evaluate Niu for this customer-billing workflow"
       },
       {
-        "need": "Separate model supply from customer pricing",
-        "niu": "Provider identity, credentials and model mappings; customer tariffs independent of Provider offers",
-        "alternative": "Channels, model mappings and expression pricing",
-        "choice": "Choose Niu for a Provider-to-customer pricing workflow"
-      },
-      {
-        "need": "Explain an application\u2019s model bill",
-        "niu": "Trace model, workspace/key usage, timing and customer charges to persisted requests",
-        "alternative": "Usage and audit logs",
-        "choice": "Choose Niu when request evidence and customer-charge attribution are central"
-      },
-      {
-        "need": "Customize and redistribute your gateway",
-        "niu": "Niu-owned public core under MIT; reused modules retain their own licenses",
-        "alternative": "AGPL-3.0 obligations apply",
-        "choice": "Choose Niu when MIT fits your distribution requirements"
-      },
-      {
-        "need": "Need dedicated Realtime, audio or reranking endpoints today",
-        "niu": "These dedicated endpoints are outside the current public contract",
-        "alternative": "Broader documented protocol and endpoint surface",
-        "choice": "New API fits this requirement today"
+        "need": "Manage company funds across workspaces and application keys",
+        "niu": "Company funds with independent workspace/key caps and pending reservations",
+        "alternative": "Key, user and team budgets",
+        "choice": "Compare the budget hierarchy against your organization"
       }
     ],
     "sources": [
       {
-        "label": "Niu vs New API vs LiteLLM Proxy performance benchmark",
-        "url": "/docs/guides/gateway-benchmarks/"
+        "label": "LiteLLM overview",
+        "url": "https://docs.litellm.ai/docs/"
       },
       {
-        "label": "New API capabilities, protocols and deployment",
-        "url": "https://github.com/QuantumNous/new-api#capabilities"
+        "label": "LiteLLM virtual keys and database requirements",
+        "url": "https://docs.litellm.ai/docs/proxy/virtual_keys"
+      },
+      {
+        "label": "LiteLLM routing and fallbacks",
+        "url": "https://docs.litellm.ai/docs/routing"
+      },
+      {
+        "label": "LiteLLM video APIs",
+        "url": "https://docs.litellm.ai/docs/videos"
+      },
+      {
+        "label": "LiteLLM spend tracking",
+        "url": "https://docs.litellm.ai/docs/proxy/cost_tracking"
+      },
+      {
+        "label": "LiteLLM source and licensing",
+        "url": "https://github.com/BerriAI/litellm"
       },
       {
         "label": "Niu routes and Providers",
@@ -186,18 +160,6 @@ export const comparisons = [
       {
         "label": "Niu key limits and routing boundaries",
         "url": "https://github.com/niu-io/niu/blob/main/docs/product/backend-capability-checklist.md"
-      },
-      {
-        "label": "Niu complete API contract",
-        "url": "/docs/api/rest/"
-      },
-      {
-        "label": "Niu product focus and pricing-claim requirements",
-        "url": "https://github.com/niu-io/niu/blob/main/docs/product/product-focus.md"
-      },
-      {
-        "label": "Niu video management implementation and qualification scope",
-        "url": "https://github.com/niu-io/niu/blob/main/docs/releases/video-result-dashboard-verification.md"
       }
     ]
   },
@@ -370,112 +332,112 @@ export const overviewRows = [
     "category": "Access & billing",
     "feature": "From experimentation to ongoing operation",
     "niu": "Provider management, company/workspace/key budgets, request accounting and text/video generation management",
-    "newApi": "Straightforward channel configuration, API keys and a playground for getting started",
-    "openRouter": "Hosted model catalog, Provider routing and API-key limits"
+    "openRouter": "Hosted model catalog, Provider routing and API-key limits",
+    "litellm": "Self-hosted Proxy and Python SDK with virtual keys, spend tracking and an admin UI"
   },
   {
     "category": "Model access",
     "feature": "Video generation management",
     "niu": "Create and track supported video jobs, restore saved inputs and history, and preview/download available results with workspace-key authorization",
-    "newApi": "Video/image task APIs through JavaScript plugins; available workflows depend on the plugin",
-    "openRouter": "Hosted video APIs and video logs; model availability depends on its catalog"
+    "openRouter": "Hosted video APIs and video logs; model availability depends on its catalog",
+    "litellm": "Supported video endpoints depend on the configured model and Provider"
   },
   {
     "category": "Access & billing",
     "feature": "Application keys",
     "niu": "Workspace keys with model grants, expiry, revocation and rotation",
-    "newApi": "API keys with restrictions; users/groups",
-    "openRouter": "API keys with expiry and management APIs"
+    "openRouter": "API keys with expiry and management APIs",
+    "litellm": "Virtual keys with model access, budgets and expiry"
   },
   {
     "category": "Access & billing",
     "feature": "Spending controls",
     "niu": "Company funds plus independent workspace/key caps; outstanding reservations count",
-    "newApi": "Quotas and subscriptions",
-    "openRouter": "USD key limit; optional daily/weekly/monthly reset"
+    "openRouter": "USD key limit; optional daily/weekly/monthly reset",
+    "litellm": "Key, user and team budgets; configurable budget duration"
   },
   {
     "category": "Access & billing",
     "feature": "Pricing",
     "niu": "Customer tariffs are separate from Provider offers; unresolved charges stay unknown",
-    "newApi": "Expression pricing and cache accounting",
-    "openRouter": "Catalog charges paid with credits; BYOK is also supported"
+    "openRouter": "Catalog charges paid with credits; BYOK is also supported",
+    "litellm": "Model cost tracking with configurable pricing"
   },
   {
     "category": "Observability",
     "feature": "Request history",
     "niu": "PostgreSQL records: model, key, status, reported tokens, timing and customer charge",
-    "newApi": "Usage logs and audit logs",
-    "openRouter": "Generation logs: model, Provider, key, usage, cost and timing"
+    "openRouter": "Generation logs: model, Provider, key, usage, cost and timing",
+    "litellm": "Spend logs and configurable logging integrations"
   },
   {
     "category": "Observability",
     "feature": "Inspecting retries",
     "niu": "Each recorded attempt remains distinguishable from the request",
-    "newApi": "Channel retry configuration",
-    "openRouter": "Upstream Requests tab and Provider response waterfall"
+    "openRouter": "Upstream Requests tab and Provider response waterfall",
+    "litellm": "Retry and fallback configuration; logging depends on configured integrations"
   },
   {
     "category": "Model access",
     "feature": "Chat endpoint",
     "niu": "POST /v1/chat/completions",
-    "newApi": "POST /v1/chat/completions",
-    "openRouter": "POST /api/v1/chat/completions"
+    "openRouter": "POST /api/v1/chat/completions",
+    "litellm": "POST /v1/chat/completions"
   },
   {
     "category": "Model access",
     "feature": "Model names",
     "niu": "Aliases mapped to configured upstream models",
-    "newApi": "Configured models and channel mappings",
-    "openRouter": "Catalog model slugs"
+    "openRouter": "Catalog model slugs",
+    "litellm": "Model aliases in model_list map to upstream deployments"
   },
   {
     "category": "Model access",
     "feature": "Upstream credentials",
     "niu": "Provider businesses with separate credentials and model mappings",
-    "newApi": "Channels; multiple upstream keys",
-    "openRouter": "OpenRouter credits or your Provider keys (BYOK)"
+    "openRouter": "OpenRouter credits or your Provider keys (BYOK)",
+    "litellm": "Provider credentials configured per deployment"
   },
   {
     "category": "Model access",
     "feature": "Routing",
     "niu": "Configured pools with priorities and weights",
-    "newApi": "Channel priorities, weights and affinity",
-    "openRouter": "Provider order; price, latency or throughput sorting"
+    "openRouter": "Provider order; price, latency or throughput sorting",
+    "litellm": "Load balancing across deployments with configurable strategies"
   },
   {
     "category": "Model access",
     "feature": "Retries and fallbacks",
     "niu": "Bounded Chat failover after a qualified OpenRouter 401; no generic replay of uncertain requests",
-    "newApi": "Configured retries and channel affinity",
-    "openRouter": "Provider fallbacks; allow_fallbacks can disable them"
+    "openRouter": "Provider fallbacks; allow_fallbacks can disable them",
+    "litellm": "Configurable retries, cooldowns, timeouts and fallbacks"
   },
   {
     "category": "Model access",
     "feature": "Function tools",
     "niu": "Opt-in route support; the caller executes requested tools",
-    "newApi": "Tools where model/channel conversion supports them",
-    "openRouter": "Routes to tool-capable Providers; caller handles execution"
+    "openRouter": "Routes to tool-capable Providers; caller handles execution",
+    "litellm": "Tool calling for supported models; caller executes tools"
   },
   {
     "category": "Setup",
     "feature": "Where it runs",
     "niu": "Your own gateway deployment",
-    "newApi": "Your own gateway deployment",
-    "openRouter": "OpenRouter-hosted service"
+    "openRouter": "OpenRouter-hosted service",
+    "litellm": "Self-hosted Proxy or Python SDK in your application"
   },
   {
     "category": "Setup",
     "feature": "Database",
     "niu": "PostgreSQL is required",
-    "newApi": "SQLite, MySQL or PostgreSQL",
-    "openRouter": "No gateway database to operate"
+    "openRouter": "No gateway database to operate",
+    "litellm": "PostgreSQL required for Proxy virtual-key management"
   },
   {
     "category": "Setup",
     "feature": "Source code",
     "niu": "Public core under MIT",
-    "newApi": "AGPL-3.0",
-    "openRouter": "Hosted service; client SDKs are public"
+    "openRouter": "Hosted service; client SDKs are public",
+    "litellm": "Open-source core; review separate enterprise licensing terms"
   }
 ] as const;
