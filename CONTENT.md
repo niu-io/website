@@ -4,7 +4,7 @@ Reviewed October 14, 2026. This baseline follows the public [Niu product focus](
 
 ## Positioning
 
-Niu is a Token management platform for developers and teams consuming model APIs. Lead with performance, reliability and economy: model access, request evidence, clear token usage, spending and budgets. Do not position the landing page as a token resale or model API business platform. Lower-cost access through qualified Supplier offers is the commercial direction; it is not evidence that an offer is currently cheaper or that every model is available.
+Niu is a Token Platform for developers and teams consuming model APIs. Lead with performance, reliability and economy: model access, request evidence, clear token usage, spending and budgets. The headline is “Make every token count.”; the subtitle names the Token Platform category. The promise is a cohesive model-use workflow, rather than an unsupported claim to be the only platform users will ever need. Do not position the landing page as a token resale or model API business platform. Lower-cost access through qualified Supplier offers is the commercial direction; it is not evidence that an offer is currently cheaper or that every model is available.
 
 The main workflow is connect model supply → issue a workspace key → make a model request → inspect usage/customer charges. Include saved Chat and Video management, supported video job status and authorized result access. Niu handles model requests; external applications own their tasks, tools and outcomes.
 

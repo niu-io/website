@@ -487,20 +487,20 @@ export default function LandingContent({
               <>
                 让每一份 Token，
                 <br />
-                <span className="accent">用得高效、可靠、经济。</span>
+                <span className="accent">发挥更大价值。</span>
               </>
             ) : (
               <>
-                Token management
+                Make every
                 <br />
-                <span className="accent">platform.</span>
+                <span className="accent">token count.</span>
               </>
             )}
           </h1>
           <p className="hero-description hero-enter" style={stagger(2)}>
             {t(
-              "A token management platform for developers and teams. Access model APIs, manage keys and budgets, and understand every request, token and charge.",
-              "面向开发者与团队的 Token 管理平台。统一接入模型 API，管理密钥与预算，让每次调用、Token 用量和费用都有据可查。",
+              "The Token Platform for developers and teams. Access models with performance and reliability, and keep token usage and spending under control.",
+              "面向开发者与团队的 Token 平台。高效、可靠地接入模型，集中管理密钥、用量与预算，让每次调用和支出都有据可查。",
             )}
           </p>
           <div className="actions hero-actions hero-enter" style={stagger(3)}>
