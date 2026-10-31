@@ -30,8 +30,12 @@
     box-shadow 0.22s ease,
     backdrop-filter 0.22s ease;
 }
+.public-header {
+  -webkit-backdrop-filter: saturate(160%) blur(24px);
+  backdrop-filter: saturate(160%) blur(24px);
+}
 html.is-scrolled .public-header {
-  background: color-mix(in oklab, var(--background) 90%, transparent);
+  background: color-mix(in oklab, var(--background) 94%, transparent);
   border-bottom-color: color-mix(in oklab, var(--border) 75%, transparent);
   backdrop-filter: saturate(180%) blur(18px);
   -webkit-backdrop-filter: saturate(180%) blur(18px);
@@ -2696,4 +2700,29 @@ html.is-scrolled .public-header {
 }
 .demo-nowrap {
   white-space: nowrap;
+}
+
+/* Preserve a readable header even when scroll scripts or backdrop filters fail. */
+@supports not (backdrop-filter: blur(1px)) {
+  .public-header { background: var(--background); }
+}
+@media (max-width: 760px) {
+  .product-preview.demo-dashboard-shell,
+  .product-preview.demo-dashboard-shell.is-sidebar-collapsed {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .demo-app-rail { display: none; }
+  .demo-topbar { padding: 10px 12px; gap: 10px; }
+  .demo-breadcrumb-bar { min-width: 0; font-size: 12px; }
+  .demo-breadcrumb-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .preview-tabs { width: 100%; display: flex; min-width: 0; }
+  .preview-tabs button { flex: 1; min-width: 0; padding: 8px; font-size: 11px; line-height: 1.4; white-space: normal; }
+  .demo-page-surface { padding: 12px; gap: 12px; }
+  .demo-page-title-row { flex-wrap: wrap; gap: 6px; }
+  .demo-page-title-row h2 { font-size: 18px; }
+  .demo-volume-header { flex-wrap: wrap; gap: 4px; }
+  .demo-table-scroll { max-width: 100%; overflow-x: auto; }
+  .demo-data-table { font-size: 11px; }
+  .demo-data-table thead th, .demo-data-table td { padding: 8px 6px; }
+  .demo-filter-chip { max-width: 100%; white-space: normal; height: auto; min-height: 30px; }
 }
