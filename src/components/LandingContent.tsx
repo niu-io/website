@@ -11,7 +11,6 @@ import {
   IconCoins,
   IconCopy,
   IconHistory,
-  IconLayoutDashboard,
   IconListSearch,
   IconMessageChatbot,
   IconPlugConnected,
@@ -44,6 +43,7 @@ import {
   Users,
 } from "lucide-react";
 import { Button } from "./ui/button";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "./ui/tabs";
 import {
   links,
   pillars,
@@ -54,6 +54,7 @@ import {
 } from "../content/landing";
 import { benchmarkSteps, benchmarkSuites } from "../content/benchmarks";
 
+const installationPrompt = "Install and configure Niu by following https://niu.io/docs/install.md.";
 const pillarIcons = [IconBolt, IconScale, IconTimeline, IconServerBolt];
 const capabilityIcons = [
   IconRoute,
@@ -377,33 +378,15 @@ const volumeHistogramBars = [
 ];
 
 const gatewaySteps = [
-  {
-    step: "01",
-    title: "Choose a model for your application",
-    titleZh: "第一步：选择适合应用的模型",
-    detail:
-      "Browse available models, check capabilities and prices, and choose the model that fits your workload.",
-    detailZh:
-      "浏览可用模型，核对能力与价格，选择适合实际工作负载的模型。",
-  },
-  {
-    step: "02",
-    title: "Issue workspace API keys with model & budget limits",
-    titleZh: "第二步：为应用配置密钥与预算",
-    detail:
-      "Create a workspace API key, limit its model access, and set a spending cap for your application.",
-    detailZh:
-      "创建工作空间 API 密钥，限制可调用的模型范围，并为应用设置消费上限。",
-  },
-  {
-    step: "03",
-    title: "Change one Base URL—Niu handles failover and billing",
-    titleZh: "第三步：改一行地址直接调用，自动完成扣费与对账",
-    detail:
-      "Clients stream responses with zero code changes while Niu handles automatic failover, token metering, and real-time billing.",
-    detailZh:
-      "按文档接入流式调用，集中查看请求状态、词元 用量、耗时与费用。",
-  },
+  { step: "01", title: "Let your agent connect Niu", titleZh: "让 Agent 连接 Niu",
+    detail: "Give it the setup prompt. It configures the supported integration, opens Niu for sign-in and approval, then verifies access.",
+    detailZh: "把接入提示词交给 Agent。它配置受支持的接入方式，打开牛元让你登录并审核权限，然后验证连接。" },
+  { step: "02", title: "Describe the outcome and constraints", titleZh: "说明目标与约束",
+    detail: "Provide task samples, quality expectations, latency needs and a test budget. Your agent retrieves model information itself.",
+    detailZh: "给出任务样本、质量要求、延迟目标和测试预算。模型信息由 Agent 自行获取。" },
+  { step: "03", title: "Review the proposal and evidence", titleZh: "审阅方案与证据",
+    detail: "Review model choices, pool proposals and configuration changes. The agent reads diagnostics directly and explains the tradeoffs.",
+    detailZh: "审阅模型选择、模型池方案和配置变更。Agent 直接读取诊断信息并解释取舍。" },
 ];
 
 export default function LandingContent({
@@ -431,6 +414,8 @@ export default function LandingContent({
   >("chat");
   const [activeSuiteIndex, setActiveSuiteIndex] = useState(0);
   const [activeCodeIndex, setActiveCodeIndex] = useState(0);
+  const [copiedInstall,setCopiedInstall]=useState(false);
+  const [installCopyError,setInstallCopyError]=useState(false);
   const [copiedCode, setCopiedCode] = useState(false);
   const mainRef = useRef<HTMLElement>(null);
   useLandingMotion(mainRef);
@@ -480,8 +465,8 @@ export default function LandingContent({
             <span className="release-tag">{t("Why Niu", "核心优势")}</span>
             <span>
               {t(
-                "Performance · Reliability · Economy",
-                "性能 · 可靠性 · 经济性",
+                "Discover · Evaluate · Manage",
+                "发现 · 评估 · 管理",
               )}
             </span>
             <IconArrowRight size={14} aria-hidden="true" />
@@ -489,29 +474,40 @@ export default function LandingContent({
           <h1 id="hero-title" className="hero-enter" style={stagger(1)}>
             {isZh ? (
               <>
-                让每个词元
+                面向 Agent 的
                 <br />
-                <span className="accent">发挥更大价值</span>
+                <span className="accent">模型平台</span>
               </>
             ) : (
               <>
-                Make every
+                The Model Platform
                 <br />
-                <span className="accent">token count.</span>
+                <span className="accent">for Agents</span>
               </>
             )}
           </h1>
           <p className="hero-description hero-enter" style={stagger(2)}>
             {t(
-              "The Token Platform for developers and teams. Access models with performance and reliability, and keep token usage and spending under control.",
-              "面向开发者与团队的 词元平台。高效、可靠地接入模型，集中管理密钥、用量与预算，让每次调用和支出都有据可查。",
+              "Discover and evaluate models, build model pools, and manage performance and cost—all through your agent.",
+              "通过你的 Agent，发现与评估模型、构建模型池，管理性能与成本。",
             )}
           </p>
+          <div className="hero-install code-card hero-enter" style={stagger(3)}>
+            <div className="code-heading"><strong>{t("Give this to your coding agent", "把这句话交给你的 coding agent")}</strong><a href="/docs/install.md">{t("Niu 0.3", "牛元 0.3")}</a></div>
+            <code className="hero-install-prompt">{installationPrompt}</code>
+            <div className="hero-install-footer">
+              <p>{t("Your agent handles setup. Sign in and approve access in Niu when asked, then let the agent continue.", "Agent 负责安装与配置；需要时，你只需在牛元登录并审核权限，然后交给 Agent 继续。")}</p>
+              <Button size="lg" className="cta-primary" onClick={()=>{setInstallCopyError(false);if(!navigator.clipboard){setInstallCopyError(true);return;}void navigator.clipboard.writeText(installationPrompt).then(()=>setCopiedInstall(true)).catch(()=>setInstallCopyError(true));}}>
+                {copiedInstall?<IconCheck aria-hidden="true"/>:<IconCopy aria-hidden="true"/>}<span aria-live="polite">{copiedInstall?t("Copied", "已复制"):t("Copy setup prompt", "复制接入提示词")}</span>
+              </Button>
+            </div>
+            {installCopyError&&<p className="hero-install-error" role="status">{t("Select the prompt above to copy it manually.", "请选择上方提示词手动复制。")}</p>}
+          </div>
           <div className="actions hero-actions hero-enter" style={stagger(3)}>
-            <Button asChild size="lg" className="cta-primary">
-              <a href={links.dashboard}>
-                <IconLayoutDashboard aria-hidden="true" />
-                {t("Open dashboard", "打开控制台")}
+            <Button asChild size="lg" variant="outline" className="cta-secondary">
+              <a href="/docs/guides/personal-assistant/">
+                <IconPlugConnected aria-hidden="true" />
+                {t("Build with Niu", "用 Niu 开发")}
                 <IconArrowRight className="cta-arrow" aria-hidden="true" />
               </a>
             </Button>
@@ -521,7 +517,9 @@ export default function LandingContent({
               variant="outline"
               className="cta-secondary"
             >
-              <a href={links.quickstart}>{t("Get started", "快速入门")}</a>
+              <a href={links.dashboard}>
+                {t("Open dashboard", "打开控制台")}
+              </a>
             </Button>
             <Button asChild size="lg" variant="ghost" className="cta-ghost">
               <a href={links.repo}>
@@ -535,20 +533,220 @@ export default function LandingContent({
             <span aria-hidden="true">·</span>
             <a href="/models/">{t("Browse models", "浏览模型目录")}</a>
             <span aria-hidden="true">·</span>
-            <a href="/blog/why-niu/">{t("Why Niu?", "为什么选择牛元？")}</a>
+            <a href="/blog/why-niu/">{t("Why Niu?", "为什么选择 Niu？")}</a>
           </p>
 
-          <dl className="hero-stats" aria-label="Measured gateway results">
-            {heroStats.map((stat, i) => (
-              <div key={stat.label} data-reveal style={stagger(i)}>
-                <dt>{isZh ? stat.labelZh : stat.label}</dt>
-                <dd>
-                  <CountUp value={stat.value} />
-                </dd>
-              </div>
-            ))}
-          </dl>
+          {/* Three product pillars */}
+          <div
+            className="pillars-grid"
+            aria-label="Core competitive advantages"
+          >
+            {pillars.map((pillar, index) => {
+              const PillarIcon = pillarIcons[index];
+              return (
+                <article
+                  key={pillar.index}
+                  className="pillar-card"
+                  data-reveal
+                  data-spotlight
+                  style={stagger(index)}
+                >
+                  <div className="pillar-top">
+                    <span className="pillar-icon" aria-hidden="true">
+                      <PillarIcon size={20} stroke={1.75} />
+                    </span>
+                    <span className="pillar-metric">
+                      {isZh ? pillar.metricZh : pillar.metric}
+                    </span>
+                  </div>
+                  <h3>{isZh ? pillar.titleZh : pillar.title}</h3>
+                  <p>{isZh ? pillar.detailZh : pillar.detail}</p>
+                </article>
+              );
+            })}
+          </div>
+        </div>
+      </section>
 
+      {/* 3. SIX CORE CAPABILITIES */}
+      <section
+        className="section container"
+        id="product"
+        aria-labelledby="product-title"
+      >
+        <div className="section-heading" data-reveal>
+          <div>
+            <p className="eyebrow">
+              {t("AGENT SCENARIOS", "AGENT 使用场景")}
+            </p>
+            <h2 id="product-title">
+              {isZh ? (
+                <>
+                  告诉 Agent 你的需求，
+                  <br />
+                  让它与 Niu 一起完成。
+                </>
+              ) : (
+                <>
+                  Start with what
+                  <br />
+                  you want to achieve.
+                </>
+              )}
+            </h2>
+          </div>
+          <p>
+            {t(
+              "Your agent gets the evidence and controls to configure Niu: build a model pool for your task, then refine quality, latency and cost from real execution feedback.",
+              "Agent 获取决策信息与管理能力，按任务需求配置牛元的模型池，再根据实际运行反馈持续改善质量、延迟与成本。",
+            )}
+          </p>
+        </div>
+        <div className="capability-grid">
+          {capabilities.map((item, index) => {
+            const CapabilityIcon = capabilityIcons[index];
+            return (
+              <article
+                key={item.href}
+                className="capability"
+                data-reveal
+                data-spotlight
+                style={stagger(index % 3)}
+              >
+                <div className="capability-top">
+                  <span className="capability-icon" aria-hidden="true">
+                    <CapabilityIcon size={20} stroke={1.75} />
+                  </span>
+                  <span className="feature-number">{item.number}</span>
+                </div>
+                <h3>{isZh ? item.titleZh : item.title}</h3>
+                <p>{isZh ? item.descriptionZh : item.description}</p>
+                <a className="text-link" href={item.href}>
+                  {isZh ? item.labelZh : item.label}{" "}
+                  <span aria-hidden="true">→</span>
+                </a>
+              </article>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* 4. DROP-IN API QUICKSTART */}
+      <section
+        className="gateway-section"
+        id="gateway"
+        aria-labelledby="gateway-title"
+      >
+        <div className="container section gateway-grid">
+          <div className="gateway-copy" data-reveal>
+            <p className="eyebrow">
+              {t("START WITH YOUR AGENT", "从你的 AGENT 开始")}
+            </p>
+            <h2 id="gateway-title">
+              {isZh ? (
+                <>
+                  说清你想做什么，
+                  <br />
+                  接入工作交给 Agent。
+                </>
+              ) : (
+                <>
+                  Give your agent a goal.
+                  <br />
+                  Let it handle the setup.
+                </>
+              )}
+            </h2>
+            <p className="section-description">
+              {t(
+                "Start with the setup prompt. Niu 0.3 targets Claude Code, Codex and DeepSeek Harness integration around shared Niu contracts. The installation document checks current availability.",
+                "从接入提示词开始。牛元 0.3围绕共同的牛元契约提供 Claude Code、Codex 与 DeepSeek Harness 接入；安装文档会检查当前可用性。",
+              )}
+            </p>
+            <ul className="gateway-features">
+              {gatewaySteps.map((item) => (
+                <li key={item.step}>
+                  <span className="gateway-step-badge">{item.step}</span>
+                  <div>
+                    <strong>{isZh ? item.titleZh : item.title}</strong>
+                    <p>{isZh ? item.detailZh : item.detail}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+            <div className="gateway-links">
+              <a className="text-link" href="/docs/guides/personal-assistant/">
+                {t("Build with Niu", "用 Niu 开发")}{" "}
+                <span aria-hidden="true">→</span>
+              </a>
+              <a className="text-link" href="https://github.com/niu-io/niu/tree/main/examples/personal-assistant">
+                {t("Runnable example", "可运行源码示例")}{" "}
+                <span aria-hidden="true">→</span>
+              </a>
+            </div>
+          </div>
+          <Tabs className="code-card" data-reveal style={stagger(1)}
+            value={codeExamples[activeCodeIndex].id}
+            onValueChange={(value) => { setActiveCodeIndex(codeExamples.findIndex((item) => item.id === value)); setCopiedCode(false); }}
+          >
+            <div className="code-heading">
+              <TabsList className="code-tabs" variant="line" aria-label="Agent task prompts">
+                {codeExamples.map((example, idx) => (
+                  <TabsTrigger key={example.id} value={example.id}>
+                    {t(example.label, ["连接", "评估", "改进"][idx])}
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+              <Button
+                variant="ghost"
+                type="button"
+                className="code-copy-btn"
+                onClick={handleCopyCode}
+                aria-label={t("Copy agent prompt", "复制 Agent 提示词")}
+              >
+                {copiedCode ? (
+                  <IconCheck size={14} aria-hidden="true" />
+                ) : (
+                  <IconCopy size={14} aria-hidden="true" />
+                )}
+                <span>
+                  {copiedCode ? t("Copied", "已复制") : t("Copy", "复制")}
+                </span>
+              </Button>
+            </div>
+            <div className="code-subbar">
+              <span>{codeExamples[activeCodeIndex].endpoint}</span>
+              <span>{t("Prompt for your agent", "交给 Agent 的提示词")}</span>
+            </div>
+            {/* Build-time Shiki HTML from maintained task prompts. */}
+            {codeExamples.map((example, idx) => (
+              <TabsContent key={example.id} value={example.id} className="highlighted-example">
+                <div dangerouslySetInnerHTML={{ __html: highlightedCode[idx] }} />
+              </TabsContent>
+            ))}
+            <div className="code-footnote">
+              <span className="status-dot is-live"></span>
+              <span>
+                {t("Scope:", "能力范围：")}{" "}
+                <strong>
+                  {isZh
+                    ? codeExamples[activeCodeIndex].traceZh
+                    : codeExamples[activeCodeIndex].trace}
+                </strong>
+              </span>
+            </div>
+          </Tabs>
+        </div>
+      </section>
+
+      <section className="section container" aria-labelledby="review-title">
+        <div className="section-heading" data-reveal>
+          <div>
+            <p className="eyebrow">{t("HUMAN REVIEW", "人工审阅")}</p>
+            <h2 id="review-title">{t("Your agent reads the evidence. You review the decisions.", "Agent 读取证据，你审阅决策。")}</h2>
+          </div>
+          <p>{t("Use Niu to inspect request outcomes and charges without relaying data to your agent. The preview below uses illustrative data.", "在 Niu 中查看请求结果与费用，无需替 Agent 传递数据。以下预览使用示例数据。")}</p>
+        </div>
           {/* Interactive Product UI Preview Window — Actual Niu Dashboard v0.2.23 Replica */}
           <div
             className="preview-frame"
@@ -1161,7 +1359,7 @@ export default function LandingContent({
                               <strong>{selectedLog.charge}</strong>
                             </div>
                             <div>
-                              <span>{t("Input 词元", "输入 词元")}</span>
+                              <span>{t("Input Token", "输入 Token")}</span>
                               <strong>
                                 {selectedLog.inputTokens}{" "}
                                 <small>
@@ -1171,7 +1369,7 @@ export default function LandingContent({
                               </strong>
                             </div>
                             <div>
-                              <span>{t("Output 词元", "输出 词元")}</span>
+                              <span>{t("Output Token", "输出 Token")}</span>
                               <strong>
                                 {selectedLog.outputTokens}{" "}
                                 <small>
@@ -1850,7 +2048,7 @@ export default function LandingContent({
                             {activeGenerationsMode === "chat"
                               ? t(
                                   "Compare models side-by-side with live streaming throughput, token counts, and settled customer charges persisted in PostgreSQL.",
-                                  "并排对比多个模型的实时流式吞吐、词元 用量与持久化至 PostgreSQL 的已结算客户费用。",
+                                  "并排对比多个模型的实时流式吞吐、Token 用量与持久化至 PostgreSQL 的已结算客户费用。",
                                 )
                               : t(
                                   "Submit text-to-video and image-to-video tasks with Volcengine Seedance 1.5 Pro, manage materials, and track settled video charges.",
@@ -2140,8 +2338,8 @@ export default function LandingContent({
                 <div className="preview-caption">
                   <span>
                     {t(
-                      "Gateway · Workspace Dashboard · Model Catalog · Docs — served from one endpoint",
-                      "AI 网关 · 工作空间控制台 · 模型目录 · 文档中心 — 单一端点一体化交付",
+                      "Illustrative dashboard data · Review request evidence in Niu",
+                      "控制台示例数据 · 在 Niu 中审阅请求证据",
                     )}
                   </span>
                   <Button asChild size="sm" className="cta-primary cta-compact">
@@ -2158,36 +2356,6 @@ export default function LandingContent({
             </div>
           </div>
 
-          {/* 4 Core Competitive Advantages */}
-          <div
-            className="pillars-grid"
-            aria-label="Core competitive advantages"
-          >
-            {pillars.map((pillar, index) => {
-              const PillarIcon = pillarIcons[index];
-              return (
-                <article
-                  key={pillar.index}
-                  className="pillar-card"
-                  data-reveal
-                  data-spotlight
-                  style={stagger(index)}
-                >
-                  <div className="pillar-top">
-                    <span className="pillar-icon" aria-hidden="true">
-                      <PillarIcon size={20} stroke={1.75} />
-                    </span>
-                    <span className="pillar-metric">
-                      {isZh ? pillar.metricZh : pillar.metric}
-                    </span>
-                  </div>
-                  <h3>{isZh ? pillar.titleZh : pillar.title}</h3>
-                  <p>{isZh ? pillar.detailZh : pillar.detail}</p>
-                </article>
-              );
-            })}
-          </div>
-        </div>
       </section>
 
       {/* 2. PERFORMANCE BENCHMARK (VISUAL CARDS + VERDICT) */}
@@ -2200,8 +2368,8 @@ export default function LandingContent({
           <div>
             <p className="eyebrow">
               {t(
-                "10× PERFORMANCE · MEASURED BENCHMARKS",
-                "10 倍性能优势 · 实测数据说话",
+                "HISTORICAL GATEWAY BENCHMARKS",
+                "历史网关基准测试",
               )}
             </p>
             <h2 id="benchmark-title">
@@ -2223,22 +2391,30 @@ export default function LandingContent({
           <p>
             {isZh ? (
               <>
-                为什么用 Rust
-                重写网关？因为高并发下网关自己绝不能成为瓶颈。使用开源基准工具{" "}
+                以下是牛元 v0.2.4 在指定配置下的历史结果，使用基准工具{" "}
                 <code>ai-gateway-bench</code>{" "}
-                实测，即使完整开启数据库记账与额度风控，Niu
-                牛元依然保持毫秒级延迟与 18 MB 极低内存占用。
+                在 Apple M4 与 PostgreSQL 17.11 上测量。这些数据不代表牛元 0.3 或你的实际模型任务表现。
               </>
             ) : (
               <>
-                Why Rust? Because your gateway should never be the bottleneck.
-                Measured with <code>ai-gateway-bench</code> on Apple M4 with
+                Historical Niu v0.2.4 results, measured with <code>ai-gateway-bench</code> on Apple M4 with
                 PostgreSQL 17.11, Niu sustains 3,239 RPS with full database
-                accounting and 18.2 MB idle RAM.
+                accounting and 18.2 MB idle RAM in this configuration. These are not Niu 0.3 or application task measurements.
               </>
             )}
           </p>
         </div>
+          <dl className="hero-stats" aria-label="Measured gateway results">
+            {heroStats.map((stat, i) => (
+              <div key={stat.label} data-reveal style={stagger(i)}>
+                <dt>{isZh ? stat.labelZh : stat.label}</dt>
+                <dd>
+                  <CountUp value={stat.value} />
+                </dd>
+              </div>
+            ))}
+          </dl>
+
         <ol className="benchmark-steps">
           {benchmarkSteps.map((item, index) => (
             <li
@@ -2439,190 +2615,6 @@ export default function LandingContent({
         </div>
       </section>
 
-      {/* 3. SIX CORE CAPABILITIES */}
-      <section
-        className="section container"
-        id="product"
-        aria-labelledby="product-title"
-      >
-        <div className="section-heading" data-reveal>
-          <div>
-            <p className="eyebrow">
-              {t("YOUR TOKEN WORKSPACE", "围绕词元使用的一站式工作空间")}
-            </p>
-            <h2 id="product-title">
-              {isZh ? (
-                <>
-                  模型接入、调用与管理，
-                  <br />
-                  在一个工作空间完成。
-                </>
-              ) : (
-                <>
-                  Access, use and manage models.
-                  <br />
-                  Keep usage in one workspace.
-                </>
-              )}
-            </h2>
-          </div>
-          <p>
-            {t(
-              "Connect your applications, try models in Chat, and manage keys, budgets and request history together.",
-              "接入现有应用，在对话中试用模型，集中管理密钥、预算和调用记录。",
-            )}
-          </p>
-        </div>
-        <div className="capability-grid">
-          {capabilities.map((item, index) => {
-            const CapabilityIcon = capabilityIcons[index];
-            return (
-              <article
-                key={item.href}
-                className="capability"
-                data-reveal
-                data-spotlight
-                style={stagger(index % 3)}
-              >
-                <div className="capability-top">
-                  <span className="capability-icon" aria-hidden="true">
-                    <CapabilityIcon size={20} stroke={1.75} />
-                  </span>
-                  <span className="feature-number">{item.number}</span>
-                </div>
-                <h3>{isZh ? item.titleZh : item.title}</h3>
-                <p>{isZh ? item.descriptionZh : item.description}</p>
-                <a className="text-link" href={item.href}>
-                  {isZh ? item.labelZh : item.label}{" "}
-                  <span aria-hidden="true">→</span>
-                </a>
-              </article>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* 4. DROP-IN API QUICKSTART */}
-      <section
-        className="gateway-section"
-        id="gateway"
-        aria-labelledby="gateway-title"
-      >
-        <div className="container section gateway-grid">
-          <div className="gateway-copy" data-reveal>
-            <p className="eyebrow">
-              {t("DROP-IN COMPATIBILITY", "零代码改造 · 即插即用")}
-            </p>
-            <h2 id="gateway-title">
-              {isZh ? (
-                <>
-                  改一行接口地址，
-                  <br />
-                  无缝接入所有 SDK 与编程助手。
-                </>
-              ) : (
-                <>
-                  One endpoint for SDKs
-                  <br />
-                  and coding agents.
-                </>
-              )}
-            </h2>
-            <p className="section-description">
-              {t(
-                "Point any OpenAI-compatible client, Claude Code, or Codex at your Niu gateway using a scoped workspace API key.",
-                "无需修改现有业务代码，只需把 Base URL 指向您的 Niu 牛元网关，即可直接连接各类应用、Claude Code 与 Codex。",
-              )}
-            </p>
-            <ul className="gateway-features">
-              {gatewaySteps.map((item) => (
-                <li key={item.step}>
-                  <span className="gateway-step-badge">{item.step}</span>
-                  <div>
-                    <strong>{isZh ? item.titleZh : item.title}</strong>
-                    <p>{isZh ? item.detailZh : item.detail}</p>
-                  </div>
-                </li>
-              ))}
-            </ul>
-            <div className="gateway-links">
-              <a className="text-link" href="/docs/guides/api-quickstart/">
-                {t("API quickstart", "API 快速入门")}{" "}
-                <span aria-hidden="true">→</span>
-              </a>
-              <a className="text-link" href="/docs/guides/sdk-quickstart/">
-                {t("TypeScript SDK", "TypeScript SDK 教程")}{" "}
-                <span aria-hidden="true">→</span>
-              </a>
-            </div>
-          </div>
-          <div className="code-card" data-reveal style={stagger(1)}>
-            <div className="code-heading">
-              <span className="code-window" aria-hidden="true">
-                <i />
-                <i />
-                <i />
-              </span>
-              <div
-                className="code-tabs"
-                role="tablist"
-                aria-label="Integration examples"
-              >
-                {codeExamples.map((example, idx) => (
-                  <button
-                    key={example.id}
-                    type="button"
-                    role="tab"
-                    aria-selected={activeCodeIndex === idx}
-                    onClick={() => setActiveCodeIndex(idx)}
-                  >
-                    {example.label}
-                  </button>
-                ))}
-              </div>
-              <button
-                type="button"
-                className="code-copy-btn"
-                onClick={handleCopyCode}
-                aria-label="Copy code snippet"
-              >
-                {copiedCode ? (
-                  <IconCheck size={14} aria-hidden="true" />
-                ) : (
-                  <IconCopy size={14} aria-hidden="true" />
-                )}
-                <span>
-                  {copiedCode ? t("Copied", "已复制") : t("Copy", "复制")}
-                </span>
-              </button>
-            </div>
-            <div className="code-subbar">
-              <span>{codeExamples[activeCodeIndex].endpoint}</span>
-              <span>TLS / Localhost · Bearer Workspace Key</span>
-            </div>
-            {/* Build-time Shiki HTML from our own source snippets; no runtime highlighter. */}
-            <div
-              key={codeExamples[activeCodeIndex].id}
-              className="highlighted-example"
-              dangerouslySetInnerHTML={{
-                __html: highlightedCode[activeCodeIndex],
-              }}
-            />
-            <div className="code-footnote">
-              <span className="status-dot is-live"></span>
-              <span>
-                {t("Recorded in PostgreSQL:", "PostgreSQL 账本记录：")}{" "}
-                <strong>
-                  {isZh
-                    ? codeExamples[activeCodeIndex].traceZh
-                    : codeExamples[activeCodeIndex].trace}
-                </strong>
-              </span>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* 5. SELF-HOSTED ARCHITECTURE & EVALUATION SCOPE */}
       <section
         className="section container"
@@ -2691,7 +2683,7 @@ export default function LandingContent({
               <li>
                 {t(
                   "Request logs, token usage and customer-facing charges",
-                  "请求明细日志、词元 用量与实际调用费用",
+                  "请求明细日志、Token 用量与实际调用费用",
                 )}
               </li>
               <li>
@@ -2764,7 +2756,7 @@ export default function LandingContent({
           <div className="section-heading" data-reveal>
             <div>
               <p className="eyebrow">
-                {t("FROM THE NIU BLOG", "来自 NIU 牛元博客")}
+                {t("FROM THE NIU BLOG", "来自 NIU Niu 博客")}
               </p>
               <h2 id="landing-blog-title">
                 {isZh ? (
@@ -2786,7 +2778,7 @@ export default function LandingContent({
               <p>
                 {t(
                   "Model access, token usage and reliable API integration in practice.",
-                  "分享模型接入、词元 用量管理与调用可靠性的工程实践。",
+                  "分享模型接入、Token 用量管理与调用可靠性的工程实践。",
                 )}
               </p>
               <a className="text-link" href="/blog/">
@@ -2876,8 +2868,8 @@ export default function LandingContent({
           <div className="faq-intro">
             <p>
               {t(
-                "What developers and teams need to know before connecting their applications.",
-                "开发者和团队在接入应用前需要了解的关键问题。",
+                "How agents connect, what they can do today, and where your review is needed.",
+                "了解 Agent 如何接入、目前能做什么，以及哪些环节需要你审核。",
               )}
             </p>
             <div className="faq-intro-links">
@@ -2928,36 +2920,36 @@ export default function LandingContent({
           <span className="closing-glow" aria-hidden="true" />
           <p className="eyebrow">
             {t(
-              "PERFORMANCE · RELIABILITY · ECONOMY",
+              "AGENT-FRIENDLY · COST-EFFICIENT · HIGH-PERFORMANCE",
               "性能 · 可靠性 · 经济性",
             )}
           </p>
           <h2 id="closing-title">
             {isZh ? (
               <>
-                开始使用 Niu 牛元，
+                把你的需求，
                 <br />
-                <span className="accent">让词元使用更有条理。</span>
+                <span className="accent">交给连接了 Niu 的 Agent。</span>
               </>
             ) : (
               <>
-                Put your tokens to work.
+                Bring your next task.
                 <br />
-                <span className="accent">Keep usage under control.</span>
+                <span className="accent">Connect your agent to Niu.</span>
               </>
             )}
           </h2>
           <p className="closing-copy">
             {t(
-              "Browse models, create a workspace API key and start calling. You can also self-host the open-source stack.",
-              "浏览模型，创建工作空间 API 密钥并开始调用；也可以自行部署开源版本。",
+              "Use the guided workflow and runnable example. Your agent handles setup and reads the references; you review the results.",
+              "从引导流程和可运行示例开始。Agent 负责接入并按需查阅参考文档，你负责审阅结果。",
             )}
           </p>
           <div className="actions hero-actions">
             <Button asChild size="lg" className="cta-primary">
-              <a href={links.dashboard}>
-                <IconLayoutDashboard aria-hidden="true" />
-                {t("Open dashboard", "打开控制台")}
+              <a href="/docs/guides/personal-assistant/">
+                <IconPlugConnected aria-hidden="true" />
+                {t("Build with Niu", "用 Niu 开发")}
                 <IconArrowRight className="cta-arrow" aria-hidden="true" />
               </a>
             </Button>
@@ -2967,7 +2959,7 @@ export default function LandingContent({
               variant="outline"
               className="cta-secondary"
             >
-              <a href={links.quickstart}>{t("Get started", "快速入门")}</a>
+              <a href={links.dashboard}>{t("Open dashboard", "打开控制台")}</a>
             </Button>
             <Button asChild size="lg" variant="ghost" className="cta-ghost">
               <a href={links.repo}>

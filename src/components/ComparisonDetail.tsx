@@ -25,12 +25,12 @@ export default function ComparisonDetail({
         <a className="compare-back" href="/compare/">
           {t("← All comparisons", "← 返回全部对比")}
         </a>
-        <h1>{t(`Niu vs ${comparison.name}`, `Niu 牛元 vs ${comparison.name}`)}</h1>
+        <h1>{t(`Niu vs ${comparison.name}`, `Niu vs ${comparison.name}`)}</h1>
         <p>{comparison.intro}</p>
         <p className="compare-meta">
           {t(
             `Reviewed ${reviewed}. Product documentation and Niu's current API contract are linked below.`,
-            `审阅日期：${reviewed}。下方附有产品文档与 Niu 牛元当前 API 契约链接。`,
+            `审阅日期：${reviewed}。下方附有产品文档与 Niu当前 API 契约链接。`,
           )}
         </p>
       </header>
@@ -38,13 +38,13 @@ export default function ComparisonDetail({
         <TableCaption>
           {t(
             "Niu targets lower-cost model access and transparent billing. Savings depend on the model, workload and qualified Provider offer; this feature comparison is not a verified price comparison.",
-            "Niu 牛元致力于提供更低成本的模型接入与透明计费。实际成本节省取决于具体模型、负载及供应商报价；本表为功能范围对比而非价格对比。",
+            "Niu致力于提供更低成本的模型接入与透明计费。实际成本节省取决于具体模型、负载及供应商报价；本表为功能范围对比而非价格对比。",
           )}
         </TableCaption>
         <TableHeader>
           <TableRow>
             <TableHead>{t("Feature", "能力维度")}</TableHead>
-            <TableHead>{t("Niu", "Niu 牛元")}</TableHead>
+            <TableHead>{t("Niu", "Niu")}</TableHead>
             <TableHead>{comparison.name}</TableHead>
           </TableRow>
         </TableHeader>
@@ -71,12 +71,12 @@ export default function ComparisonDetail({
       </Table>
       {comparison.slug === "litellm" && <CompareBenchmark />}
       <section className="compare-section">
-        <h2>{t("Why choose Niu?", "为什么选择 Niu 牛元？")}</h2>
+        <h2>{t("Why choose Niu?", "为什么选择 Niu？")}</h2>
         <Table className="compare-table decision-table">
           <TableHeader>
             <TableRow>
               <TableHead>{t("Your requirement", "您的业务需求")}</TableHead>
-              <TableHead>{t("Niu", "Niu 牛元")}</TableHead>
+              <TableHead>{t("Niu", "Niu")}</TableHead>
               <TableHead>{comparison.name}</TableHead>
               <TableHead>{t("Fits best", "最佳选择")}</TableHead>
             </TableRow>

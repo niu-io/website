@@ -1,42 +1,38 @@
 ---
-title: "Why Niu? A Token Management Platform for Developers and Teams"
-description: "Performance, reliability and economy for people using model APIs. Access models, manage token spending and understand every request."
+title: "Why Niu? The Model Platform for Agents"
+description: "Niu gives coding agents model information, request evidence and management controls. You set the goals and review important decisions."
 cover: "/site-assets/blog/why-niu-v3.webp"
 status: "published"
 pinned: true
 pinOrder: 0
 publishedAt: "2026-10-15"
-updatedAt: "2026-10-30"
+updatedAt: "2026-10-31"
 category: "Product"
-author: "Niu"
+author: "Niuer"
 ---
 
-Developers and teams use model APIs to build applications, work with coding tools, and explore ideas in Chat and Video. As usage grows, they need more than another API key: they need to understand which models they can use, what happened to a request, and where their token budget went.
+Coding agents already understand the goal: complete your task while making sensible tradeoffs between quality, speed, reliability and cost. What they need is access to reliable information and the controls to act on it.
 
-Niu is a token management platform for those users. Its focus is performance, reliability and economy: access models efficiently, understand failures, and keep spending visible and controlled.
+**Niu is The Model Platform for Agents.** It provides those information and management capabilities. Your agent makes the task-specific decisions; Niu does not promise an optimal model or guaranteed savings.
 
-## Performance: keep model access efficient
+## Give your agent information and controls
 
-Use documented OpenAI-compatible and Anthropic-compatible endpoints to connect applications and coding tools through a workspace API key. Check the model's supported capabilities before switching an application.
+Your agent can inspect available models, declared capabilities and published customer prices, compare outputs on task samples within an approved test budget, and retrieve request timing, usage and charges directly. Missing evidence stays unknown.
 
-The Rust gateway supports streaming and has a published [gateway benchmark](/docs/guides/gateway-benchmarks/). Those measurements describe historical versions against a deterministic mock upstream. They do not promise the same end-to-end latency or throughput for every model and workload.
+Model calls are only part of the workflow. Niu also supports administrator-managed model pools and routing, scoped access and budgets, and request diagnostics. Your agent can propose a pool; current MCP tools do not administer pools or change budgets. Authorized administrators review and apply those changes.
 
-## Reliability: understand each request
+## Keep the decisions that matter
 
-Request history brings status, recorded attempts, reported token usage, timing and charges together. You can distinguish a request rejected before dispatch from an upstream error or an interrupted response.
+You describe the desired result and set spending and permission boundaries. The agent retrieves the evidence and does the work within its authority. You review consequential changes, rather than carrying model lists, JSON or screenshots between systems.
 
-Configured model routes support bounded failover. An uncertain request must not be blindly replayed: doing so could repeat work or incur another charge. Missing usage evidence remains explicit. See the [request evidence guide](/docs/concepts/execution-observation/) for supported behavior and limits.
+If you want to investigate yourself, [browse models](/models/), try them in Niu and inspect results, latency, usage and customer charges. The dashboard remains a place to explore, review and recover.
 
-## Economy: make token spending visible
+## Start with your coding agent
 
-Review listed model prices, actual token usage and request charges. Set workspace and API-key budgets for applications and team usage. In-flight reservations count toward applicable spending limits before requests finish.
+Follow [Build with Niu](/docs/guides/personal-assistant/) and let your agent handle installation and configuration. A [runnable personal assistant example](https://github.com/niu-io/niu/tree/main/examples/personal-assistant) gives it a concrete starting point. The purpose is to learn how to use Niu, not to prescribe the application you should build.
 
-Economy means making informed choices and keeping spending under control. It is not a claim that every model is cheaper. Model prices and availability depend on configured offers, and unresolved billing evidence must remain distinguishable from a confirmed charge.
+The current integration uses a local MCP server and a workspace API key. Native coding-agent plugins and agent-managed event subscriptions are planned. Plugins should expose the same Niu capabilities in each host's supported form; they do not grant broader permissions or replace the agent's judgment.
 
-## One workspace for API, Chat and Video
+## Read only what you need
 
-Call APIs from your applications, compare models in Chat, and revisit saved conversations. Supported video workflows expose saved job state and authorized result access. Availability depends on model configuration and permissions.
-
-Niu's open-source gateway, dashboard, catalog and Docs can also be self-hosted with PostgreSQL. See the [deployment guide](/docs/deployment/single-container/) and [release acceptance matrix](https://github.com/niu-io/niu/blob/main/docs/releases/first-release.md) for setup and qualification boundaries.
-
-[Browse models](/models/) or follow the [quickstart](/docs/getting-started/) to get started.
+This orientation and the onboarding workflow should be enough to begin. The remaining reference library is primarily for your agent to consult as needed. You can also [self-host Niu](/docs/deployment/single-container/); actual availability depends on configuration, permissions and the [release qualification](https://github.com/niu-io/niu/blob/main/docs/releases/first-release.md).

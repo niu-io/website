@@ -1,169 +1,169 @@
-// Token management for developers and teams consuming model APIs.
+// Agent-oriented model management; planned capabilities remain explicitly labeled.
 export const capabilities = [
   {
     "number": "01",
-    "title": "Model routing & bounded failover",
-    "titleZh": "模型路由与有界故障切换",
-    "description": "Use one model entry point across configured routes. Inspect each attempt and understand when a fallback occurred.",
-    "descriptionZh": "通过统一模型入口使用已配置的路由，查看每次尝试，了解故障切换发生的原因。",
-    "label": "Models & routing",
-    "labelZh": "了解模型池与路由",
-    "href": "/docs/configuration/models/"
+    "title": "Find models for my task",
+    "titleZh": "为我的任务找到模型",
+    "description": "Your agent reads available models, capabilities and published customer prices through MCP, then shortlists candidates against your requirements.",
+    "descriptionZh": "Agent 通过 MCP 读取可用模型、能力与已发布的客户价格，按你的需求筛选候选模型。",
+    "label": "Model discovery",
+    "labelZh": "模型发现",
+    "href": "/docs/guides/mcp/"
   },
   {
     "number": "02",
-    "title": "Request logs & usage evidence",
-    "titleZh": "调用日志与用量凭证",
-    "description": "Inspect request status, token counts, timing and charges without stitching together separate dashboards.",
-    "descriptionZh": "集中查看请求状态、词元 数量、耗时与费用，减少在多个控制台之间切换。",
-    "label": "Request evidence",
-    "labelZh": "查看日志与诊断机制",
-    "href": "/docs/concepts/execution-observation/"
+    "title": "Compare quality, speed and cost",
+    "titleZh": "比较效果、速度与成本",
+    "description": "Use the same task samples to compare model outputs, timing and reported charges within an approved test budget. Judge value by accepted results, not token price alone.",
+    "descriptionZh": "在已批准的测试预算内，用相同任务样本比较输出、耗时和已报告费用。性价比以合格结果为依据，不只看 Token 单价。",
+    "label": "Model evaluation",
+    "labelZh": "模型评估",
+    "href": "/docs/guides/personal-assistant/"
   },
   {
     "number": "03",
-    "title": "Clear usage & spending",
-    "titleZh": "清晰的用量与费用",
-    "description": "Review the price of a model and the charge for each request. Keep missing or unresolved billing evidence visible.",
-    "descriptionZh": "查看模型价格与逐次请求费用，明确区分已确认费用和仍待核实的计费凭证。",
-    "label": "Usage & spending",
-    "labelZh": "了解用量与费用",
-    "href": "/docs/concepts/performance-and-cost/"
+    "title": "Build a pool around my needs",
+    "titleZh": "按需求组织 model pool",
+    "description": "In Niu 0.3, your authorized agent previews and manages workspace model pools. Review saved revisions and execution evidence in Niu; platform supply configuration stays separate.",
+    "descriptionZh": "在 牛元 0.3 中，获得授权的 Agent 可预览并管理工作空间模型池。你在牛元审阅修订记录与执行证据；平台供给配置保持独立。",
+    "label": "Model pools",
+    "labelZh": "模型池配置",
+    "href": "/docs/pools.md"
   },
   {
     "number": "04",
-    "title": "Workspace & API-key budgets",
-    "titleZh": "工作空间与密钥预算",
-    "description": "Set scoped API keys and spending caps for your applications and team, with in-flight budget reservations.",
-    "descriptionZh": "为应用与团队设置具有明确权限的 API 密钥和消费上限，通过在途预占管理预算。",
-    "label": "Access & limits",
-    "labelZh": "了解权限与额度风控",
+    "title": "Keep access and spending in scope",
+    "titleZh": "明确权限与支出边界",
+    "description": "Your agent checks the key’s grants and limits before testing. You review access and budget changes in Niu; credentials stay in secure local configuration.",
+    "descriptionZh": "Agent 在测试前检查密钥权限与限制，你在 Niu 中审核权限和预算变更；凭据保留在安全的本地配置中。",
+    "label": "Access and budgets",
+    "labelZh": "权限与预算",
     "href": "/docs/security/overview/"
   },
   {
     "number": "05",
-    "title": "Drop-in for SDKs & coding agents",
-    "titleZh": "改一行地址，无缝接入现有应用",
-    "description": "Native OpenAI (/v1/chat/completions, /v1/responses) and Anthropic (/v1/messages) compatibility. Change one Base URL to connect Claude Code, Codex, or your app.",
-    "descriptionZh": "原生兼容 OpenAI（/v1/chat/completions、/v1/responses）与 Anthropic（/v1/messages）接口，改一行 Base URL 即可丝滑接入 Claude Code、Codex 与各类应用。",
-    "label": "API & SDK",
-    "labelZh": "查看 API 与接入指南",
-    "href": "/docs/guides/api-quickstart/"
+    "title": "Explain a slow or failed request",
+    "titleZh": "解释请求为什么慢或失败",
+    "description": "Your agent retrieves request evidence directly: attempts, timing, usage and customer charges. It recommends a change you can verify and keeps missing evidence explicit.",
+    "descriptionZh": "Agent 直接读取请求尝试、耗时、用量和客户费用，提出可验证的调整建议，并明确指出缺失的证据。",
+    "label": "Request diagnostics",
+    "labelZh": "请求诊断",
+    "href": "/docs/concepts/execution-observation/"
   },
   {
     "number": "06",
-    "title": "Saved Chat & Video workspaces",
-    "titleZh": "可回访的对话与视频工作台",
-    "description": "Try models in Chat and manage supported video jobs. Saved sessions and authorized results stay available across visits.",
-    "descriptionZh": "在对话中试用模型，管理受支持的视频任务，跨次访问已保存的会话与有权查看的结果。",
-    "label": "Generations",
-    "labelZh": "了解对话与视频工作台",
-    "href": "/docs/reference/generations/"
+    "title": "Respond when conditions change",
+    "titleZh": "在运行条件变化时响应",
+    "description": "In Niu 0.3, agents can configure authorized notifications for model-pool changes and recorded evaluations, then retrieve evidence directly. Delivery does not guarantee an inactive agent will wake.",
+    "descriptionZh": "在 牛元 0.3 中，Agent 可为模型池变化和评估记录配置已授权的事件通知，再直接读取证据。通知送达不代表休眠中的 Agent 会被唤醒。",
+    "label": "Current integration scope",
+    "labelZh": "当前接入范围",
+    "href": "/docs/guides/mcp/"
   }
 ];
 
 export const codeExamples = [
   {
-    "id": "curl",
-    "language": "bash",
-    "label": "cURL · SSE",
-    "endpoint": "POST /v1/chat/completions",
-    "code": "curl http://localhost:2555/v1/chat/completions \\\n  -H \"Authorization: Bearer $NIU_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"model\": \"claude-sonnet-4\",\n    \"messages\": [{\"role\": \"user\", \"content\": \"Check Q3 p99.\"}],\n    \"stream\": true\n  }'",
-    "trace": "Operation → Attempt #1 (Anthropic 200 OK) → 40 SSE tok → Settled Customer Charge ($0.018)",
-    "traceZh": "Operation → Attempt #1 (Anthropic 200 OK) → 40 SSE词元→ 客户费率已结算 ($0.018)"
+    "id": "connect",
+    "language": "text",
+    "label": "Connect",
+    "endpoint": "Agent-led Niu setup",
+    "code": "Install and configure Niu by following https://niu.io/docs/install.md.",
+    "trace": "Niu 0.3: Claude Code, Codex and DeepSeek Harness. Check installation availability before setup.",
+    "traceZh": "牛元 0.3：Claude Code、Codex 与 DeepSeek Harness。接入前请检查安装可用性。"
   },
   {
-    "id": "sdk",
-    "language": "typescript",
-    "label": "TypeScript SDK",
-    "endpoint": "@niu/sdk · NiuClient",
-    "code": "import { NiuClient } from \"@niu/sdk\";\n\nconst niu = new NiuClient({\n  baseUrl: \"https://niu.io\",\n  apiKey: process.env.NIU_API_KEY,\n});\n\nconst stream = await niu.chat.completions.create({\n  model: \"claude-sonnet-4\",\n  messages: [{ role: \"user\", content: \"Summarize our Q3 API latency.\" }],\n  stream: true,\n});",
-    "trace": "Typed SSE iterator · Scoped workspace key · Pre-dispatch hold reserved in PostgreSQL",
-    "traceZh": "强类型 SSE 流式迭代器 · 工作空间作用域密钥 · PostgreSQL 转发前额度预占"
+    "id": "compare",
+    "language": "text",
+    "label": "Evaluate",
+    "endpoint": "Compare models for a task",
+    "code": "Use Niu to shortlist models for my application.\nAsk for my task samples, quality criteria, latency target\nand maximum test budget before any paid evaluation.\nCompare outputs, timing and reported customer charges.\nExplain tradeoffs and preserve unknown costs as unknown.\nPreview a workspace model pool using my explicit grants.\nReview consequential changes and verify the saved revision.",
+    "trace": "Niu 0.3: evaluations and workspace pools need explicit delegated grants.",
+    "traceZh": "牛元 0.3：评估与工作空间模型池需要明确委托权限。"
   },
   {
-    "id": "agents",
-    "language": "bash",
-    "label": "Claude Code & Codex",
-    "endpoint": "POST /v1/messages & /v1/responses",
-    "code": "export ANTHROPIC_BASE_URL=\"http://localhost:2555\"\nexport ANTHROPIC_API_KEY=\"$NIU_WORKSPACE_KEY\"\n\nexport OPENAI_BASE_URL=\"http://localhost:2555/v1\"\nexport OPENAI_API_KEY=\"$NIU_WORKSPACE_KEY\"\n\n# Launch coding agents directly against your Niu route pool\nclaude \"Refactor the billing ledger retry handler\"",
-    "trace": "Native /v1/messages & /v1/responses · Multi-turn tool calls · Per-key budget cap enforced",
-    "traceZh": "原生兼容 /v1/messages 与 /v1/responses · 多轮工具调用 · 密钥级预算上限强约束"
+    "id": "diagnose",
+    "language": "text",
+    "label": "Improve",
+    "endpoint": "Diagnose before changing",
+    "code": "Use Niu request evidence to investigate this result.\nInspect attempts, timing, usage and customer charges\nusing the request reference already available to you.\nDo not ask me to relay JSON from the dashboard.\nExplain what the evidence establishes and what is unknown.\nPropose a bounded test of the change.\nDo not retry a possibly charged request without review.",
+    "trace": "Read evidence directly. Review consequential changes with the user.",
+    "traceZh": "直接读取证据；涉及重要变更时交由用户审核。"
   }
 ];
 
 export const faqs = [
   {
     "index": "01",
-    "category": "Why Niu",
-    "categoryZh": "核心选型对比",
-    "question": "Who is Niu for?",
-    "questionZh": "Niu 牛元适合谁？",
-    "answer": "Niu is a token management platform for developers and teams using model APIs. Access models, manage workspace keys and budgets, and inspect usage and request charges from one workspace.",
-    "answerZh": "Niu 牛元是面向模型 API 使用者的 词元管理平台，帮助开发者与团队接入模型、管理工作空间密钥和预算，并集中查看用量与调用费用。",
-    "linkLabel": "Browse models",
-    "linkLabelZh": "浏览模型",
-    "linkHref": "/models/"
+    "category": "Agent integration",
+    "categoryZh": "Agent 接入",
+    "question": "How does my coding agent connect?",
+    "questionZh": "Coding agent 如何接入？",
+    "answer": "Give your agent the setup prompt. Niu 0.3 includes Claude Code, Codex and DeepSeek Harness packages with browser authorization; the installation document checks package and deployment availability before setup. Setup verifies release artifacts and deployment capabilities before authorization.",
+    "answerZh": "把接入提示词交给 Agent。牛元 0.3 包含 Claude Code、Codex 和 DeepSeek Harness 接入包及浏览器授权；安装文档会先检查包与部署是否可用。安装前会验证发布产物和部署能力。",
+    "linkLabel": "Connect your agent",
+    "linkLabelZh": "连接 Agent",
+    "linkHref": "/docs/guides/personal-assistant/"
   },
   {
     "index": "02",
-    "category": "Economy",
-    "categoryZh": "经济性",
-    "question": "How can I control token spending?",
-    "questionZh": "如何控制词元支出？",
-    "answer": "Check the listed model price, review actual token usage and charges, and set workspace and key-level budgets. Prices and availability depend on the configured offers; Niu does not promise every model is cheaper.",
-    "answerZh": "先查看模型标价，再结合实际词元用量和费用设置工作空间与密钥预算。价格与可用性取决于已配置的模型报价，不承诺每个模型都更便宜。",
-    "linkLabel": "Usage & budgets",
-    "linkLabelZh": "了解用量与预算",
-    "linkHref": "/docs/concepts/performance-and-cost/"
+    "category": "Model value",
+    "categoryZh": "模型性价比",
+    "question": "How does an agent choose a model?",
+    "questionZh": "Agent 怎样选模型？",
+    "answer": "Start with task requirements and an approved evaluation budget. Compare candidate outputs, latency, reliability and reported customer charges. A lower token price does not guarantee a lower cost per acceptable result.",
+    "answerZh": "从任务需求和批准的评估预算出发，比较候选模型输出、延迟、可靠性与已报告的客户费用。更低的 Token 单价不代表更低的合格结果成本。",
+    "linkLabel": "Evaluate with Niu",
+    "linkLabelZh": "使用 Niu 评估",
+    "linkHref": "/docs/guides/personal-assistant/"
   },
   {
     "index": "03",
-    "category": "Billing accuracy",
-    "categoryZh": "流式计费准确性",
-    "question": "What happens if an upstream stream drops halfway through?",
-    "questionZh": "如果上游流式输出到一半意外断开了，会不会乱扣费？",
-    "answer": "No mystery charges and no fake $0 bills. Niu records pre-dispatch state in PostgreSQL and never blindly replays a request that may have already run upstream. If a stream drops without usage evidence, the call is explicitly flagged as unresolved for review.",
-    "answerZh": "不会乱扣费，更不会算糊涂账。Niu 牛元在转发前会先记录准入状态，绝不盲目重试可能已经产生费用的请求。如果流式响应中途意外断开且缺少用量凭证，系统会将其明确标记为「待核实」状态，既不会多扣客户钱，也不会伪造 0 元成功账单。",
-    "linkLabel": "Request evidence contract",
-    "linkLabelZh": "了解请求与对账机制",
-    "linkHref": "/docs/concepts/execution-observation/"
+    "category": "Human review",
+    "categoryZh": "人工审核",
+    "question": "What do I still need to review?",
+    "questionZh": "我还需要审核什么？",
+    "answer": "You set goals, access and spending boundaries and review important changes. In Niu 0.3, explicitly delegated agents can manage workspace pools, evaluations and resource subscriptions. Key creation and budget changes still require the appropriate Niu member authority.",
+    "answerZh": "你确定目标、权限与支出边界，并审核重要变更。牛元 0.3 中，获得明确授权的 Agent 可管理工作空间模型池、评估和资源订阅。创建密钥、修改预算仍需相应的牛元成员权限。",
+    "linkLabel": "Review the workflow",
+    "linkLabelZh": "查看审核流程",
+    "linkHref": "/docs/guides/personal-assistant/"
   },
   {
     "index": "04",
-    "category": "Full-stack open source",
-    "categoryZh": "全栈开源与自托管",
-    "question": "Is the full stack truly open source for self-hosting?",
-    "questionZh": "真的是全栈开源吗？私有化部署会不会被卡脖子？",
-    "answer": "Yes. The Rust gateway, admin console, customer workspace dashboard, model catalog, and docs are all MIT-licensed and run together against a single PostgreSQL database—with zero license servers or private dependencies.",
-    "answerZh": "真正全栈开源。核心 Rust 网关、管理后台、客户工作空间控制台、模型目录和文档站点全部采用 MIT 开源协议，只需连接一个标准 PostgreSQL 数据库即可单容器完整运行，不需要连接任何外部授权服务器。",
-    "linkLabel": "Single-container deployment",
-    "linkLabelZh": "查看单容器部署指南",
-    "linkHref": "/docs/deployment/single-container/"
+    "category": "Model pools",
+    "categoryZh": "模型池",
+    "question": "Can my agent build and update model pools?",
+    "questionZh": "Agent 能构建和更新 model pool 吗？",
+    "answer": "In Niu 0.3, an agent with pools:read/write can inspect, preview and update workspace model pools. Revision conflicts must be reconciled. Human members review saved policy and execution evidence; platform supply pools remain separate.",
+    "answerZh": "牛元 0.3 中，具有 pools:read/write 权限的 Agent 可检查、预览并更新工作空间模型池，修订冲突需要先核对。成员审阅保存的策略与执行证据；平台供给池保持独立。",
+    "linkLabel": "Pool configuration",
+    "linkLabelZh": "模型池配置",
+    "linkHref": "/docs/pools.md"
   },
   {
     "index": "05",
-    "category": "Integration",
-    "categoryZh": "接入方式",
-    "question": "Can I use Niu with my existing applications?",
-    "questionZh": "可以接入现有应用和编程工具吗？",
-    "answer": "Use a scoped workspace API key with the documented OpenAI-compatible and Anthropic-compatible endpoints. Check the model capabilities and supported protocol before switching your application.",
-    "answerZh": "使用工作空间 API 密钥，按文档配置 OpenAI 兼容或 Anthropic 兼容端点。切换应用前，请核对模型能力与所支持的协议。",
-    "linkLabel": "API quickstart",
-    "linkLabelZh": "API 快速开始",
-    "linkHref": "/docs/guides/api-quickstart/"
+    "category": "Events and plugins",
+    "categoryZh": "事件与插件",
+    "question": "Can Niu notify my agent and let it adapt?",
+    "questionZh": "Niu 能通知 Agent 并让它自动调整吗？",
+    "answer": "Niu 0.3 supports signed notifications for pool changes and recorded evaluations. An authorized receiver must verify signatures, deduplicate and reconcile delivery. Receipt does not guarantee an inactive host wakes, nor authorize paid work or automatic policy changes.",
+    "answerZh": "牛元 0.3支持模型池变化和评估记录的签名通知。接收端需要获得授权、验证签名、去重并核对投递。送达不保证唤醒休眠宿主，也不构成付费工作或自动变更策略的授权。",
+    "linkLabel": "Current MCP capabilities",
+    "linkLabelZh": "当前 MCP 能力",
+    "linkHref": "/docs/guides/mcp/"
   },
   {
     "index": "06",
-    "category": "Production readiness",
-    "categoryZh": "功能就绪度",
-    "question": "Which capabilities can I use?",
-    "questionZh": "目前有哪些可使用的能力？",
-    "answer": "Niu includes model access, workspace API keys and budgets, request logs, and saved Chat and supported Video workflows. Availability depends on configured models and permissions. Consult the release matrix for qualification limits.",
-    "answerZh": "Niu 牛元提供模型接入、工作空间密钥与预算、请求日志，以及可保存的对话和受支持的视频流程。实际可用范围取决于模型配置与权限；验证边界见发布准入清单。",
-    "linkLabel": "Release acceptance matrix",
-    "linkLabelZh": "查看发布准入矩阵",
-    "linkHref": "https://github.com/niu-io/niu/blob/main/docs/releases/first-release.md"
+    "category": "Deployment",
+    "categoryZh": "部署",
+    "question": "Can I run Niu myself?",
+    "questionZh": "可以自行部署 Niu 吗？",
+    "answer": "The public gateway, dashboard, model catalog and docs are MIT-licensed. Self-host with PostgreSQL and configure the model access you need. Availability still depends on configured routes and permissions.",
+    "answerZh": "公开网关、控制台、模型目录和文档采用 MIT 许可。你可以配合 PostgreSQL 自行部署并配置所需模型；实际可用范围取决于路由配置和权限。",
+    "linkLabel": "Self-host Niu",
+    "linkLabelZh": "自行部署 Niu",
+    "linkHref": "/docs/deployment/single-container/"
   }
 ];
 
@@ -204,39 +204,30 @@ export const links = {
 export const pillars = [
   {
     "index": "01",
-    "metric": "Performance",
-    "metricZh": "性能",
-    "title": "Fast model access",
-    "titleZh": "高效调用模型",
-    "detail": "A Rust gateway with streaming support and measured proxy performance. Connect applications and coding tools through compatible API endpoints.",
-    "detailZh": "Rust 网关支持流式输出，并提供可查验的代理性能实测。通过兼容的 API 接入应用和编程工具。"
+    "metric": "Agent-friendly",
+    "metricZh": "面向智能体",
+    "title": "Let your agent work directly with Niu",
+    "titleZh": "让智能体直接使用牛元",
+    "detail": "Connect through native plugins and MCP. Your agent discovers, configures and verifies; you set goals and approve access.",
+    "detailZh": "通过原生插件和 MCP 接入。智能体直接发现、配置并验证；你设定目标、审核权限。"
   },
   {
     "index": "02",
-    "metric": "Reliability",
-    "metricZh": "可靠性",
-    "title": "See what happened to every request",
-    "titleZh": "每次调用都有据可查",
-    "detail": "Model routing, bounded failover and attempt-level logs help you understand failures. Unresolved usage stays explicit.",
-    "detailZh": "模型路由、有界故障切换与逐次尝试日志帮助定位失败；缺少凭证的用量明确保留为待核实。"
+    "metric": "Cost-efficient",
+    "metricZh": "追求性价比",
+    "title": "Build the model pool your task needs",
+    "titleZh": "为具体任务配置合适的模型池",
+    "detail": "Give your agent model information, evaluation evidence and authorized controls to configure pools and routing around your quality, latency and budget requirements.",
+    "detailZh": "让智能体获取模型信息与评估证据，并获得授权的管理能力，按任务质量、延迟和预算要求配置模型池与路由。"
   },
   {
     "index": "03",
-    "metric": "Economy",
-    "metricZh": "经济性",
-    "title": "Keep token spending visible",
-    "titleZh": "让词元支出清晰可控",
-    "detail": "Review model prices, token usage and request charges. Set workspace and API-key budgets before usage grows.",
-    "detailZh": "查看模型价格、词元 用量与逐次调用费用，通过工作空间和 API 密钥预算管理支出。"
-  },
-  {
-    "index": "04",
-    "metric": "API + Chat + Video",
-    "metricZh": "API + 对话 + 视频",
-    "title": "One workspace for your model usage",
-    "titleZh": "在一个工作空间管理模型使用",
-    "detail": "Use APIs in your applications, compare models in Chat, and revisit saved conversations and supported video results.",
-    "detailZh": "在应用中调用 API，在对话中比较模型，并随时回访已保存的会话与受支持的视频结果。"
+    "metric": "High-performance",
+    "metricZh": "高性能",
+    "title": "Keep model calls fast and observable",
+    "titleZh": "让模型调用高效且可观测",
+    "detail": "Route requests through Niu’s gateway and inspect latency, failures, usage and customer charges. Feed measurements back to your agent’s model pool.",
+    "detailZh": "通过牛元网关路由请求，查看延迟、失败、用量与客户费用，再将测量结果反馈给智能体的模型池。"
   }
 ];
 

@@ -1,14 +1,22 @@
 # Landing content and public claim rules
 
-Reviewed October 14, 2026. This baseline follows the public [Niu product focus](https://github.com/niu-io/niu/blob/main/docs/product/product-focus.md).
+Reviewed October 31, 2026. This baseline follows the public [Niu product focus](https://github.com/niu-io/niu/blob/main/docs/product/product-focus.md).
 
 ## Positioning
 
-Niu is a Token Platform for developers and teams consuming model APIs. Lead with performance, reliability and economy: model access, request evidence, clear token usage, spending and budgets. The headline is “Make every token count.”; the subtitle names the Token Platform category. The promise is a cohesive model-use workflow, rather than an unsupported claim to be the only platform users will ever need. Do not position the landing page as a token resale or model API business platform. Lower-cost access through qualified Supplier offers is the commercial direction; it is not evidence that an offer is currently cheaper or that every model is available.
+**The Model Platform for Agents**
 
-The main workflow is connect model supply → issue a workspace key → make a model request → inspect usage/customer charges. Include saved Chat and Video management, supported video job status and authorized result access. Niu handles model requests; external applications own their tasks, tools and outcomes.
+Discover and evaluate models, build model pools, and manage performance and cost—all through your agent.
 
-Product name: Niu. Keep niu.io only in actual domain URLs/configuration. Primary action: Get started. Secondary: Browse models. Marketing navigation has one Docs entry alongside Blog, Models and Compare; API and SDK references are reached within Docs. Use Docs for navigation labels.
+Follow the public [agent-oriented principles](https://github.com/niu-io/niu/blob/main/docs/product/agent-oriented-principles.md), agreed 2026-10-31. Coding agents already seek to complete tasks while improving value. Niu supplies trustworthy information and authorized management capabilities; the agent owns task quality, model choices and cost/performance tradeoffs. Do not promise an optimal model, guaranteed savings or task success.
+
+Model invocation is one part of management. Landing scenarios should show agents retrieving model capabilities and customer prices, comparing samples, proposing model pools, inspecting grants and budgets, diagnosing requests and responding to resource events where implemented. Explain the evidence and controls Niu supplies, without teaching generic optimization or assigning Niu the agent's decisions.
+
+MCP remains the documented integration for the published deployment. The unpublished 0.3 candidate implements native Claude Code, Codex and DeepSeek Harness packages, pool administration and scoped event subscriptions. Native packages share the same contracts and add host-specific setup and lifecycle integration. Candidate implementation and fixture verification do not establish published availability; the installation document checks the package and deployment before setup. Distinguish host hooks, platform events and server-side plugins.
+
+People need only a short orientation and an agent-led onboarding workflow. They set goals and authority, review important changes, and can explore model trials, saved results, performance and customer charges directly. Other references primarily serve coding agents. Do not require people to relay raw tool results or read a manual to begin.
+
+Lead the landing with agent tasks and a working entry point; put manual API examples and gateway benchmarks after the workflow as supporting evidence. Keep existing trial and review surfaces. Primary action: copy `Install and configure Niu by following https://niu.io/docs/install.md.` into Claude Code or Codex. Human signs in and approves access in Niu; the agent handles setup and verification. Build with Niu and Open dashboard remain secondary entry points. Navigation retains one Docs entry alongside Blog, Models and Compare. Keep Niu as the product name and niu.io only in URLs/configuration. Existing Provider, administration and commercial data boundaries remain intact.
 
 ## Current capability evidence
 
@@ -35,10 +43,12 @@ Landing, Models, Docs, API, SDK and Compare use the same navigation definition, 
 
 Marketing source stays in this repository. Docs/catalog import Niu's canonical public shell styles and navigation; this website ships a checked snapshot, with no build dependency on an adjacent public checkout.
 
-Chinese product copy uses 词元 for Token. The Chinese headline is split into “让每个词元” and “发挥更大价值”, with no comma. English retains Token.
+Use Niu as the primary product name in all languages. 牛元 may appear only as an explanatory Chinese annotation, not a competing product name. Retain Token in Chinese copy to avoid translation overhead. The Chinese headline is “面向 Agent 的模型平台”.
 
 ## Blog translations and covers
 
 Blog articles use English Markdown in `src/content/blog` and matching Simplified Chinese Markdown in `src/content/blog-translations`, with the same file ID. Both collections use the same metadata schema and publication policy. Preserve section order between translations so a language change can retain the corresponding linked section. Missing translations fall back to English. The existing header language choice controls article metadata, contents and body, and also localizes the landing-page previews.
 
 Set `cover` on the English article to a website-owned `/site-assets/blog/` image; the index, article and social metadata reuse it. Prefer text-free abstract editorial artwork using Niu colors. Do not put explanatory labels, fabricated charts or benchmark results into cover art. Generation provenance belongs in the website source, alongside the article assets.
+
+The 0.3 preview hero links installation availability explicitly. Workspace pool management and pool/evaluation event notifications exist in the candidate; native-host final acceptance remains a release gate. Do not imply deployment or publication while the release is held.

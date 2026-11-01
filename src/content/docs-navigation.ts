@@ -5,3 +5,23 @@ export function documentationSection(path: string): 'Docs' | 'API' | 'SDK' | 'Co
   if (/\/api(?:\/|$)/.test(path)) return 'API';
   return 'Docs';
 }
+
+/** One public Docs entry owns its API and SDK references as well. */
+export function publicNavigationActive(path: string, label: string): boolean {
+  if (path.startsWith('/docs/')) {
+    const agentSource = /\/agents(?:\/|$)|\.md$/.test(path);
+    if (label === 'For Human') return documentationSection(path) === 'Docs' && !agentSource;
+    if (label === 'For Agents') return agentSource;
+    if (label === 'API' || label === 'SDK') return documentationSection(path) === label;
+    return label === (documentationSection(path) === 'Compare' ? 'Compare' : 'Docs');
+  }
+  return false;
+}
+
+/** Audience-first documentation navigation, separate from the marketing navigation. */
+export const documentationNavigation = [
+  { label: 'For Human', href: '/docs/' },
+  { label: 'For Agents', href: '/docs/agents/' },
+  { label: 'API', href: '/docs/api/rest/' },
+  { label: 'SDK', href: '/docs/api/sdk/' },
+];

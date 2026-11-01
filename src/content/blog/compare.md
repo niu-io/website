@@ -7,7 +7,7 @@ pinned: true
 pinOrder: 1
 publishedAt: "2026-10-30"
 category: "Comparisons"
-author: "Niu"
+author: "Niuer"
 ---
 
 Choosing a model API platform starts with the work you want it to handle. A hosted model service, a self-hosted gateway and a Python SDK can all help you call models, but they put different responsibilities on your team.

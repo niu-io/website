@@ -6,17 +6,17 @@ export default function BlogArticleFooter() {
   return (
     <footer className="blog-article-footer">
       <div>
-        <h2>{t("Make your first model request", "开始你的第一次模型请求")}</h2>
+        <h2>{t("Connect your agent to Niu", "让你的 Agent 连接 Niu")}</h2>
         <p>
           {t(
-            "Connect an application, explore models and understand your token usage.",
-            "接入应用、探索模型，并了解你的词元用量。",
+            "Give your agent a goal. Let it handle setup and retrieve the evidence.",
+            "说明你的目标，让 Agent 完成接入并自行获取证据。",
           )}
         </p>
       </div>
       <div className="blog-article-actions">
         <Button asChild>
-          <a href="/docs/getting-started/">{t("Get started", "快速入门")}</a>
+          <a href="/docs/guides/personal-assistant/">{t("Build with Niu", "用 Niu 开发")}</a>
         </Button>
         <Button asChild variant="outline">
           <a href="https://github.com/niu-io/niu">

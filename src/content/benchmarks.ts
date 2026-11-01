@@ -186,9 +186,9 @@ export const benchmarkSuites: GatewayBenchmarkSuite[] = [
     verdictTitleZh:
       "在不牺牲尾延迟的前提下，实现完整的 PostgreSQL ACID 准入与批量结算。",
     verdictBody:
-      "Niu records pre-dispatch operations and attempts in a single SQL CTE and coalesces up to 64 post-dispatch completions per batch transaction, keeping c = 64 p99 latency at 31.54 ms while LiteLLM Proxy saturates its Python event loop at ~302 RPS.",
+      "Niu records pre-dispatch operations and attempts in a single SQL CTE and coalesces up to 64 post-dispatch completions per batch transaction, keeping c = 64 p99 latency at 31.54 ms compared with the measured LiteLLM configuration at ~302 RPS. This comparison does not establish a language-level cause.",
     verdictBodyZh:
-      "Niu 牛元通过单条 SQL CTE 记录转发前操作与尝试，并在单个批量事务中合并最多 64 笔完成结算，将 64 并发下 p99 延迟稳定在 31.54 ms，而 LiteLLM Proxy 在约 302 RPS 时即达到 Python 事件循环瓶颈。",
+      "Niu 牛元通过单条 SQL CTE 记录转发前操作与尝试，并在单个批量事务中合并最多 64 笔完成结算，将 64 并发下 p99 延迟稳定在 31.54 ms，同次测试中的 LiteLLM 配置约为 302 RPS。该比较不证明编程语言层面的因果关系。",
   },
   {
     id: "streaming",
@@ -298,9 +298,9 @@ export const benchmarkSuites: GatewayBenchmarkSuite[] = [
     verdictTitleZh:
       "单流逐字转发开销低于 10 微秒，16 并发下达 9,436 Token/秒。",
     verdictBody:
-      "Because LiteLLM Proxy instantiates and serializes Python/Pydantic chunk objects on every SSE token event, it adds 194 µs per chunk at c = 1 and plateaus at 83.0 streams/s at c = 16. Niu forwards SSE frames directly through Tokio byte streams while extracting terminal usage.",
+      "The measured LiteLLM configuration added 194 µs per chunk at c = 1 and reached 83.0 streams/s at c = 16. Niu forwards SSE frames through Tokio byte streams while extracting terminal usage. The benchmark does not isolate the cause of the difference.",
     verdictBodyZh:
-      "LiteLLM Proxy 在每个 SSE 事件上实例化并序列化 Python/Pydantic 对象，单流每分片增加 194 微秒开销并在 16 并发下停滞于 83.0 流/秒。Niu 牛元直接通过 Tokio 字节流零拷贝转发 SSE 帧并提取结束用量。",
+      "被测 LiteLLM 配置在单并发时每分片增加 194 微秒，16 并发时达到 83.0 流／秒。牛元通过 Tokio 字节流转发 SSE 帧并提取结束用量；基准未单独验证差异原因。",
   },
   {
     id: "agents",
@@ -504,8 +504,8 @@ export const benchmarkSuites: GatewayBenchmarkSuite[] = [
     verdictTitleZh:
       "以低于 30 MB 的内存占用运行高吞吐网关节点。",
     verdictBody:
-      "Importing Python provider SDKs and tokenizers consumes 158–195 MB per LiteLLM worker before serving traffic. Niu's native Rust binary starts in 18.2 MB and grows by only 8.2 MB under 64-worker saturation.",
+      "The measured LiteLLM configurations used 158–195 MB idle memory per worker. Niu's native Rust binary starts in 18.2 MB and grows by only 8.2 MB under 64-worker saturation.",
     verdictBodyZh:
-      "LiteLLM 每个工作进程仅导入 Python SDK 与分词器即占用 158–195 MB 内存。Niu 牛元原生 Rust 单二进制启动仅需 18.2 MB，在 64 并发满载下仅增长 8.2 MB。",
+      "被测 LiteLLM 配置的每个进程空闲内存为 158–195 MB。Niu 牛元原生 Rust 单二进制启动仅需 18.2 MB，在 64 并发满载下仅增长 8.2 MB。",
   },
 ];

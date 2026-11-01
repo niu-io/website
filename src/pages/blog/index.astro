@@ -12,14 +12,14 @@ const translations = publishedPosts(await getCollection("blogTranslations"));
   title="Blog"
   chineseTitle="博客"
   description="Ideas and engineering behind better model access, reliable requests and clear token spending."
-  chineseDescription="关于模型接入、可靠请求与清晰词元开支的产品思考和工程实践。"
+  chineseDescription="关于模型接入、可靠请求与清晰 Token 开支的产品思考和工程实践。"
 >
   <header class="blog-intro">
-    <p class="blog-eyebrow" data-en="The Niu blog" data-zh="牛元博客">
+    <p class="blog-eyebrow" data-en="The Niu blog" data-zh="Niu 博客">
       The Niu blog
     </p>
-    <h1 data-en="Make every token count." data-zh="让每个词元发挥更大价值">
-      Make every token count.
+    <h1 data-en="The Model Platform for Agents." data-zh="面向 Agent 的模型平台">
+      The Model Platform for Agents.
     </h1>
     <p
       data-en="Ideas, decisions and engineering behind better model access."
@@ -91,6 +91,7 @@ const translations = publishedPosts(await getCollection("blogTranslations"));
             </p>
             <div class="blog-entry-footer">
               <span class="blog-byline">
+                <span class="blog-byline-avatar" aria-hidden="true"><img src="/site-assets/brand/niu-mark.png" alt="" width="20" height="20" /></span>
                 <span
                   class="blog-byline-author"
                   data-en={post.data.author}

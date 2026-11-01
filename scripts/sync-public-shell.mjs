@@ -14,7 +14,7 @@ const files=[
  ['branding/tokens.css','src/styles/tokens.css'],
  ['branding/public-header.css','src/styles/public-header.css'],
  ['branding/public-navigation.json','src/content/public-navigation.json'],
- ['apps/dashboard/src/app/locale.ts','src/components/locale.ts'],
+ ['apps/dashboard/app/shell/locale.ts','src/components/locale.ts'],
  ['apps/docs/src/components/PublicHeader.tsx','src/components/PublicHeader.tsx'],
  ['apps/docs/src/components/SessionLink.tsx','src/components/SessionLink.tsx'],
  ['apps/docs/src/components/live-api/session.ts','src/components/live-api/session.ts'],
@@ -23,7 +23,7 @@ const files=[
 ];
 const brandFiles=[
  ['branding/identity.css','src/styles/identity.css'],
- ['apps/dashboard/src/components/NiuBrand.tsx','src/components/NiuBrand.tsx'],
+ ['apps/dashboard/app/components/NiuBrand.tsx','src/components/NiuBrand.tsx'],
  ['branding/rounded/sources/mark-paths.json','src/content/brand/mark-paths.json'],
  ['branding/rounded/sources/lettering.json','src/content/brand/lettering.json'],
  ['branding/rounded/manifest.json','src/content/brand/manifest.json'],
@@ -38,7 +38,7 @@ files.push(...brandFiles);
 const brandOrigins=new Set([...brandFiles.map(([origin])=>origin),'branding/public-header.css','apps/docs/src/components/PublicHeader.tsx']);
 const activeFiles=brandOnly?files.filter(([origin])=>brandOrigins.has(origin)):files;
 const digest=text=>createHash('sha256').update(text).digest('hex');
-const adapt=(text,file)=>file.endsWith('.tsx')?text.replaceAll('../../../dashboard/src/components/NiuBrand', './NiuBrand').replaceAll('../../../../branding/rounded/sources/', '../content/brand/').replaceAll('../../../../branding/rounded/manifest.json', '../content/brand/manifest.json').replaceAll('../../../../branding/identity.css', '../styles/identity.css').replaceAll('../../../dashboard/src/components/ui/', './ui/').replaceAll('../../../dashboard/src/app/locale', './locale').replaceAll("'../navigation'","'../content/docs-navigation'").replaceAll("'../../../dashboard/src/components/ui/","'./ui/").replaceAll("'./ThemeMenu'","'./PublicThemeMenu'").replaceAll("'../../../../branding/public-navigation.json'","'../content/website-navigation'"):text;
+const adapt=(text,file)=>file.endsWith('.tsx')?text.replaceAll('../../../dashboard/app/components/NiuBrand', './NiuBrand').replaceAll('../../../dashboard/app/components/ui/', './ui/').replaceAll('../../../dashboard/app/shell/locale', './locale').replaceAll('../../../dashboard/src/components/NiuBrand', './NiuBrand').replaceAll('../../../../branding/rounded/sources/', '../content/brand/').replaceAll('../../../../branding/rounded/manifest.json', '../content/brand/manifest.json').replaceAll('../../../../branding/identity.css', '../styles/identity.css').replaceAll('../../../dashboard/src/components/ui/', './ui/').replaceAll('../../../dashboard/src/app/locale', './locale').replaceAll("'../navigation'","'../content/docs-navigation'").replaceAll("'../../../dashboard/src/components/ui/","'./ui/").replaceAll("'./ThemeMenu'","'./PublicThemeMenu'").replaceAll("'../../../../branding/public-navigation.json'","'../content/website-navigation'"):text;
 if(!source&&!check)throw new Error('Provide --source <public-niu-checkout> to synchronize.');
 const previous=brandOnly?JSON.parse(await readFile(manifestPath,'utf8')):undefined;
 const manifest={...previous,sourceRepository:'niu-io/niu',files:{...previous?.files}};
