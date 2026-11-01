@@ -8,7 +8,7 @@
     "src/components/PublicHeader.tsx": "4ad576be9ce62b646d615f1c55fd275636346c6631a45c9279004eeb6d00a68c",
     "src/components/SessionLink.tsx": "1244e4daeb78de49b726e5f281fa2efc87741e415a5e7e59d215111530b92b5b",
     "src/components/live-api/session.ts": "fe89a76e3505741e7b30631fea828d54cf80ecb26086c43f3c298ca75c64cf7e",
-    "src/content/docs-navigation.ts": "3fe9321fe587438f993d383efbd58d52bdd88eee3def993e5b8c4a596efcf888",
+    "src/content/docs-navigation.ts": "22806e7ae00de958ca7962c1e61e57768ca355727dd0ddfe6932a8be05c97dfc",
     "src/components/PublicNavigationMenu.tsx": "08c76a535e494aeb0c4f129228981b46b95792564f22a3f9e0394cf19c7e6928",
     "src/styles/identity.css": "fce63f4de4ca625c2b63c85dfbea92425dd2390ed503bae3f085551541cde425",
     "src/components/NiuBrand.tsx": "c65cfb939c7d21486593640faaed51dd26117c64b74366e7a596daf4e8533587",
@@ -22,6 +22,6 @@
     "public/site-assets/brand/MAPLE-MONO-OFL.txt": "eb2d28d2e565a0757e3d64e34ebb452e75a0cad87c0ab3faf4e08ba7596de902",
     "public/site-assets/brand/OPEN-HUNINN-OFL.txt": "5df6de36ba2fe26119ac161edbed97c62a9da3c1493f6930b9d9af7f5c93004b"
   },
-  "sourceRevision": "fe4e3bffd3f9b17d5a6d13fffc0fd85552230ea3",
+  "sourceRevision": "27f52790a3d8d315fbca61db1329bed81c07d255",
   "sourceWorkingTreeModified": true
 }
