@@ -82,7 +82,7 @@ export default function CompareBenchmark() {
       <p className="compare-note">
         {t(
           "Different configurations: Niu used PostgreSQL admission and batched completion; New API used token caching and batched logs; LiteLLM used an in-memory master key without database spend logs. PostgreSQL synchronous_commit was off.",
-          "配置不同：Niu使用 PostgreSQL 准入与批量结算；New API 使用令牌缓存与批量日志；LiteLLM 使用内存 master_key，关闭数据库消费日志。PostgreSQL synchronous_commit 关闭。",
+          "配置不同：Niu 使用 PostgreSQL 准入与批量结算；New API 使用令牌缓存与批量日志；LiteLLM 使用内存 master_key，关闭数据库消费日志。PostgreSQL synchronous_commit 关闭。",
         )}
       </p>
       <div className="compare-actions">

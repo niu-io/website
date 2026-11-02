@@ -380,7 +380,7 @@ const volumeHistogramBars = [
 const gatewaySteps = [
   { step: "01", title: "Let your agent connect Niu", titleZh: "让 Agent 连接 Niu",
     detail: "Give it the setup prompt. It configures the supported integration, opens Niu for sign-in and approval, then verifies access.",
-    detailZh: "把接入提示词交给 Agent。它配置受支持的接入方式，打开牛元让你登录并审核权限，然后验证连接。" },
+    detailZh: "把接入提示词交给 Agent。它配置受支持的接入方式，打开 Niu 让你登录并审核权限，然后验证连接。" },
   { step: "02", title: "Describe the outcome and constraints", titleZh: "说明目标与约束",
     detail: "Provide task samples, quality expectations, latency needs and a test budget. Your agent retrieves model information itself.",
     detailZh: "给出任务样本、质量要求、延迟目标和测试预算。模型信息由 Agent 自行获取。" },
@@ -489,14 +489,14 @@ export default function LandingContent({
           <p className="hero-description hero-enter" style={stagger(2)}>
             {t(
               "Discover and evaluate models, build model pools, and manage performance and cost—all through your agent.",
-              "通过你的 Agent，发现与评估模型、构建模型池，管理性能与成本。",
+              "Niu（牛元）让你通过 Agent，发现与评估模型、构建模型池，管理性能与成本。",
             )}
           </p>
           <div className="hero-install code-card hero-enter" style={stagger(3)}>
-            <div className="code-heading"><strong>{t("Give this to your coding agent", "把这句话交给你的 coding agent")}</strong><a href="/docs/install.md">{t("Niu 0.3", "牛元 0.3")}</a></div>
+            <div className="code-heading"><strong>{t("Give this to your coding agent", "把这句话交给你的 coding agent")}</strong><a href="/docs/install.md">{t("Niu 0.3", "Niu 0.3")}</a></div>
             <code className="hero-install-prompt">{installationPrompt}</code>
             <div className="hero-install-footer">
-              <p>{t("Your agent handles setup. Sign in and approve access in Niu when asked, then let the agent continue.", "Agent 负责安装与配置；需要时，你只需在牛元登录并审核权限，然后交给 Agent 继续。")}</p>
+              <p>{t("Your agent handles setup. Sign in and approve access in Niu when asked, then let the agent continue.", "Agent 负责安装与配置；需要时，你只需在 Niu 登录并审核权限，然后交给 Agent 继续。")}</p>
               <Button size="lg" className="cta-primary" onClick={()=>{setInstallCopyError(false);if(!navigator.clipboard){setInstallCopyError(true);return;}void navigator.clipboard.writeText(installationPrompt).then(()=>setCopiedInstall(true)).catch(()=>setInstallCopyError(true));}}>
                 {copiedInstall?<IconCheck aria-hidden="true"/>:<IconCopy aria-hidden="true"/>}<span aria-live="polite">{copiedInstall?t("Copied", "已复制"):t("Copy setup prompt", "复制接入提示词")}</span>
               </Button>
@@ -598,7 +598,7 @@ export default function LandingContent({
           <p>
             {t(
               "Your agent gets the evidence and controls to configure Niu: build a model pool for your task, then refine quality, latency and cost from real execution feedback.",
-              "Agent 获取决策信息与管理能力，按任务需求配置牛元的模型池，再根据实际运行反馈持续改善质量、延迟与成本。",
+              "Agent 获取决策信息与管理能力，按任务需求配置 Niu 的模型池，再根据实际运行反馈持续改善质量、延迟与成本。",
             )}
           </p>
         </div>
@@ -660,7 +660,7 @@ export default function LandingContent({
             <p className="section-description">
               {t(
                 "Start with the setup prompt. Niu 0.3 targets Claude Code, Codex and DeepSeek Harness integration around shared Niu contracts. The installation document checks current availability.",
-                "从接入提示词开始。牛元 0.3围绕共同的牛元契约提供 Claude Code、Codex 与 DeepSeek Harness 接入；安装文档会检查当前可用性。",
+                "从接入提示词开始。Niu 0.3围绕共同的 Niu 契约提供 Claude Code、Codex 与 DeepSeek Harness 接入；安装文档会检查当前可用性。",
               )}
             </p>
             <ul className="gateway-features">
@@ -2391,9 +2391,9 @@ export default function LandingContent({
           <p>
             {isZh ? (
               <>
-                以下是牛元 v0.2.4 在指定配置下的历史结果，使用基准工具{" "}
+                以下是 Niu v0.2.4 在指定配置下的历史结果，使用基准工具{" "}
                 <code>ai-gateway-bench</code>{" "}
-                在 Apple M4 与 PostgreSQL 17.11 上测量。这些数据不代表牛元 0.3 或你的实际模型任务表现。
+                在 Apple M4 与 PostgreSQL 17.11 上测量。这些数据不代表 Niu 0.3 或你的实际模型任务表现。
               </>
             ) : (
               <>

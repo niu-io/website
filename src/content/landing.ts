@@ -25,7 +25,7 @@ export const capabilities = [
     "title": "Build a pool around my needs",
     "titleZh": "按需求组织 model pool",
     "description": "In Niu 0.3, your authorized agent previews and manages workspace model pools. Review saved revisions and execution evidence in Niu; platform supply configuration stays separate.",
-    "descriptionZh": "在 牛元 0.3 中，获得授权的 Agent 可预览并管理工作空间模型池。你在牛元审阅修订记录与执行证据；平台供给配置保持独立。",
+    "descriptionZh": "在 Niu 0.3 中，获得授权的 Agent 可预览并管理工作空间模型池。你在 Niu 审阅修订记录与执行证据；平台供给配置保持独立。",
     "label": "Model pools",
     "labelZh": "模型池配置",
     "href": "/docs/pools.md"
@@ -55,7 +55,7 @@ export const capabilities = [
     "title": "Respond when conditions change",
     "titleZh": "在运行条件变化时响应",
     "description": "In Niu 0.3, agents can configure authorized notifications for model-pool changes and recorded evaluations, then retrieve evidence directly. Delivery does not guarantee an inactive agent will wake.",
-    "descriptionZh": "在 牛元 0.3 中，Agent 可为模型池变化和评估记录配置已授权的事件通知，再直接读取证据。通知送达不代表休眠中的 Agent 会被唤醒。",
+    "descriptionZh": "在 Niu 0.3 中，Agent 可为模型池变化和评估记录配置已授权的事件通知，再直接读取证据。通知送达不代表休眠中的 Agent 会被唤醒。",
     "label": "Current integration scope",
     "labelZh": "当前接入范围",
     "href": "/docs/guides/mcp/"
@@ -70,7 +70,7 @@ export const codeExamples = [
     "endpoint": "Agent-led Niu setup",
     "code": "Install and configure Niu by following https://niu.io/docs/install.md.",
     "trace": "Niu 0.3: Claude Code, Codex and DeepSeek Harness. Check installation availability before setup.",
-    "traceZh": "牛元 0.3：Claude Code、Codex 与 DeepSeek Harness。接入前请检查安装可用性。"
+    "traceZh": "Niu 0.3：Claude Code、Codex 与 DeepSeek Harness。接入前请检查安装可用性。"
   },
   {
     "id": "compare",
@@ -79,7 +79,7 @@ export const codeExamples = [
     "endpoint": "Compare models for a task",
     "code": "Use Niu to shortlist models for my application.\nAsk for my task samples, quality criteria, latency target\nand maximum test budget before any paid evaluation.\nCompare outputs, timing and reported customer charges.\nExplain tradeoffs and preserve unknown costs as unknown.\nPreview a workspace model pool using my explicit grants.\nReview consequential changes and verify the saved revision.",
     "trace": "Niu 0.3: evaluations and workspace pools need explicit delegated grants.",
-    "traceZh": "牛元 0.3：评估与工作空间模型池需要明确委托权限。"
+    "traceZh": "Niu 0.3：评估与工作空间模型池需要明确委托权限。"
   },
   {
     "id": "diagnose",
@@ -100,7 +100,7 @@ export const faqs = [
     "question": "How does my coding agent connect?",
     "questionZh": "Coding agent 如何接入？",
     "answer": "Give your agent the setup prompt. Niu 0.3 includes Claude Code, Codex and DeepSeek Harness packages with browser authorization; the installation document checks package and deployment availability before setup. Setup verifies release artifacts and deployment capabilities before authorization.",
-    "answerZh": "把接入提示词交给 Agent。牛元 0.3 包含 Claude Code、Codex 和 DeepSeek Harness 接入包及浏览器授权；安装文档会先检查包与部署是否可用。安装前会验证发布产物和部署能力。",
+    "answerZh": "把接入提示词交给 Agent。Niu 0.3 包含 Claude Code、Codex 和 DeepSeek Harness 接入包及浏览器授权；安装文档会先检查包与部署是否可用。安装前会验证发布产物和部署能力。",
     "linkLabel": "Connect your agent",
     "linkLabelZh": "连接 Agent",
     "linkHref": "/docs/guides/personal-assistant/"
@@ -124,7 +124,7 @@ export const faqs = [
     "question": "What do I still need to review?",
     "questionZh": "我还需要审核什么？",
     "answer": "You set goals, access and spending boundaries and review important changes. In Niu 0.3, explicitly delegated agents can manage workspace pools, evaluations and resource subscriptions. Key creation and budget changes still require the appropriate Niu member authority.",
-    "answerZh": "你确定目标、权限与支出边界，并审核重要变更。牛元 0.3 中，获得明确授权的 Agent 可管理工作空间模型池、评估和资源订阅。创建密钥、修改预算仍需相应的牛元成员权限。",
+    "answerZh": "你确定目标、权限与支出边界，并审核重要变更。Niu 0.3 中，获得明确授权的 Agent 可管理工作空间模型池、评估和资源订阅。创建密钥、修改预算仍需相应的 Niu 成员权限。",
     "linkLabel": "Review the workflow",
     "linkLabelZh": "查看审核流程",
     "linkHref": "/docs/guides/personal-assistant/"
@@ -136,7 +136,7 @@ export const faqs = [
     "question": "Can my agent build and update model pools?",
     "questionZh": "Agent 能构建和更新 model pool 吗？",
     "answer": "In Niu 0.3, an agent with pools:read/write can inspect, preview and update workspace model pools. Revision conflicts must be reconciled. Human members review saved policy and execution evidence; platform supply pools remain separate.",
-    "answerZh": "牛元 0.3 中，具有 pools:read/write 权限的 Agent 可检查、预览并更新工作空间模型池，修订冲突需要先核对。成员审阅保存的策略与执行证据；平台供给池保持独立。",
+    "answerZh": "Niu 0.3 中，具有 pools:read/write 权限的 Agent 可检查、预览并更新工作空间模型池，修订冲突需要先核对。成员审阅保存的策略与执行证据；平台供给池保持独立。",
     "linkLabel": "Pool configuration",
     "linkLabelZh": "模型池配置",
     "linkHref": "/docs/pools.md"
@@ -148,7 +148,7 @@ export const faqs = [
     "question": "Can Niu notify my agent and let it adapt?",
     "questionZh": "Niu 能通知 Agent 并让它自动调整吗？",
     "answer": "Niu 0.3 supports signed notifications for pool changes and recorded evaluations. An authorized receiver must verify signatures, deduplicate and reconcile delivery. Receipt does not guarantee an inactive host wakes, nor authorize paid work or automatic policy changes.",
-    "answerZh": "牛元 0.3支持模型池变化和评估记录的签名通知。接收端需要获得授权、验证签名、去重并核对投递。送达不保证唤醒休眠宿主，也不构成付费工作或自动变更策略的授权。",
+    "answerZh": "Niu 0.3支持模型池变化和评估记录的签名通知。接收端需要获得授权、验证签名、去重并核对投递。送达不保证唤醒休眠宿主，也不构成付费工作或自动变更策略的授权。",
     "linkLabel": "Current MCP capabilities",
     "linkLabelZh": "当前 MCP 能力",
     "linkHref": "/docs/guides/mcp/"
@@ -207,7 +207,7 @@ export const pillars = [
     "metric": "Agent-friendly",
     "metricZh": "面向智能体",
     "title": "Let your agent work directly with Niu",
-    "titleZh": "让智能体直接使用牛元",
+    "titleZh": "让智能体直接使用 Niu",
     "detail": "Connect through native plugins and MCP. Your agent discovers, configures and verifies; you set goals and approve access.",
     "detailZh": "通过原生插件和 MCP 接入。智能体直接发现、配置并验证；你设定目标、审核权限。"
   },
@@ -227,7 +227,7 @@ export const pillars = [
     "title": "Keep model calls fast and observable",
     "titleZh": "让模型调用高效且可观测",
     "detail": "Route requests through Niu’s gateway and inspect latency, failures, usage and customer charges. Feed measurements back to your agent’s model pool.",
-    "detailZh": "通过牛元网关路由请求，查看延迟、失败、用量与客户费用，再将测量结果反馈给智能体的模型池。"
+    "detailZh": "通过 Niu 网关路由请求，查看延迟、失败、用量与客户费用，再将测量结果反馈给智能体的模型池。"
   }
 ];
 

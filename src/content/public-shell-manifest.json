@@ -4,14 +4,14 @@
     "src/styles/tokens.css": "9b630280a2f0dbf6186a33312e03d6548e8d0467d8b547b68308055fdf1aa092",
     "src/styles/public-header.css": "09220dbd546396fdb7f9c4fb66037782871f7c69f26a3aa2486518d6137aa9f6",
     "src/content/public-navigation.json": "1f902aa5b59799247d9b4f2c32e8e629d6b0d6b4cf5e6e8ba58a8ae7015e6322",
-    "src/components/locale.ts": "fcc7997be3c980efe4d464755c3f0a4e9d3083e917f09a769bacd70573af5a01",
-    "src/components/PublicHeader.tsx": "4ad576be9ce62b646d615f1c55fd275636346c6631a45c9279004eeb6d00a68c",
+    "src/components/locale.ts": "b0e43da8222d21d98965d6039461a00280ece67f44d830d78ca238ede05fb361",
+    "src/components/PublicHeader.tsx": "8db83d941a2fb5bd814f73e55b520e4e220d7ae38d59aab9f6970fa5835fb9f5",
     "src/components/SessionLink.tsx": "1244e4daeb78de49b726e5f281fa2efc87741e415a5e7e59d215111530b92b5b",
     "src/components/live-api/session.ts": "fe89a76e3505741e7b30631fea828d54cf80ecb26086c43f3c298ca75c64cf7e",
-    "src/content/docs-navigation.ts": "5e124f8e500598af2167241a2e7c006a89ec23dd339f7e4640b5684bc81222a5",
-    "src/components/PublicNavigationMenu.tsx": "08c76a535e494aeb0c4f129228981b46b95792564f22a3f9e0394cf19c7e6928",
-    "src/styles/identity.css": "fce63f4de4ca625c2b63c85dfbea92425dd2390ed503bae3f085551541cde425",
-    "src/components/NiuBrand.tsx": "c65cfb939c7d21486593640faaed51dd26117c64b74366e7a596daf4e8533587",
+    "src/content/docs-navigation.ts": "fb945fcdae7e4b7a01a3b81b40e9d069ebc81fa410a7f4ff54974ae407a7590c",
+    "src/components/PublicNavigationMenu.tsx": "68606d066db5bea56f4afa3ba86e68d9daba39e5e1b71c7a5557782bd411e1f5",
+    "src/styles/identity.css": "9621e376a1962e15b881483cdad1c3469f9b01bbe0d9a9cd71f698890cffdae4",
+    "src/components/NiuBrand.tsx": "3c1bfbf65490c4f2fafd843fac265e83d45cfd3caa5ff3d8424af55fe00542a1",
     "src/content/brand/mark-paths.json": "f79d017058642b56acf8b1df1042eef9ec225fbabe4bf57bacd43105059ae97f",
     "src/content/brand/lettering.json": "5879bc18ec5809e966a3e4547955876148000131cc021a746ef8527af27a8b55",
     "src/content/brand/manifest.json": "b58b78f8d28951809038a573d4151c8fd6a832b98fac2a2287b42b076304db14",
@@ -22,6 +22,6 @@
     "public/site-assets/brand/MAPLE-MONO-OFL.txt": "eb2d28d2e565a0757e3d64e34ebb452e75a0cad87c0ab3faf4e08ba7596de902",
     "public/site-assets/brand/OPEN-HUNINN-OFL.txt": "5df6de36ba2fe26119ac161edbed97c62a9da3c1493f6930b9d9af7f5c93004b"
   },
-  "sourceRevision": "e5511902bd996c9b1b777297c3f8202d364dc7dc",
-  "sourceWorkingTreeModified": true
+  "sourceRevision": "559954ba2463b11b73495103c47489238f943f40",
+  "sourceWorkingTreeModified": false
 }

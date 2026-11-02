@@ -188,7 +188,7 @@ export const benchmarkSuites: GatewayBenchmarkSuite[] = [
     verdictBody:
       "Niu records pre-dispatch operations and attempts in a single SQL CTE and coalesces up to 64 post-dispatch completions per batch transaction, keeping c = 64 p99 latency at 31.54 ms compared with the measured LiteLLM configuration at ~302 RPS. This comparison does not establish a language-level cause.",
     verdictBodyZh:
-      "Niu 牛元通过单条 SQL CTE 记录转发前操作与尝试，并在单个批量事务中合并最多 64 笔完成结算，将 64 并发下 p99 延迟稳定在 31.54 ms，同次测试中的 LiteLLM 配置约为 302 RPS。该比较不证明编程语言层面的因果关系。",
+      "Niu 通过单条 SQL CTE 记录转发前操作与尝试，并在单个批量事务中合并最多 64 笔完成结算，将 64 并发下 p99 延迟稳定在 31.54 ms，同次测试中的 LiteLLM 配置约为 302 RPS。该比较不证明编程语言层面的因果关系。",
   },
   {
     id: "streaming",
@@ -300,7 +300,7 @@ export const benchmarkSuites: GatewayBenchmarkSuite[] = [
     verdictBody:
       "The measured LiteLLM configuration added 194 µs per chunk at c = 1 and reached 83.0 streams/s at c = 16. Niu forwards SSE frames through Tokio byte streams while extracting terminal usage. The benchmark does not isolate the cause of the difference.",
     verdictBodyZh:
-      "被测 LiteLLM 配置在单并发时每分片增加 194 微秒，16 并发时达到 83.0 流／秒。牛元通过 Tokio 字节流转发 SSE 帧并提取结束用量；基准未单独验证差异原因。",
+      "被测 LiteLLM 配置在单并发时每分片增加 194 微秒，16 并发时达到 83.0 流／秒。Niu 通过 Tokio 字节流转发 SSE 帧并提取结束用量；基准未单独验证差异原因。",
   },
   {
     id: "agents",
@@ -406,7 +406,7 @@ export const benchmarkSuites: GatewayBenchmarkSuite[] = [
     verdictBody:
       "As growing conversation histories reach 25 KB per turn across 16 simultaneous agents, JSON re-parsing and event-loop contention double LiteLLM Proxy's completion time (3.06s to 5.80s). Niu completes all 480 turns in 1.69s with a flat 54 ms median turn time.",
     verdictBodyZh:
-      "当 16 个并发智能体的历史上下文增长至每轮 25 KB 时，JSON 反复解析与事件循环争用使 LiteLLM Proxy 完成耗时翻倍（3.06 秒升至 5.80 秒）。Niu 牛元仅需 1.69 秒即可完成全部 480 轮请求，中位单轮耗时稳定在 54 ms。",
+      "当 16 个并发智能体的历史上下文增长至每轮 25 KB 时，JSON 反复解析与事件循环争用使 LiteLLM Proxy 完成耗时翻倍（3.06 秒升至 5.80 秒）。Niu 仅需 1.69 秒即可完成全部 480 轮请求，中位单轮耗时稳定在 54 ms。",
   },
   {
     id: "efficiency",
@@ -506,6 +506,6 @@ export const benchmarkSuites: GatewayBenchmarkSuite[] = [
     verdictBody:
       "The measured LiteLLM configurations used 158–195 MB idle memory per worker. Niu's native Rust binary starts in 18.2 MB and grows by only 8.2 MB under 64-worker saturation.",
     verdictBodyZh:
-      "被测 LiteLLM 配置的每个进程空闲内存为 158–195 MB。Niu 牛元原生 Rust 单二进制启动仅需 18.2 MB，在 64 并发满载下仅增长 8.2 MB。",
+      "被测 LiteLLM 配置的每个进程空闲内存为 158–195 MB。Niu 原生 Rust 单二进制启动仅需 18.2 MB，在 64 并发满载下仅增长 8.2 MB。",
   },
 ];

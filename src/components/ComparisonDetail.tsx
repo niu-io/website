@@ -30,7 +30,7 @@ export default function ComparisonDetail({
         <p className="compare-meta">
           {t(
             `Reviewed ${reviewed}. Product documentation and Niu's current API contract are linked below.`,
-            `审阅日期：${reviewed}。下方附有产品文档与 Niu当前 API 契约链接。`,
+            `审阅日期：${reviewed}。下方附有产品文档与 Niu 当前 API 契约链接。`,
           )}
         </p>
       </header>
@@ -38,7 +38,7 @@ export default function ComparisonDetail({
         <TableCaption>
           {t(
             "Niu targets lower-cost model access and transparent billing. Savings depend on the model, workload and qualified Provider offer; this feature comparison is not a verified price comparison.",
-            "Niu致力于提供更低成本的模型接入与透明计费。实际成本节省取决于具体模型、负载及供应商报价；本表为功能范围对比而非价格对比。",
+            "Niu 致力于提供更低成本的模型接入与透明计费。实际成本节省取决于具体模型、负载及供应商报价；本表为功能范围对比而非价格对比。",
           )}
         </TableCaption>
         <TableHeader>

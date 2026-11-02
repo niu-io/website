@@ -13,7 +13,7 @@ export default function CompareOverview() {
         <p>
           {t(
             "From your first model call to ongoing application operations: Niu combines Provider management, workspace budgets, transparent usage and billing, and text/video generation management. Compare it with LiteLLM for self-hosted gateway and SDK workflows, and OpenRouter for hosted model access.",
-            "从第一次模型调用到持续生产运营：Niu集成了供应商管理、工作空间预算、透明的用量与计费账本，以及生成对话与视频工作台。与提供自托管网关及 Python SDK 的 LiteLLM，以及托管模型服务 OpenRouter 对比。",
+            "从第一次模型调用到持续生产运营：Niu 集成了供应商管理、工作空间预算、透明的用量与计费账本，以及生成对话与视频工作台。与提供自托管网关及 Python SDK 的 LiteLLM，以及托管模型服务 OpenRouter 对比。",
           )}
         </p>
       </header>
