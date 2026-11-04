@@ -32,6 +32,7 @@ const brandFiles=[
  ['branding/assets/niu-social-en-dark.png','public/site-assets/brand/niu-social-en-dark.png',true],
  ['branding/assets/favicon.ico','public/favicon.ico',true],
  ['branding/rounded/sources/MAPLE-MONO-OFL.txt','public/site-assets/brand/MAPLE-MONO-OFL.txt'],
+ ['branding/rounded/sources/ARIAL-ROUNDED-NOTICE.txt','public/site-assets/brand/ARIAL-ROUNDED-NOTICE.txt'],
  ['branding/rounded/sources/OPEN-HUNINN-OFL.txt','public/site-assets/brand/OPEN-HUNINN-OFL.txt'],
 ];
 files.push(...brandFiles);

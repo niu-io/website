@@ -10,18 +10,21 @@
     "src/components/live-api/session.ts": "fe89a76e3505741e7b30631fea828d54cf80ecb26086c43f3c298ca75c64cf7e",
     "src/content/docs-navigation.ts": "fb945fcdae7e4b7a01a3b81b40e9d069ebc81fa410a7f4ff54974ae407a7590c",
     "src/components/PublicNavigationMenu.tsx": "68606d066db5bea56f4afa3ba86e68d9daba39e5e1b71c7a5557782bd411e1f5",
-    "src/styles/identity.css": "9621e376a1962e15b881483cdad1c3469f9b01bbe0d9a9cd71f698890cffdae4",
+    "src/styles/identity.css": "c0d719df41c2a1231f729265ae723697539521a00b63e6a5b94f8a21cf3cab26",
     "src/components/NiuBrand.tsx": "3c1bfbf65490c4f2fafd843fac265e83d45cfd3caa5ff3d8424af55fe00542a1",
     "src/content/brand/mark-paths.json": "f79d017058642b56acf8b1df1042eef9ec225fbabe4bf57bacd43105059ae97f",
-    "src/content/brand/lettering.json": "5879bc18ec5809e966a3e4547955876148000131cc021a746ef8527af27a8b55",
-    "src/content/brand/manifest.json": "b58b78f8d28951809038a573d4151c8fd6a832b98fac2a2287b42b076304db14",
+    "src/content/brand/lettering.json": "432bc125864898195cbe9e2bc95b7813d139ac82061d1fc209ff6044aeb683c3",
+    "src/content/brand/manifest.json": "441bb9aee564a0e9fa82c5c5c1ba6f0b58fb85ddf8144d8e322c32de3c79199a",
     "public/site-assets/brand/niu-mark.png": "4ff254f73bd098c41eccaa9f78440592749bf6a44196f86d85851e874dbc8491",
-    "public/site-assets/brand/niu-logo-dark.png": "a263f0ecc146e9231c5dcfa1f224db5faf37d265104288a3c8242f485c8e7f96",
-    "public/site-assets/brand/niu-social-en-dark.png": "fce5159b0fb5785c1cf0ace170f830790a664e8cf03e54eb1741c656575205a3",
+    "public/site-assets/brand/niu-logo-dark.png": "6ae960105320d2376ccf902767a25cadbbaa8815f8a842cc82fd984b2714a865",
+    "public/site-assets/brand/niu-social-en-dark.png": "0217c2c8452ebe6f7af3281fb2f0602c49cd79eba5a6d49513b337634e2965af",
     "public/favicon.ico": "bedf959e2cd50dd9b55edd26402d97a219717198c313b8fe8fac5d7804d519d2",
     "public/site-assets/brand/MAPLE-MONO-OFL.txt": "eb2d28d2e565a0757e3d64e34ebb452e75a0cad87c0ab3faf4e08ba7596de902",
-    "public/site-assets/brand/OPEN-HUNINN-OFL.txt": "5df6de36ba2fe26119ac161edbed97c62a9da3c1493f6930b9d9af7f5c93004b"
+    "public/site-assets/brand/OPEN-HUNINN-OFL.txt": "5df6de36ba2fe26119ac161edbed97c62a9da3c1493f6930b9d9af7f5c93004b",
+    "public/site-assets/brand/ARIAL-ROUNDED-NOTICE.txt": "60118bedd48f05794f51c43f68aaf8e934b1b7edb5ade99c5206c7d1c3d0a3f8"
   },
   "sourceRevision": "559954ba2463b11b73495103c47489238f943f40",
-  "sourceWorkingTreeModified": false
+  "sourceWorkingTreeModified": false,
+  "brandSourceRevision": "e12bdc28b15aed4f94574689974b646a1d289e3a",
+  "brandSourceWorkingTreeModified": true
 }
