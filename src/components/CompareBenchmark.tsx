@@ -22,6 +22,17 @@ const rows = benchmarkSuites.flatMap((suite) =>
         : suite.rows.slice(0, 2),
 );
 
+const metricZh: Record<string, string> = {
+  "c = 64 throughput (/v1/chat/completions)": "64 并发吞吐量 (/v1/chat/completions)",
+  "Anthropic /v1/messages (c = 64)": "Anthropic /v1/messages 吞吐量 (64 并发)",
+  "Concurrent streaming throughput (c = 16)": "并发流式吞吐量 (16 并发)",
+  "Concurrent Inter-Token Latency (ITL p50, c = 16)": "并发逐字延迟 (ITL p50，16 并发)",
+  "16 agents × 30 turns (codex /v1/chat/completions)": "16 个智能体 × 30 轮对话 (codex /v1/chat/completions)",
+  "16 agents × 30 turns (claude_code /v1/messages)": "16 个智能体 × 30 轮对话 (claude_code /v1/messages)",
+  "Idle resident memory (RSS)": "空闲常驻内存 (RSS)",
+  "Peak resident memory under c = 64 load (RSS)": "64 并发满载峰值常驻内存 (RSS)",
+};
+
 export default function CompareBenchmark() {
   const { t } = useLocale();
   return (
@@ -62,7 +73,7 @@ export default function CompareBenchmark() {
         <TableBody>
           {rows.map((row) => (
             <TableRow key={row.metric}>
-              <TableCell>{row.metric}</TableCell>
+              <TableCell>{t(row.metric, metricZh[row.metric] ?? row.metric)}</TableCell>
               <TableCell data-label="Niu v0.2.4">
                 {row.niu}
                 {row.niuSub && <p>{row.niuSub}</p>}
