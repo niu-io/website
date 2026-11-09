@@ -563,8 +563,7 @@ h2 {
 }
 .section-heading .eyebrow,
 .gateway-grid .eyebrow,
-.start-section .eyebrow,
-.faq-section .eyebrow {
+.start-section .eyebrow {
   margin-bottom: 20px;
 }
 .section-heading > p {
@@ -807,44 +806,6 @@ code {
 .start-paths a:hover h3 {
   color: var(--brand-ink);
 }
-.faq-section {
-  border-top: 1px solid var(--border);
-  display: grid;
-  grid-template-columns: 1fr 1.25fr;
-  gap: 80px;
-}
-.faq-list details {
-  border-bottom: 1px solid var(--border);
-  padding: 19px 0;
-}
-.faq-list details:first-child {
-  padding-top: 0;
-}
-.faq-list summary {
-  cursor: pointer;
-  list-style: none;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-  font-size: 15px;
-  font-weight: 530;
-  line-height: 1.5;
-}
-.faq-list summary::-webkit-details-marker {
-  display: none;
-}
-.faq-list summary span {
-  font-size: 20px;
-  color: var(--muted-foreground);
-}
-.faq-list details[open] summary span {
-  transform: rotate(45deg);
-}
-.faq-list p {
-  font-size: 14px;
-  padding: 16px 28px 0 0;
-}
 .closing {
   background: var(--secondary);
   border: 1px solid var(--border);
@@ -980,8 +941,7 @@ code {
   .capability h3 {
     font-size: 23px;
   }
-  .start-section,
-  .faq-section {
+  .start-section {
     gap: 45px;
   }
   .closing h2 {
@@ -1153,8 +1113,7 @@ code {
   .release-card {
     padding: 28px;
   }
-  .start-section,
-  .faq-section {
+  .start-section {
     grid-template-columns: 1fr;
     gap: 34px;
   }
@@ -2606,7 +2565,6 @@ h3 {
 .gateway-section,
 .editions-section,
 .start-section,
-.faq-section,
 .integration-story,
 .benchmark-steps li {
   border: 0;
@@ -2713,8 +2671,7 @@ h3 {
 .value-selectors button[aria-pressed="true"] {
   box-shadow: none;
 }
-.start-paths > a,
-.faq-list details {
+.start-paths > a {
   border-color: var(--data-divider);
 }
 .mock-body td,

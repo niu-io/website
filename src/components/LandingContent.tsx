@@ -48,7 +48,6 @@ import {
   links,
   pillars,
   capabilities,
-  faqs,
   codeExamples,
   heroStats,
 } from "../content/landing";
@@ -64,22 +63,6 @@ const capabilityIcons = [
   IconPlugConnected,
   IconMessageChatbot,
 ];
-
-interface LandingPost {
-  href: string;
-  title: string;
-  chineseTitle?: string;
-  chineseDescription?: string;
-  chineseCategory?: string;
-  chineseDateLabel?: string;
-  chineseReadingTime?: string;
-  description: string;
-  category: string;
-  publishedAt: string;
-  dateLabel: string;
-  readingTime: string;
-  highlights?: string[];
-}
 
 const previewTabs = [
   {
@@ -390,10 +373,8 @@ const gatewaySteps = [
 ];
 
 export default function LandingContent({
-  latestPosts,
   highlightedCode,
 }: {
-  latestPosts: LandingPost[];
   highlightedCode: string[];
 }) {
   const { isZh, t } = useLocale();
@@ -575,30 +556,63 @@ export default function LandingContent({
         <div className="section-heading" data-reveal>
           <div>
             <p className="eyebrow">
-              {t("AGENT SCENARIOS", "AGENT 使用场景")}
+              {t("BUILT FOR AGENTS", "为 AGENT 而建")}
             </p>
             <h2 id="product-title">
               {isZh ? (
                 <>
-                  告诉 Agent 你的需求，
+                  Agent 已经在替你选模型，
                   <br />
-                  让它与 Niu 一起完成。
+                  给它一个能把事做好的平台。
                 </>
               ) : (
                 <>
-                  Start with what
+                  Your agent already chooses models.
                   <br />
-                  you want to achieve.
+                  Give it a platform that lets it do the job.
                 </>
               )}
             </h2>
           </div>
           <p>
             {t(
-              "Your agent gets the evidence and controls to configure Niu: build a model pool for your task, then refine quality, latency and cost from real execution feedback.",
-              "Agent 获取决策信息与管理能力，按任务需求配置 Niu 的模型池，再根据实际运行反馈持续改善质量、延迟与成本。",
+              "Coding agents already compare models, weigh cost and decide how to call them. What they lack is direct access to trustworthy model information and authorized control. Niu exposes both, so your agent can act, verify and recover without asking you to relay dashboards.",
+              "Coding agent 已经在比较模型、权衡成本并决定如何调用。它们缺的是可信的模型信息与获得授权的管理能力。Niu 把两者直接交给 Agent，让它自己操作、验证和恢复，而不是让你转述控制台里的数据。",
             )}
           </p>
+        </div>
+        <div className="agent-roles" data-reveal>
+          <article className="agent-role">
+            <p className="agent-role-label">{t("YOUR AGENT", "你的 AGENT")}</p>
+            <h3>{t("Does the work", "负责执行")}</h3>
+            <ul>
+              <li>{t("Reads models, capabilities and current customer prices", "读取模型、能力与当前客户价格")}</li>
+              <li>{t("Compares candidates against your task, quality bar and test budget", "按任务、质量要求与测试预算比较候选模型")}</li>
+              <li>{t("Manages workspace pools and retrieves request evidence within its grants", "在授权范围内管理工作空间模型池并读取请求证据")}</li>
+            </ul>
+          </article>
+          <article className="agent-role">
+            <p className="agent-role-label">{t("NIU", "NIU")}</p>
+            <h3>{t("Supplies the truth and the controls", "提供事实与管控")}</h3>
+            <ul>
+              <li>{t("Publishes the model catalog and current customer prices", "发布模型目录与当前客户价格")}</li>
+              <li>{t("Enforces keys, budgets, grants and revision checks", "执行密钥、预算、授权与修订校验")}</li>
+              <li>{t("Records requests, usage, charges and audit history", "记录请求、用量、费用与审计历史")}</li>
+            </ul>
+          </article>
+          <article className="agent-role">
+            <p className="agent-role-label">{t("YOU", "你")}</p>
+            <h3>{t("Keep the decisions", "保留决策权")}</h3>
+            <ul>
+              <li>{t("Set the goal, quality bar and test budget", "设定目标、质量要求与测试预算")}</li>
+              <li>{t("Approve access and consequential changes", "审批权限与重要变更")}</li>
+              <li>{t("Review saved results, revisions and charges", "审阅保存的结果、修订与费用")}</li>
+            </ul>
+          </article>
+        </div>
+        <div className="capability-label" data-reveal>
+          <p className="eyebrow">{t("WHAT YOUR AGENT DOES IN NIU", "AGENT 在 NIU 里做什么")}</p>
+          <span>{t("Six concrete tasks, one working loop.", "六个具体任务，一条工作闭环。")}</span>
         </div>
         <div className="capability-grid">
           {capabilities.map((item, index) => {
@@ -2745,171 +2759,7 @@ export default function LandingContent({
         </div>
       </section>
 
-      {/* 6. LATEST BLOG POSTS */}
-      {latestPosts.length > 0 && (
-        <section
-          className="section container landing-blog"
-          aria-labelledby="landing-blog-title"
-        >
-          <div className="section-heading" data-reveal>
-            <div>
-              <p className="eyebrow">
-                {t("FROM THE NIU BLOG", "来自 NIU Niu 博客")}
-              </p>
-              <h2 id="landing-blog-title">
-                {isZh ? (
-                  <>
-                    来自网关工程团队的
-                    <br />
-                    架构与产品实践笔记。
-                  </>
-                ) : (
-                  <>
-                    Engineering notes from
-                    <br />
-                    the gateway team.
-                  </>
-                )}
-              </h2>
-            </div>
-            <div className="landing-blog-intro">
-              <p>
-                {t(
-                  "Model access, token usage and reliable API integration in practice.",
-                  "分享模型接入、Token 用量管理与调用可靠性的工程实践。",
-                )}
-              </p>
-              <a className="text-link" href="/blog/">
-                {t("All articles", "全部文章")}{" "}
-                <span aria-hidden="true">→</span>
-              </a>
-            </div>
-          </div>
-          <div
-            className={`landing-blog-list${latestPosts.length === 1 ? " is-single" : ""}`}
-          >
-            {latestPosts.map((post, index) => (
-              <a
-                key={post.href}
-                className="landing-blog-card"
-                href={post.href}
-                data-reveal
-                data-spotlight
-                style={stagger(index)}
-              >
-                <div className="landing-blog-main">
-                  <div className="landing-blog-meta">
-                    <span className="landing-blog-category">
-                      {isZh && post.chineseCategory ? post.chineseCategory : post.category}
-                    </span>
-                    <time dateTime={post.publishedAt}>{isZh && post.chineseDateLabel ? post.chineseDateLabel : post.dateLabel}</time>
-                    <span>{isZh && post.chineseReadingTime ? post.chineseReadingTime : post.readingTime}</span>
-                  </div>
-                  <h3>
-                    {isZh && post.chineseTitle ? post.chineseTitle : post.title}
-                  </h3>
-                  <p>{isZh && post.chineseDescription ? post.chineseDescription : post.description}</p>
-                  <span className="text-link">
-                    {t("Read article", "阅读全文")}{" "}
-                    <IconArrowRight size={16} aria-hidden="true" />
-                  </span>
-                </div>
-                {latestPosts.length === 1 &&
-                  post.highlights &&
-                  post.highlights.length > 0 && (
-                    <div className="landing-blog-chapters">
-                      <span className="small-label">
-                        {t("INSIDE THIS ESSAY", "本文核心章节")}
-                      </span>
-                      <ol>
-                        {post.highlights.map((heading, hIndex) => (
-                          <li key={heading}>
-                            <span>{String(hIndex + 1).padStart(2, "0")}</span>
-                            <strong>{heading}</strong>
-                          </li>
-                        ))}
-                      </ol>
-                    </div>
-                  )}
-              </a>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* 7. CONCISE FAQ */}
-      <section
-        className="section container faq-section"
-        aria-labelledby="faq-title"
-      >
-        <div className="section-heading" data-reveal>
-          <div>
-            <p className="eyebrow">
-              {t("FREQUENTLY ASKED QUESTIONS", "常见问题解答 (FAQ)")}
-            </p>
-            <h2 id="faq-title">
-              {isZh ? (
-                <>
-                  在投入生产环境前
-                  <br />
-                  最受关注的核心问题。
-                </>
-              ) : (
-                <>
-                  Key questions before
-                  <br />
-                  you run in production.
-                </>
-              )}
-            </h2>
-          </div>
-          <div className="faq-intro">
-            <p>
-              {t(
-                "How agents connect, what they can do today, and where your review is needed.",
-                "了解 Agent 如何接入、目前能做什么，以及哪些环节需要你审核。",
-              )}
-            </p>
-            <div className="faq-intro-links">
-              <a className="text-link" href="/docs/">
-                {t("Read the docs", "阅读技术文档")}{" "}
-                <span aria-hidden="true">→</span>
-              </a>
-              <a className="text-link" href={`${links.repo}/issues`}>
-                {t("Ask on GitHub", "在 GitHub 提问")}{" "}
-                <span aria-hidden="true">↗</span>
-              </a>
-            </div>
-          </div>
-        </div>
-        <div className="faq-list" data-reveal>
-          {faqs.map((faq, idx) => (
-            <details key={faq.question} open={idx === 0 || undefined}>
-              <summary>
-                <span className="faq-meta">
-                  <span className="faq-index">{faq.index}</span>
-                  <span className="faq-category">
-                    {isZh ? faq.categoryZh : faq.category}
-                  </span>
-                </span>
-                <span className="faq-question">
-                  {isZh ? faq.questionZh : faq.question}
-                </span>
-                <span className="faq-toggle" aria-hidden="true" />
-              </summary>
-              <div className="faq-body">
-                <p>{isZh ? faq.answerZh : faq.answer}</p>
-                <a className="text-link faq-doc-link" href={faq.linkHref}>
-                  {isZh ? faq.linkLabelZh : faq.linkLabel}{" "}
-                  <span aria-hidden="true">→</span>
-                </a>
-              </div>
-            </details>
-          ))}
-        </div>
-      </section>
-
-      {/* 8. CLOSING CTA */}
+      {/* 7. CLOSING CTA */}
       <section
         className="closing-stage container"
         aria-labelledby="closing-title"
