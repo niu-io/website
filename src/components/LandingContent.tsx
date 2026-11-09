@@ -531,8 +531,6 @@ export default function LandingContent({
           <p className="hero-sublinks hero-enter" style={stagger(4)}>
             <a href={links.compare}>{t("Compare gateways", "网关对比")}</a>
             <span aria-hidden="true">·</span>
-            <a href="/models/">{t("Browse models", "浏览模型目录")}</a>
-            <span aria-hidden="true">·</span>
             <a href="/blog/why-niu/">{t("Why Niu?", "为什么选择 Niu？")}</a>
           </p>
 
@@ -2647,8 +2645,8 @@ export default function LandingContent({
           </div>
           <p>
             {t(
-              "The gateway, dashboard, model catalog, and docs are MIT-licensed with zero black-box dependencies or license servers—your data stays 100% yours.",
-              "网关、管理控制台、模型目录与文档站点全部采用 MIT 开源许可，无黑盒依赖、无外部授权服务器，业务数据 100% 掌握在您自己手中。",
+              "The gateway, dashboard, and docs are MIT-licensed with zero black-box dependencies or license servers—your data stays 100% yours.",
+              "网关、管理控制台与文档站点全部采用 MIT 开源许可，无黑盒依赖、无外部授权服务器，业务数据 100% 掌握在您自己手中。",
             )}
           </p>
         </div>
@@ -2688,8 +2686,8 @@ export default function LandingContent({
               </li>
               <li>
                 {t(
-                  "Public Model Catalog, saved multi-model Chat, and Seedance Video studio",
-                  "公开模型目录、云端同步的多模型对话，以及 Seedance 视频生成工作台",
+                  "Workspace model catalog, saved multi-model Chat, and Seedance Video studio",
+                  "工作空间模型目录、云端同步的多模型对话，以及 Seedance 视频生成工作台",
                 )}
               </li>
             </ul>

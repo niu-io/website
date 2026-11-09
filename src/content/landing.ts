@@ -159,8 +159,8 @@ export const faqs = [
     "categoryZh": "部署",
     "question": "Can I run Niu myself?",
     "questionZh": "可以自行部署 Niu 吗？",
-    "answer": "The public gateway, dashboard, model catalog and docs are MIT-licensed. Self-host with PostgreSQL and configure the model access you need. Availability still depends on configured routes and permissions.",
-    "answerZh": "公开网关、控制台、模型目录和文档采用 MIT 许可。你可以配合 PostgreSQL 自行部署并配置所需模型；实际可用范围取决于路由配置和权限。",
+    "answer": "The public gateway, dashboard and docs are MIT-licensed. Self-host with PostgreSQL and configure the model access you need. Availability still depends on configured routes and permissions.",
+    "answerZh": "公开网关、控制台和文档采用 MIT 许可。你可以配合 PostgreSQL 自行部署并配置所需模型；实际可用范围取决于路由配置和权限。",
     "linkLabel": "Self-host Niu",
     "linkLabelZh": "自行部署 Niu",
     "linkHref": "/docs/deployment/single-container/"

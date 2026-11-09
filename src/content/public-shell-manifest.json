@@ -3,7 +3,7 @@
   "files": {
     "src/styles/tokens.css": "9b630280a2f0dbf6186a33312e03d6548e8d0467d8b547b68308055fdf1aa092",
     "src/styles/public-header.css": "09220dbd546396fdb7f9c4fb66037782871f7c69f26a3aa2486518d6137aa9f6",
-    "src/content/public-navigation.json": "1f902aa5b59799247d9b4f2c32e8e629d6b0d6b4cf5e6e8ba58a8ae7015e6322",
+    "src/content/public-navigation.json": "af6626c2d2e14117a63f06e4df394412036983c89391c805bb8e2be6d79b49ef",
     "src/components/locale.ts": "b0e43da8222d21d98965d6039461a00280ece67f44d830d78ca238ede05fb361",
     "src/components/PublicHeader.tsx": "8db83d941a2fb5bd814f73e55b520e4e220d7ae38d59aab9f6970fa5835fb9f5",
     "src/components/SessionLink.tsx": "1244e4daeb78de49b726e5f281fa2efc87741e415a5e7e59d215111530b92b5b",
