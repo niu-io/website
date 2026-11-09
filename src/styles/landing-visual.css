@@ -291,7 +291,8 @@ html.is-scrolled .public-header {
 /* ---------- Framed product preview ---------- */
 .preview-frame {
   position: relative;
-  margin-top: 20px;
+  margin-top: 44px;
+  scroll-margin-top: 88px;
   padding: 8px;
   border-radius: 28px;
   background: linear-gradient(
@@ -607,7 +608,7 @@ html.is-scrolled .public-header {
 
 /* ---------- Drop-in Gateway section ---------- */
 .gateway-grid {
-  align-items: stretch;
+  align-items: center;
   gap: 48px;
 }
 .gateway-copy {
@@ -2407,7 +2408,7 @@ html.is-scrolled .public-header {
 }
 .demo-kpi-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 10px;
 }
 .demo-kpi-card {

@@ -3,10 +3,8 @@ import { CountUp, useLandingMotion } from "./landing-motion";
 import { useLocale } from "./locale";
 import {
   IconArrowRight,
-  IconBolt,
   IconBook,
   IconBrandGithub,
-  IconChartLine,
   IconCheck,
   IconCoins,
   IconCopy,
@@ -15,47 +13,45 @@ import {
   IconMessageChatbot,
   IconPlugConnected,
   IconRoute,
-  IconScale,
   IconSearch,
-  IconServerBolt,
   IconShieldLock,
   IconSparkles,
-  IconTimeline,
 } from "@tabler/icons-react";
 import {
   Activity,
   BarChart3,
   ChevronsUpDown,
-  CreditCard,
   Film,
   FolderKey,
   KeyRound,
   List,
-  Palette,
   PanelLeft,
   Plus,
-  Receipt,
   RefreshCw,
-  ScrollText,
   Settings,
   ShieldAlert,
   SlidersHorizontal,
-  Users,
 } from "lucide-react";
 import { Button } from "./ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "./ui/tabs";
 import {
   links,
-  pillars,
   capabilities,
   faqs,
   codeExamples,
   heroStats,
 } from "../content/landing";
-import { benchmarkSteps, benchmarkSuites } from "../content/benchmarks";
 
-const installationPrompt = "Install and configure Niu by following https://niu.io/docs/install.md.";
-const pillarIcons = [IconBolt, IconScale, IconTimeline, IconServerBolt];
+function currentDeploymentOrigin() {
+  if (typeof window === "undefined") return "https://niu.io";
+  return window.location.origin || "https://niu.io";
+}
+
+function buildInstallationPrompt(origin: string) {
+  const deployment = origin.replace(/\/$/, "") || "https://niu.io";
+  return `Install and configure Niu for ${deployment} by following https://niu.io/docs/install.md. Verify the deployment and workspace during authorization.`;
+}
+
 const capabilityIcons = [
   IconRoute,
   IconListSearch,
@@ -92,19 +88,11 @@ const previewTabs = [
   },
   {
     id: "routing",
-    label: "Admin · Route pools",
-    labelZh: "管理后台 · 路由池",
-    breadcrumb: "Admin / Route pools",
-    breadcrumbZh: "管理后台 / 路由池",
-    railArea: "admin" as const,
-  },
-  {
-    id: "billing",
-    label: "Admin · Financial statements",
-    labelZh: "管理后台 · 财务报表",
-    breadcrumb: "Admin / Financial statements",
-    breadcrumbZh: "管理后台 / 财务报表",
-    railArea: "admin" as const,
+    label: "Workspace · Routing & Evaluations",
+    labelZh: "工作空间 · 路由与评估",
+    breadcrumb: "Default workspace / Routing",
+    breadcrumbZh: "默认工作空间 / 模型路由",
+    railArea: "workspace" as const,
   },
   {
     id: "generations",
@@ -119,82 +107,106 @@ const previewTabs = [
 const demoLogRecords = [
   {
     time: "Oct 19, 14:22:08",
+    timeZh: "10月19日 14:22:08",
     model: "claude-sonnet-4",
     providerSub: "Anthropic · claude-sonnet-4-20250514",
     providerBadge: "A",
     status: "Completed",
+    statusZh: "已完成",
     statusTone: "completed" as const,
     duration: "1,180 ms",
     durationSub: "Attempt 2 of 2 · failover",
+    durationSubZh: "第 2/2 次尝试 · 故障切换",
     inputTokens: "412",
     cachedTokens: "256",
     outputTokens: "128",
     reasoningTokens: "0",
     charge: "$0.0180",
+    chargeZh: "$0.0180",
     chargeSub: "Settled tariff",
+    chargeSubZh: "已按价目表结算",
     apiKey: "prod-backend",
     finishReason: "stop",
     deliveryStatus: "Completed · Customer tariff settled",
+    deliveryStatusZh: "已完成 · 客户费率已结算",
     providerStatus: "HTTP 200 OK",
+    providerStatusZh: "HTTP 200 OK",
     throughput: "128 output tokens · 148.8 tok/s",
+    throughputZh: "128 输出 Token · 148.8 tok/s",
     phases: [
       {
         label: "Preparation",
+        labelZh: "请求准入与准备",
         duration: "2.1 ms",
         pct: 6,
         tone: "prep" as const,
       },
       {
         label: "First output wait",
+        labelZh: "首字等待 (TTFT)",
         duration: "318 ms",
         pct: 27,
         tone: "ttft" as const,
       },
       {
         label: "Output stream",
+        labelZh: "输出流生成",
         duration: "860 ms",
         pct: 67,
         tone: "stream" as const,
       },
     ],
     rawPreview:
-      "POST /v1/chat/completions → pool claude-sonnet-4 (attempt 1 HTTP 401 not charged → attempt 2 Anthropic HTTP 200 settled $0.0180)",
+      "POST /v1/chat/completions → policy claude-sonnet-4 (attempt 1 HTTP 401 not charged → attempt 2 Anthropic HTTP 200 settled $0.0180)",
+    rawPreviewZh:
+      "POST /v1/chat/completions → 路由策略 claude-sonnet-4（尝试 1 HTTP 401 未计费 → 尝试 2 Anthropic HTTP 200 已结算 $0.0180）",
   },
   {
     time: "Oct 19, 14:22:07",
+    timeZh: "10月19日 14:22:07",
     model: "claude-sonnet-4",
     providerSub: "OpenRouter · anthropic/claude-sonnet-4",
     providerBadge: "OR",
     status: "Failed · HTTP 401",
+    statusZh: "失败 · HTTP 401",
     statusTone: "failed" as const,
     duration: "3.2 ms",
     durationSub: "Attempt 1 · route cooldown",
+    durationSubZh: "第 1 次尝试 · 路由冷却",
     inputTokens: "0",
     cachedTokens: "0",
     outputTokens: "0",
     reasoningTokens: "0",
     charge: "Not charged",
+    chargeZh: "未计费",
     chargeSub: "Pre-stream rejection",
+    chargeSubZh: "流开始前拒绝",
     apiKey: "prod-backend",
     finishReason: "upstream_auth_error",
     deliveryStatus: "Not executed · Hold transferred to Attempt 2",
+    deliveryStatusZh: "未执行 · 预留额度转交第 2 次尝试",
     providerStatus: "HTTP 401 Unauthorized",
+    providerStatusZh: "HTTP 401 鉴权失败",
     throughput: "0 output tokens · Failover triggered",
+    throughputZh: "0 输出 Token · 已触发故障切换",
     phases: [
       {
         label: "Preparation",
+        labelZh: "请求准入与准备",
         duration: "1.8 ms",
         pct: 56,
         tone: "prep" as const,
       },
       {
         label: "First output wait",
+        labelZh: "首字等待 (TTFT)",
         duration: "1.4 ms",
         pct: 44,
         tone: "failed" as const,
       },
       {
         label: "Output stream",
+        labelZh: "输出流生成",
         duration: "—",
         pct: 0,
         tone: "stream" as const,
@@ -202,42 +214,55 @@ const demoLogRecords = [
     ],
     rawPreview:
       "Upstream HTTP 401 on candidate claude-sonnet-4-openrouter; route entered 60s auth cooldown and request failed over to claude-sonnet-4-anthropic.",
+    rawPreviewZh:
+      "候选路由 claude-sonnet-4-openrouter 返回上游 HTTP 401；该路由进入 60 秒鉴权冷却并自动切换至 claude-sonnet-4-anthropic。",
   },
   {
     time: "Oct 19, 14:19:41",
+    timeZh: "10月19日 14:19:41",
     model: "deepseek-r1",
     providerSub: "OpenRouter · deepseek/deepseek-r1",
     providerBadge: "DS",
     status: "Uncertain",
+    statusZh: "状态未定",
     statusTone: "uncertain" as const,
     duration: "4,820 ms",
     durationSub: "Stream dropped mid-flight",
+    durationSubZh: "流传输中途断开",
     inputTokens: "620",
     cachedTokens: "0",
     outputTokens: "—",
     reasoningTokens: "194",
     charge: "Unresolved",
+    chargeZh: "待核对",
     chargeSub: "Explicitly unbilled",
+    chargeSubZh: "显式保留未计费",
     apiKey: "eval-runner",
     finishReason: "stream_interrupted",
     deliveryStatus: "Uncertain · Never fabricated as $0.00",
+    deliveryStatusZh: "状态未定 · 绝不伪造为 $0.00 完成",
     providerStatus: "HTTP 200 (SSE interrupted)",
+    providerStatusZh: "HTTP 200（SSE 流中断）",
     throughput: "Partial stream · Reconciliation required",
+    throughputZh: "部分流输出 · 需对账核实",
     phases: [
       {
         label: "Preparation",
+        labelZh: "请求准入与准备",
         duration: "2.4 ms",
         pct: 5,
         tone: "prep" as const,
       },
       {
         label: "First output wait",
+        labelZh: "首字等待 (TTFT)",
         duration: "610 ms",
         pct: 18,
         tone: "ttft" as const,
       },
       {
         label: "Output stream",
+        labelZh: "输出流生成",
         duration: "4,207 ms",
         pct: 77,
         tone: "uncertain" as const,
@@ -245,6 +270,120 @@ const demoLogRecords = [
     ],
     rawPreview:
       "SSE stream closed before terminal usage chunk; recorded as Uncertain / Unresolved so customer bills never fake a $0 completion.",
+    rawPreviewZh:
+      "SSE 流在收到最终用量分块前断开；系统记录为状态未定 / 待核对，避免账单伪造 $0.00 正常完成。",
+  },
+  {
+    time: "Oct 19, 14:18:12",
+    timeZh: "10月19日 14:18:12",
+    model: "gpt-4.1-mini",
+    providerSub: "OpenAI · gpt-4.1-mini-2025-04-14",
+    providerBadge: "OA",
+    status: "Blocked · Guardrail",
+    statusZh: "已拦截 · 护栏",
+    statusTone: "failed" as const,
+    duration: "4.1 ms",
+    durationSub: "Input policy enforcement",
+    durationSubZh: "输入安全护栏拦截",
+    inputTokens: "0",
+    cachedTokens: "0",
+    outputTokens: "0",
+    reasoningTokens: "0",
+    charge: "Not charged",
+    chargeZh: "未计费",
+    chargeSub: "Blocked before dispatch",
+    chargeSubZh: "转发前拦截未计费",
+    apiKey: "support-agent",
+    finishReason: "guardrail_denied",
+    deliveryStatus: "Denied by workspace guardrail · Reservation released",
+    deliveryStatusZh: "被工作空间安全护栏拦截 · 预留额度已释放",
+    providerStatus: "Not dispatched",
+    providerStatusZh: "未向上游转发",
+    throughput: "0 output tokens · Guardrail rule #2",
+    throughputZh: "0 输出 Token · 命中护栏规则 #2",
+    phases: [
+      {
+        label: "Preparation",
+        labelZh: "请求准入与准备",
+        duration: "4.1 ms",
+        pct: 100,
+        tone: "failed" as const,
+      },
+      {
+        label: "First output wait",
+        labelZh: "首字等待 (TTFT)",
+        duration: "—",
+        pct: 0,
+        tone: "ttft" as const,
+      },
+      {
+        label: "Output stream",
+        labelZh: "输出流生成",
+        duration: "—",
+        pct: 0,
+        tone: "stream" as const,
+      },
+    ],
+    rawPreview:
+      "Pre-dispatch guardrail denied secret pattern in prompt; reservation released without upstream call or charge.",
+    rawPreviewZh:
+      "转发前安全护栏拦截了提示词中的敏感凭据模式；预留额度已释放，未发起上游调用且未产生扣费。",
+  },
+  {
+    time: "Oct 19, 14:15:30",
+    timeZh: "10月19日 14:15:30",
+    model: "gpt-4.1",
+    providerSub: "OpenAI · gpt-4.1-2025-04-14",
+    providerBadge: "OA",
+    status: "Completed",
+    statusZh: "已完成",
+    statusTone: "completed" as const,
+    duration: "840 ms",
+    durationSub: "Attempt 1 · structured JSON",
+    durationSubZh: "第 1 次尝试 · 结构化 JSON",
+    inputTokens: "380",
+    cachedTokens: "192",
+    outputTokens: "96",
+    reasoningTokens: "0",
+    charge: "$0.0118",
+    chargeZh: "$0.0118",
+    chargeSub: "Settled tariff",
+    chargeSubZh: "已按价目表结算",
+    apiKey: "prod-backend",
+    finishReason: "stop",
+    deliveryStatus: "Completed · JSON schema verified",
+    deliveryStatusZh: "已完成 · JSON Schema 校验通过",
+    providerStatus: "HTTP 200 OK",
+    providerStatusZh: "HTTP 200 OK",
+    throughput: "96 output tokens · 168.4 tok/s",
+    throughputZh: "96 输出 Token · 168.4 tok/s",
+    phases: [
+      {
+        label: "Preparation",
+        labelZh: "请求准入与准备",
+        duration: "1.9 ms",
+        pct: 5,
+        tone: "prep" as const,
+      },
+      {
+        label: "First output wait",
+        labelZh: "首字等待 (TTFT)",
+        duration: "268 ms",
+        pct: 32,
+        tone: "ttft" as const,
+      },
+      {
+        label: "Output stream",
+        labelZh: "输出流生成",
+        duration: "570 ms",
+        pct: 63,
+        tone: "stream" as const,
+      },
+    ],
+    rawPreview:
+      "POST /v1/chat/completions → policy gpt-4.1 (structured_output validated against JSON schema, settled $0.0118).",
+    rawPreviewZh:
+      "POST /v1/chat/completions → 路由策略 gpt-4.1（结构化输出通过 JSON Schema 校验，已结算 $0.0118）。",
   },
 ];
 
@@ -252,21 +391,28 @@ const demoRoutePools = [
   {
     alias: "claude-sonnet-4",
     revision: "Revision 4",
-    scopeBadge: "Shared pool",
-    scopeSub: "Shared across workspaces",
-    enabledSummary: "3 of 3 candidates enabled",
+    revisionZh: "修订版 4",
+    scopeBadge: "tools · vision · <=64k",
+    scopeBadgeZh: "工具 · 视觉 · <=64k",
+    scopeSub: "Updated by Claude Code · dry-run verified",
+    scopeSubZh: "由 Claude Code 更新 · 已通过预览验证",
+    enabledSummary: "96% eval acceptance ($0.0142/accepted)",
+    enabledSummaryZh: "评估合格率 96%（$0.0142/合格样本）",
     status: "Enabled",
-    maxAttempts: "Max 2 attempts per request",
+    statusZh: "已启用",
+    maxAttempts: "Max 2 attempts · Pre-stream failover",
+    maxAttemptsZh: "最多 2 次尝试 · 流前故障切换",
     candidates: [
       {
         alias: "claude-sonnet-4-anthropic",
         provider: "Anthropic Direct",
         priority: 100,
         weight: 800,
-        tierShare: "80% primary tier share",
+        tierShare: "80% primary share",
+        tierShareZh: "主层占比 80%",
         sharePct: 80,
-        cooldown: "No active cooldown · 0 / 3 auth failures in 60s",
-        status: "Enabled · Primary",
+        status: "Primary",
+        statusZh: "主路由",
         isPrimary: true,
       },
       {
@@ -274,10 +420,11 @@ const demoRoutePools = [
         provider: "OpenRouter Enterprise",
         priority: 100,
         weight: 200,
-        tierShare: "20% primary tier share",
+        tierShare: "20% primary share",
+        tierShareZh: "主层占比 20%",
         sharePct: 20,
-        cooldown: "No active cooldown · 0 / 3 auth failures in 60s",
-        status: "Enabled · Primary",
+        status: "Primary",
+        statusZh: "主路由",
         isPrimary: true,
       },
       {
@@ -285,10 +432,11 @@ const demoRoutePools = [
         provider: "Google Vertex AI",
         priority: 50,
         weight: 1000,
-        tierShare: "100% standby tier (P50)",
+        tierShare: "Standby (P50)",
+        tierShareZh: "备用层 (P50)",
         sharePct: 100,
-        cooldown: "Standby failover ready · 0 / 3 in 60s",
-        status: "Enabled · Standby",
+        status: "Standby",
+        statusZh: "备用路由",
         isPrimary: false,
       },
     ],
@@ -296,21 +444,28 @@ const demoRoutePools = [
   {
     alias: "gpt-4.1",
     revision: "Revision 2",
-    scopeBadge: "Shared pool",
-    scopeSub: "Shared across workspaces",
-    enabledSummary: "2 of 2 candidates enabled",
+    revisionZh: "修订版 2",
+    scopeBadge: "chat · structured JSON",
+    scopeBadgeZh: "对话 · 结构化 JSON",
+    scopeSub: "Updated by Codex · matched vs baseline",
+    scopeSubZh: "由 Codex 更新 · 已完成基线对比",
+    enabledSummary: "92% eval acceptance ($0.0118/accepted)",
+    enabledSummaryZh: "评估合格率 92%（$0.0118/合格样本）",
     status: "Enabled",
-    maxAttempts: "Max 2 attempts per request",
+    statusZh: "已启用",
+    maxAttempts: "Max 2 attempts · Pre-stream failover",
+    maxAttemptsZh: "最多 2 次尝试 · 流前故障切换",
     candidates: [
       {
         alias: "gpt-4.1-openai-direct",
         provider: "OpenAI Direct",
         priority: 100,
         weight: 900,
-        tierShare: "90% primary tier share",
+        tierShare: "90% primary share",
+        tierShareZh: "主层占比 90%",
         sharePct: 90,
-        cooldown: "No active cooldown · 0 / 3 auth failures in 60s",
-        status: "Enabled · Primary",
+        status: "Primary",
+        statusZh: "主路由",
         isPrimary: true,
       },
       {
@@ -318,10 +473,11 @@ const demoRoutePools = [
         provider: "Azure OpenAI",
         priority: 50,
         weight: 1000,
-        tierShare: "100% standby tier (P50)",
+        tierShare: "Standby (P50)",
+        tierShareZh: "备用层 (P50)",
         sharePct: 100,
-        cooldown: "Standby failover ready · 0 / 3 in 60s",
-        status: "Enabled · Standby",
+        status: "Standby",
+        statusZh: "备用路由",
         isPrimary: false,
       },
     ],
@@ -329,21 +485,28 @@ const demoRoutePools = [
   {
     alias: "deepseek-r1",
     revision: "Revision 5",
-    scopeBadge: "Organization pool",
-    scopeSub: "Private to Acme Robotics",
-    enabledSummary: "3 of 3 candidates enabled",
+    revisionZh: "修订版 5",
+    scopeBadge: "reasoning = high · <=128k",
+    scopeBadgeZh: "深度推理 · <=128k",
+    scopeSub: "Updated by DeepSeek Harness · 0 unknown charges",
+    scopeSubZh: "由 DeepSeek Harness 更新 · 0 笔未知费用",
+    enabledSummary: "94% eval acceptance ($0.0064/accepted)",
+    enabledSummaryZh: "评估合格率 94%（$0.0064/合格样本）",
     status: "Enabled",
-    maxAttempts: "Max 2 attempts per request",
+    statusZh: "已启用",
+    maxAttempts: "Max 2 attempts · Pre-stream failover",
+    maxAttemptsZh: "最多 2 次尝试 · 流前故障切换",
     candidates: [
       {
         alias: "deepseek-r1-volcengine",
         provider: "Volcengine Ark",
         priority: 100,
         weight: 700,
-        tierShare: "70% primary tier share",
+        tierShare: "70% primary share",
+        tierShareZh: "主层占比 70%",
         sharePct: 70,
-        cooldown: "No active cooldown · 0 / 3 auth failures in 60s",
-        status: "Enabled · Primary",
+        status: "Primary",
+        statusZh: "主路由",
         isPrimary: true,
       },
       {
@@ -351,10 +514,11 @@ const demoRoutePools = [
         provider: "OpenRouter Enterprise",
         priority: 100,
         weight: 300,
-        tierShare: "30% primary tier share",
+        tierShare: "30% primary share",
+        tierShareZh: "主层占比 30%",
         sharePct: 30,
-        cooldown: "No active cooldown · 0 / 3 auth failures in 60s",
-        status: "Enabled · Primary",
+        status: "Primary",
+        statusZh: "主路由",
         isPrimary: true,
       },
       {
@@ -362,10 +526,11 @@ const demoRoutePools = [
         provider: "Together AI",
         priority: 50,
         weight: 1000,
-        tierShare: "100% standby tier (P50)",
+        tierShare: "Standby (P50)",
+        tierShareZh: "备用层 (P50)",
         sharePct: 100,
-        cooldown: "Standby failover ready · 0 / 3 in 60s",
-        status: "Enabled · Standby",
+        status: "Standby",
+        statusZh: "备用路由",
         isPrimary: false,
       },
     ],
@@ -379,14 +544,14 @@ const volumeHistogramBars = [
 
 const gatewaySteps = [
   { step: "01", title: "Let your agent connect Niu", titleZh: "让 Agent 连接 Niu",
-    detail: "Give it the setup prompt. It configures the supported integration, opens Niu for sign-in and approval, then verifies access.",
-    detailZh: "把接入提示词交给 Agent。它配置受支持的接入方式，打开 Niu 让你登录并审核权限，然后验证连接。" },
+    detail: "Share the setup prompt, approve workspace access in your browser, and verify the connection.",
+    detailZh: "发送接入提示词，在浏览器中审批工作空间权限并验证连接。" },
   { step: "02", title: "Describe the outcome and constraints", titleZh: "说明目标与约束",
-    detail: "Provide task samples, quality expectations, latency needs and a test budget. Your agent retrieves model information itself.",
-    detailZh: "给出任务样本、质量要求、延迟目标和测试预算。模型信息由 Agent 自行获取。" },
-  { step: "03", title: "Review the proposal and evidence", titleZh: "审阅方案与证据",
-    detail: "Review model choices, pool proposals and configuration changes. The agent reads diagnostics directly and explains the tradeoffs.",
-    detailZh: "审阅模型选择、模型池方案和配置变更。Agent 直接读取诊断信息并解释取舍。" },
+    detail: "Provide task samples, quality criteria, latency targets, and a test budget.",
+    detailZh: "给出任务样本、质量标准、延迟目标与测试预算。" },
+  { step: "03", title: "Review routing policies and evidence", titleZh: "审阅路由策略与证据",
+    detail: "Inspect evaluations, routing revisions, and request logs in Niu while your agent handles the details.",
+    detailZh: "在 Niu 中审阅评估结果、路由修订与请求日志，细节查询交由 Agent 处理。" },
 ];
 
 export default function LandingContent({
@@ -401,25 +566,25 @@ export default function LandingContent({
   const [previewPaused, setPreviewPaused] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [selectedLogIndex, setSelectedLogIndex] = useState(0);
-  const [showVolumeChart, setShowVolumeChart] = useState(true);
-  const [activeLogTab, setActiveLogTab] = useState<
-    "response" | "request" | "raw"
-  >("response");
+  const [showVolumeChart, setShowVolumeChart] = useState(false);
   const [selectedPoolIndex, setSelectedPoolIndex] = useState(0);
-  const [activeFinancialTab, setActiveFinancialTab] = useState<
-    "pnl" | "providers"
-  >("pnl");
   const [activeGenerationsMode, setActiveGenerationsMode] = useState<
     "chat" | "video"
   >("chat");
-  const [activeSuiteIndex, setActiveSuiteIndex] = useState(0);
   const [activeCodeIndex, setActiveCodeIndex] = useState(0);
+  const [deploymentOrigin, setDeploymentOrigin] = useState("https://niu.io");
   const [copiedInstall,setCopiedInstall]=useState(false);
   const [installCopyError,setInstallCopyError]=useState(false);
   const [copiedCode, setCopiedCode] = useState(false);
   const mainRef = useRef<HTMLElement>(null);
   useLandingMotion(mainRef);
   const stagger = (i: number) => ({ "--i": i }) as React.CSSProperties;
+
+  useEffect(() => {
+    setDeploymentOrigin(currentDeploymentOrigin());
+  }, []);
+
+  const installationPrompt = buildInstallationPrompt(deploymentOrigin);
 
   useEffect(() => {
     if (previewPaused) return;
@@ -429,7 +594,7 @@ export default function LandingContent({
     )
       return;
     const timer = window.setInterval(() => {
-      setActivePreviewIndex((prev) => prev === 0 ? 3 : 0);
+      setActivePreviewIndex((prev) => (prev + 1) % previewTabs.length);
     }, 6500);
     return () => window.clearInterval(timer);
   }, [previewPaused, activePreviewIndex]);
@@ -446,7 +611,6 @@ export default function LandingContent({
 
   const activeTab = previewTabs[activePreviewIndex] ?? previewTabs[0];
   const selectedLog = demoLogRecords[selectedLogIndex] ?? demoLogRecords[0];
-  const selectedPool = demoRoutePools[selectedPoolIndex] ?? demoRoutePools[0];
 
   return (
     <main id="main" ref={mainRef}>
@@ -465,8 +629,8 @@ export default function LandingContent({
             <span className="release-tag">{t("Why Niu", "核心优势")}</span>
             <span>
               {t(
-                "Discover · Evaluate · Manage",
-                "发现 · 评估 · 管理",
+                "Discover · Evaluate · Route",
+                "发现 · 评估 · 路由",
               )}
             </span>
             <IconArrowRight size={14} aria-hidden="true" />
@@ -487,16 +651,20 @@ export default function LandingContent({
             )}
           </h1>
           <p className="hero-description hero-enter" style={stagger(2)}>
-            {t(
-              "Discover and evaluate models, build model pools, and manage performance and cost—all through your agent.",
-              "Niu（牛元）让你通过 Agent，发现与评估模型、构建模型池，管理性能与成本。",
+            {isZh ? (
+              <>
+                Niu（牛元）让你通过 Agent，发现与评估模型、配置模型路由，
+                <span className="demo-nowrap">管理性能与成本。</span>
+              </>
+            ) : (
+              "Discover and evaluate models, configure routing, and manage performance and cost—all through your agent."
             )}
           </p>
           <div className="hero-install code-card hero-enter" style={stagger(3)}>
-            <div className="code-heading"><strong>{t("Give this to your coding agent", "把这句话交给你的 coding agent")}</strong><a href="/docs/install.md">{t("Niu 0.3", "Niu 0.3")}</a></div>
+            <div className="code-heading"><strong>{t("Give this to your coding agent", "把这句话交给你的 coding agent")}</strong><a href="/docs/install.md">{t("Niu 0.3 install contract", "Niu 0.3 接入规范")}</a></div>
             <code className="hero-install-prompt">{installationPrompt}</code>
             <div className="hero-install-footer">
-              <p>{t("Your agent handles setup. Sign in and approve access in Niu when asked, then let the agent continue.", "Agent 负责安装与配置；需要时，你只需在 Niu 登录并审核权限，然后交给 Agent 继续。")}</p>
+              <p>{t("Paste into Claude Code, Codex or DeepSeek Harness. Your agent checks availability and opens Niu for sign-in and approval.", "粘贴至 Claude Code、Codex 或 DeepSeek Harness。Agent 检查可用性并打开 Niu 完成登录与授权审批。")}</p>
               <Button size="lg" className="cta-primary" onClick={()=>{setInstallCopyError(false);if(!navigator.clipboard){setInstallCopyError(true);return;}void navigator.clipboard.writeText(installationPrompt).then(()=>setCopiedInstall(true)).catch(()=>setInstallCopyError(true));}}>
                 {copiedInstall?<IconCheck aria-hidden="true"/>:<IconCopy aria-hidden="true"/>}<span aria-live="polite">{copiedInstall?t("Copied", "已复制"):t("Copy setup prompt", "复制接入提示词")}</span>
               </Button>
@@ -528,225 +696,10 @@ export default function LandingContent({
               </a>
             </Button>
           </div>
-          <p className="hero-sublinks hero-enter" style={stagger(4)}>
-            <a href={links.compare}>{t("Compare gateways", "网关对比")}</a>
-            <span aria-hidden="true">·</span>
-            <a href="/blog/why-niu/">{t("Why Niu?", "为什么选择 Niu？")}</a>
-          </p>
 
-          {/* Three product pillars */}
+          {/* Interactive Product UI Preview Window — Niu 0.3 Workspace Review & Generations */}
           <div
-            className="pillars-grid"
-            aria-label="Core competitive advantages"
-          >
-            {pillars.map((pillar, index) => {
-              const PillarIcon = pillarIcons[index];
-              return (
-                <article
-                  key={pillar.index}
-                  className="pillar-card"
-                  data-reveal
-                  data-spotlight
-                  style={stagger(index)}
-                >
-                  <div className="pillar-top">
-                    <span className="pillar-icon" aria-hidden="true">
-                      <PillarIcon size={20} stroke={1.75} />
-                    </span>
-                    <span className="pillar-metric">
-                      {isZh ? pillar.metricZh : pillar.metric}
-                    </span>
-                  </div>
-                  <h3>{isZh ? pillar.titleZh : pillar.title}</h3>
-                  <p>{isZh ? pillar.detailZh : pillar.detail}</p>
-                </article>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* 3. SIX CORE CAPABILITIES */}
-      <section
-        className="section container"
-        id="product"
-        aria-labelledby="product-title"
-      >
-        <div className="section-heading" data-reveal>
-          <div>
-            <p className="eyebrow">
-              {t("AGENT SCENARIOS", "AGENT 使用场景")}
-            </p>
-            <h2 id="product-title">
-              {isZh ? (
-                <>
-                  告诉 Agent 你的需求，
-                  <br />
-                  让它与 Niu 一起完成。
-                </>
-              ) : (
-                <>
-                  Start with what
-                  <br />
-                  you want to achieve.
-                </>
-              )}
-            </h2>
-          </div>
-          <p>
-            {t(
-              "Your agent gets the evidence and controls to configure Niu: build a model pool for your task, then refine quality, latency and cost from real execution feedback.",
-              "Agent 获取决策信息与管理能力，按任务需求配置 Niu 的模型池，再根据实际运行反馈持续改善质量、延迟与成本。",
-            )}
-          </p>
-        </div>
-        <div className="capability-grid">
-          {capabilities.map((item, index) => {
-            const CapabilityIcon = capabilityIcons[index];
-            return (
-              <article
-                key={item.href}
-                className="capability"
-                data-reveal
-                data-spotlight
-                style={stagger(index % 3)}
-              >
-                <div className="capability-top">
-                  <span className="capability-icon" aria-hidden="true">
-                    <CapabilityIcon size={20} stroke={1.75} />
-                  </span>
-                  <span className="feature-number">{item.number}</span>
-                </div>
-                <h3>{isZh ? item.titleZh : item.title}</h3>
-                <p>{isZh ? item.descriptionZh : item.description}</p>
-                <a className="text-link" href={item.href}>
-                  {isZh ? item.labelZh : item.label}{" "}
-                  <span aria-hidden="true">→</span>
-                </a>
-              </article>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* 4. DROP-IN API QUICKSTART */}
-      <section
-        className="gateway-section"
-        id="gateway"
-        aria-labelledby="gateway-title"
-      >
-        <div className="container section gateway-grid">
-          <div className="gateway-copy" data-reveal>
-            <p className="eyebrow">
-              {t("START WITH YOUR AGENT", "从你的 AGENT 开始")}
-            </p>
-            <h2 id="gateway-title">
-              {isZh ? (
-                <>
-                  说清你想做什么，
-                  <br />
-                  接入工作交给 Agent。
-                </>
-              ) : (
-                <>
-                  Give your agent a goal.
-                  <br />
-                  Let it handle the setup.
-                </>
-              )}
-            </h2>
-            <p className="section-description">
-              {t(
-                "Start with the setup prompt. Niu 0.3 targets Claude Code, Codex and DeepSeek Harness integration around shared Niu contracts. The installation document checks current availability.",
-                "从接入提示词开始。Niu 0.3围绕共同的 Niu 契约提供 Claude Code、Codex 与 DeepSeek Harness 接入；安装文档会检查当前可用性。",
-              )}
-            </p>
-            <ul className="gateway-features">
-              {gatewaySteps.map((item) => (
-                <li key={item.step}>
-                  <span className="gateway-step-badge">{item.step}</span>
-                  <div>
-                    <strong>{isZh ? item.titleZh : item.title}</strong>
-                    <p>{isZh ? item.detailZh : item.detail}</p>
-                  </div>
-                </li>
-              ))}
-            </ul>
-            <div className="gateway-links">
-              <a className="text-link" href="/docs/guides/personal-assistant/">
-                {t("Build with Niu", "用 Niu 开发")}{" "}
-                <span aria-hidden="true">→</span>
-              </a>
-              <a className="text-link" href="https://github.com/niu-io/niu/tree/main/examples/personal-assistant">
-                {t("Runnable example", "可运行源码示例")}{" "}
-                <span aria-hidden="true">→</span>
-              </a>
-            </div>
-          </div>
-          <Tabs className="code-card" data-reveal style={stagger(1)}
-            value={codeExamples[activeCodeIndex].id}
-            onValueChange={(value) => { setActiveCodeIndex(codeExamples.findIndex((item) => item.id === value)); setCopiedCode(false); }}
-          >
-            <div className="code-heading">
-              <TabsList className="code-tabs" variant="line" aria-label="Agent task prompts">
-                {codeExamples.map((example, idx) => (
-                  <TabsTrigger key={example.id} value={example.id}>
-                    {t(example.label, ["连接", "评估", "改进"][idx])}
-                  </TabsTrigger>
-                ))}
-              </TabsList>
-              <Button
-                variant="ghost"
-                type="button"
-                className="code-copy-btn"
-                onClick={handleCopyCode}
-                aria-label={t("Copy agent prompt", "复制 Agent 提示词")}
-              >
-                {copiedCode ? (
-                  <IconCheck size={14} aria-hidden="true" />
-                ) : (
-                  <IconCopy size={14} aria-hidden="true" />
-                )}
-                <span>
-                  {copiedCode ? t("Copied", "已复制") : t("Copy", "复制")}
-                </span>
-              </Button>
-            </div>
-            <div className="code-subbar">
-              <span>{codeExamples[activeCodeIndex].endpoint}</span>
-              <span>{t("Prompt for your agent", "交给 Agent 的提示词")}</span>
-            </div>
-            {/* Build-time Shiki HTML from maintained task prompts. */}
-            {codeExamples.map((example, idx) => (
-              <TabsContent key={example.id} value={example.id} className="highlighted-example">
-                <div dangerouslySetInnerHTML={{ __html: highlightedCode[idx] }} />
-              </TabsContent>
-            ))}
-            <div className="code-footnote">
-              <span className="status-dot is-live"></span>
-              <span>
-                {t("Scope:", "能力范围：")}{" "}
-                <strong>
-                  {isZh
-                    ? codeExamples[activeCodeIndex].traceZh
-                    : codeExamples[activeCodeIndex].trace}
-                </strong>
-              </span>
-            </div>
-          </Tabs>
-        </div>
-      </section>
-
-      <section className="section container" aria-labelledby="review-title">
-        <div className="section-heading" data-reveal>
-          <div>
-            <p className="eyebrow">{t("HUMAN REVIEW", "人工审阅")}</p>
-            <h2 id="review-title">{t("Your agent reads the evidence. You review the decisions.", "Agent 读取证据，你审阅决策。")}</h2>
-          </div>
-          <p>{t("Use Niu to inspect request outcomes and charges without relaying data to your agent. The preview below uses illustrative data.", "在 Niu 中查看请求结果与费用，无需替 Agent 传递数据。以下预览使用示例数据。")}</p>
-        </div>
-          {/* Interactive Product UI Preview Window — Actual Niu Dashboard v0.2.23 Replica */}
-          <div
+            id="review-title"
             className="preview-frame"
             data-paused={previewPaused ? "true" : undefined}
             data-reveal
@@ -785,8 +738,8 @@ export default function LandingContent({
                   <button
                     type="button"
                     className={`mock-rail-btn${activeTab.railArea === "workspace" ? " is-active" : ""}`}
-                    aria-label="Workspace"
-                    title="Workspace · Logs"
+                    aria-label={t("Workspace", "工作空间")}
+                    title={t("Workspace · Logs & Routing", "工作空间 · 日志与路由")}
                     onClick={() => setActivePreviewIndex(0)}
                   >
                     <FolderKey size={18} />
@@ -794,27 +747,15 @@ export default function LandingContent({
                   <button
                     type="button"
                     className={`mock-rail-btn${activeTab.railArea === "generations" ? " is-active" : ""}`}
-                    aria-label="Generations"
-                    title="Generations · Chat & Video"
-                    onClick={() => setActivePreviewIndex(3)}
+                    aria-label={t("Generations", "生成对话")}
+                    title={t("Generations · Chat & Video", "生成对话 · 对话与视频")}
+                    onClick={() => setActivePreviewIndex(2)}
                   >
                     <IconSparkles size={19} stroke={1.75} />
                   </button>
-                  <button
-                    type="button"
-                    className="mock-rail-btn"
-                    aria-label="Activity & Logs"
-                    title="Workspace · Logs & Timing"
-                    onClick={() => setActivePreviewIndex(0)}
-                  >
-                    <IconChartLine size={19} stroke={1.75} />
-                  </button>
-
                 </div>
                 <div className="demo-rail-footer">
-
-
-                  <span className="demo-rail-avatar" title="Your account">
+                  <span className="demo-rail-avatar" title={t("Your account", "当前账户")}>
                     H
                   </span>
                 </div>
@@ -863,7 +804,7 @@ export default function LandingContent({
                         </button>
                         <button
                           type="button"
-                          className="demo-sidebar-item is-active"
+                          className={`demo-sidebar-item${activePreviewIndex === 0 ? " is-active" : ""}`}
                           onClick={() => setActivePreviewIndex(0)}
                         >
                           <List size={15} />
@@ -871,19 +812,35 @@ export default function LandingContent({
                         </button>
                         <button
                           type="button"
-                          className="demo-sidebar-item"
-                          onClick={() => {
-                            setActivePreviewIndex(3);
-                            setActiveGenerationsMode("video");
-                          }}
+                          className={`demo-sidebar-item${activePreviewIndex === 1 ? " is-active" : ""}`}
+                          onClick={() => setActivePreviewIndex(1)}
                         >
-                          <Film size={15} />
-                          <span>{t("Video", "视频生成")}</span>
+                          <IconRoute size={15} />
+                          <span>{t("Routing", "模型路由")}</span>
                         </button>
                         <button
                           type="button"
                           className="demo-sidebar-item"
-                          onClick={() => setActivePreviewIndex(0)}
+                          onClick={() => setActivePreviewIndex(1)}
+                        >
+                          <IconListSearch size={15} />
+                          <span>{t("Evaluations", "评估")}</span>
+                        </button>
+                        <button
+                          type="button"
+                          className="demo-sidebar-item"
+                          onClick={() => setActivePreviewIndex(1)}
+                        >
+                          <IconPlugConnected size={15} />
+                          <span>{t("Event subscriptions", "事件订阅")}</span>
+                        </button>
+                        <button
+                          type="button"
+                          className="demo-sidebar-item"
+                          onClick={() => {
+                            setActivePreviewIndex(0);
+                            setSelectedLogIndex(3);
+                          }}
                         >
                           <ShieldAlert size={15} />
                           <span>{t("Guardrails", "安全护栏")}</span>
@@ -893,107 +850,8 @@ export default function LandingContent({
                           className="demo-sidebar-item"
                           onClick={() => setActivePreviewIndex(0)}
                         >
-                          <BarChart3 size={15} />
-                          <span>{t("Activity", "活动监控")}</span>
-                        </button>
-
-                        <button
-                          type="button"
-                          className="demo-sidebar-item"
-                          onClick={() => setActivePreviewIndex(0)}
-                        >
-                          <Users size={15} />
-                          <span>{t("Users", "成员管理")}</span>
-                        </button>
-                        <button
-                          type="button"
-                          className="demo-sidebar-item"
-                          onClick={() => setActivePreviewIndex(0)}
-                        >
                           <Settings size={15} />
-                          <span>{t("Settings", "工作空间设置")}</span>
-                        </button>
-                      </nav>
-                      <div className="demo-sidebar-footer">
-                        <a href="/docs/" className="demo-sidebar-item">
-                          <IconBook size={15} />
-                          <span>{t("Docs", "开发文档")}</span>
-                        </a>
-                      </div>
-                    </>
-                  )}
-
-                  {activeTab.railArea === "admin" && (
-                    <>
-                      <div className="demo-sidebar-header">
-                        <span className="demo-sidebar-title">
-                          {t("Admin", "管理后台")}
-                        </span>
-                      </div>
-                      <nav className="demo-sidebar-nav" aria-label="Admin menu">
-                        <button
-                          type="button"
-                          className="demo-sidebar-item"
-                          onClick={() => setActivePreviewIndex(1)}
-                        >
-                          <IconPlugConnected size={15} />
-                          <span>{t("Providers", "模型供应商")}</span>
-                        </button>
-                        <button
-                          type="button"
-                          className={`demo-sidebar-item${activePreviewIndex === 1 ? " is-active" : ""}`}
-                          onClick={() => setActivePreviewIndex(1)}
-                        >
-                          <IconRoute size={15} />
-                          <span>{t("Route pools", "路由池")}</span>
-                        </button>
-                        <button
-                          type="button"
-                          className={`demo-sidebar-item${activePreviewIndex === 2 ? " is-active" : ""}`}
-                          onClick={() => setActivePreviewIndex(2)}
-                        >
-                          <IconCoins size={15} />
-                          <span>{t("Financial statements", "财务报表")}</span>
-                        </button>
-                        <button
-                          type="button"
-                          className="demo-sidebar-item"
-                          onClick={() => setActivePreviewIndex(2)}
-                        >
-                          <Users size={15} />
-                          <span>{t("Customer accounts", "客户账户")}</span>
-                        </button>
-                        <button
-                          type="button"
-                          className="demo-sidebar-item"
-                          onClick={() => setActivePreviewIndex(2)}
-                        >
-                          <Receipt size={15} />
-                          <span>{t("Customer pricing", "客户定价")}</span>
-                        </button>
-                        <button
-                          type="button"
-                          className="demo-sidebar-item"
-                          onClick={() => setActivePreviewIndex(2)}
-                        >
-                          <CreditCard size={15} />
-                          <span>{t("Payment gateways", "支付网关")}</span>
-                        </button>
-                        <button
-                          type="button"
-                          className="demo-sidebar-item"
-                          onClick={() => setActivePreviewIndex(1)}
-                        >
-                          <Palette size={15} />
-                          <span>{t("Branding & theme", "品牌与主题")}</span>
-                        </button>
-                        <button
-                          type="button"
-                          className="demo-sidebar-item"
-                          onClick={() => setActivePreviewIndex(1)}
-                        >
-                          <ScrollText size={15} />
-                          <span>{t("Audit logs", "审计日志")}</span>
+                          <span>{t("Settings", "设置")}</span>
                         </button>
                       </nav>
                       <div className="demo-sidebar-footer">
@@ -1043,7 +901,12 @@ export default function LandingContent({
                                 "生产级 API 架构设计",
                               )}
                             </strong>
-                            <small>claude-sonnet-4 + gpt-4.1 · 2m</small>
+                            <small>
+                              {t(
+                                "claude-sonnet-4 + gpt-4.1 · 2m ago",
+                                "claude-sonnet-4 + gpt-4.1 · 2 分钟前",
+                              )}
+                            </small>
                           </div>
                         </button>
                         <button
@@ -1059,7 +922,12 @@ export default function LandingContent({
                                 "Seedance 1.5 Pro 视频工作台",
                               )}
                             </strong>
-                            <small>seedance-1-5-pro · 1080p · 6m</small>
+                            <small>
+                              {t(
+                                "seedance-1-5-pro · 1080p · 6m ago",
+                                "seedance-1-5-pro · 1080p · 6 分钟前",
+                              )}
+                            </small>
                           </div>
                         </button>
                         <button
@@ -1075,7 +943,9 @@ export default function LandingContent({
                                 "安全护栏与重试审计",
                               )}
                             </strong>
-                            <small>deepseek-r1 · 1h ago</small>
+                            <small>
+                              {t("deepseek-r1 · 1h ago", "deepseek-r1 · 1 小时前")}
+                            </small>
                           </div>
                         </button>
                       </nav>
@@ -1100,10 +970,14 @@ export default function LandingContent({
                       type="button"
                       className="demo-sidebar-toggle"
                       aria-label={
-                        sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"
+                        sidebarCollapsed
+                          ? t("Expand sidebar", "展开侧边栏")
+                          : t("Collapse sidebar", "收起侧边栏")
                       }
                       title={
-                        sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"
+                        sidebarCollapsed
+                          ? t("Expand sidebar", "展开侧边栏")
+                          : t("Collapse sidebar", "收起侧边栏")
                       }
                       onClick={() => setSidebarCollapsed((prev) => !prev)}
                     >
@@ -1120,7 +994,7 @@ export default function LandingContent({
                     role="tablist"
                     aria-label="Product surface views"
                   >
-                    {previewTabs.map((tab, i) => ({tab, i})).filter(({i}) => i === 0 || i === 3).map(({tab, i}) => (
+                    {previewTabs.map((tab, i) => (
                       <button
                         key={tab.id}
                         type="button"
@@ -1154,8 +1028,8 @@ export default function LandingContent({
                           </div>
                           <p className="demo-page-subtitle">
                             {t(
-                              "Inspect every workspace operation, upstream route-pool attempt, phase latency, and settled customer tariff.",
-                              "检视工作空间的每一次请求操作、上游路由池尝试、分阶段延迟与已结算的客户费率。",
+                              "Inspect every workspace operation, upstream routing attempt, phase latency, guardrail decision, and settled customer charge.",
+                              "检视工作空间的每一次请求操作、上游路由尝试、分阶段延迟、安全护栏决策与已结算的客户费用。",
                             )}
                           </p>
                         </div>
@@ -1175,7 +1049,9 @@ export default function LandingContent({
                           <button
                             type="button"
                             className="demo-action-btn"
-                            onClick={() => setSelectedLogIndex(1)}
+                            onClick={() =>
+                              setSelectedLogIndex((prev) => (prev === 1 ? 3 : 1))
+                            }
                           >
                             <ShieldAlert size={13} />
                             <span>{t("Blocked & failed", "拦截与失败")}</span>
@@ -1183,7 +1059,7 @@ export default function LandingContent({
                           <button
                             type="button"
                             className="demo-icon-btn"
-                            aria-label="Refresh requests"
+                            aria-label={t("Refresh requests", "刷新请求")}
                             onClick={() =>
                               setSelectedLogIndex(
                                 (prev) => (prev + 1) % demoLogRecords.length,
@@ -1233,7 +1109,7 @@ export default function LandingContent({
                             <div className="demo-subtoolbar-left">
                               <span
                                 className="demo-toolbar-icon-pill"
-                                title="Filter requests"
+                                title={t("Filter requests", "筛选请求")}
                               >
                                 <IconSearch size={13} />
                               </span>
@@ -1242,8 +1118,8 @@ export default function LandingContent({
                               </span>
                               <span className="demo-filter-chip">
                                 {t(
-                                  "Pool: claude-sonnet-4",
-                                  "路由池：claude-sonnet-4",
+                                  "Policy: claude-sonnet-4",
+                                  "路由策略：claude-sonnet-4",
                                 )}
                               </span>
                             </div>
@@ -1253,7 +1129,7 @@ export default function LandingContent({
                               </span>
                               <span
                                 className="demo-toolbar-icon-pill"
-                                title="Columns"
+                                title={t("Columns", "显示列")}
                               >
                                 <SlidersHorizontal size={13} />
                               </span>
@@ -1291,7 +1167,10 @@ export default function LandingContent({
                                           <div>
                                             <strong>{row.model}</strong>
                                             <small>
-                                              {row.time.replace("Oct 19, ", "")}{" "}
+                                              {(isZh ? row.timeZh : row.time).replace(
+                                                /^Oct 19, |^10月19日 /,
+                                                "",
+                                              )}{" "}
                                               ·{" "}
                                               {row.providerSub.split(" · ")[0]}
                                             </small>
@@ -1303,14 +1182,14 @@ export default function LandingContent({
                                           className={`demo-status-pill is-${row.statusTone}`}
                                         >
                                           <i className="demo-status-dot" />
-                                          {row.status}
+                                          {isZh ? row.statusZh : row.status}
                                         </span>
                                       </td>
                                       <td className="is-right">
                                         <strong
                                           className={`demo-charge-text is-${row.statusTone}`}
                                         >
-                                          {row.charge}
+                                          {isZh ? row.chargeZh : row.charge}
                                         </strong>
                                         <small>{row.duration}</small>
                                       </td>
@@ -1336,14 +1215,16 @@ export default function LandingContent({
                                 <span className="demo-nowrap">
                                   {selectedLog.model}
                                 </span>{" "}
-                                <small>· {selectedLog.time}</small>
+                                <small>
+                                  · {isZh ? selectedLog.timeZh : selectedLog.time}
+                                </small>
                               </h3>
                             </div>
                             <span
                               className={`demo-status-pill is-${selectedLog.statusTone}`}
                             >
                               <i className="demo-status-dot" />
-                              {selectedLog.status}
+                              {isZh ? selectedLog.statusZh : selectedLog.status}
                             </span>
                           </div>
 
@@ -1354,7 +1235,9 @@ export default function LandingContent({
                             </div>
                             <div>
                               <span>{t("Customer charge", "客户费用")}</span>
-                              <strong>{selectedLog.charge}</strong>
+                              <strong>
+                                {isZh ? selectedLog.chargeZh : selectedLog.charge}
+                              </strong>
                             </div>
                             <div>
                               <span>{t("Input Token", "输入 Token")}</span>
@@ -1385,8 +1268,9 @@ export default function LandingContent({
                                 {t("Request timing", "请求耗时分解")}
                               </strong>
                               <span>
-                                {t("Gateway latency:", "网关延迟：")}{" "}
-                                {selectedLog.duration}
+                                {isZh
+                                  ? selectedLog.throughputZh
+                                  : selectedLog.throughput}
                               </span>
                             </div>
                             <div className="demo-timing-rows">
@@ -1396,7 +1280,9 @@ export default function LandingContent({
                                   className="demo-timing-row"
                                 >
                                   <div className="demo-timing-label">
-                                    <span>{phase.label}</span>
+                                    <span>
+                                      {isZh ? phase.labelZh : phase.label}
+                                    </span>
                                     <strong>{phase.duration}</strong>
                                   </div>
                                   <div className="demo-timing-track">
@@ -1408,12 +1294,6 @@ export default function LandingContent({
                                 </div>
                               ))}
                             </div>
-                            <div className="demo-timing-footer">
-                              <span>{selectedLog.throughput}</span>
-                              <span>
-                                {t("Total:", "总计：")} {selectedLog.duration}
-                              </span>
-                            </div>
                           </div>
 
                           <dl className="demo-drawer-dl">
@@ -1422,74 +1302,42 @@ export default function LandingContent({
                               <dd>{selectedLog.providerSub}</dd>
                             </div>
                             <div>
-                              <dt>{t("Provider status", "上游状态")}</dt>
-                              <dd>{selectedLog.providerStatus}</dd>
-                            </div>
-                            <div>
                               <dt>{t("Delivery & billing", "交付与计费")}</dt>
-                              <dd>{selectedLog.deliveryStatus}</dd>
-                            </div>
-                            <div>
-                              <dt>{t("API key", "API 密钥")}</dt>
-                              <dd className="demo-mono-cell">
-                                {selectedLog.apiKey}
+                              <dd>
+                                {isZh
+                                  ? selectedLog.deliveryStatusZh
+                                  : selectedLog.deliveryStatus}
                               </dd>
                             </div>
                           </dl>
 
-                          <div className="demo-drawer-tabs">
-                            {(["response", "request", "raw"] as const).map(
-                              (tabKey) => (
-                                <button
-                                  key={tabKey}
-                                  type="button"
-                                  className={
-                                    activeLogTab === tabKey
-                                      ? "is-active"
-                                      : undefined
-                                  }
-                                  onClick={() => setActiveLogTab(tabKey)}
-                                >
-                                  {tabKey === "response"
-                                    ? t("Response", "响应")
-                                    : tabKey === "request"
-                                      ? t("Request", "请求")
-                                      : t("Raw trace", "原始追踪")}
-                                </button>
-                              ),
-                            )}
-                          </div>
                           <div className="demo-drawer-code">
-                            {activeLogTab === "response" && (
-                              <code>{selectedLog.rawPreview}</code>
-                            )}
-                            {activeLogTab === "request" && (
-                              <code>{`POST /v1/chat/completions · model: "${selectedLog.model}" · stream: true · key: ${selectedLog.apiKey}`}</code>
-                            )}
-                            {activeLogTab === "raw" && (
-                              <code>{`finish_reason: "${selectedLog.finishReason}" · status: "${selectedLog.status}" · charge: "${selectedLog.charge}"`}</code>
-                            )}
+                            <code>
+                              {isZh
+                                ? selectedLog.rawPreviewZh
+                                : selectedLog.rawPreview}
+                            </code>
                           </div>
                         </aside>
                       </div>
                     </div>
                   )}
 
-                  {/* SURFACE 1: ADMIN / ROUTE POOLS (features/route-pools/page.tsx) */}
+                  {/* SURFACE 1: WORKSPACE / ROUTING, EVALUATIONS & EVENTS (features/agent-review/page.tsx) */}
                   {activePreviewIndex === 1 && (
                     <div className="investigation demo-page-surface">
                       <div className="demo-page-header">
                         <div>
                           <div className="demo-page-title-row">
-                            <h2>{t("Route pools", "路由池")}</h2>
+                            <h2>{t("Routing & Evaluations", "模型路由与评估")}</h2>
                             <span className="demo-count-badge">
-                              {t("3 active pools", "3 个活跃路由池")}
+                              {t("3 saved policies · 25 eval samples", "3 条已存策略 · 25 个评估样本")}
                             </span>
                           </div>
                           <p className="demo-page-subtitle">
                             {t(
-                              "Group multiple Provider model mappings under a single Niu alias with priority tiers and weighted selection. Highest eligible priority wins, with weighted selection inside that tier.",
-                              "将多个供应商模型映射聚合在单一 Niu 别名下，按优先级分层与权重分配流量：最高可用优先级胜出，同层内按权重均衡。",
+                              "Review workspace routing policies, fingerprinted evaluations, and signed event deliveries.",
+                              "审阅工作空间路由策略、带指纹的任务评估结果及签名事件通知状态。",
                             )}
                           </p>
                         </div>
@@ -1497,10 +1345,10 @@ export default function LandingContent({
                           <button
                             type="button"
                             className="demo-action-btn"
-                            onClick={() => setActivePreviewIndex(2)}
+                            onClick={() => setActivePreviewIndex(0)}
                           >
-                            <IconPlugConnected size={13} />
-                            <span>{t("Providers", "模型供应商")}</span>
+                            <List size={13} />
+                            <span>{t("Selection logs", "路由命中日志")}</span>
                           </button>
                           <button
                             type="button"
@@ -1511,52 +1359,74 @@ export default function LandingContent({
                               )
                             }
                           >
-                            <Plus size={13} />
-                            <span>{t("Create route pool", "新建路由池")}</span>
+                            <IconHistory size={13} />
+                            <span>{t("Cycle policy", "切换策略")}</span>
                           </button>
                         </div>
                       </div>
 
-                      <div className="demo-subtoolbar">
-                        <div className="demo-subtoolbar-left">
-                          <span
-                            className="demo-toolbar-icon-pill"
-                            title="Search route pools"
-                          >
-                            <IconSearch size={13} />
-                          </span>
-                          <span className="demo-filter-chip is-active">
-                            {t("All scopes (3)", "全部范围 (3)")}
-                          </span>
-                          <span className="demo-filter-chip">
-                            {t("Shared pools (2)", "共享路由池 (2)")}
-                          </span>
-                          <span className="demo-filter-chip">
-                            {t("Organization pools (1)", "组织路由池 (1)")}
-                          </span>
-                        </div>
-                        <div className="demo-subtoolbar-right">
-                          <span className="demo-toolbar-meta">
-                            {t(
-                              "Click a route pool to inspect candidate priority & weights",
-                              "点击路由池以检视候选路由的优先级与权重",
-                            )}
-                          </span>
-                        </div>
+                      <div className="demo-kpi-grid is-three-col">
+                        <article className="demo-kpi-card is-highlighted">
+                          <div className="demo-kpi-top">
+                            <span>
+                              {t("Matched evaluation", "同样本对比评估")}
+                            </span>
+                            <span className="demo-outline-badge">
+                              {t("25 samples", "25 个样本")}
+                            </span>
+                          </div>
+                          <strong>{t("96.0% accepted", "96.0% 合格率")}</strong>
+                          <div className="demo-kpi-foot">
+                            <span className="demo-delta-badge is-positive">
+                              {t("$0.0142 / accepted", "$0.0142 / 合格样本")}
+                            </span>
+                          </div>
+                        </article>
+                        <article className="demo-kpi-card">
+                          <div className="demo-kpi-top">
+                            <span>
+                              {t("Delegated authority", "Agent 委托权限")}
+                            </span>
+                            <span className="demo-outline-badge">
+                              {t("Task-scoped", "按任务授权")}
+                            </span>
+                          </div>
+                          <strong>{t("Management only", "仅管理权限")}</strong>
+                          <div className="demo-kpi-foot">
+                            <span className="demo-delta-badge">
+                              {t("Model invocation: Off", "模型调用：默认关闭")}
+                            </span>
+                          </div>
+                        </article>
+                        <article className="demo-kpi-card">
+                          <div className="demo-kpi-top">
+                            <span>
+                              {t("Event notifications", "签名事件通知")}
+                            </span>
+                            <span className="demo-outline-badge">
+                              {t("Active", "运行中")}
+                            </span>
+                          </div>
+                          <strong>{t("100% delivered", "100% 已送达")}</strong>
+                          <div className="demo-kpi-foot">
+                            <span className="demo-delta-badge is-positive">
+                              {t("0 open connection incidents", "0 个未决连接故障")}
+                            </span>
+                          </div>
+                        </article>
                       </div>
 
                       <div className="comparison-scroll demo-table-scroll">
                         <table
                           className="comparison-matrix demo-data-table"
-                          aria-label="Model route pools"
+                          aria-label="Workspace routing policies"
                         >
                           <thead>
                             <tr>
-                              <th>{t("Pool alias", "路由池别名")}</th>
-                              <th>{t("Scope", "共享范围")}</th>
-                              <th>{t("Candidate routes", "候选路由")}</th>
+                              <th>{t("Routing policy", "路由策略")}</th>
+                              <th>{t("Match conditions", "匹配条件")}</th>
+                              <th>{t("Candidate tiers & evaluation", "候选分层与评估结果")}</th>
                               <th>{t("Status", "状态")}</th>
-                              <th>{t("Actions", "操作")}</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -1573,15 +1443,19 @@ export default function LandingContent({
                                       <IconRoute size={15} />
                                       <div>
                                         <strong>{pool.alias}</strong>
-                                        <small>{pool.revision}</small>
+                                        <small>
+                                          {isZh ? pool.revisionZh : pool.revision}
+                                        </small>
                                       </div>
                                     </div>
                                   </td>
                                   <td>
                                     <span className="demo-outline-badge">
-                                      {pool.scopeBadge}
+                                      {isZh ? pool.scopeBadgeZh : pool.scopeBadge}
                                     </span>
-                                    <small>{pool.scopeSub}</small>
+                                    <small>
+                                      {isZh ? pool.scopeSubZh : pool.scopeSub}
+                                    </small>
                                   </td>
                                   <td>
                                     <div className="demo-candidate-pills">
@@ -1597,33 +1471,17 @@ export default function LandingContent({
                                         </span>
                                       ))}
                                     </div>
-                                    <small>{pool.enabledSummary}</small>
+                                    <small>
+                                      {isZh
+                                        ? pool.enabledSummaryZh
+                                        : pool.enabledSummary}
+                                    </small>
                                   </td>
                                   <td>
                                     <span className="demo-status-pill is-completed">
                                       <i className="demo-status-dot" />
-                                      {pool.status}
+                                      {isZh ? pool.statusZh : pool.status}
                                     </span>
-                                  </td>
-                                  <td>
-                                    <div className="demo-row-actions">
-                                      <button
-                                        type="button"
-                                        className="demo-action-btn is-sm"
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          setSelectedPoolIndex(idx);
-                                        }}
-                                      >
-                                        Edit pool
-                                      </button>
-                                      <span
-                                        className="demo-toolbar-icon-pill"
-                                        title="Revision history"
-                                      >
-                                        <IconHistory size={13} />
-                                      </span>
-                                    </div>
                                   </td>
                                 </tr>
                               );
@@ -1631,399 +1489,11 @@ export default function LandingContent({
                           </tbody>
                         </table>
                       </div>
-
-                      {/* Selected Pool Candidate Route Inspector */}
-                      <div className="demo-pool-inspector">
-                        <div className="demo-pool-inspector-header">
-                          <div>
-                            <span className="demo-drawer-eyebrow">
-                              Candidate routes · {selectedPool.alias} (
-                              {selectedPool.revision})
-                            </span>
-                            <h3>
-                              Priority tier weights &amp; temporary auth
-                              cooldown state
-                            </h3>
-                          </div>
-                          <span className="demo-outline-badge">
-                            {selectedPool.maxAttempts}
-                          </span>
-                        </div>
-                        <div className="demo-pool-candidates-grid">
-                          {selectedPool.candidates.map((cand) => (
-                            <div
-                              key={cand.alias}
-                              className={`demo-candidate-card${cand.isPrimary ? " is-primary-tier" : ""}`}
-                            >
-                              <div className="demo-candidate-card-top">
-                                <strong>{cand.alias}</strong>
-                                <span className="demo-outline-badge">
-                                  Priority {cand.priority}
-                                </span>
-                              </div>
-                              <p className="demo-candidate-provider">
-                                {cand.provider}
-                              </p>
-                              <div className="route-weight-cell">
-                                <span>
-                                  Weight {cand.weight} · {cand.tierShare}
-                                </span>
-                                <i className="route-weight-bar">
-                                  <b
-                                    style={{
-                                      width: `${cand.sharePct}%`,
-                                      opacity: cand.isPrimary ? 1 : 0.45,
-                                    }}
-                                  />
-                                </i>
-                              </div>
-                              <div className="demo-candidate-meta">
-                                <span>{cand.cooldown}</span>
-                                <strong>{cand.status}</strong>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
                     </div>
                   )}
 
-                  {/* SURFACE 2: ADMIN / FINANCIAL STATEMENTS (features/commercial-position/page.tsx) */}
+                  {/* SURFACE 2: GENERATIONS · CHAT COMPARISON & SEEDANCE VIDEO (PlaygroundView.tsx + VideoView.tsx) */}
                   {activePreviewIndex === 2 && (
-                    <div className="investigation demo-page-surface">
-                      <div className="demo-page-header">
-                        <div>
-                          <div className="demo-page-title-row">
-                            <h2>{t("Financial statements", "财务报表")}</h2>
-                            <span className="demo-count-badge">
-                              {t("Accrual + Cash flow", "权责发生制 + 现金流")}
-                            </span>
-                          </div>
-                          <p className="demo-page-subtitle">
-                            {t(
-                              "October 2026 (Month to date) · Compared against Sept 2026 (same MTD span) · Personal owner-funded calls are excluded from commercial revenue and cost.",
-                              "2026 年 10 月（月初至今）· 对比 2026 年 9 月同期 · 个人所有者自付调用已从商业收入与成本中剔除。",
-                            )}
-                          </p>
-                        </div>
-                        <div className="demo-header-actions">
-                          <span className="demo-filter-chip">
-                            {t(
-                              "Month to date (Current month)",
-                              "月初至今（当月）",
-                            )}
-                          </span>
-                          <span className="demo-filter-chip">
-                            {t("Currency: $ USD", "币种：$ USD")}
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* Line Tabs: Financial summary (P&L) | Provider positions */}
-                      <div
-                        className="demo-line-tabs"
-                        role="tablist"
-                        aria-label="Financial statement views"
-                      >
-                        <button
-                          type="button"
-                          role="tab"
-                          aria-selected={activeFinancialTab === "pnl"}
-                          className={
-                            activeFinancialTab === "pnl"
-                              ? "is-active"
-                              : undefined
-                          }
-                          onClick={() => setActiveFinancialTab("pnl")}
-                        >
-                          {t(
-                            "Financial summary (Statement of operations)",
-                            "财务汇总（损益表 P&L）",
-                          )}
-                        </button>
-                        <button
-                          type="button"
-                          role="tab"
-                          aria-selected={activeFinancialTab === "providers"}
-                          className={
-                            activeFinancialTab === "providers"
-                              ? "is-active"
-                              : undefined
-                          }
-                          onClick={() => setActiveFinancialTab("providers")}
-                        >
-                          {t(
-                            "Provider positions (3 active Providers)",
-                            "供应商结算头寸（3 家活跃供应商）",
-                          )}
-                        </button>
-                      </div>
-
-                      {/* Layer 1: 4 Executive KPI Cards from commercial-position/page.tsx */}
-                      <div className="demo-kpi-grid">
-                        <article className="demo-kpi-card">
-                          <div className="demo-kpi-top">
-                            <span>
-                              {t("Net recognized revenue", "已确认净收入")}
-                            </span>
-                            <span className="demo-outline-badge">
-                              {t("Income", "收入")}
-                            </span>
-                          </div>
-                          <strong>$48,920.40</strong>
-                          <div className="demo-kpi-foot">
-                            <span className="demo-delta-badge is-positive">
-                              {t("+18.4% vs prior MTD", "较上月同期 +18.4%")}
-                            </span>
-                            <small>
-                              {t(
-                                "Gross $51,240.00 · Gift -$2,139.60",
-                                "总额 $51,240.00 · 赠金抵扣 -$2,139.60",
-                              )}
-                            </small>
-                          </div>
-                        </article>
-                        <article className="demo-kpi-card">
-                          <div className="demo-kpi-top">
-                            <span>
-                              {t(
-                                "Cost of supply (Provider payable)",
-                                "模型供给成本（应付供应商）",
-                              )}
-                            </span>
-                            <span className="demo-outline-badge">COGS</span>
-                          </div>
-                          <strong>$34,610.85</strong>
-                          <div className="demo-kpi-foot">
-                            <span className="demo-delta-badge">
-                              {t("+14.1% vs prior MTD", "较上月同期 +14.1%")}
-                            </span>
-                            <small>
-                              {t(
-                                "128,450 settled commercial calls",
-                                "128,450 次已结算商业调用",
-                              )}
-                            </small>
-                          </div>
-                        </article>
-                        <article className="demo-kpi-card is-highlighted">
-                          <div className="demo-kpi-top">
-                            <span>
-                              {t("Platform net contribution", "平台净贡献毛利")}
-                            </span>
-                            <span className="demo-outline-badge">
-                              {t("29.3% margin", "29.3% 毛利率")}
-                            </span>
-                          </div>
-                          <strong>$14,309.55</strong>
-                          <div className="demo-kpi-foot">
-                            <span className="demo-delta-badge is-positive">
-                              {t("+30.2% vs prior MTD", "较上月同期 +30.2%")}
-                            </span>
-                            <small>
-                              {t(
-                                "Net revenue minus Provider payable",
-                                "净收入减去应付供应商成本",
-                              )}
-                            </small>
-                          </div>
-                        </article>
-                        <article className="demo-kpi-card">
-                          <div className="demo-kpi-top">
-                            <span>
-                              {t("Verified cash receipts", "已核验现金收款")}
-                            </span>
-                            <span className="demo-outline-badge">
-                              {t("Cash flow", "现金流")}
-                            </span>
-                          </div>
-                          <strong>$62,400.00</strong>
-                          <div className="demo-kpi-foot">
-                            <span className="demo-delta-badge is-positive">
-                              {t(
-                                "Prepaid wallet: $19,840.20",
-                                "预付钱包余额：$19,840.20",
-                              )}
-                            </span>
-                            <small>
-                              {t(
-                                "Zero supplier cost leaked to customer API",
-                                "上游采购成本对客户 API 零泄露",
-                              )}
-                            </small>
-                          </div>
-                        </article>
-                      </div>
-
-                      {/* Layer 2: Statement of Operations (P&L) OR Provider Positions */}
-                      {activeFinancialTab === "pnl" ? (
-                        <div className="comparison-scroll demo-table-scroll">
-                          <table
-                            className="comparison-matrix demo-data-table"
-                            aria-label="Statement of operations (P&L)"
-                          >
-                            <thead>
-                              <tr>
-                                <th>
-                                  Statement of operations (P&amp;L) line item
-                                </th>
-                                <th>Current MTD</th>
-                                <th>Prior MTD</th>
-                                <th>Change</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              <tr>
-                                <td>Gross customer usage charges</td>
-                                <td>$51,240.00</td>
-                                <td>$43,180.00</td>
-                                <td>
-                                  <span className="demo-delta-text is-positive">
-                                    +18.7%
-                                  </span>
-                                </td>
-                              </tr>
-                              <tr>
-                                <td>
-                                  Less: Customer balance refunds &amp;
-                                  adjustments
-                                </td>
-                                <td>-$180.00</td>
-                                <td>-$240.00</td>
-                                <td>
-                                  <span className="demo-delta-text">
-                                    -25.0%
-                                  </span>
-                                </td>
-                              </tr>
-                              <tr>
-                                <td>
-                                  Less: Consumed promotional gift allowance
-                                </td>
-                                <td>-$2,139.60</td>
-                                <td>-$1,620.00</td>
-                                <td>
-                                  <span className="demo-delta-text">
-                                    +32.1%
-                                  </span>
-                                </td>
-                              </tr>
-                              <tr className="demo-summary-row">
-                                <td>
-                                  <strong>
-                                    Net recognized customer revenue
-                                  </strong>
-                                </td>
-                                <td>
-                                  <strong>$48,920.40</strong>
-                                </td>
-                                <td>
-                                  <strong>$41,320.00</strong>
-                                </td>
-                                <td>
-                                  <span className="demo-delta-text is-positive">
-                                    <strong>+18.4%</strong>
-                                  </span>
-                                </td>
-                              </tr>
-                              <tr>
-                                <td>
-                                  Less: Provider payable (Cost of model supply)
-                                </td>
-                                <td>-$34,610.85</td>
-                                <td>-$30,330.20</td>
-                                <td>
-                                  <span className="demo-delta-text">
-                                    +14.1%
-                                  </span>
-                                </td>
-                              </tr>
-                              <tr className="matrix-selected demo-summary-row">
-                                <td>
-                                  <strong>
-                                    Platform net contribution (Gross profit)
-                                  </strong>
-                                </td>
-                                <td>
-                                  <strong>$14,309.55</strong>
-                                </td>
-                                <td>
-                                  <strong>$10,989.80</strong>
-                                </td>
-                                <td>
-                                  <span className="demo-delta-text is-positive">
-                                    <strong>+30.2% (+2.7 pp margin)</strong>
-                                  </span>
-                                </td>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </div>
-                      ) : (
-                        <div className="comparison-scroll demo-table-scroll">
-                          <table
-                            className="comparison-matrix demo-data-table"
-                            aria-label="Provider commercial positions"
-                          >
-                            <thead>
-                              <tr>
-                                <th>Provider</th>
-                                <th>Approved offers</th>
-                                <th>Settled requests</th>
-                                <th>Customer revenue</th>
-                                <th>Provider payable</th>
-                                <th>Net contribution</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              <tr className="matrix-selected">
-                                <td>
-                                  <strong>Anthropic Direct</strong>
-                                  <small>claude-sonnet-4, claude-opus-4</small>
-                                </td>
-                                <td>4 active offers</td>
-                                <td>64,120</td>
-                                <td>$26,480.00</td>
-                                <td>$18,536.00</td>
-                                <td>
-                                  <strong>$7,944.00 (30.0%)</strong>
-                                </td>
-                              </tr>
-                              <tr>
-                                <td>
-                                  <strong>OpenRouter Enterprise</strong>
-                                  <small>deepseek-r1, qwen-2.5-coder</small>
-                                </td>
-                                <td>6 active offers</td>
-                                <td>49,810</td>
-                                <td>$14,120.40</td>
-                                <td>$10,307.85</td>
-                                <td>
-                                  <strong>$3,812.55 (27.0%)</strong>
-                                </td>
-                              </tr>
-                              <tr>
-                                <td>
-                                  <strong>Volcengine Ark</strong>
-                                  <small>seedance-1-5-pro, doubao-pro</small>
-                                </td>
-                                <td>3 active offers</td>
-                                <td>14,520</td>
-                                <td>$8,320.00</td>
-                                <td>$5,767.00</td>
-                                <td>
-                                  <strong>$2,553.00 (30.7%)</strong>
-                                </td>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </div>
-                      )}
-                    </div>
-                  )}
-
-                  {/* SURFACE 3: GENERATIONS · CHAT COMPARISON & SEEDANCE VIDEO (PlaygroundView.tsx + VideoView.tsx) */}
-                  {activePreviewIndex === 3 && (
                     <div className="investigation demo-page-surface">
                       <div className="demo-page-header">
                         <div>
@@ -2097,12 +1567,13 @@ export default function LandingContent({
                         <>
                           <div className="demo-chat-prompt-bar">
                             <span className="demo-prompt-role">
-                              User prompt
+                              {t("User prompt", "用户输入提示词")}
                             </span>
                             <p>
-                              Compare bounded route-pool failover vs
-                              unconditional retries when an upstream Provider
-                              returns HTTP 401 before streaming starts.
+                              {t(
+                                "Compare bounded routing failover vs unconditional retries when an upstream Provider returns HTTP 401 before streaming starts.",
+                                "对比当上游供应商在流式输出开始前返回 HTTP 401 时，有界路由故障切换与无条件重试的区别。",
+                              )}
                             </p>
                           </div>
 
@@ -2115,29 +1586,55 @@ export default function LandingContent({
                                   </span>
                                   <div>
                                     <strong>claude-sonnet-4</strong>
-                                    <small>Anthropic · Pool revision 4</small>
+                                    <small>
+                                      {t(
+                                        "Anthropic · Policy revision 4",
+                                        "Anthropic · 路由策略修订版 4",
+                                      )}
+                                    </small>
                                   </div>
                                 </div>
                                 <span className="demo-status-pill is-completed">
                                   <i className="demo-status-dot" />
-                                  Completed · 1,180 ms
+                                  {t("Completed · 1,180 ms", "已完成 · 1,180 ms")}
                                 </span>
                               </div>
                               <div className="demo-chat-card-body">
                                 <p>
-                                  <strong>Bounded failover</strong> only retries
-                                  when the upstream rejection occurs before any
-                                  SSE body bytes are committed. On{" "}
-                                  <code>HTTP 401</code>, Niu places the failing
-                                  candidate route into a 60s auth cooldown and
-                                  dispatches Attempt 2 without double-charging
-                                  the workspace.
+                                  {isZh ? (
+                                    <>
+                                      <strong>有界故障切换</strong>仅在上游拒绝发生于任何
+                                      SSE 响应体字节发出之前时才触发重试。遇到{" "}
+                                      <code>HTTP 401</code> 时，Niu 将失败候选路由置入
+                                      60 秒鉴权冷却并自动调度第 2 次尝试，不会对工作空间重复扣费。
+                                    </>
+                                  ) : (
+                                    <>
+                                      <strong>Bounded failover</strong> only retries
+                                      when the upstream rejection occurs before any
+                                      SSE body bytes are committed. On{" "}
+                                      <code>HTTP 401</code>, Niu places the failing
+                                      candidate route into a 60s auth cooldown and
+                                      dispatches Attempt 2 without double-charging
+                                      the workspace.
+                                    </>
+                                  )}
                                 </p>
                               </div>
                               <div className="demo-chat-card-footer">
-                                <span>412 prompt → 128 output tokens</span>
+                                <span>
+                                  {t(
+                                    "412 prompt → 128 output tokens",
+                                    "412 输入 → 128 输出 Token",
+                                  )}
+                                </span>
                                 <span>148.8 tok/s</span>
-                                <strong>Customer charge: $0.0180</strong>
+                                <strong>
+                                  {t(
+                                    "Customer charge: $0.0180",
+                                    "客户费用：$0.0180",
+                                  )}
+                                </strong>
                               </div>
                             </article>
 
@@ -2150,72 +1647,57 @@ export default function LandingContent({
                                   <div>
                                     <strong>gpt-4.1</strong>
                                     <small>
-                                      OpenAI Direct · Pool revision 2
+                                      {t(
+                                        "OpenAI Direct · Policy revision 2",
+                                        "OpenAI Direct · 路由策略修订版 2",
+                                      )}
                                     </small>
                                   </div>
                                 </div>
                                 <span className="demo-status-pill is-completed">
                                   <i className="demo-status-dot" />
-                                  Completed · 940 ms
+                                  {t("Completed · 940 ms", "已完成 · 940 ms")}
                                 </span>
                               </div>
                               <div className="demo-chat-card-body">
                                 <p>
-                                  <strong>Pre-stream vs mid-stream:</strong>{" "}
-                                  Pre-stream <code>401/429/503</code> errors can
-                                  safely fail over within the route pool’s{" "}
-                                  <code>max_attempts</code> cap. If a stream
-                                  drops after tokens are emitted, Niu records
-                                  the state as{" "}
-                                  <code>Uncertain / Unresolved</code>.
+                                  {isZh ? (
+                                    <>
+                                      <strong>流开始前 vs 流传输中：</strong>流开始前的{" "}
+                                      <code>401/429/503</code> 错误可在路由策略的{" "}
+                                      <code>max_attempts</code> 上限内安全切换；若已发出部分
+                                      Token 后流中断，Niu 会将其记录为{" "}
+                                      <code>状态未定 / 待核对</code>。
+                                    </>
+                                  ) : (
+                                    <>
+                                      <strong>Pre-stream vs mid-stream:</strong>{" "}
+                                      Pre-stream <code>401/429/503</code> errors can
+                                      safely fail over within the routing policy’s{" "}
+                                      <code>max_attempts</code> cap. If a stream
+                                      drops after tokens are emitted, Niu records
+                                      the state as{" "}
+                                      <code>Uncertain / Unresolved</code>.
+                                    </>
+                                  )}
                                 </p>
                               </div>
                               <div className="demo-chat-card-footer">
-                                <span>412 prompt → 116 output tokens</span>
+                                <span>
+                                  {t(
+                                    "412 prompt → 116 output tokens",
+                                    "412 输入 → 116 输出 Token",
+                                  )}
+                                </span>
                                 <span>162.4 tok/s</span>
-                                <strong>Customer charge: $0.0142</strong>
+                                <strong>
+                                  {t(
+                                    "Customer charge: $0.0142",
+                                    "客户费用：$0.0142",
+                                  )}
+                                </strong>
                               </div>
                             </article>
-                          </div>
-
-                          <div className="comparison-scroll demo-table-scroll">
-                            <table
-                              className="comparison-matrix demo-data-table"
-                              aria-label="Comparison summary"
-                            >
-                              <thead>
-                                <tr>
-                                  <th>Comparison summary metric</th>
-                                  <th>claude-sonnet-4</th>
-                                  <th>gpt-4.1</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                <tr>
-                                  <td>Client round-trip &amp; attempts</td>
-                                  <td>
-                                    1,180 ms (2 attempts · seamless failover)
-                                  </td>
-                                  <td>940 ms (1 attempt · primary route)</td>
-                                </tr>
-                                <tr>
-                                  <td>Prompt / output tokens</td>
-                                  <td>540 total (412 prompt · 128 output)</td>
-                                  <td>528 total (412 prompt · 116 output)</td>
-                                </tr>
-                                <tr className="matrix-selected">
-                                  <td>
-                                    <strong>Settled customer charge</strong>
-                                  </td>
-                                  <td>
-                                    <strong>$0.0180</strong>
-                                  </td>
-                                  <td>
-                                    <strong>$0.0142</strong>
-                                  </td>
-                                </tr>
-                              </tbody>
-                            </table>
                           </div>
                         </>
                       ) : (
@@ -2230,43 +1712,54 @@ export default function LandingContent({
                                   1080p · 16:9 · 5s · 24 fps
                                 </span>
                                 <span className="demo-video-pill">
-                                  Audio generated
+                                  {t("Audio generated", "已生成伴音")}
                                 </span>
                               </div>
                               <div className="demo-video-play-center">
                                 <Film size={24} />
                                 <span>
-                                  Rendered MP4 ready · 1920×1080 · 42.0s
-                                  generation time
+                                  {t(
+                                    "Rendered MP4 ready · 1920×1080 · 42.0s generation time",
+                                    "MP4 渲染就绪 · 1920×1080 · 生成耗时 42.0 秒",
+                                  )}
                                 </span>
                               </div>
                               <div className="demo-video-prompt-overlay">
                                 <small>
-                                  SAVED PROMPT &amp; CAMERA DIRECTION
+                                  {t(
+                                    "SAVED PROMPT & CAMERA DIRECTION",
+                                    "已保存提示词与运镜指令",
+                                  )}
                                 </small>
                                 <p>
-                                  “Aerial dusk tracking shot over an illuminated
-                                  container port, cinematic reflections on wet
-                                  asphalt, volumetric coastal fog, smooth gimbal
-                                  motion.”
+                                  {t(
+                                    "“Aerial dusk tracking shot over an illuminated container port, cinematic reflections on wet asphalt, volumetric coastal fog, smooth gimbal motion.”",
+                                    "“黄昏时分灯火通明的集装箱港口航拍跟拍镜头，湿润沥青路面呈现电影感倒影，海岸体积雾，平滑云台运镜。”",
+                                  )}
                                 </p>
                               </div>
                             </div>
                             <div className="demo-video-controls-bar">
                               <span className="demo-filter-chip is-active">
-                                Model: seedance-1-5-pro
+                                {t(
+                                  "Model: seedance-1-5-pro",
+                                  "模型：seedance-1-5-pro",
+                                )}
                               </span>
                               <span className="demo-filter-chip">
-                                Resolution: 1080p
+                                {t("Resolution: 1080p", "分辨率：1080p")}
                               </span>
                               <span className="demo-filter-chip">
-                                Aspect: 16:9
+                                {t("Aspect: 16:9", "画幅：16:9")}
                               </span>
                               <span className="demo-filter-chip">
-                                Duration: 5s
+                                {t("Duration: 5s", "时长：5 秒")}
                               </span>
                               <span className="demo-filter-chip">
-                                Materials: 4 approved assets
+                                {t(
+                                  "Assets: 4 approved materials",
+                                  "素材库：4 个已审核素材",
+                                )}
                               </span>
                             </div>
                           </div>
@@ -2274,25 +1767,37 @@ export default function LandingContent({
                           <div className="demo-video-side-cards">
                             <div className="demo-timing-card">
                               <div className="demo-timing-header">
-                                <strong>Video lifecycle</strong>
+                                <strong>
+                                  {t("Video lifecycle", "视频任务生命周期")}
+                                </strong>
                                 <span className="demo-status-pill is-completed">
                                   <i className="demo-status-dot" />
-                                  Succeeded
+                                  {t("Succeeded", "已成功")}
                                 </span>
                               </div>
                               <dl className="demo-drawer-dl">
                                 <div>
-                                  <dt>Submitted</dt>
-                                  <dd>Oct 19, 14:16:02</dd>
-                                </div>
-                                <div>
-                                  <dt>Completed</dt>
-                                  <dd>Oct 19, 14:16:44 (42.0s)</dd>
-                                </div>
-                                <div>
-                                  <dt>Provider tools</dt>
+                                  <dt>{t("Submitted", "提交时间")}</dt>
                                   <dd>
-                                    Materials &amp; Human verification active
+                                    {t("Oct 19, 14:16:02", "10月19日 14:16:02")}
+                                  </dd>
+                                </div>
+                                <div>
+                                  <dt>{t("Completed", "完成时间")}</dt>
+                                  <dd>
+                                    {t(
+                                      "Oct 19, 14:16:44 (42.0s)",
+                                      "10月19日 14:16:44（42.0 秒）",
+                                    )}
+                                  </dd>
+                                </div>
+                                <div>
+                                  <dt>{t("Workspace assets", "工作空间素材")}</dt>
+                                  <dd>
+                                    {t(
+                                      "Materials & safety check verified",
+                                      "素材库与安全核验已通过",
+                                    )}
                                   </dd>
                                 </div>
                               </dl>
@@ -2300,26 +1805,31 @@ export default function LandingContent({
 
                             <div className="demo-timing-card">
                               <div className="demo-timing-header">
-                                <strong>Video billing</strong>
-                                <span>Tariff settled</span>
+                                <strong>{t("Video billing", "视频计费明细")}</strong>
+                                <span>{t("Tariff settled", "费率已结算")}</span>
                               </div>
                               <dl className="demo-drawer-dl">
                                 <div>
-                                  <dt>Billing status</dt>
-                                  <dd>Settled debit</dd>
+                                  <dt>{t("Billing status", "计费状态")}</dt>
+                                  <dd>{t("Settled debit", "已结算扣款")}</dd>
                                 </div>
                                 <div>
-                                  <dt>Quoted estimate</dt>
+                                  <dt>{t("Quoted estimate", "预估报价")}</dt>
                                   <dd>$0.2400</dd>
                                 </div>
                                 <div>
-                                  <dt>Settled customer charge</dt>
+                                  <dt>
+                                    {t(
+                                      "Settled customer charge",
+                                      "已结算客户费用",
+                                    )}
+                                  </dt>
                                   <dd>
                                     <strong>$0.2400</strong>
                                   </dd>
                                 </div>
                                 <div>
-                                  <dt>API key</dt>
+                                  <dt>{t("API key", "API 密钥")}</dt>
                                   <dd className="demo-mono-cell">
                                     prod-backend
                                   </dd>
@@ -2336,8 +1846,8 @@ export default function LandingContent({
                 <div className="preview-caption">
                   <span>
                     {t(
-                      "Illustrative dashboard data · Review request evidence in Niu",
-                      "控制台示例数据 · 在 Niu 中审阅请求证据",
+                      "Illustrative dashboard data · Inspect logs, routing policies, evaluations and generations in Niu",
+                      "控制台示例数据 · 在 Niu 中审阅请求日志、路由策略、评估运行与生成结果",
                     )}
                   </span>
                   <Button asChild size="sm" className="cta-primary cta-compact">
@@ -2353,7 +1863,178 @@ export default function LandingContent({
               </div>
             </div>
           </div>
+        </div>
+      </section>
 
+      {/* 2. SIX CORE CAPABILITIES */}
+      <section
+        className="section container"
+        id="product"
+        aria-labelledby="product-title"
+      >
+        <div className="section-heading" data-reveal>
+          <div>
+            <p className="eyebrow">
+              {t("AGENT SCENARIOS", "AGENT 使用场景")}
+            </p>
+            <h2 id="product-title">
+              {isZh ? (
+                <>
+                  告诉 Agent 你的需求，
+                  <br />
+                  让它与 Niu 一起完成。
+                </>
+              ) : (
+                <>
+                  Start with what
+                  <br />
+                  you want to achieve.
+                </>
+              )}
+            </h2>
+          </div>
+          <p>
+            {t(
+              "Your agent gets the evidence and controls to configure Niu: evaluate candidates, configure routing around your workload, and refine quality, latency and cost from real execution feedback.",
+              "Agent 获取决策证据与管理能力，按任务负载评估候选模型并配置 Niu 的路由策略，再根据实际运行反馈持续改善质量、延迟与成本。",
+            )}
+          </p>
+        </div>
+        <div className="capability-grid">
+          {capabilities.map((item, index) => {
+            const CapabilityIcon = capabilityIcons[index];
+            return (
+              <article
+                key={item.href}
+                className="capability"
+                data-reveal
+                data-spotlight
+                style={stagger(index % 3)}
+              >
+                <div className="capability-top">
+                  <span className="capability-icon" aria-hidden="true">
+                    <CapabilityIcon size={20} stroke={1.75} />
+                  </span>
+                  <span className="feature-number">{item.number}</span>
+                </div>
+                <h3>{isZh ? item.titleZh : item.title}</h3>
+                <p>{isZh ? item.descriptionZh : item.description}</p>
+                <a className="text-link" href={item.href}>
+                  {isZh ? item.labelZh : item.label}{" "}
+                  <span aria-hidden="true">→</span>
+                </a>
+              </article>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* 3. DROP-IN API QUICKSTART */}
+      <section
+        className="gateway-section"
+        id="gateway"
+        aria-labelledby="gateway-title"
+      >
+        <div className="container section gateway-grid">
+          <div className="gateway-copy" data-reveal>
+            <p className="eyebrow">
+              {t("START WITH YOUR AGENT", "从你的 AGENT 开始")}
+            </p>
+            <h2 id="gateway-title">
+              {isZh ? (
+                <>
+                  说清你想做什么，
+                  <br />
+                  接入工作交给 Agent。
+                </>
+              ) : (
+                <>
+                  Give your agent a goal.
+                  <br />
+                  Let it handle the setup.
+                </>
+              )}
+            </h2>
+            <p className="section-description">
+              {t(
+                "Connect Claude Code, Codex or DeepSeek Harness without changing your agent's own host model.",
+                "连接 Claude Code、Codex 或 DeepSeek Harness，且无需改动 Agent 自身的宿主模型。",
+              )}
+            </p>
+            <ul className="gateway-features">
+              {gatewaySteps.map((item) => (
+                <li key={item.step}>
+                  <span className="gateway-step-badge">{item.step}</span>
+                  <div>
+                    <strong>{isZh ? item.titleZh : item.title}</strong>
+                    <p>{isZh ? item.detailZh : item.detail}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+            <div className="gateway-links">
+              <a className="text-link" href="/docs/guides/personal-assistant/">
+                {t("Build with Niu", "用 Niu 开发")}{" "}
+                <span aria-hidden="true">→</span>
+              </a>
+              <a className="text-link" href="https://github.com/niu-io/niu/tree/main/examples/personal-assistant">
+                {t("Runnable example", "可运行源码示例")}{" "}
+                <span aria-hidden="true">→</span>
+              </a>
+            </div>
+          </div>
+          <Tabs className="code-card" data-reveal style={stagger(1)}
+            value={codeExamples[activeCodeIndex].id}
+            onValueChange={(value) => { setActiveCodeIndex(codeExamples.findIndex((item) => item.id === value)); setCopiedCode(false); }}
+          >
+            <div className="code-heading">
+              <TabsList className="code-tabs" variant="line" aria-label="Agent task prompts">
+                {codeExamples.map((example, idx) => (
+                  <TabsTrigger key={example.id} value={example.id}>
+                    {t(example.label, ["连接", "评估", "改进"][idx])}
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+              <Button
+                variant="ghost"
+                type="button"
+                className="code-copy-btn"
+                onClick={handleCopyCode}
+                aria-label={t("Copy agent prompt", "复制 Agent 提示词")}
+              >
+                {copiedCode ? (
+                  <IconCheck size={14} aria-hidden="true" />
+                ) : (
+                  <IconCopy size={14} aria-hidden="true" />
+                )}
+                <span>
+                  {copiedCode ? t("Copied", "已复制") : t("Copy", "复制")}
+                </span>
+              </Button>
+            </div>
+            <div className="code-subbar">
+              <span>{isZh ? codeExamples[activeCodeIndex].endpointZh : codeExamples[activeCodeIndex].endpoint}</span>
+              <span>{t("Prompt for your agent", "交给 Agent 的提示词")}</span>
+            </div>
+            {/* Build-time Shiki HTML from maintained task prompts. */}
+            {codeExamples.map((example, idx) => (
+              <TabsContent key={example.id} value={example.id} className="highlighted-example">
+                <div dangerouslySetInnerHTML={{ __html: highlightedCode[idx] }} />
+              </TabsContent>
+            ))}
+            <div className="code-footnote">
+              <span className="status-dot is-live"></span>
+              <span>
+                {t("Scope:", "能力范围：")}{" "}
+                <strong>
+                  {isZh
+                    ? codeExamples[activeCodeIndex].traceZh
+                    : codeExamples[activeCodeIndex].trace}
+                </strong>
+              </span>
+            </div>
+          </Tabs>
+        </div>
       </section>
 
       {/* 2. PERFORMANCE BENCHMARK (VISUAL CARDS + VERDICT) */}
@@ -2413,202 +2094,32 @@ export default function LandingContent({
             ))}
           </dl>
 
-        <ol className="benchmark-steps">
-          {benchmarkSteps.map((item, index) => (
-            <li
-              key={item.step}
-              data-reveal
-              data-spotlight
-              style={stagger(index)}
-            >
-              <span className="benchmark-step-num">{item.step}</span>
-              <div>
-                <strong>{isZh ? item.titleZh : item.title}</strong>
-                <p>{isZh ? item.descriptionZh : item.description}</p>
-              </div>
-            </li>
-          ))}
-        </ol>
-        <div className="benchmark-demo" data-reveal>
-          <div className="benchmark-toolbar">
-            <span className="sample-label">
+        <div className="benchmark-method benchmark-method-compact" data-reveal>
+          <p>
+            {isZh ? (
+              <>
+                <strong>测试基线：</strong> Niu v0.2.4 开启完整 PostgreSQL ACID 转发前准入与批量完成结算；New API (45fbb14) 开启{" "}
+                <code>MEMORY_CACHE_ENABLED=true</code>；LiteLLM Proxy (v1.104.0) 运行于无状态 <code>master_key</code> 模式。
+              </>
+            ) : (
+              <>
+                <strong>Test baseline:</strong> Niu v0.2.4 ran with full ACID PostgreSQL pre-dispatch admission and batched completion; New API (45fbb14) ran with{" "}
+                <code>MEMORY_CACHE_ENABLED=true</code>; LiteLLM Proxy (v1.104.0) ran in stateless <code>master_key</code> mode.
+              </>
+            )}
+          </p>
+          <div className="benchmark-links">
+            <a className="text-link" href={links.benchmark}>
               {t(
-                "AI-GATEWAY-BENCH · 0MS MOCK UPSTREAM (36,649 RPS DIRECT BASELINE)",
-                "AI-GATEWAY-BENCH · 0MS 模拟上游（36,649 RPS 直连基线）",
-              )}
-            </span>
-            <span className="benchmark-status">
-              {t(
-                "Apple M4 (10-core, 24 GB) · PostgreSQL 17.11 · 0% errors",
-                "Apple M4 (10 核, 24 GB) · PostgreSQL 17.11 · 0% 错误率",
-              )}
-            </span>
-          </div>
-          <div
-            className="benchmark-tabs"
-            role="tablist"
-            aria-label="Choose a benchmark workload"
-          >
-            {benchmarkSuites.map((suite, index) => (
-              <button
-                key={suite.id}
-                type="button"
-                role="tab"
-                id={`benchmark-tab-${suite.id}`}
-                aria-controls={`benchmark-panel-${suite.id}`}
-                aria-selected={index === activeSuiteIndex}
-                tabIndex={index === activeSuiteIndex ? 0 : -1}
-                onClick={() => setActiveSuiteIndex(index)}
-                onKeyDown={(e) => {
-                  let next = index;
-                  if (e.key === "ArrowRight")
-                    next = (index + 1) % benchmarkSuites.length;
-                  else if (e.key === "ArrowLeft")
-                    next =
-                      (index - 1 + benchmarkSuites.length) %
-                      benchmarkSuites.length;
-                  else if (e.key === "Home") next = 0;
-                  else if (e.key === "End") next = benchmarkSuites.length - 1;
-                  else return;
-                  e.preventDefault();
-                  setActiveSuiteIndex(next);
-                  const nextEl = document.getElementById(
-                    `benchmark-tab-${benchmarkSuites[next].id}`,
-                  );
-                  nextEl?.focus();
-                }}
-              >
-                {isZh && suite.labelZh ? suite.labelZh : suite.label}
-              </button>
-            ))}
-          </div>
-          {benchmarkSuites.map((suite, index) => (
-            <div
-              key={suite.id}
-              className="benchmark-panel"
-              role="tabpanel"
-              id={`benchmark-panel-${suite.id}`}
-              aria-labelledby={`benchmark-tab-${suite.id}`}
-              hidden={index !== activeSuiteIndex}
-              tabIndex={0}
-            >
-              <div className="benchmark-task">
-                <div>
-                  <span className="small-label">
-                    {isZh && suite.eyebrowZh ? suite.eyebrowZh : suite.eyebrow}
-                  </span>
-                  <h3>{isZh && suite.titleZh ? suite.titleZh : suite.title}</h3>
-                  <p>
-                    {isZh && suite.descriptionZh
-                      ? suite.descriptionZh
-                      : suite.description}
-                  </p>
-                </div>
-                <div className="acceptance-rule">
-                  <strong>
-                    {isZh && suite.ruleTitleZh
-                      ? suite.ruleTitleZh
-                      : suite.ruleTitle}
-                  </strong>
-                  <span>
-                    {isZh && suite.ruleDetailZh
-                      ? suite.ruleDetailZh
-                      : suite.ruleDetail}
-                  </span>
-                </div>
-              </div>
-              <div className="model-comparison">
-                {suite.cards.map((card) => (
-                  <article
-                    key={card.name}
-                    className={`model-result${card.isWinner ? " model-winner" : ""}`}
-                    data-spotlight
-                  >
-                    <div className="model-title">
-                      <div>
-                        <h4>{card.name}</h4>
-                        <p>{card.runtime}</p>
-                      </div>
-                      <span className="model-verdict">{card.badge}</span>
-                    </div>
-                    <div className="per-result">
-                      <span>{card.primaryUnit}</span>
-                      <strong>{card.primaryMetric}</strong>
-                      <small>{card.primarySubtext}</small>
-                    </div>
-                    <div className="fusion-cost-bar" aria-hidden="true">
-                      <i style={{ width: `${card.barPercent}%` }} />
-                    </div>
-                    <dl className="model-facts">
-                      {card.facts.map((fact) => (
-                        <div key={fact.label}>
-                          <dt>{fact.label}</dt>
-                          <dd>{fact.value}</dd>
-                        </div>
-                      ))}
-                    </dl>
-                  </article>
-                ))}
-              </div>
-              <div className="benchmark-verdict">
-                <div className="verdict-number">
-                  <strong>{suite.verdictNumber}</strong>
-                  <span>
-                    {isZh && suite.verdictSubZh
-                      ? suite.verdictSubZh
-                      : suite.verdictSub}
-                  </span>
-                </div>
-                <div>
-                  <h4>
-                    {isZh && suite.verdictTitleZh
-                      ? suite.verdictTitleZh
-                      : suite.verdictTitle}
-                  </h4>
-                  <p>
-                    {isZh && suite.verdictBodyZh
-                      ? suite.verdictBodyZh
-                      : suite.verdictBody}
-                  </p>
-                </div>
-              </div>
-            </div>
-          ))}
-          <div className="benchmark-method benchmark-method-compact">
-            <p>
-              {isZh ? (
-                <>
-                  <strong>公平性说明：</strong> Niu v0.2.4 开启完整 PostgreSQL
-                  ACID 转发前准入与批量完成结算；New API (45fbb14) 开启{" "}
-                  <code>MEMORY_CACHE_ENABLED=true</code>；LiteLLM Proxy
-                  (v1.104.0) 运行于无状态 <code>master_key</code>{" "}
-                  模式并关闭数据库日志。生产选型请结合您的实际业务负载进行基准验证。
-                </>
-              ) : (
-                <>
-                  <strong>Fairness note:</strong> Niu v0.2.4 ran with full ACID
-                  PostgreSQL pre-dispatch admission &amp; batched completion;
-                  New API (45fbb14) ran with{" "}
-                  <code>MEMORY_CACHE_ENABLED=true</code>; LiteLLM Proxy
-                  (v1.104.0) ran in stateless <code>master_key</code> mode with
-                  DB logs disabled. Always qualify your own deployment and
-                  workload.
-                </>
-              )}
-            </p>
-            <div className="benchmark-links">
-              <a className="text-link" href={links.benchmark}>
-                {t(
-                  "Full benchmark report & methodology",
-                  "完整基准测试报告与方法论",
-                )}{" "}
-                <span aria-hidden="true">→</span>
-              </a>
-              <a className="text-link" href="/compare/#performance">
-                {t("Side-by-side matrix", "横向对比矩阵")}{" "}
-                <span aria-hidden="true">→</span>
-              </a>
-            </div>
+                "Full benchmark report & methodology",
+                "完整基准测试报告与方法论",
+              )}{" "}
+              <span aria-hidden="true">→</span>
+            </a>
+            <a className="text-link" href="/compare/#performance">
+              {t("Side-by-side matrix", "横向对比矩阵")}{" "}
+              <span aria-hidden="true">→</span>
+            </a>
           </div>
         </div>
       </section>
@@ -2662,32 +2173,26 @@ export default function LandingContent({
             <ul>
               <li>
                 {t(
-                  "High-speed Rust gateway (/v1/chat/completions, /v1/responses, /v1/messages)",
-                  "Rust 高性能网关（兼容 /v1/chat/completions、/v1/responses 与 /v1/messages）",
+                  "Rust gateway (/v1/chat/completions, /v1/responses, /v1/messages) with MCP and Claude Code, Codex, and DeepSeek Harness packages",
+                  "Rust 高性能网关（兼容 /v1/chat/completions、/v1/responses、/v1/messages），内置 MCP 及 Claude Code、Codex、DeepSeek Harness 接入包",
                 )}
               </li>
               <li>
                 {t(
-                  "Smart Model Pools with conditional routing, failover, and strategy audit",
-                  "模型路由（支持条件分流、有界故障切换与逐次尝试记录）",
+                  "Internal use mode by default (connect OpenRouter, FastRouter, BabelArk, Qiniu, or DeepSeek with an API key), plus optional Resale mode with customer tariffs and Credits",
+                  "默认采用零门槛内部自用模式（填入 API 密钥即可连接 OpenRouter、FastRouter、BabelArk、七牛云、DeepSeek），亦可开启商业转售模式与品牌 Credits",
                 )}
               </li>
               <li>
                 {t(
-                  "Company balance, workspace budgets, and per-key spend protection",
-                  "企业账户余额、工作空间预算上限与 API 密钥并发防刷穿保护",
+                  "Workspace routing policies, fingerprinted task evaluations, and signed webhook event notifications",
+                  "工作空间模型路由策略、带指纹的任务样本评估与签名 Webhook 事件通知",
                 )}
               </li>
               <li>
                 {t(
-                  "Request logs, token usage and customer-facing charges",
-                  "请求明细日志、Token 用量与实际调用费用",
-                )}
-              </li>
-              <li>
-                {t(
-                  "Workspace model catalog, saved multi-model Chat, and Seedance Video studio",
-                  "工作空间模型目录、云端同步的多模型对话，以及 Seedance 视频生成工作台",
+                  "Task-scoped browser approval, spending caps, Guardrails, phase-timed request logs, and Chat & Seedance Video studio",
+                  "按任务范围的浏览器审批、预算上限、安全护栏、分阶段请求日志，以及多模型对话与 Seedance 视频工作台",
                 )}
               </li>
             </ul>
@@ -2714,25 +2219,19 @@ export default function LandingContent({
             <ul>
               <li>
                 {t(
-                  "Continuous protocol & edge-case verification across upstream Providers",
-                  "持续扩展各家上游供应商与新模型的协议兼容性验证",
+                  "End-to-end v0.3.0 native host package publication and browser consent verification",
+                  "v0.3.0 原生宿主接入包正式发布与端到端浏览器授权核验",
                 )}
               </li>
               <li>
                 {t(
-                  "Commercial payment gateways and automated Provider settlement workflows",
-                  "更多在线支付充值渠道与上游供应商自动结算闭环",
+                  "Expanded Provider protocol, streaming, and commercial settlement reconciliation",
+                  "持续扩展上游供应商流式协议准入与商业对账结算能力",
                 )}
               </li>
               <li>
                 {t(
-                  "Async video generation lifecycle and media retention policies",
-                  "异步视频生成全生命周期管理与媒体存储保留策略",
-                )}
-              </li>
-              <li>
-                {t(
-                  "Multi-node high availability, crash recovery, and zero-downtime upgrades",
+                  "Multi-node high availability, crash recovery, and zero-downtime upgrade verification",
                   "多节点高可用部署、故障自动恢复与零停机平滑升级验证",
                 )}
               </li>
@@ -2754,7 +2253,7 @@ export default function LandingContent({
           <div className="section-heading" data-reveal>
             <div>
               <p className="eyebrow">
-                {t("FROM THE NIU BLOG", "来自 NIU Niu 博客")}
+                {t("FROM THE NIU BLOG", "来自 Niu 博客")}
               </p>
               <h2 id="landing-blog-title">
                 {isZh ? (
@@ -2814,23 +2313,6 @@ export default function LandingContent({
                     <IconArrowRight size={16} aria-hidden="true" />
                   </span>
                 </div>
-                {latestPosts.length === 1 &&
-                  post.highlights &&
-                  post.highlights.length > 0 && (
-                    <div className="landing-blog-chapters">
-                      <span className="small-label">
-                        {t("INSIDE THIS ESSAY", "本文核心章节")}
-                      </span>
-                      <ol>
-                        {post.highlights.map((heading, hIndex) => (
-                          <li key={heading}>
-                            <span>{String(hIndex + 1).padStart(2, "0")}</span>
-                            <strong>{heading}</strong>
-                          </li>
-                        ))}
-                      </ol>
-                    </div>
-                  )}
               </a>
             ))}
           </div>
@@ -2883,8 +2365,8 @@ export default function LandingContent({
           </div>
         </div>
         <div className="faq-list" data-reveal>
-          {faqs.map((faq, idx) => (
-            <details key={faq.question} open={idx === 0 || undefined}>
+          {faqs.map((faq) => (
+            <details key={faq.question}>
               <summary>
                 <span className="faq-meta">
                   <span className="faq-index">{faq.index}</span>
@@ -2919,7 +2401,7 @@ export default function LandingContent({
           <p className="eyebrow">
             {t(
               "AGENT-FRIENDLY · COST-EFFICIENT · HIGH-PERFORMANCE",
-              "性能 · 可靠性 · 经济性",
+              "面向智能体 · 追求性价比 · 高性能",
             )}
           </p>
           <h2 id="closing-title">
