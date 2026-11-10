@@ -11,26 +11,6 @@ export const capabilities = [
     "href": "/docs/agents.md"
   },
   {
-    "number": "02",
-    "title": "Compare quality, speed and cost",
-    "titleZh": "比较效果、速度与成本",
-    "description": "Run fingerprinted task samples under an approved budget to compare candidate outputs, latency, and cost per accepted sample.",
-    "descriptionZh": "在已批准的测试预算下运行带指纹的任务样本，对比候选模型的输出质量、延迟与单样本成本。",
-    "label": "Model evaluation",
-    "labelZh": "模型评估",
-    "href": "/docs/evaluations.md"
-  },
-  {
-    "number": "03",
-    "title": "Configure routing around my workload",
-    "titleZh": "按任务需求配置模型路由",
-    "description": "Preview and update workspace routing policies with conditional rules, priority tiers, and weights, then review saved revisions in Niu.",
-    "descriptionZh": "通过条件规则、优先级分层与权重预览并更新工作空间路由策略，在 Niu 中审阅保存的修订。",
-    "label": "Routing policies",
-    "labelZh": "模型路由策略",
-    "href": "/docs/pools.md"
-  },
-  {
     "number": "04",
     "title": "Keep access, invocation and spending in scope",
     "titleZh": "明确权限、调用与支出边界",
@@ -50,16 +30,7 @@ export const capabilities = [
     "labelZh": "请求诊断",
     "href": "/docs/concepts/execution-observation/"
   },
-  {
-    "number": "06",
-    "title": "Respond when conditions change",
-    "titleZh": "在运行条件变化时响应",
-    "description": "Pull workspace events or subscribe to signed webhook notifications when routing policies change or new evaluations are recorded.",
-    "descriptionZh": "当路由策略变更或记录新评估时，Agent 可拉取工作空间事件或接收签名 Webhook 通知。",
-    "label": "Events and notifications",
-    "labelZh": "事件与通知",
-    "href": "/docs/events.md"
-  }
+
 ];
 
 export const codeExamples = [
@@ -74,22 +45,12 @@ export const codeExamples = [
     "traceZh": "Niu 0.3：支持 Claude Code、Codex 与 DeepSeek Harness 浏览器授权接入。"
   },
   {
-    "id": "compare",
-    "language": "text",
-    "label": "Evaluate",
-    "endpoint": "Step 02 · Evaluate on task samples",
-    "endpointZh": "第 02 步 · 基于任务样本评估模型",
-    "code": "Use Niu to shortlist candidate models for my application. Ask for my task samples, quality rubric, latency target, and test budget first.\n\nRun fingerprinted evaluations to compare quality, latency, and cost per accepted sample, then preview a workspace routing policy for my review.",
-    "trace": "Fingerprinted task evaluations and routing policy previews.",
-    "traceZh": "带指纹的任务样本评估与工作空间路由策略预览。"
-  },
-  {
     "id": "diagnose",
     "language": "text",
-    "label": "Improve",
-    "endpoint": "Step 03 · Diagnose & refine routing",
-    "endpointZh": "第 03 步 · 诊断请求并优化路由",
-    "code": "Use Niu request evidence to investigate our recent slow, blocked, or failed calls. Inspect upstream attempts, phase timing, guardrail status, and settled charges.\n\nExplain what the evidence establishes and dry-run a routing policy update before applying any change.",
+    "label": "Diagnose",
+    "endpoint": "Step 02 · Diagnose requests",
+    "endpointZh": "第 02 步 · 诊断请求",
+    "code": "Use Niu request evidence to investigate our recent slow, blocked, or failed calls. Inspect upstream attempts, phase timing, guardrail status, and settled charges.\n\nExplain what the evidence establishes and identify any missing information.",
     "trace": "Direct request diagnostics; consequential changes stay under your review.",
     "traceZh": "Agent 直接读取诊断证据，重要变更交由你审核确认。"
   }
@@ -114,23 +75,11 @@ export const faqs = [
     "categoryZh": "人工审核",
     "question": "What do I approve and review as a human?",
     "questionZh": "作为用户我需要审批和审核什么？",
-    "answer": "You choose the workspace, expiration, management scopes, and whether named models may be invoked (off by default). Every routing revision, evaluation run, and charge remains visible in the dashboard.",
-    "answerZh": "你在浏览器中选择工作空间、有效期、管理权限范围，以及是否允许调用指定模型（默认关闭）。每次路由修订、评估运行与费用明细均可在控制台审阅。",
+    "answer": "You choose the workspace, expiration, management scopes, and whether named models may be invoked (off by default). Review request results and charges in the dashboard.",
+    "answerZh": "你在浏览器中选择工作空间、有效期、管理权限范围，以及是否允许调用指定模型（默认关闭）。请求结果与费用明细均可在控制台审阅。",
     "linkLabel": "Agent authority contract",
     "linkLabelZh": "查看 Agent 权限规范",
     "linkHref": "/docs/agents.md"
-  },
-  {
-    "index": "03",
-    "category": "Routing & evaluations",
-    "categoryZh": "路由与评估",
-    "question": "How do workspace routing policies and evaluations work?",
-    "questionZh": "工作空间路由策略与任务评估是如何协同的？",
-    "answer": "Under your test budget, your agent runs fingerprinted task samples to compare quality, latency, and cost per accepted sample, then previews and updates conditional routing policies with priority and weight tiers.",
-    "answerZh": "在已批准的测试预算下，Agent 运行带指纹的任务样本对比质量、延迟与单样本成本，随后通过条件规则、优先级与权重分层预览并更新工作空间路由策略。",
-    "linkLabel": "Routing specification",
-    "linkLabelZh": "查看路由规范",
-    "linkHref": "/docs/pools.md"
   },
   {
     "index": "04",
@@ -194,10 +143,10 @@ export const pillars = [
     "index": "02",
     "metric": "Cost-efficient",
     "metricZh": "追求性价比",
-    "title": "Configure routing around your workload",
-    "titleZh": "按任务负载配置模型路由",
-    "detail": "Compare models on task samples and configure routing policies around your quality, latency, and budget requirements.",
-    "detailZh": "用真实任务样本评估候选模型，按质量、延迟与预算要求配置模型路由策略。"
+    "title": "Track model usage and cost",
+    "titleZh": "查看模型用量与费用",
+    "detail": "Review model usage, request outcomes, and customer charges.",
+    "detailZh": "查看模型用量、请求结果与客户费用。"
   },
   {
     "index": "03",

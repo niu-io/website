@@ -8,7 +8,6 @@ import {
   IconCheck,
   IconCoins,
   IconCopy,
-  IconHistory,
   IconListSearch,
   IconMessageChatbot,
   IconPlugConnected,
@@ -84,14 +83,6 @@ const previewTabs = [
     labelZh: "工作空间 · 请求日志",
     breadcrumb: "Default workspace / Logs",
     breadcrumbZh: "默认工作空间 / 请求日志",
-    railArea: "workspace" as const,
-  },
-  {
-    id: "routing",
-    label: "Workspace · Routing & Evaluations",
-    labelZh: "工作空间 · 路由与评估",
-    breadcrumb: "Default workspace / Routing",
-    breadcrumbZh: "默认工作空间 / 模型路由",
     railArea: "workspace" as const,
   },
   {
@@ -387,155 +378,6 @@ const demoLogRecords = [
   },
 ];
 
-const demoRoutePools = [
-  {
-    alias: "claude-sonnet-4",
-    revision: "Revision 4",
-    revisionZh: "修订版 4",
-    scopeBadge: "tools · vision · <=64k",
-    scopeBadgeZh: "工具 · 视觉 · <=64k",
-    scopeSub: "Updated by Claude Code · dry-run verified",
-    scopeSubZh: "由 Claude Code 更新 · 已通过预览验证",
-    enabledSummary: "96% eval acceptance ($0.0142/accepted)",
-    enabledSummaryZh: "评估合格率 96%（$0.0142/合格样本）",
-    status: "Enabled",
-    statusZh: "已启用",
-    maxAttempts: "Max 2 attempts · Pre-stream failover",
-    maxAttemptsZh: "最多 2 次尝试 · 流前故障切换",
-    candidates: [
-      {
-        alias: "claude-sonnet-4-anthropic",
-        provider: "Anthropic Direct",
-        priority: 100,
-        weight: 800,
-        tierShare: "80% primary share",
-        tierShareZh: "主层占比 80%",
-        sharePct: 80,
-        status: "Primary",
-        statusZh: "主路由",
-        isPrimary: true,
-      },
-      {
-        alias: "claude-sonnet-4-openrouter",
-        provider: "OpenRouter Enterprise",
-        priority: 100,
-        weight: 200,
-        tierShare: "20% primary share",
-        tierShareZh: "主层占比 20%",
-        sharePct: 20,
-        status: "Primary",
-        statusZh: "主路由",
-        isPrimary: true,
-      },
-      {
-        alias: "claude-sonnet-4-vertex",
-        provider: "Google Vertex AI",
-        priority: 50,
-        weight: 1000,
-        tierShare: "Standby (P50)",
-        tierShareZh: "备用层 (P50)",
-        sharePct: 100,
-        status: "Standby",
-        statusZh: "备用路由",
-        isPrimary: false,
-      },
-    ],
-  },
-  {
-    alias: "gpt-4.1",
-    revision: "Revision 2",
-    revisionZh: "修订版 2",
-    scopeBadge: "chat · structured JSON",
-    scopeBadgeZh: "对话 · 结构化 JSON",
-    scopeSub: "Updated by Codex · matched vs baseline",
-    scopeSubZh: "由 Codex 更新 · 已完成基线对比",
-    enabledSummary: "92% eval acceptance ($0.0118/accepted)",
-    enabledSummaryZh: "评估合格率 92%（$0.0118/合格样本）",
-    status: "Enabled",
-    statusZh: "已启用",
-    maxAttempts: "Max 2 attempts · Pre-stream failover",
-    maxAttemptsZh: "最多 2 次尝试 · 流前故障切换",
-    candidates: [
-      {
-        alias: "gpt-4.1-openai-direct",
-        provider: "OpenAI Direct",
-        priority: 100,
-        weight: 900,
-        tierShare: "90% primary share",
-        tierShareZh: "主层占比 90%",
-        sharePct: 90,
-        status: "Primary",
-        statusZh: "主路由",
-        isPrimary: true,
-      },
-      {
-        alias: "gpt-4.1-azure-east",
-        provider: "Azure OpenAI",
-        priority: 50,
-        weight: 1000,
-        tierShare: "Standby (P50)",
-        tierShareZh: "备用层 (P50)",
-        sharePct: 100,
-        status: "Standby",
-        statusZh: "备用路由",
-        isPrimary: false,
-      },
-    ],
-  },
-  {
-    alias: "deepseek-r1",
-    revision: "Revision 5",
-    revisionZh: "修订版 5",
-    scopeBadge: "reasoning = high · <=128k",
-    scopeBadgeZh: "深度推理 · <=128k",
-    scopeSub: "Updated by DeepSeek Harness · 0 unknown charges",
-    scopeSubZh: "由 DeepSeek Harness 更新 · 0 笔未知费用",
-    enabledSummary: "94% eval acceptance ($0.0064/accepted)",
-    enabledSummaryZh: "评估合格率 94%（$0.0064/合格样本）",
-    status: "Enabled",
-    statusZh: "已启用",
-    maxAttempts: "Max 2 attempts · Pre-stream failover",
-    maxAttemptsZh: "最多 2 次尝试 · 流前故障切换",
-    candidates: [
-      {
-        alias: "deepseek-r1-volcengine",
-        provider: "Volcengine Ark",
-        priority: 100,
-        weight: 700,
-        tierShare: "70% primary share",
-        tierShareZh: "主层占比 70%",
-        sharePct: 70,
-        status: "Primary",
-        statusZh: "主路由",
-        isPrimary: true,
-      },
-      {
-        alias: "deepseek-r1-openrouter",
-        provider: "OpenRouter Enterprise",
-        priority: 100,
-        weight: 300,
-        tierShare: "30% primary share",
-        tierShareZh: "主层占比 30%",
-        sharePct: 30,
-        status: "Primary",
-        statusZh: "主路由",
-        isPrimary: true,
-      },
-      {
-        alias: "deepseek-r1-together",
-        provider: "Together AI",
-        priority: 50,
-        weight: 1000,
-        tierShare: "Standby (P50)",
-        tierShareZh: "备用层 (P50)",
-        sharePct: 100,
-        status: "Standby",
-        statusZh: "备用路由",
-        isPrimary: false,
-      },
-    ],
-  },
-];
 
 const volumeHistogramBars = [
   34, 42, 38, 51, 64, 72, 68, 84, 92, 78, 88, 96, 82, 74, 89, 94, 100, 86, 79,
@@ -549,9 +391,9 @@ const gatewaySteps = [
   { step: "02", title: "Describe the outcome and constraints", titleZh: "说明目标与约束",
     detail: "Provide task samples, quality criteria, latency targets, and a test budget.",
     detailZh: "给出任务样本、质量标准、延迟目标与测试预算。" },
-  { step: "03", title: "Review routing policies and evidence", titleZh: "审阅路由策略与证据",
-    detail: "Inspect evaluations, routing revisions, and request logs in Niu while your agent handles the details.",
-    detailZh: "在 Niu 中审阅评估结果、路由修订与请求日志，细节查询交由 Agent 处理。" },
+  { step: "03", title: "Review usage and request results", titleZh: "审阅用量与请求结果",
+    detail: "Inspect request logs and usage in Niu.",
+    detailZh: "在 Niu 中查看请求日志和用量。" },
 ];
 
 export default function LandingContent({
@@ -567,7 +409,6 @@ export default function LandingContent({
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [selectedLogIndex, setSelectedLogIndex] = useState(0);
   const [showVolumeChart, setShowVolumeChart] = useState(false);
-  const [selectedPoolIndex, setSelectedPoolIndex] = useState(0);
   const [activeGenerationsMode, setActiveGenerationsMode] = useState<
     "chat" | "video"
   >("chat");
@@ -599,8 +440,10 @@ export default function LandingContent({
     return () => window.clearInterval(timer);
   }, [previewPaused, activePreviewIndex]);
 
+  const scopedExample = (code: string) => `Use the Niu deployment at ${deploymentOrigin}.\n\n${code}`;
   const handleCopyCode = () => {
-    const snippet = codeExamples[activeCodeIndex]?.code;
+    const example = codeExamples[activeCodeIndex];
+    const snippet = example ? scopedExample(example.code) : undefined;
     if (!snippet || typeof navigator === "undefined" || !navigator.clipboard)
       return;
     void navigator.clipboard.writeText(snippet).then(() => {
@@ -629,8 +472,8 @@ export default function LandingContent({
             <span className="release-tag">{t("Why Niu", "核心优势")}</span>
             <span>
               {t(
-                "Discover · Evaluate · Route",
-                "发现 · 评估 · 路由",
+                "Discover · Use · Review",
+                "发现 · 使用 · 查看",
               )}
             </span>
             <IconArrowRight size={14} aria-hidden="true" />
@@ -653,11 +496,11 @@ export default function LandingContent({
           <p className="hero-description hero-enter" style={stagger(2)}>
             {isZh ? (
               <>
-                Niu（牛元）让你通过 Agent，发现与评估模型、配置模型路由，
-                <span className="demo-nowrap">管理性能与成本。</span>
+                连接你的 Agent，发现并使用模型，
+                <span className="demo-nowrap">查看用量和请求结果。</span>
               </>
             ) : (
-              "Discover and evaluate models, configure routing, and manage performance and cost—all through your agent."
+              "Discover models, connect your agent, and review usage and request results."
             )}
           </p>
           <div className="hero-install code-card hero-enter" style={stagger(3)}>
@@ -716,57 +559,16 @@ export default function LandingContent({
               className={`product-preview demo-dashboard-shell${sidebarCollapsed ? " is-sidebar-collapsed" : ""}`}
               aria-label="Interactive Niu dashboard preview"
             >
-              {/* 1. Left Product Rail (AppLayout.tsx .app-rail) */}
-              <aside
-                className="mock-nav-rail demo-app-rail"
-                aria-label="Product rail navigation"
-              >
-                <button
-                  type="button"
-                  className="mock-nav-home"
-                  title="Niu Dashboard"
-                  onClick={() => setActivePreviewIndex(0)}
-                >
-                  <img
-                    src="/site-assets/brand/niu-mark.png"
-                    alt="Niu"
-                    width="26"
-                    height="26"
-                  />
-                </button>
-                <div className="mock-nav-items">
-                  <button
-                    type="button"
-                    className={`mock-rail-btn${activeTab.railArea === "workspace" ? " is-active" : ""}`}
-                    aria-label={t("Workspace", "工作空间")}
-                    title={t("Workspace · Logs & Routing", "工作空间 · 日志与路由")}
-                    onClick={() => setActivePreviewIndex(0)}
-                  >
-                    <FolderKey size={18} />
-                  </button>
-                  <button
-                    type="button"
-                    className={`mock-rail-btn${activeTab.railArea === "generations" ? " is-active" : ""}`}
-                    aria-label={t("Generations", "生成对话")}
-                    title={t("Generations · Chat & Video", "生成对话 · 对话与视频")}
-                    onClick={() => setActivePreviewIndex(2)}
-                  >
-                    <IconSparkles size={19} stroke={1.75} />
-                  </button>
-                </div>
-                <div className="demo-rail-footer">
-                  <span className="demo-rail-avatar" title={t("Your account", "当前账户")}>
-                    H
-                  </span>
-                </div>
-              </aside>
-
-              {/* 2. Contextual Second-Level Sidebar (AppLayout.tsx .niu-workspace-sidebar) */}
               {!sidebarCollapsed && (
                 <aside
                   className="demo-context-sidebar"
                   aria-label="Section navigation"
                 >
+                  <div className="demo-sidebar-header">
+                    <a href="/workspaces/default/" className="flex items-center gap-2 font-semibold"><img src="/site-assets/brand/niu-mark.png" width="26" height="26" alt="" />Niu</a>
+                    <Button variant="ghost" className="w-full justify-start gap-2" onClick={() => setActivePreviewIndex(0)}><FolderKey size={18} />{t("Workspace", "工作空间")}</Button>
+                    <Button variant="ghost" className="w-full justify-start gap-2" onClick={() => setActivePreviewIndex(1)}><IconSparkles size={18} />{t("Generations", "生成对话")}</Button>
+                  </div>
                   {activeTab.railArea === "workspace" && (
                     <>
                       <div className="demo-sidebar-header">
@@ -810,30 +612,9 @@ export default function LandingContent({
                           <List size={15} />
                           <span>{t("Logs", "请求日志")}</span>
                         </button>
-                        <button
-                          type="button"
-                          className={`demo-sidebar-item${activePreviewIndex === 1 ? " is-active" : ""}`}
-                          onClick={() => setActivePreviewIndex(1)}
-                        >
-                          <IconRoute size={15} />
-                          <span>{t("Routing", "模型路由")}</span>
-                        </button>
-                        <button
-                          type="button"
-                          className="demo-sidebar-item"
-                          onClick={() => setActivePreviewIndex(1)}
-                        >
-                          <IconListSearch size={15} />
-                          <span>{t("Evaluations", "评估")}</span>
-                        </button>
-                        <button
-                          type="button"
-                          className="demo-sidebar-item"
-                          onClick={() => setActivePreviewIndex(1)}
-                        >
-                          <IconPlugConnected size={15} />
-                          <span>{t("Event subscriptions", "事件订阅")}</span>
-                        </button>
+
+
+
                         <button
                           type="button"
                           className="demo-sidebar-item"
@@ -1323,177 +1104,8 @@ export default function LandingContent({
                     </div>
                   )}
 
-                  {/* SURFACE 1: WORKSPACE / ROUTING, EVALUATIONS & EVENTS (features/agent-review/page.tsx) */}
-                  {activePreviewIndex === 1 && (
-                    <div className="investigation demo-page-surface">
-                      <div className="demo-page-header">
-                        <div>
-                          <div className="demo-page-title-row">
-                            <h2>{t("Routing & Evaluations", "模型路由与评估")}</h2>
-                            <span className="demo-count-badge">
-                              {t("3 saved policies · 25 eval samples", "3 条已存策略 · 25 个评估样本")}
-                            </span>
-                          </div>
-                          <p className="demo-page-subtitle">
-                            {t(
-                              "Review workspace routing policies, fingerprinted evaluations, and signed event deliveries.",
-                              "审阅工作空间路由策略、带指纹的任务评估结果及签名事件通知状态。",
-                            )}
-                          </p>
-                        </div>
-                        <div className="demo-header-actions">
-                          <button
-                            type="button"
-                            className="demo-action-btn"
-                            onClick={() => setActivePreviewIndex(0)}
-                          >
-                            <List size={13} />
-                            <span>{t("Selection logs", "路由命中日志")}</span>
-                          </button>
-                          <button
-                            type="button"
-                            className="demo-action-btn is-primary"
-                            onClick={() =>
-                              setSelectedPoolIndex(
-                                (prev) => (prev + 1) % demoRoutePools.length,
-                              )
-                            }
-                          >
-                            <IconHistory size={13} />
-                            <span>{t("Cycle policy", "切换策略")}</span>
-                          </button>
-                        </div>
-                      </div>
-
-                      <div className="demo-kpi-grid is-three-col">
-                        <article className="demo-kpi-card is-highlighted">
-                          <div className="demo-kpi-top">
-                            <span>
-                              {t("Matched evaluation", "同样本对比评估")}
-                            </span>
-                            <span className="demo-outline-badge">
-                              {t("25 samples", "25 个样本")}
-                            </span>
-                          </div>
-                          <strong>{t("96.0% accepted", "96.0% 合格率")}</strong>
-                          <div className="demo-kpi-foot">
-                            <span className="demo-delta-badge is-positive">
-                              {t("$0.0142 / accepted", "$0.0142 / 合格样本")}
-                            </span>
-                          </div>
-                        </article>
-                        <article className="demo-kpi-card">
-                          <div className="demo-kpi-top">
-                            <span>
-                              {t("Delegated authority", "Agent 委托权限")}
-                            </span>
-                            <span className="demo-outline-badge">
-                              {t("Task-scoped", "按任务授权")}
-                            </span>
-                          </div>
-                          <strong>{t("Management only", "仅管理权限")}</strong>
-                          <div className="demo-kpi-foot">
-                            <span className="demo-delta-badge">
-                              {t("Model invocation: Off", "模型调用：默认关闭")}
-                            </span>
-                          </div>
-                        </article>
-                        <article className="demo-kpi-card">
-                          <div className="demo-kpi-top">
-                            <span>
-                              {t("Event notifications", "签名事件通知")}
-                            </span>
-                            <span className="demo-outline-badge">
-                              {t("Active", "运行中")}
-                            </span>
-                          </div>
-                          <strong>{t("100% delivered", "100% 已送达")}</strong>
-                          <div className="demo-kpi-foot">
-                            <span className="demo-delta-badge is-positive">
-                              {t("0 open connection incidents", "0 个未决连接故障")}
-                            </span>
-                          </div>
-                        </article>
-                      </div>
-
-                      <div className="comparison-scroll demo-table-scroll">
-                        <table
-                          className="comparison-matrix demo-data-table"
-                          aria-label="Workspace routing policies"
-                        >
-                          <thead>
-                            <tr>
-                              <th>{t("Routing policy", "路由策略")}</th>
-                              <th>{t("Match conditions", "匹配条件")}</th>
-                              <th>{t("Candidate tiers & evaluation", "候选分层与评估结果")}</th>
-                              <th>{t("Status", "状态")}</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {demoRoutePools.map((pool, idx) => {
-                              const isSelected = idx === selectedPoolIndex;
-                              return (
-                                <tr
-                                  key={pool.alias}
-                                  className={`demo-clickable-row${isSelected ? " matrix-selected" : ""}`}
-                                  onClick={() => setSelectedPoolIndex(idx)}
-                                >
-                                  <td>
-                                    <div className="demo-pool-alias-cell">
-                                      <IconRoute size={15} />
-                                      <div>
-                                        <strong>{pool.alias}</strong>
-                                        <small>
-                                          {isZh ? pool.revisionZh : pool.revision}
-                                        </small>
-                                      </div>
-                                    </div>
-                                  </td>
-                                  <td>
-                                    <span className="demo-outline-badge">
-                                      {isZh ? pool.scopeBadgeZh : pool.scopeBadge}
-                                    </span>
-                                    <small>
-                                      {isZh ? pool.scopeSubZh : pool.scopeSub}
-                                    </small>
-                                  </td>
-                                  <td>
-                                    <div className="demo-candidate-pills">
-                                      {pool.candidates.map((cand) => (
-                                        <span
-                                          key={cand.alias}
-                                          className="demo-candidate-pill"
-                                        >
-                                          <strong>{cand.alias}</strong>
-                                          <span>
-                                            P{cand.priority} · W{cand.weight}
-                                          </span>
-                                        </span>
-                                      ))}
-                                    </div>
-                                    <small>
-                                      {isZh
-                                        ? pool.enabledSummaryZh
-                                        : pool.enabledSummary}
-                                    </small>
-                                  </td>
-                                  <td>
-                                    <span className="demo-status-pill is-completed">
-                                      <i className="demo-status-dot" />
-                                      {isZh ? pool.statusZh : pool.status}
-                                    </span>
-                                  </td>
-                                </tr>
-                              );
-                            })}
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                  )}
-
                   {/* SURFACE 2: GENERATIONS · CHAT COMPARISON & SEEDANCE VIDEO (PlaygroundView.tsx + VideoView.tsx) */}
-                  {activePreviewIndex === 2 && (
+                  {activePreviewIndex === 1 && (
                     <div className="investigation demo-page-surface">
                       <div className="demo-page-header">
                         <div>
@@ -1571,8 +1183,8 @@ export default function LandingContent({
                             </span>
                             <p>
                               {t(
-                                "Compare bounded routing failover vs unconditional retries when an upstream Provider returns HTTP 401 before streaming starts.",
-                                "对比当上游供应商在流式输出开始前返回 HTTP 401 时，有界路由故障切换与无条件重试的区别。",
+                                "Summarize the Q3 usage report in two sentences.",
+                                "用两句话总结第三季度用量报告。",
                               )}
                             </p>
                           </div>
@@ -1588,8 +1200,8 @@ export default function LandingContent({
                                     <strong>claude-sonnet-4</strong>
                                     <small>
                                       {t(
-                                        "Anthropic · Policy revision 4",
-                                        "Anthropic · 路由策略修订版 4",
+                                        "Anthropic",
+                                        "Anthropic",
                                       )}
                                     </small>
                                   </div>
@@ -1599,28 +1211,7 @@ export default function LandingContent({
                                   {t("Completed · 1,180 ms", "已完成 · 1,180 ms")}
                                 </span>
                               </div>
-                              <div className="demo-chat-card-body">
-                                <p>
-                                  {isZh ? (
-                                    <>
-                                      <strong>有界故障切换</strong>仅在上游拒绝发生于任何
-                                      SSE 响应体字节发出之前时才触发重试。遇到{" "}
-                                      <code>HTTP 401</code> 时，Niu 将失败候选路由置入
-                                      60 秒鉴权冷却并自动调度第 2 次尝试，不会对工作空间重复扣费。
-                                    </>
-                                  ) : (
-                                    <>
-                                      <strong>Bounded failover</strong> only retries
-                                      when the upstream rejection occurs before any
-                                      SSE body bytes are committed. On{" "}
-                                      <code>HTTP 401</code>, Niu places the failing
-                                      candidate route into a 60s auth cooldown and
-                                      dispatches Attempt 2 without double-charging
-                                      the workspace.
-                                    </>
-                                  )}
-                                </p>
-                              </div>
+                              <div className="demo-chat-card-body"><p>{t("Usage increased in Q3. Most requests came from support workflows.", "第三季度用量上升。大部分请求来自客服流程。")}</p></div>
                               <div className="demo-chat-card-footer">
                                 <span>
                                   {t(
@@ -1648,8 +1239,8 @@ export default function LandingContent({
                                     <strong>gpt-4.1</strong>
                                     <small>
                                       {t(
-                                        "OpenAI Direct · Policy revision 2",
-                                        "OpenAI Direct · 路由策略修订版 2",
+                                        "OpenAI Direct",
+                                        "OpenAI Direct",
                                       )}
                                     </small>
                                   </div>
@@ -1659,29 +1250,7 @@ export default function LandingContent({
                                   {t("Completed · 940 ms", "已完成 · 940 ms")}
                                 </span>
                               </div>
-                              <div className="demo-chat-card-body">
-                                <p>
-                                  {isZh ? (
-                                    <>
-                                      <strong>流开始前 vs 流传输中：</strong>流开始前的{" "}
-                                      <code>401/429/503</code> 错误可在路由策略的{" "}
-                                      <code>max_attempts</code> 上限内安全切换；若已发出部分
-                                      Token 后流中断，Niu 会将其记录为{" "}
-                                      <code>状态未定 / 待核对</code>。
-                                    </>
-                                  ) : (
-                                    <>
-                                      <strong>Pre-stream vs mid-stream:</strong>{" "}
-                                      Pre-stream <code>401/429/503</code> errors can
-                                      safely fail over within the routing policy’s{" "}
-                                      <code>max_attempts</code> cap. If a stream
-                                      drops after tokens are emitted, Niu records
-                                      the state as{" "}
-                                      <code>Uncertain / Unresolved</code>.
-                                    </>
-                                  )}
-                                </p>
-                              </div>
+                              <div className="demo-chat-card-body"><p>{t("Support accounted for most requests. Usage grew over the previous quarter.", "客服流程占请求量的大部分。用量比上季度有所增长。")}</p></div>
                               <div className="demo-chat-card-footer">
                                 <span>
                                   {t(
@@ -1846,8 +1415,8 @@ export default function LandingContent({
                 <div className="preview-caption">
                   <span>
                     {t(
-                      "Illustrative dashboard data · Inspect logs, routing policies, evaluations and generations in Niu",
-                      "控制台示例数据 · 在 Niu 中审阅请求日志、路由策略、评估运行与生成结果",
+                      "Illustrative dashboard data · Inspect logs and generations in Niu",
+                      "控制台示例数据 · 在 Niu 中查看请求日志与生成结果",
                     )}
                   </span>
                   <Button asChild size="sm" className="cta-primary cta-compact">
@@ -1895,8 +1464,8 @@ export default function LandingContent({
           </div>
           <p>
             {t(
-              "Your agent gets the evidence and controls to configure Niu: evaluate candidates, configure routing around your workload, and refine quality, latency and cost from real execution feedback.",
-              "Agent 获取决策证据与管理能力，按任务负载评估候选模型并配置 Niu 的路由策略，再根据实际运行反馈持续改善质量、延迟与成本。",
+              "Connect your agent to Niu, use supported models, and review real request outcomes.",
+              "将 Agent 接入 Niu，使用支持的模型并查看实际请求结果。",
             )}
           </p>
         </div>
@@ -1991,7 +1560,7 @@ export default function LandingContent({
               <TabsList className="code-tabs" variant="line" aria-label="Agent task prompts">
                 {codeExamples.map((example, idx) => (
                   <TabsTrigger key={example.id} value={example.id}>
-                    {t(example.label, ["连接", "评估", "改进"][idx])}
+                    {t(example.label, ["连接", "诊断"][idx])}
                   </TabsTrigger>
                 ))}
               </TabsList>
@@ -2019,6 +1588,7 @@ export default function LandingContent({
             {/* Build-time Shiki HTML from maintained task prompts. */}
             {codeExamples.map((example, idx) => (
               <TabsContent key={example.id} value={example.id} className="highlighted-example">
+                <p className="px-5 pt-4 text-sm">{t("Deployment", "部署地址")}: <code>{deploymentOrigin}</code></p>
                 <div dangerouslySetInnerHTML={{ __html: highlightedCode[idx] }} />
               </TabsContent>
             ))}
@@ -2181,12 +1751,6 @@ export default function LandingContent({
                 {t(
                   "Internal use mode by default (connect OpenRouter, FastRouter, BabelArk, Qiniu, or DeepSeek with an API key), plus optional Resale mode with customer tariffs and Credits",
                   "默认采用零门槛内部自用模式（填入 API 密钥即可连接 OpenRouter、FastRouter、BabelArk、七牛云、DeepSeek），亦可开启商业转售模式与品牌 Credits",
-                )}
-              </li>
-              <li>
-                {t(
-                  "Workspace routing policies, fingerprinted task evaluations, and signed webhook event notifications",
-                  "工作空间模型路由策略、带指纹的任务样本评估与签名 Webhook 事件通知",
                 )}
               </li>
               <li>

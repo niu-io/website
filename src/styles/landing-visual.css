@@ -1517,11 +1517,11 @@ html.is-scrolled .public-header {
 /* ---------- Interactive Niu Dashboard v0.2.23 Replica ---------- */
 .product-preview.demo-dashboard-shell {
   display: grid;
-  grid-template-columns: 56px 212px minmax(0, 1fr);
+  grid-template-columns: 212px minmax(0, 1fr);
   min-height: 620px;
 }
 .product-preview.demo-dashboard-shell.is-sidebar-collapsed {
-  grid-template-columns: 56px minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
 }
 .demo-app-rail {
   border-right: 1px solid var(--data-divider);
@@ -2653,7 +2653,7 @@ html.is-scrolled .public-header {
 
 @media (max-width: 1100px) {
   .product-preview.demo-dashboard-shell {
-    grid-template-columns: 52px minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr);
   }
   .demo-context-sidebar {
     display: none;
@@ -2673,7 +2673,7 @@ html.is-scrolled .public-header {
 @media (max-width: 760px) {
   .product-preview.demo-dashboard-shell,
   .product-preview.demo-dashboard-shell.is-sidebar-collapsed {
-    grid-template-columns: 46px minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr);
   }
   .demo-page-surface {
     padding: 16px 14px;
@@ -2765,3 +2765,5 @@ html.is-scrolled .public-header {
   .hero-install-footer { align-items: stretch; flex-direction: column; gap: 16px; padding: 0 18px 18px; }
   .hero-install .code-heading { padding: 14px 18px; }
 }
+
+.highlighted-example { flex-direction: column; }
