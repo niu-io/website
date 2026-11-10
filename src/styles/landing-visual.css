@@ -812,6 +812,8 @@ html.is-scrolled .public-header {
 }
 .release-card,
 .release-card.upcoming {
+  min-width: 0;
+  overflow-wrap: anywhere;
   display: flex;
   flex-direction: column;
   padding: 32px;
