@@ -6,9 +6,9 @@ export const capabilities = [
     "titleZh": "为我的任务找到模型",
     "description": "Your agent reads available models, capabilities, context limits, and pricing through MCP to shortlist candidates for your task.",
     "descriptionZh": "Agent 通过 MCP 读取可用模型、模态能力、上下文上限与价格，按你的需求筛选候选模型。",
-    "label": "Model discovery",
-    "labelZh": "模型发现",
-    "href": "/docs/agents.md"
+    "label": "MCP model discovery",
+    "labelZh": "MCP 模型发现指南",
+    "href": "/docs/guides/mcp/"
   },
   {
     "number": "04",
@@ -79,7 +79,7 @@ export const faqs = [
     "answerZh": "你在浏览器中选择工作空间、有效期、管理权限范围，以及是否允许调用指定模型（默认关闭）。请求结果与费用明细均可在控制台审阅。",
     "linkLabel": "Agent authority contract",
     "linkLabelZh": "查看 Agent 权限规范",
-    "linkHref": "/docs/agents.md"
+    "linkHref": "/docs/agents/"
   },
   {
     "index": "04",

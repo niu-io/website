@@ -148,9 +148,9 @@ const demoLogRecords = [
       },
     ],
     rawPreview:
-      "POST /v1/chat/completions → policy claude-sonnet-4 (attempt 1 HTTP 401 not charged → attempt 2 Anthropic HTTP 200 settled $0.0180)",
+      "POST /v1/chat/completions → model claude-sonnet-4 (upstream attempt 1 HTTP 401 not charged → attempt 2 Anthropic HTTP 200 settled $0.0180)",
     rawPreviewZh:
-      "POST /v1/chat/completions → 路由策略 claude-sonnet-4（尝试 1 HTTP 401 未计费 → 尝试 2 Anthropic HTTP 200 已结算 $0.0180）",
+      "POST /v1/chat/completions → 模型 claude-sonnet-4（上游尝试 1 HTTP 401 未计费 → 尝试 2 Anthropic HTTP 200 已结算 $0.0180）",
   },
   {
     time: "Oct 19, 14:22:07",
@@ -372,9 +372,9 @@ const demoLogRecords = [
       },
     ],
     rawPreview:
-      "POST /v1/chat/completions → policy gpt-4.1 (structured_output validated against JSON schema, settled $0.0118).",
+      "POST /v1/chat/completions → model gpt-4.1 (structured_output validated against JSON schema, settled $0.0118).",
     rawPreviewZh:
-      "POST /v1/chat/completions → 路由策略 gpt-4.1（结构化输出通过 JSON Schema 校验，已结算 $0.0118）。",
+      "POST /v1/chat/completions → 模型 gpt-4.1（结构化输出通过 JSON Schema 校验，已结算 $0.0118）。",
   },
 ];
 
@@ -899,8 +899,8 @@ export default function LandingContent({
                               </span>
                               <span className="demo-filter-chip">
                                 {t(
-                                  "Policy: claude-sonnet-4",
-                                  "路由策略：claude-sonnet-4",
+                                  "Model: claude-sonnet-4",
+                                  "模型：claude-sonnet-4",
                                 )}
                               </span>
                             </div>
