@@ -48,7 +48,7 @@ function currentDeploymentOrigin() {
 
 function buildInstallationPrompt(origin: string) {
   const deployment = origin.replace(/\/$/, "") || "https://niu.io";
-  return `Install and configure Niu for ${deployment} by following https://niu.io/docs/install.md. Verify the deployment and workspace during authorization.`;
+  return `Install and configure Niu for ${deployment} by following ${deployment}/docs/install.md. Verify the deployment and workspace during authorization.`;
 }
 
 const capabilityIcons = [
