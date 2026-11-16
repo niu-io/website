@@ -13,7 +13,7 @@ import { publishedPosts } from "../content/blog-policy";
 import "../styles/landing-blog.css";
 import "../styles/landing-visual.css";
 import LandingContent from "../components/LandingContent";
-import { codeExamples } from "../content/landing";
+import { codeExamples, protocolExamples } from "../content/landing";
 import { codeToHtml } from "shiki";
 const highlightedCode = await Promise.all(
   codeExamples.map((example) =>
@@ -23,18 +23,35 @@ const highlightedCode = await Promise.all(
     }),
   ),
 );
+const highlightedProtocols = await Promise.all(
+  protocolExamples.map((example) =>
+    codeToHtml(example.code, {
+      lang: example.language,
+      themes: { light: "github-light", dark: "github-dark" },
+    }),
+  ),
+);
 
-const blogTranslations = publishedPosts(await getCollection("blogTranslations"));
+const blogTranslations = publishedPosts(
+  await getCollection("blogTranslations"),
+);
 const latestPosts = publishedPosts(await getCollection("blog"))
   .slice(0, 3)
   .map(({ id, data, body }) => ({
     href: `/blog/${id}/`,
     title: data.title,
-    chineseTitle: blogTranslations.find(post => post.id === id)?.data.title ?? data.chineseTitle,
-    chineseDescription: blogTranslations.find(post => post.id === id)?.data.description,
+    chineseTitle:
+      blogTranslations.find((post) => post.id === id)?.data.title ??
+      data.chineseTitle,
+    chineseDescription: blogTranslations.find((post) => post.id === id)?.data
+      .description,
     chineseDateLabel: formatDate(data.publishedAt, "zh-CN"),
-    chineseReadingTime: readingTime(blogTranslations.find(post => post.id === id)?.body ?? body, "zh-CN"),
-    chineseCategory: blogTranslations.find(post => post.id === id)?.data.category,
+    chineseReadingTime: readingTime(
+      blogTranslations.find((post) => post.id === id)?.body ?? body,
+      "zh-CN",
+    ),
+    chineseCategory: blogTranslations.find((post) => post.id === id)?.data
+      .category,
     description: data.description,
     category: data.category,
     publishedAt: data.publishedAt,
@@ -108,6 +125,7 @@ const canonical = new URL(`${base}/`, Astro.site);
       client:load
       latestPosts={latestPosts}
       highlightedCode={highlightedCode}
+      highlightedProtocols={highlightedProtocols}
     />
     <SiteFooter />
   </body>
