@@ -459,7 +459,7 @@ export default function LandingContent({
             <span>
               {t(
                 "Native agent packages, routing and evaluations",
-                "原生 Agent 接入、模型路由与评测",
+                "原生智能体接入、模型路由与评测",
               )}
             </span>
             <IconArrowRight size={14} aria-hidden="true" />
@@ -467,7 +467,7 @@ export default function LandingContent({
           <h1 id="hero-title" className="hero-enter" style={stagger(1)}>
             {isZh ? (
               <>
-                面向 Agent 的
+                面向智能体的
                 <br />
                 <span className="accent">模型平台</span>
               </>
@@ -482,7 +482,7 @@ export default function LandingContent({
           <p className="hero-description hero-enter" style={stagger(2)}>
             {isZh ? (
               <>
-                让 Agent 发现与评测模型、配置路由，
+                让智能体发现与评测模型、配置路由，
                 <span className="demo-nowrap">并核查性能与费用。</span>
               </>
             ) : (
@@ -494,11 +494,11 @@ export default function LandingContent({
               <strong>
                 {t(
                   "Give this to your coding agent",
-                  "把这句话交给你的 coding agent",
+                  "把这句话交给你的编码智能体",
                 )}
               </strong>
               <a href="/docs/install.md">
-                {t("Niu 0.3 install contract", "Niu 0.3 接入规范")}
+                {t("Niu 0.3 install contract", "牛元(Niu) 0.3 接入规范")}
               </a>
             </div>
             <code className="hero-install-prompt">{installationPrompt}</code>
@@ -506,7 +506,7 @@ export default function LandingContent({
               <p>
                 {t(
                   "Paste into Claude Code, Codex or DeepSeek Harness. Your agent checks availability and opens Niu for sign-in and approval.",
-                  "粘贴至 Claude Code、Codex 或 DeepSeek Harness。Agent 检查可用性并打开 Niu 完成登录与授权审批。",
+                  "粘贴至 Claude Code、Codex 或 DeepSeek Harness。智能体检查可用性并打开牛元(Niu)完成登录与授权审批。",
                 )}
               </p>
               <Button
@@ -544,7 +544,7 @@ export default function LandingContent({
             >
               <a href="/docs/guides/personal-assistant/">
                 <IconPlugConnected aria-hidden="true" />
-                {t("Build with Niu", "用 Niu 开发")}
+                {t("Build with Niu", "用牛元(Niu)开发")}
                 <IconArrowRight className="cta-arrow" aria-hidden="true" />
               </a>
             </Button>
@@ -1487,7 +1487,7 @@ export default function LandingContent({
                   <span>
                     {t(
                       "Illustrative dashboard data · Inspect logs and generations in Niu",
-                      "控制台示例数据 · 在 Niu 中查看请求日志与生成结果",
+                      "控制台示例数据 · 在牛元(Niu)中查看请求日志与生成结果",
                     )}
                   </span>
                   <Button asChild size="sm" className="cta-primary cta-compact">
@@ -1520,7 +1520,7 @@ export default function LandingContent({
                 <>
                   模型管理的完整闭环，
                   <br />
-                  由你的 Agent 直接操作。
+                  由你的智能体直接操作。
                 </>
               ) : (
                 <>
@@ -1534,7 +1534,7 @@ export default function LandingContent({
           <p>
             {t(
               "Niu supplies the evidence and authorized controls. Your agent makes the model and cost decisions; you review what matters.",
-              "Niu 提供可信证据与授权能力，模型与成本取舍由 Agent 决定，重要变更由你审核。",
+              "牛元(Niu)提供可信证据与授权能力，模型与成本取舍由智能体决定，重要变更由你审核。",
             )}
           </p>
         </div>
@@ -1580,7 +1580,7 @@ export default function LandingContent({
                   <>
                     三步开始，
                     <br />
-                    接入工作交给 Agent。
+                    接入工作交给智能体。
                   </>
                 ) : (
                   <>
@@ -1594,7 +1594,7 @@ export default function LandingContent({
             <p>
               {t(
                 "Works with Claude Code, Codex and DeepSeek Harness without changing the agent's own host model.",
-                "支持 Claude Code、Codex 与 DeepSeek Harness，且不改动 Agent 自身的宿主模型。",
+                "支持 Claude Code、Codex 与 DeepSeek Harness，且不改动智能体自身的宿主模型。",
               )}
             </p>
           </div>
@@ -1624,7 +1624,7 @@ export default function LandingContent({
                 <>
                   沿用 SDK 原生协议，
                   <br />
-                  一把 Niu 密钥统一管理。
+                  一把牛元(Niu)密钥统一管理。
                 </>
               ) : (
                 <>
@@ -1747,7 +1747,7 @@ export default function LandingContent({
           <p>
             {t(
               "Run Niu as a single container with PostgreSQL. Inference still reaches the upstream Providers you configure.",
-              "单容器加 PostgreSQL 即可运行 Niu，推理请求仍发往你配置的上游供应商。",
+              "单容器加 PostgreSQL 即可运行牛元(Niu)，推理请求仍发往你配置的上游供应商。",
             )}
           </p>
         </div>
@@ -1769,7 +1769,7 @@ export default function LandingContent({
         <p className="landing-release-note" data-reveal>
           {t(
             "Niu 0.3 is a release candidate. Native host packages remain under release qualification;",
-            "Niu 0.3 仍为候选版本，原生宿主接入包尚在发布准入验证中；",
+            "牛元(Niu) 0.3 仍为候选版本，原生宿主接入包尚在发布准入验证中；",
           )}{" "}
           <a href={links.release}>
             {t("see the acceptance matrix", "查看发布准入矩阵")}

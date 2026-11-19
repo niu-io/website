@@ -8,7 +8,7 @@ export const capabilities = [
     description:
       "Your agent reads available models, capabilities, context limits and customer prices to shortlist candidates.",
     descriptionZh:
-      "Agent 读取可用模型、能力、上下文上限与客户价格，筛选候选模型。",
+      "智能体读取可用模型、能力、上下文上限与客户价格，筛选候选模型。",
     href: "/docs/agents/capabilities/",
   },
   {
@@ -60,10 +60,10 @@ export const workflowSteps = [
   {
     step: "01",
     title: "Connect your agent",
-    titleZh: "连接 Agent",
+    titleZh: "连接智能体",
     detail:
       "Paste the setup prompt. Your agent checks the deployment and opens Niu for sign-in.",
-    detailZh: "粘贴接入提示词，Agent 检查部署并打开 Niu 供你登录。",
+    detailZh: "粘贴接入提示词，智能体检查部署并打开牛元(Niu)供你登录。",
   },
   {
     step: "02",
