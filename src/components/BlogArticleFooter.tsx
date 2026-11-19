@@ -16,7 +16,7 @@ export default function BlogArticleFooter() {
       </div>
       <div className="blog-article-actions">
         <Button asChild>
-          <a href="/docs/guides/personal-assistant/">{t("Build with Niu", "用 Niu 开发")}</a>
+          <a href="/docs/guides/personal-assistant/">{t("Build with Niu", "用牛元(Niu)开发")}</a>
         </Button>
         <Button asChild variant="outline">
           <a href="https://github.com/niu-io/niu">

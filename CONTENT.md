@@ -44,7 +44,7 @@ Landing, Models, Docs, API, SDK and Compare use the same navigation definition, 
 
 Marketing source stays in this repository. Docs/catalog import Niu's canonical public shell styles and navigation; this website ships a checked snapshot, with no build dependency on an adjacent public checkout.
 
-Use Niu as the primary product name in all languages. 牛元 may appear only as an explanatory Chinese annotation, not a competing product name. Retain Token in Chinese copy to avoid translation overhead. The Chinese headline is “面向 Agent 的模型平台”.
+In Chinese copy, write the product name as 牛元(Niu) and translate Agent as 智能体 (编码智能体 for coding agent); English copy keeps Niu and Agent. Keep Niu unchanged in URLs, code, commands and the setup prompt. Retain Token in Chinese copy to avoid translation overhead. The Chinese headline is “面向智能体的模型平台”.
 
 ## Blog translations and covers
 
