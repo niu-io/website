@@ -1790,7 +1790,7 @@ export default function LandingContent({
               <>
                 把下一个任务，
                 <br />
-                <span className="accent">交给连接了 Niu 的 Agent。</span>
+                <span className="accent">交给连接了牛元(Niu)的智能体。</span>
               </>
             ) : (
               <>
