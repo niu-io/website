@@ -1,0 +1,118 @@
+/* Landing sections introduced with the 0.3 landing simplification.
+   Reuses the card treatment of `.capability` from landing-visual.css. */
+
+.capability h3 {
+  font-size: 20px;
+  letter-spacing: -0.4px;
+}
+
+/* ---------- How it works ---------- */
+.landing-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.landing-steps li {
+  padding: 28px;
+  border-radius: 18px;
+  background: var(--background);
+  box-shadow: inset 0 0 0 1px
+    color-mix(in oklab, var(--border) 60%, transparent);
+}
+.landing-step-number {
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--brand-ink);
+  background: var(--selected-surface);
+}
+.landing-steps h3 {
+  margin: 18px 0 8px;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.4px;
+}
+.landing-steps p {
+  font-size: 14px;
+  color: var(--muted-foreground);
+}
+
+/* ---------- Protocols ---------- */
+.landing-protocol-list {
+  display: grid;
+  gap: 12px;
+  margin: 28px 0;
+  padding: 0;
+  list-style: none;
+}
+.landing-protocol-list li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  color: var(--foreground);
+}
+.landing-protocol-list svg {
+  flex-shrink: 0;
+  color: var(--brand-ink);
+}
+
+/* ---------- Foundation ---------- */
+.landing-facts {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+.landing-facts article {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 28px;
+  border-radius: 18px;
+  box-shadow: inset 0 0 0 1px
+    color-mix(in oklab, var(--border) 60%, transparent);
+}
+.landing-fact-value {
+  font-size: 30px;
+  font-weight: 600;
+  letter-spacing: -0.8px;
+  line-height: 1.1;
+  color: var(--foreground);
+}
+.landing-facts h3 {
+  margin: 16px 0 8px;
+  font-size: 17px;
+  font-weight: 600;
+}
+.landing-facts p:not(.landing-fact-value) {
+  font-size: 14px;
+  color: var(--muted-foreground);
+  margin-bottom: 22px;
+}
+.landing-facts .text-link {
+  margin-top: auto;
+}
+.landing-release-note {
+  margin-top: 28px;
+  font-size: 13px;
+  color: var(--muted-foreground);
+}
+.landing-release-note a {
+  color: var(--foreground);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@media (max-width: 1000px) {
+  .landing-steps,
+  .landing-facts {
+    grid-template-columns: 1fr;
+  }
+}

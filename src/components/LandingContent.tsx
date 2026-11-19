@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from "react";
-import { CountUp, useLandingMotion } from "./landing-motion";
+import { useLandingMotion } from "./landing-motion";
 import { useLocale } from "./locale";
 import {
   IconArrowRight,
+  IconBell,
   IconBook,
   IconBrandGithub,
+  IconChartBar,
   IconCheck,
-  IconCoins,
   IconCopy,
   IconListSearch,
   IconMessageChatbot,
@@ -36,11 +37,10 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "./ui/tabs";
 import {
   links,
   capabilities,
-  faqs,
-  codeExamples,
+  foundationFacts,
   protocolExamples,
-  protocolHighlights,
-  heroStats,
+  protocolNames,
+  workflowSteps,
 } from "../content/landing";
 
 function currentDeploymentOrigin() {
@@ -53,30 +53,15 @@ function buildInstallationPrompt(origin: string) {
   return `Install and configure Niu for ${deployment} by following ${deployment}/docs/install.md. Verify the deployment and workspace during authorization.`;
 }
 
+// Order matches `capabilities` in content/landing.ts.
 const capabilityIcons = [
+  IconSearch,
+  IconChartBar,
   IconRoute,
-  IconListSearch,
-  IconCoins,
   IconShieldLock,
-  IconPlugConnected,
-  IconMessageChatbot,
+  IconListSearch,
+  IconBell,
 ];
-
-interface LandingPost {
-  href: string;
-  title: string;
-  chineseTitle?: string;
-  chineseDescription?: string;
-  chineseCategory?: string;
-  chineseDateLabel?: string;
-  chineseReadingTime?: string;
-  description: string;
-  category: string;
-  publishedAt: string;
-  dateLabel: string;
-  readingTime: string;
-  highlights?: string[];
-}
 
 const previewTabs = [
   {
@@ -385,39 +370,9 @@ const volumeHistogramBars = [
   91, 85, 76, 88, 95,
 ];
 
-const gatewaySteps = [
-  {
-    step: "01",
-    title: "Let your agent connect Niu",
-    titleZh: "让 Agent 连接 Niu",
-    detail:
-      "Share the setup prompt, approve workspace access in your browser, and verify the connection.",
-    detailZh: "发送接入提示词，在浏览器中审批工作空间权限并验证连接。",
-  },
-  {
-    step: "02",
-    title: "Describe the outcome and constraints",
-    titleZh: "说明目标与约束",
-    detail:
-      "Provide task samples, quality criteria, latency targets, and a test budget.",
-    detailZh: "给出任务样本、质量标准、延迟目标与测试预算。",
-  },
-  {
-    step: "03",
-    title: "Review usage and request results",
-    titleZh: "审阅用量与请求结果",
-    detail: "Inspect request logs and usage in Niu.",
-    detailZh: "在 Niu 中查看请求日志和用量。",
-  },
-];
-
 export default function LandingContent({
-  latestPosts,
-  highlightedCode,
   highlightedProtocols,
 }: {
-  latestPosts: LandingPost[];
-  highlightedCode: string[];
   highlightedProtocols: string[];
 }) {
   const { isZh, t } = useLocale();
@@ -429,12 +384,10 @@ export default function LandingContent({
   const [activeGenerationsMode, setActiveGenerationsMode] = useState<
     "chat" | "video"
   >("chat");
-  const [activeCodeIndex, setActiveCodeIndex] = useState(0);
   const [activeProtocolIndex, setActiveProtocolIndex] = useState(0);
   const [deploymentOrigin, setDeploymentOrigin] = useState("https://niu.io");
   const [copiedInstall, setCopiedInstall] = useState(false);
   const [installCopyError, setInstallCopyError] = useState(false);
-  const [copiedCode, setCopiedCode] = useState(false);
   const [copiedProtocol, setCopiedProtocol] = useState(false);
   const mainRef = useRef<HTMLElement>(null);
   useLandingMotion(mainRef);
@@ -459,17 +412,16 @@ export default function LandingContent({
     return () => window.clearInterval(timer);
   }, [previewPaused, activePreviewIndex]);
 
-  const scopedExample = (code: string) =>
-    `Use the Niu deployment at ${deploymentOrigin}.\n\n${code}`;
-  const handleCopyCode = () => {
-    const example = codeExamples[activeCodeIndex];
-    const snippet = example ? scopedExample(example.code) : undefined;
-    if (!snippet || typeof navigator === "undefined" || !navigator.clipboard)
+  const copyInstallationPrompt = () => {
+    setInstallCopyError(false);
+    if (typeof navigator === "undefined" || !navigator.clipboard) {
+      setInstallCopyError(true);
       return;
-    void navigator.clipboard.writeText(snippet).then(() => {
-      setCopiedCode(true);
-      window.setTimeout(() => setCopiedCode(false), 1800);
-    });
+    }
+    void navigator.clipboard
+      .writeText(installationPrompt)
+      .then(() => setCopiedInstall(true))
+      .catch(() => setInstallCopyError(true));
   };
   const handleCopyProtocol = () => {
     const example = protocolExamples[activeProtocolIndex];
@@ -503,8 +455,13 @@ export default function LandingContent({
             style={stagger(0)}
             href="#product"
           >
-            <span className="release-tag">{t("Why Niu", "核心优势")}</span>
-            <span>{t("Discover · Use · Review", "发现 · 使用 · 查看")}</span>
+            <span className="release-tag">Niu 0.3</span>
+            <span>
+              {t(
+                "Native agent packages, routing and evaluations",
+                "原生 Agent 接入、模型路由与评测",
+              )}
+            </span>
             <IconArrowRight size={14} aria-hidden="true" />
           </a>
           <h1 id="hero-title" className="hero-enter" style={stagger(1)}>
@@ -525,11 +482,11 @@ export default function LandingContent({
           <p className="hero-description hero-enter" style={stagger(2)}>
             {isZh ? (
               <>
-                连接你的 Agent，发现并使用模型，
-                <span className="demo-nowrap">查看用量和请求结果。</span>
+                让 Agent 发现与评测模型、配置路由，
+                <span className="demo-nowrap">并核查性能与费用。</span>
               </>
             ) : (
-              "Discover models, connect your agent, and review usage and request results."
+              "Discover and evaluate models, configure routing, and manage performance and cost—all through your agent."
             )}
           </p>
           <div className="hero-install code-card hero-enter" style={stagger(3)}>
@@ -555,17 +512,7 @@ export default function LandingContent({
               <Button
                 size="lg"
                 className="cta-primary"
-                onClick={() => {
-                  setInstallCopyError(false);
-                  if (!navigator.clipboard) {
-                    setInstallCopyError(true);
-                    return;
-                  }
-                  void navigator.clipboard
-                    .writeText(installationPrompt)
-                    .then(() => setCopiedInstall(true))
-                    .catch(() => setInstallCopyError(true));
-                }}
+                onClick={copyInstallationPrompt}
               >
                 {copiedInstall ? (
                   <IconCheck aria-hidden="true" />
@@ -1559,7 +1506,7 @@ export default function LandingContent({
         </div>
       </section>
 
-      {/* 2. SIX CORE CAPABILITIES */}
+      {/* 2. WHAT YOUR AGENT CAN DO WITH NIU */}
       <section
         className="section container"
         id="product"
@@ -1567,51 +1514,49 @@ export default function LandingContent({
       >
         <div className="section-heading" data-reveal>
           <div>
-            <p className="eyebrow">{t("AGENT SCENARIOS", "AGENT 使用场景")}</p>
+            <p className="eyebrow">{t("CAPABILITIES", "核心能力")}</p>
             <h2 id="product-title">
               {isZh ? (
                 <>
-                  告诉 Agent 你的需求，
+                  模型管理的完整闭环，
                   <br />
-                  让它与 Niu 一起完成。
+                  由你的 Agent 直接操作。
                 </>
               ) : (
                 <>
-                  Start with what
+                  The full model workflow,
                   <br />
-                  you want to achieve.
+                  operated by your agent.
                 </>
               )}
             </h2>
           </div>
           <p>
             {t(
-              "Connect your agent to Niu, use supported models, and review real request outcomes.",
-              "将 Agent 接入 Niu，使用支持的模型并查看实际请求结果。",
+              "Niu supplies the evidence and authorized controls. Your agent makes the model and cost decisions; you review what matters.",
+              "Niu 提供可信证据与授权能力，模型与成本取舍由 Agent 决定，重要变更由你审核。",
             )}
           </p>
         </div>
         <div className="capability-grid">
           {capabilities.map((item, index) => {
-            const CapabilityIcon = capabilityIcons[index];
+            const CapabilityIcon = capabilityIcons[index] ?? IconSparkles;
             return (
               <article
                 key={item.href}
                 className="capability"
                 data-reveal
-                data-spotlight
                 style={stagger(index % 3)}
               >
                 <div className="capability-top">
                   <span className="capability-icon" aria-hidden="true">
                     <CapabilityIcon size={20} stroke={1.75} />
                   </span>
-                  <span className="feature-number">{item.number}</span>
                 </div>
                 <h3>{isZh ? item.titleZh : item.title}</h3>
                 <p>{isZh ? item.descriptionZh : item.description}</p>
                 <a className="text-link" href={item.href}>
-                  {isZh ? item.labelZh : item.label}{" "}
+                  {t("Learn more", "了解更多")}{" "}
                   <span aria-hidden="true">→</span>
                 </a>
               </article>
@@ -1620,143 +1565,52 @@ export default function LandingContent({
         </div>
       </section>
 
-      {/* 3. DROP-IN API QUICKSTART */}
+      {/* 3. HOW IT WORKS */}
       <section
         className="gateway-section"
-        id="gateway"
-        aria-labelledby="gateway-title"
+        id="workflow"
+        aria-labelledby="workflow-title"
       >
-        <div className="container section gateway-grid">
-          <div className="gateway-copy" data-reveal>
-            <p className="eyebrow">
-              {t("START WITH YOUR AGENT", "从你的 AGENT 开始")}
-            </p>
-            <h2 id="gateway-title">
-              {isZh ? (
-                <>
-                  说清你想做什么，
-                  <br />
-                  接入工作交给 Agent。
-                </>
-              ) : (
-                <>
-                  Give your agent a goal.
-                  <br />
-                  Let it handle the setup.
-                </>
-              )}
-            </h2>
-            <p className="section-description">
-              {t(
-                "Connect Claude Code, Codex or DeepSeek Harness without changing your agent's own host model.",
-                "连接 Claude Code、Codex 或 DeepSeek Harness，且无需改动 Agent 自身的宿主模型。",
-              )}
-            </p>
-            <ul className="gateway-features">
-              {gatewaySteps.map((item) => (
-                <li key={item.step}>
-                  <span className="gateway-step-badge">{item.step}</span>
-                  <div>
-                    <strong>{isZh ? item.titleZh : item.title}</strong>
-                    <p>{isZh ? item.detailZh : item.detail}</p>
-                  </div>
-                </li>
-              ))}
-            </ul>
-            <div className="gateway-links">
-              <a className="text-link" href="/docs/guides/personal-assistant/">
-                {t("Build with Niu", "用 Niu 开发")}{" "}
-                <span aria-hidden="true">→</span>
-              </a>
-              <a
-                className="text-link"
-                href="https://github.com/niu-io/niu/tree/main/examples/personal-assistant"
-              >
-                {t("Runnable example", "可运行源码示例")}{" "}
-                <span aria-hidden="true">→</span>
-              </a>
-            </div>
-          </div>
-          <Tabs
-            className="code-card"
-            data-reveal
-            style={stagger(1)}
-            value={codeExamples[activeCodeIndex].id}
-            onValueChange={(value) => {
-              setActiveCodeIndex(
-                codeExamples.findIndex((item) => item.id === value),
-              );
-              setCopiedCode(false);
-            }}
-          >
-            <div className="code-heading">
-              <TabsList
-                className="code-tabs"
-                variant="line"
-                aria-label="Agent task prompts"
-              >
-                {codeExamples.map((example, idx) => (
-                  <TabsTrigger key={example.id} value={example.id}>
-                    {t(example.label, ["连接", "诊断"][idx])}
-                  </TabsTrigger>
-                ))}
-              </TabsList>
-              <Button
-                variant="ghost"
-                type="button"
-                className="code-copy-btn"
-                onClick={handleCopyCode}
-                aria-label={t("Copy agent prompt", "复制 Agent 提示词")}
-              >
-                {copiedCode ? (
-                  <IconCheck size={14} aria-hidden="true" />
+        <div className="container section">
+          <div className="section-heading" data-reveal>
+            <div>
+              <p className="eyebrow">{t("HOW IT WORKS", "使用流程")}</p>
+              <h2 id="workflow-title">
+                {isZh ? (
+                  <>
+                    三步开始，
+                    <br />
+                    接入工作交给 Agent。
+                  </>
                 ) : (
-                  <IconCopy size={14} aria-hidden="true" />
+                  <>
+                    Three steps.
+                    <br />
+                    Your agent does the setup.
+                  </>
                 )}
-                <span>
-                  {copiedCode ? t("Copied", "已复制") : t("Copy", "复制")}
-                </span>
-              </Button>
+              </h2>
             </div>
-            <div className="code-subbar">
-              <span>
-                {isZh
-                  ? codeExamples[activeCodeIndex].endpointZh
-                  : codeExamples[activeCodeIndex].endpoint}
-              </span>
-              <span>{t("Prompt for your agent", "交给 Agent 的提示词")}</span>
-            </div>
-            {/* Build-time Shiki HTML from maintained task prompts. */}
-            {codeExamples.map((example, idx) => (
-              <TabsContent
-                key={example.id}
-                value={example.id}
-                className="highlighted-example"
-              >
-                <p className="px-5 pt-4 text-sm">
-                  {t("Deployment", "部署地址")}: <code>{deploymentOrigin}</code>
-                </p>
-                <div
-                  dangerouslySetInnerHTML={{ __html: highlightedCode[idx] }}
-                />
-              </TabsContent>
+            <p>
+              {t(
+                "Works with Claude Code, Codex and DeepSeek Harness without changing the agent's own host model.",
+                "支持 Claude Code、Codex 与 DeepSeek Harness，且不改动 Agent 自身的宿主模型。",
+              )}
+            </p>
+          </div>
+          <ol className="landing-steps">
+            {workflowSteps.map((item, index) => (
+              <li key={item.step} data-reveal style={stagger(index)}>
+                <span className="landing-step-number">{item.step}</span>
+                <h3>{isZh ? item.titleZh : item.title}</h3>
+                <p>{isZh ? item.detailZh : item.detail}</p>
+              </li>
             ))}
-            <div className="code-footnote">
-              <span className="status-dot is-live"></span>
-              <span>
-                {t("Scope:", "能力范围：")}{" "}
-                <strong>
-                  {isZh
-                    ? codeExamples[activeCodeIndex].traceZh
-                    : codeExamples[activeCodeIndex].trace}
-                </strong>
-              </span>
-            </div>
-          </Tabs>
+          </ol>
         </div>
       </section>
 
-      {/* 3B. NATIVE MULTI-PROTOCOL GATEWAY */}
+      {/* 4. NATIVE PROTOCOLS, ONE KEY */}
       <section
         className="section container protocols-section"
         id="protocols"
@@ -1764,48 +1618,39 @@ export default function LandingContent({
       >
         <div className="gateway-grid">
           <div className="gateway-copy" data-reveal>
-            <p className="eyebrow">
-              {t("NATIVE PROTOCOL GATEWAY", "原生多协议推理网关")}
-            </p>
+            <p className="eyebrow">{t("NATIVE PROTOCOLS", "原生协议")}</p>
             <h2 id="protocols-title">
               {isZh ? (
                 <>
-                  沿用各 SDK 原生协议，
+                  沿用 SDK 原生协议，
                   <br />
-                  统一收口至一把 Niu 密钥。
+                  一把 Niu 密钥统一管理。
                 </>
               ) : (
                 <>
-                  Speak the protocol your SDK expects.
+                  Keep your SDK&apos;s protocol.
                   <br />
-                  Keep one Niu key boundary.
+                  Use one Niu key.
                 </>
               )}
             </h2>
             <p className="section-description">
               {t(
-                "Send OpenAI Chat & Responses, Anthropic Messages, and Google Gemini requests natively to Niu with Authorization: Bearer $NIU_API_KEY, backed by pool/<slug> routing, Embeddings, and Seedance Video jobs.",
-                "无需改写或降级请求格式——使用统一的 Authorization: Bearer $NIU_API_KEY 直接向 Niu 发送 OpenAI Chat / Responses、Anthropic Messages 与 Google Gemini 原生请求，并与 pool/<slug> 路由、Embeddings 及 Seedance 视频任务协同工作。",
+                "Send requests in their native format—no payload translation. Workspace keys control which models and protocols each caller may use.",
+                "按原生格式发送请求，无需转换请求体。工作空间密钥决定每个调用方可使用的模型与协议。",
               )}
             </p>
-            <ul className="gateway-features">
-              {protocolHighlights.map((item) => (
-                <li key={item.step}>
-                  <span className="gateway-step-badge">{item.step}</span>
-                  <div>
-                    <strong>{isZh ? item.titleZh : item.title}</strong>
-                    <p>{isZh ? item.detailZh : item.detail}</p>
-                  </div>
+            <ul className="landing-protocol-list">
+              {protocolNames.map((name) => (
+                <li key={name.en}>
+                  <IconCheck size={16} aria-hidden="true" />
+                  {isZh ? name.zh : name.en}
                 </li>
               ))}
             </ul>
             <div className="gateway-links">
               <a className="text-link" href="/docs/agents/inference/">
-                {t("Native inference contract", "查看推理协议契约")}{" "}
-                <span aria-hidden="true">→</span>
-              </a>
-              <a className="text-link" href="/compare/">
-                {t("Compare gateways", "查看网关能力对比")}{" "}
+                {t("Inference contract", "推理协议契约")}{" "}
                 <span aria-hidden="true">→</span>
               </a>
             </div>
@@ -1856,9 +1701,6 @@ export default function LandingContent({
               <span>
                 {isZh ? activeProtocol.endpointZh : activeProtocol.endpoint}
               </span>
-              <span>
-                {t("Auth: Bearer $NIU_API_KEY", "鉴权: Bearer $NIU_API_KEY")}
-              </span>
             </div>
             {protocolExamples.map((example, idx) => (
               <TabsContent
@@ -1873,402 +1715,80 @@ export default function LandingContent({
                 />
               </TabsContent>
             ))}
-            <div className="code-footnote">
-              <span className="status-dot is-live"></span>
-              <span>
-                {t("Scope:", "能力范围：")}{" "}
-                <strong>
-                  {isZh ? activeProtocol.traceZh : activeProtocol.trace}
-                </strong>
-              </span>
-            </div>
           </Tabs>
         </div>
       </section>
 
-      {/* 2. PERFORMANCE BENCHMARK (VISUAL CARDS + VERDICT) */}
-      <section
-        className="section container benchmark-section"
-        id="benchmark"
-        aria-labelledby="benchmark-title"
-      >
-        <div className="benchmark-heading" data-reveal>
-          <div>
-            <p className="eyebrow">
-              {t("HISTORICAL GATEWAY BENCHMARKS", "历史网关基准测试")}
-            </p>
-            <h2 id="benchmark-title">
-              {isZh ? (
-                <>
-                  单机 3,239 RPS 峰值吞吐，
-                  <br />
-                  10.7 倍于 LiteLLM · 3.7 倍于 New API。
-                </>
-              ) : (
-                <>
-                  3,239 RPS in Rust.
-                  <br />
-                  10.7× LiteLLM. 3.7× New API.
-                </>
-              )}
-            </h2>
-          </div>
-          <p>
-            {isZh ? (
-              <>
-                以下是 Niu v0.2.4 在指定配置下的历史结果，使用基准工具{" "}
-                <code>ai-gateway-bench</code> 在 Apple M4 与 PostgreSQL 17.11
-                上测量。这些数据不代表 Niu 0.3 或你的实际模型任务表现。
-              </>
-            ) : (
-              <>
-                Historical Niu v0.2.4 results, measured with{" "}
-                <code>ai-gateway-bench</code> on Apple M4 with PostgreSQL 17.11,
-                Niu sustains 3,239 RPS with full database accounting and 18.2 MB
-                idle RAM in this configuration. These are not Niu 0.3 or
-                application task measurements.
-              </>
-            )}
-          </p>
-        </div>
-        <dl className="hero-stats" aria-label="Measured gateway results">
-          {heroStats.map((stat, i) => (
-            <div key={stat.label} data-reveal style={stagger(i)}>
-              <dt>{isZh ? stat.labelZh : stat.label}</dt>
-              <dd>
-                <CountUp value={stat.value} />
-              </dd>
-            </div>
-          ))}
-        </dl>
-
-        <div className="benchmark-method benchmark-method-compact" data-reveal>
-          <p>
-            {isZh ? (
-              <>
-                <strong>测试基线：</strong> Niu v0.2.4 开启完整 PostgreSQL ACID
-                转发前准入与批量完成结算；New API (45fbb14) 开启{" "}
-                <code>MEMORY_CACHE_ENABLED=true</code>；LiteLLM Proxy (v1.104.0)
-                运行于无状态 <code>master_key</code> 模式。
-              </>
-            ) : (
-              <>
-                <strong>Test baseline:</strong> Niu v0.2.4 ran with full ACID
-                PostgreSQL pre-dispatch admission and batched completion; New
-                API (45fbb14) ran with <code>MEMORY_CACHE_ENABLED=true</code>;
-                LiteLLM Proxy (v1.104.0) ran in stateless{" "}
-                <code>master_key</code> mode.
-              </>
-            )}
-          </p>
-          <div className="benchmark-links">
-            <a className="text-link" href={links.benchmark}>
-              {t(
-                "Full benchmark report & methodology",
-                "完整基准测试报告与方法论",
-              )}{" "}
-              <span aria-hidden="true">→</span>
-            </a>
-            <a className="text-link" href="/compare/#performance">
-              {t("Side-by-side matrix", "横向对比矩阵")}{" "}
-              <span aria-hidden="true">→</span>
-            </a>
-          </div>
-        </div>
-      </section>
-
-      {/* 5. SELF-HOSTED ARCHITECTURE & EVALUATION SCOPE */}
+      {/* 5. FOUNDATION: OPEN SOURCE, OPERATING MODES, PERFORMANCE */}
       <section
         className="section container"
-        id="release"
-        aria-labelledby="release-title"
+        id="foundation"
+        aria-labelledby="foundation-title"
       >
         <div className="section-heading" data-reveal>
           <div>
-            <p className="eyebrow">
-              {t(
-                "FULL-STACK OPEN SOURCE · SELF-HOSTED",
-                "全栈开源 · 私有化自托管",
-              )}
-            </p>
-            <h2 id="release-title">
+            <p className="eyebrow">{t("FOUNDATION", "技术底座")}</p>
+            <h2 id="foundation-title">
               {isZh ? (
                 <>
-                  全栈代码开源可控，
+                  开源、可自托管，
                   <br />
-                  单容器连上数据库即可上线。
+                  轻量的 Rust 网关。
                 </>
               ) : (
                 <>
-                  Full-stack open source.
+                  Open source, self-hosted,
                   <br />
-                  Deploy with a single PostgreSQL database.
+                  and built on a lean Rust gateway.
                 </>
               )}
             </h2>
           </div>
           <p>
             {t(
-              "The gateway, dashboard, and docs are MIT-licensed with zero black-box dependencies or license servers—your data stays 100% yours.",
-              "网关、管理控制台与文档站点全部采用 MIT 开源许可，无黑盒依赖、无外部授权服务器，业务数据 100% 掌握在您自己手中。",
+              "Run Niu as a single container with PostgreSQL. Inference still reaches the upstream Providers you configure.",
+              "单容器加 PostgreSQL 即可运行 Niu，推理请求仍发往你配置的上游供应商。",
             )}
           </p>
         </div>
-        <div className="release-grid">
-          <article className="release-card" data-reveal data-spotlight>
-            <span className="phase available">
-              <span className="status-dot is-live"></span>
-              {t("READY TO DEPLOY TODAY", "开箱即用 · 立即部署")}
-            </span>
-            <h3>
-              {t("Included in the open-source stack", "全栈开源版本已内置能力")}
-            </h3>
-            <ul>
-              <li>
-                {t(
-                  "Rust gateway (/v1/chat/completions, /v1/responses, /v1/messages, /v1beta/models/*:{generateContent|streamGenerateContent}, /v1/embeddings, /v1/video/jobs) with MCP and Claude Code, Codex, and DeepSeek Harness packages",
-                  "Rust 高性能网关（兼容 /v1/chat/completions、/v1/responses、/v1/messages、/v1beta/models/*:{generateContent|streamGenerateContent}、/v1/embeddings 与 /v1/video/jobs），内置 MCP 及 Claude Code、Codex、DeepSeek Harness 接入包",
-                )}
-              </li>
-              <li>
-                {t(
-                  "Internal use mode by default (connect OpenRouter, FastRouter, BabelArk, Qiniu, or DeepSeek with an API key), plus optional Resale mode with customer tariffs and Credits",
-                  "默认采用零门槛内部自用模式（填入 API 密钥即可连接 OpenRouter、FastRouter、BabelArk、七牛云、DeepSeek），亦可开启商业转售模式与品牌 Credits",
-                )}
-              </li>
-              <li>
-                {t(
-                  "Task-scoped browser approval, spending caps, Guardrails, phase-timed request logs, and Chat & Seedance Video studio",
-                  "按任务范围的浏览器审批、预算上限、安全护栏、分阶段请求日志，以及多模型对话与 Seedance 视频工作台",
-                )}
-              </li>
-            </ul>
-            <a className="text-link" href={links.deployment}>
-              {t("Single-container deployment guide", "查看单容器部署指南")}{" "}
-              <span aria-hidden="true">→</span>
-            </a>
-          </article>
-          <article
-            className="release-card upcoming"
-            data-reveal
-            data-spotlight
-            style={stagger(1)}
-          >
-            <span className="phase">
-              {t("CONTINUOUS PRODUCTION QUALIFICATION", "生产级准入持续演进")}
-            </span>
-            <h3>
-              {t(
-                "Transparent engineering roadmap",
-                "公开透明的生产准入与演进清单",
-              )}
-            </h3>
-            <ul>
-              <li>
-                {t(
-                  "End-to-end v0.3.0 native host package publication and browser consent verification",
-                  "v0.3.0 原生宿主接入包正式发布与端到端浏览器授权核验",
-                )}
-              </li>
-              <li>
-                {t(
-                  "Expanded Provider protocol, streaming, and commercial settlement reconciliation",
-                  "持续扩展上游供应商流式协议准入与商业对账结算能力",
-                )}
-              </li>
-              <li>
-                {t(
-                  "Multi-node high availability, crash recovery, and zero-downtime upgrade verification",
-                  "多节点高可用部署、故障自动恢复与零停机平滑升级验证",
-                )}
-              </li>
-            </ul>
-            <a className="text-link" href={links.release}>
-              {t("Release acceptance matrix", "查看发布准入矩阵")}{" "}
-              <span aria-hidden="true">↗</span>
-            </a>
-          </article>
-        </div>
-      </section>
-
-      {/* 6. LATEST BLOG POSTS */}
-      {latestPosts.length > 0 && (
-        <section
-          className="section container landing-blog"
-          aria-labelledby="landing-blog-title"
-        >
-          <div className="section-heading" data-reveal>
-            <div>
-              <p className="eyebrow">
-                {t("FROM THE NIU BLOG", "来自 Niu 博客")}
+        <div className="landing-facts">
+          {foundationFacts.map((fact, index) => (
+            <article key={fact.title} data-reveal style={stagger(index)}>
+              <p className="landing-fact-value">
+                {isZh ? fact.valueZh : fact.value}
               </p>
-              <h2 id="landing-blog-title">
-                {isZh ? (
-                  <>
-                    来自网关工程团队的
-                    <br />
-                    架构与产品实践笔记。
-                  </>
-                ) : (
-                  <>
-                    Engineering notes from
-                    <br />
-                    the gateway team.
-                  </>
-                )}
-              </h2>
-            </div>
-            <div className="landing-blog-intro">
-              <p>
-                {t(
-                  "Model access, token usage and reliable API integration in practice.",
-                  "分享模型接入、Token 用量管理与调用可靠性的工程实践。",
-                )}
-              </p>
-              <a className="text-link" href="/blog/">
-                {t("All articles", "全部文章")}{" "}
+              <h3>{isZh ? fact.titleZh : fact.title}</h3>
+              <p>{isZh ? fact.detailZh : fact.detail}</p>
+              <a className="text-link" href={fact.href}>
+                {isZh ? fact.linkZh : fact.link}{" "}
                 <span aria-hidden="true">→</span>
               </a>
-            </div>
-          </div>
-          <div
-            className={`landing-blog-list${latestPosts.length === 1 ? " is-single" : ""}`}
-          >
-            {latestPosts.map((post, index) => (
-              <a
-                key={post.href}
-                className="landing-blog-card"
-                href={post.href}
-                data-reveal
-                data-spotlight
-                style={stagger(index)}
-              >
-                <div className="landing-blog-main">
-                  <div className="landing-blog-meta">
-                    <span className="landing-blog-category">
-                      {isZh && post.chineseCategory
-                        ? post.chineseCategory
-                        : post.category}
-                    </span>
-                    <time dateTime={post.publishedAt}>
-                      {isZh && post.chineseDateLabel
-                        ? post.chineseDateLabel
-                        : post.dateLabel}
-                    </time>
-                    <span>
-                      {isZh && post.chineseReadingTime
-                        ? post.chineseReadingTime
-                        : post.readingTime}
-                    </span>
-                  </div>
-                  <h3>
-                    {isZh && post.chineseTitle ? post.chineseTitle : post.title}
-                  </h3>
-                  <p>
-                    {isZh && post.chineseDescription
-                      ? post.chineseDescription
-                      : post.description}
-                  </p>
-                  <span className="text-link">
-                    {t("Read article", "阅读全文")}{" "}
-                    <IconArrowRight size={16} aria-hidden="true" />
-                  </span>
-                </div>
-              </a>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* 7. CONCISE FAQ */}
-      <section
-        className="section container faq-section"
-        aria-labelledby="faq-title"
-      >
-        <div className="section-heading" data-reveal>
-          <div>
-            <p className="eyebrow">
-              {t("FREQUENTLY ASKED QUESTIONS", "常见问题解答 (FAQ)")}
-            </p>
-            <h2 id="faq-title">
-              {isZh ? (
-                <>
-                  在投入生产环境前
-                  <br />
-                  最受关注的核心问题。
-                </>
-              ) : (
-                <>
-                  Key questions before
-                  <br />
-                  you run in production.
-                </>
-              )}
-            </h2>
-          </div>
-          <div className="faq-intro">
-            <p>
-              {t(
-                "How agents connect, what they can do today, and where your review is needed.",
-                "了解 Agent 如何接入、目前能做什么，以及哪些环节需要你审核。",
-              )}
-            </p>
-            <div className="faq-intro-links">
-              <a className="text-link" href="/docs/">
-                {t("Read the docs", "阅读技术文档")}{" "}
-                <span aria-hidden="true">→</span>
-              </a>
-              <a className="text-link" href={`${links.repo}/issues`}>
-                {t("Ask on GitHub", "在 GitHub 提问")}{" "}
-                <span aria-hidden="true">↗</span>
-              </a>
-            </div>
-          </div>
-        </div>
-        <div className="faq-list" data-reveal>
-          {faqs.map((faq) => (
-            <details key={faq.question}>
-              <summary>
-                <span className="faq-meta">
-                  <span className="faq-index">{faq.index}</span>
-                  <span className="faq-category">
-                    {isZh ? faq.categoryZh : faq.category}
-                  </span>
-                </span>
-                <span className="faq-question">
-                  {isZh ? faq.questionZh : faq.question}
-                </span>
-                <span className="faq-toggle" aria-hidden="true" />
-              </summary>
-              <div className="faq-body">
-                <p>{isZh ? faq.answerZh : faq.answer}</p>
-                <a className="text-link faq-doc-link" href={faq.linkHref}>
-                  {isZh ? faq.linkLabelZh : faq.linkLabel}{" "}
-                  <span aria-hidden="true">→</span>
-                </a>
-              </div>
-            </details>
+            </article>
           ))}
         </div>
+        <p className="landing-release-note" data-reveal>
+          {t(
+            "Niu 0.3 is a release candidate. Native host packages remain under release qualification;",
+            "Niu 0.3 仍为候选版本，原生宿主接入包尚在发布准入验证中；",
+          )}{" "}
+          <a href={links.release}>
+            {t("see the acceptance matrix", "查看发布准入矩阵")}
+          </a>
+          {t(".", "。")}
+        </p>
       </section>
 
-      {/* 8. CLOSING CTA */}
+      {/* 6. CLOSING CTA */}
       <section
         className="closing-stage container"
         aria-labelledby="closing-title"
       >
         <div className="closing" data-reveal>
           <span className="closing-glow" aria-hidden="true" />
-          <p className="eyebrow">
-            {t(
-              "AGENT-FRIENDLY · COST-EFFICIENT · HIGH-PERFORMANCE",
-              "面向智能体 · 追求性价比 · 高性能",
-            )}
-          </p>
           <h2 id="closing-title">
             {isZh ? (
               <>
-                把你的需求，
+                把下一个任务，
                 <br />
                 <span className="accent">交给连接了 Niu 的 Agent。</span>
               </>
@@ -2280,19 +1800,22 @@ export default function LandingContent({
               </>
             )}
           </h2>
-          <p className="closing-copy">
-            {t(
-              "Use the guided workflow and runnable example. Your agent handles setup and reads the references; you review the results.",
-              "从引导流程和可运行示例开始。Agent 负责接入并按需查阅参考文档，你负责审阅结果。",
-            )}
-          </p>
           <div className="actions hero-actions">
-            <Button asChild size="lg" className="cta-primary">
-              <a href="/docs/guides/personal-assistant/">
-                <IconPlugConnected aria-hidden="true" />
-                {t("Build with Niu", "用 Niu 开发")}
-                <IconArrowRight className="cta-arrow" aria-hidden="true" />
-              </a>
+            <Button
+              size="lg"
+              className="cta-primary"
+              onClick={copyInstallationPrompt}
+            >
+              {copiedInstall ? (
+                <IconCheck aria-hidden="true" />
+              ) : (
+                <IconCopy aria-hidden="true" />
+              )}
+              <span aria-live="polite">
+                {copiedInstall
+                  ? t("Copied", "已复制")
+                  : t("Copy setup prompt", "复制接入提示词")}
+              </span>
             </Button>
             <Button
               asChild
