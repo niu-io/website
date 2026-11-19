@@ -1,14 +1,14 @@
 import { useEffect, useRef, useState } from "react";
-import { CountUp, useLandingMotion } from "./landing-motion";
+import { useLandingMotion } from "./landing-motion";
 import { useLocale } from "./locale";
 import {
   IconArrowRight,
+  IconBell,
   IconBook,
   IconBrandGithub,
+  IconChartBar,
   IconCheck,
-  IconCoins,
   IconCopy,
-  IconHistory,
   IconListSearch,
   IconMessageChatbot,
   IconPlugConnected,
@@ -37,9 +37,10 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "./ui/tabs";
 import {
   links,
   capabilities,
-  faqs,
-  codeExamples,
-  heroStats,
+  foundationFacts,
+  protocolExamples,
+  protocolNames,
+  workflowSteps,
 } from "../content/landing";
 
 function currentDeploymentOrigin() {
@@ -49,33 +50,18 @@ function currentDeploymentOrigin() {
 
 function buildInstallationPrompt(origin: string) {
   const deployment = origin.replace(/\/$/, "") || "https://niu.io";
-  return `Install and configure Niu for ${deployment} by following https://niu.io/docs/install.md. Verify the deployment and workspace during authorization.`;
+  return `Install and configure Niu for ${deployment} by following ${deployment}/docs/install.md. Verify the deployment and workspace during authorization.`;
 }
 
+// Order matches `capabilities` in content/landing.ts.
 const capabilityIcons = [
+  IconSearch,
+  IconChartBar,
   IconRoute,
-  IconListSearch,
-  IconCoins,
   IconShieldLock,
-  IconPlugConnected,
-  IconMessageChatbot,
+  IconListSearch,
+  IconBell,
 ];
-
-interface LandingPost {
-  href: string;
-  title: string;
-  chineseTitle?: string;
-  chineseDescription?: string;
-  chineseCategory?: string;
-  chineseDateLabel?: string;
-  chineseReadingTime?: string;
-  description: string;
-  category: string;
-  publishedAt: string;
-  dateLabel: string;
-  readingTime: string;
-  highlights?: string[];
-}
 
 const previewTabs = [
   {
@@ -84,14 +70,6 @@ const previewTabs = [
     labelZh: "工作空间 · 请求日志",
     breadcrumb: "Default workspace / Logs",
     breadcrumbZh: "默认工作空间 / 请求日志",
-    railArea: "workspace" as const,
-  },
-  {
-    id: "routing",
-    label: "Workspace · Routing & Evaluations",
-    labelZh: "工作空间 · 路由与评估",
-    breadcrumb: "Default workspace / Routing",
-    breadcrumbZh: "默认工作空间 / 模型路由",
     railArea: "workspace" as const,
   },
   {
@@ -157,9 +135,9 @@ const demoLogRecords = [
       },
     ],
     rawPreview:
-      "POST /v1/chat/completions → policy claude-sonnet-4 (attempt 1 HTTP 401 not charged → attempt 2 Anthropic HTTP 200 settled $0.0180)",
+      "POST /v1/chat/completions → model claude-sonnet-4 (upstream attempt 1 HTTP 401 not charged → attempt 2 Anthropic HTTP 200 settled $0.0180)",
     rawPreviewZh:
-      "POST /v1/chat/completions → 路由策略 claude-sonnet-4（尝试 1 HTTP 401 未计费 → 尝试 2 Anthropic HTTP 200 已结算 $0.0180）",
+      "POST /v1/chat/completions → 模型 claude-sonnet-4（上游尝试 1 HTTP 401 未计费 → 尝试 2 Anthropic HTTP 200 已结算 $0.0180）",
   },
   {
     time: "Oct 19, 14:22:07",
@@ -381,159 +359,9 @@ const demoLogRecords = [
       },
     ],
     rawPreview:
-      "POST /v1/chat/completions → policy gpt-4.1 (structured_output validated against JSON schema, settled $0.0118).",
+      "POST /v1/chat/completions → model gpt-4.1 (structured_output validated against JSON schema, settled $0.0118).",
     rawPreviewZh:
-      "POST /v1/chat/completions → 路由策略 gpt-4.1（结构化输出通过 JSON Schema 校验，已结算 $0.0118）。",
-  },
-];
-
-const demoRoutePools = [
-  {
-    alias: "claude-sonnet-4",
-    revision: "Revision 4",
-    revisionZh: "修订版 4",
-    scopeBadge: "tools · vision · <=64k",
-    scopeBadgeZh: "工具 · 视觉 · <=64k",
-    scopeSub: "Updated by Claude Code · dry-run verified",
-    scopeSubZh: "由 Claude Code 更新 · 已通过预览验证",
-    enabledSummary: "96% eval acceptance ($0.0142/accepted)",
-    enabledSummaryZh: "评估合格率 96%（$0.0142/合格样本）",
-    status: "Enabled",
-    statusZh: "已启用",
-    maxAttempts: "Max 2 attempts · Pre-stream failover",
-    maxAttemptsZh: "最多 2 次尝试 · 流前故障切换",
-    candidates: [
-      {
-        alias: "claude-sonnet-4-anthropic",
-        provider: "Anthropic Direct",
-        priority: 100,
-        weight: 800,
-        tierShare: "80% primary share",
-        tierShareZh: "主层占比 80%",
-        sharePct: 80,
-        status: "Primary",
-        statusZh: "主路由",
-        isPrimary: true,
-      },
-      {
-        alias: "claude-sonnet-4-openrouter",
-        provider: "OpenRouter Enterprise",
-        priority: 100,
-        weight: 200,
-        tierShare: "20% primary share",
-        tierShareZh: "主层占比 20%",
-        sharePct: 20,
-        status: "Primary",
-        statusZh: "主路由",
-        isPrimary: true,
-      },
-      {
-        alias: "claude-sonnet-4-vertex",
-        provider: "Google Vertex AI",
-        priority: 50,
-        weight: 1000,
-        tierShare: "Standby (P50)",
-        tierShareZh: "备用层 (P50)",
-        sharePct: 100,
-        status: "Standby",
-        statusZh: "备用路由",
-        isPrimary: false,
-      },
-    ],
-  },
-  {
-    alias: "gpt-4.1",
-    revision: "Revision 2",
-    revisionZh: "修订版 2",
-    scopeBadge: "chat · structured JSON",
-    scopeBadgeZh: "对话 · 结构化 JSON",
-    scopeSub: "Updated by Codex · matched vs baseline",
-    scopeSubZh: "由 Codex 更新 · 已完成基线对比",
-    enabledSummary: "92% eval acceptance ($0.0118/accepted)",
-    enabledSummaryZh: "评估合格率 92%（$0.0118/合格样本）",
-    status: "Enabled",
-    statusZh: "已启用",
-    maxAttempts: "Max 2 attempts · Pre-stream failover",
-    maxAttemptsZh: "最多 2 次尝试 · 流前故障切换",
-    candidates: [
-      {
-        alias: "gpt-4.1-openai-direct",
-        provider: "OpenAI Direct",
-        priority: 100,
-        weight: 900,
-        tierShare: "90% primary share",
-        tierShareZh: "主层占比 90%",
-        sharePct: 90,
-        status: "Primary",
-        statusZh: "主路由",
-        isPrimary: true,
-      },
-      {
-        alias: "gpt-4.1-azure-east",
-        provider: "Azure OpenAI",
-        priority: 50,
-        weight: 1000,
-        tierShare: "Standby (P50)",
-        tierShareZh: "备用层 (P50)",
-        sharePct: 100,
-        status: "Standby",
-        statusZh: "备用路由",
-        isPrimary: false,
-      },
-    ],
-  },
-  {
-    alias: "deepseek-r1",
-    revision: "Revision 5",
-    revisionZh: "修订版 5",
-    scopeBadge: "reasoning = high · <=128k",
-    scopeBadgeZh: "深度推理 · <=128k",
-    scopeSub: "Updated by DeepSeek Harness · 0 unknown charges",
-    scopeSubZh: "由 DeepSeek Harness 更新 · 0 笔未知费用",
-    enabledSummary: "94% eval acceptance ($0.0064/accepted)",
-    enabledSummaryZh: "评估合格率 94%（$0.0064/合格样本）",
-    status: "Enabled",
-    statusZh: "已启用",
-    maxAttempts: "Max 2 attempts · Pre-stream failover",
-    maxAttemptsZh: "最多 2 次尝试 · 流前故障切换",
-    candidates: [
-      {
-        alias: "deepseek-r1-volcengine",
-        provider: "Volcengine Ark",
-        priority: 100,
-        weight: 700,
-        tierShare: "70% primary share",
-        tierShareZh: "主层占比 70%",
-        sharePct: 70,
-        status: "Primary",
-        statusZh: "主路由",
-        isPrimary: true,
-      },
-      {
-        alias: "deepseek-r1-openrouter",
-        provider: "OpenRouter Enterprise",
-        priority: 100,
-        weight: 300,
-        tierShare: "30% primary share",
-        tierShareZh: "主层占比 30%",
-        sharePct: 30,
-        status: "Primary",
-        statusZh: "主路由",
-        isPrimary: true,
-      },
-      {
-        alias: "deepseek-r1-together",
-        provider: "Together AI",
-        priority: 50,
-        weight: 1000,
-        tierShare: "Standby (P50)",
-        tierShareZh: "备用层 (P50)",
-        sharePct: 100,
-        status: "Standby",
-        statusZh: "备用路由",
-        isPrimary: false,
-      },
-    ],
+      "POST /v1/chat/completions → 模型 gpt-4.1（结构化输出通过 JSON Schema 校验，已结算 $0.0118）。",
   },
 ];
 
@@ -542,24 +370,10 @@ const volumeHistogramBars = [
   91, 85, 76, 88, 95,
 ];
 
-const gatewaySteps = [
-  { step: "01", title: "Let your agent connect Niu", titleZh: "让 Agent 连接 Niu",
-    detail: "Share the setup prompt, approve workspace access in your browser, and verify the connection.",
-    detailZh: "发送接入提示词，在浏览器中审批工作空间权限并验证连接。" },
-  { step: "02", title: "Describe the outcome and constraints", titleZh: "说明目标与约束",
-    detail: "Provide task samples, quality criteria, latency targets, and a test budget.",
-    detailZh: "给出任务样本、质量标准、延迟目标与测试预算。" },
-  { step: "03", title: "Review routing policies and evidence", titleZh: "审阅路由策略与证据",
-    detail: "Inspect evaluations, routing revisions, and request logs in Niu while your agent handles the details.",
-    detailZh: "在 Niu 中审阅评估结果、路由修订与请求日志，细节查询交由 Agent 处理。" },
-];
-
 export default function LandingContent({
-  latestPosts,
-  highlightedCode,
+  highlightedProtocols,
 }: {
-  latestPosts: LandingPost[];
-  highlightedCode: string[];
+  highlightedProtocols: string[];
 }) {
   const { isZh, t } = useLocale();
   const [activePreviewIndex, setActivePreviewIndex] = useState(0);
@@ -567,15 +381,14 @@ export default function LandingContent({
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [selectedLogIndex, setSelectedLogIndex] = useState(0);
   const [showVolumeChart, setShowVolumeChart] = useState(false);
-  const [selectedPoolIndex, setSelectedPoolIndex] = useState(0);
   const [activeGenerationsMode, setActiveGenerationsMode] = useState<
     "chat" | "video"
   >("chat");
-  const [activeCodeIndex, setActiveCodeIndex] = useState(0);
+  const [activeProtocolIndex, setActiveProtocolIndex] = useState(0);
   const [deploymentOrigin, setDeploymentOrigin] = useState("https://niu.io");
-  const [copiedInstall,setCopiedInstall]=useState(false);
-  const [installCopyError,setInstallCopyError]=useState(false);
-  const [copiedCode, setCopiedCode] = useState(false);
+  const [copiedInstall, setCopiedInstall] = useState(false);
+  const [installCopyError, setInstallCopyError] = useState(false);
+  const [copiedProtocol, setCopiedProtocol] = useState(false);
   const mainRef = useRef<HTMLElement>(null);
   useLandingMotion(mainRef);
   const stagger = (i: number) => ({ "--i": i }) as React.CSSProperties;
@@ -599,17 +412,33 @@ export default function LandingContent({
     return () => window.clearInterval(timer);
   }, [previewPaused, activePreviewIndex]);
 
-  const handleCopyCode = () => {
-    const snippet = codeExamples[activeCodeIndex]?.code;
+  const copyInstallationPrompt = () => {
+    setInstallCopyError(false);
+    if (typeof navigator === "undefined" || !navigator.clipboard) {
+      setInstallCopyError(true);
+      return;
+    }
+    void navigator.clipboard
+      .writeText(installationPrompt)
+      .then(() => setCopiedInstall(true))
+      .catch(() => setInstallCopyError(true));
+  };
+  const handleCopyProtocol = () => {
+    const example = protocolExamples[activeProtocolIndex];
+    const snippet = example
+      ? example.code.replaceAll("https://niu.io", deploymentOrigin)
+      : undefined;
     if (!snippet || typeof navigator === "undefined" || !navigator.clipboard)
       return;
     void navigator.clipboard.writeText(snippet).then(() => {
-      setCopiedCode(true);
-      window.setTimeout(() => setCopiedCode(false), 1800);
+      setCopiedProtocol(true);
+      window.setTimeout(() => setCopiedProtocol(false), 1800);
     });
   };
 
   const activeTab = previewTabs[activePreviewIndex] ?? previewTabs[0];
+  const activeProtocol =
+    protocolExamples[activeProtocolIndex] ?? protocolExamples[0];
   const selectedLog = demoLogRecords[selectedLogIndex] ?? demoLogRecords[0];
 
   return (
@@ -626,11 +455,11 @@ export default function LandingContent({
             style={stagger(0)}
             href="#product"
           >
-            <span className="release-tag">{t("Why Niu", "核心优势")}</span>
+            <span className="release-tag">Niu 0.3</span>
             <span>
               {t(
-                "Discover · Evaluate · Route",
-                "发现 · 评估 · 路由",
+                "Native agent packages, routing and evaluations",
+                "原生 Agent 接入、模型路由与评测",
               )}
             </span>
             <IconArrowRight size={14} aria-hidden="true" />
@@ -653,26 +482,66 @@ export default function LandingContent({
           <p className="hero-description hero-enter" style={stagger(2)}>
             {isZh ? (
               <>
-                Niu（牛元）让你通过 Agent，发现与评估模型、配置模型路由，
-                <span className="demo-nowrap">管理性能与成本。</span>
+                让 Agent 发现与评测模型、配置路由，
+                <span className="demo-nowrap">并核查性能与费用。</span>
               </>
             ) : (
               "Discover and evaluate models, configure routing, and manage performance and cost—all through your agent."
             )}
           </p>
           <div className="hero-install code-card hero-enter" style={stagger(3)}>
-            <div className="code-heading"><strong>{t("Give this to your coding agent", "把这句话交给你的 coding agent")}</strong><a href="/docs/install.md">{t("Niu 0.3 install contract", "Niu 0.3 接入规范")}</a></div>
+            <div className="code-heading">
+              <strong>
+                {t(
+                  "Give this to your coding agent",
+                  "把这句话交给你的 coding agent",
+                )}
+              </strong>
+              <a href="/docs/install.md">
+                {t("Niu 0.3 install contract", "Niu 0.3 接入规范")}
+              </a>
+            </div>
             <code className="hero-install-prompt">{installationPrompt}</code>
             <div className="hero-install-footer">
-              <p>{t("Paste into Claude Code, Codex or DeepSeek Harness. Your agent checks availability and opens Niu for sign-in and approval.", "粘贴至 Claude Code、Codex 或 DeepSeek Harness。Agent 检查可用性并打开 Niu 完成登录与授权审批。")}</p>
-              <Button size="lg" className="cta-primary" onClick={()=>{setInstallCopyError(false);if(!navigator.clipboard){setInstallCopyError(true);return;}void navigator.clipboard.writeText(installationPrompt).then(()=>setCopiedInstall(true)).catch(()=>setInstallCopyError(true));}}>
-                {copiedInstall?<IconCheck aria-hidden="true"/>:<IconCopy aria-hidden="true"/>}<span aria-live="polite">{copiedInstall?t("Copied", "已复制"):t("Copy setup prompt", "复制接入提示词")}</span>
+              <p>
+                {t(
+                  "Paste into Claude Code, Codex or DeepSeek Harness. Your agent checks availability and opens Niu for sign-in and approval.",
+                  "粘贴至 Claude Code、Codex 或 DeepSeek Harness。Agent 检查可用性并打开 Niu 完成登录与授权审批。",
+                )}
+              </p>
+              <Button
+                size="lg"
+                className="cta-primary"
+                onClick={copyInstallationPrompt}
+              >
+                {copiedInstall ? (
+                  <IconCheck aria-hidden="true" />
+                ) : (
+                  <IconCopy aria-hidden="true" />
+                )}
+                <span aria-live="polite">
+                  {copiedInstall
+                    ? t("Copied", "已复制")
+                    : t("Copy setup prompt", "复制接入提示词")}
+                </span>
               </Button>
             </div>
-            {installCopyError&&<p className="hero-install-error" role="status">{t("Select the prompt above to copy it manually.", "请选择上方提示词手动复制。")}</p>}
+            {installCopyError && (
+              <p className="hero-install-error" role="status">
+                {t(
+                  "Select the prompt above to copy it manually.",
+                  "请选择上方提示词手动复制。",
+                )}
+              </p>
+            )}
           </div>
           <div className="actions hero-actions hero-enter" style={stagger(3)}>
-            <Button asChild size="lg" variant="outline" className="cta-secondary">
+            <Button
+              asChild
+              size="lg"
+              variant="outline"
+              className="cta-secondary"
+            >
               <a href="/docs/guides/personal-assistant/">
                 <IconPlugConnected aria-hidden="true" />
                 {t("Build with Niu", "用 Niu 开发")}
@@ -685,9 +554,7 @@ export default function LandingContent({
               variant="outline"
               className="cta-secondary"
             >
-              <a href={links.dashboard}>
-                {t("Open dashboard", "打开控制台")}
-              </a>
+              <a href={links.dashboard}>{t("Open dashboard", "打开控制台")}</a>
             </Button>
             <Button asChild size="lg" variant="ghost" className="cta-ghost">
               <a href={links.repo}>
@@ -716,57 +583,41 @@ export default function LandingContent({
               className={`product-preview demo-dashboard-shell${sidebarCollapsed ? " is-sidebar-collapsed" : ""}`}
               aria-label="Interactive Niu dashboard preview"
             >
-              {/* 1. Left Product Rail (AppLayout.tsx .app-rail) */}
-              <aside
-                className="mock-nav-rail demo-app-rail"
-                aria-label="Product rail navigation"
-              >
-                <button
-                  type="button"
-                  className="mock-nav-home"
-                  title="Niu Dashboard"
-                  onClick={() => setActivePreviewIndex(0)}
-                >
-                  <img
-                    src="/site-assets/brand/niu-mark.png"
-                    alt="Niu"
-                    width="26"
-                    height="26"
-                  />
-                </button>
-                <div className="mock-nav-items">
-                  <button
-                    type="button"
-                    className={`mock-rail-btn${activeTab.railArea === "workspace" ? " is-active" : ""}`}
-                    aria-label={t("Workspace", "工作空间")}
-                    title={t("Workspace · Logs & Routing", "工作空间 · 日志与路由")}
-                    onClick={() => setActivePreviewIndex(0)}
-                  >
-                    <FolderKey size={18} />
-                  </button>
-                  <button
-                    type="button"
-                    className={`mock-rail-btn${activeTab.railArea === "generations" ? " is-active" : ""}`}
-                    aria-label={t("Generations", "生成对话")}
-                    title={t("Generations · Chat & Video", "生成对话 · 对话与视频")}
-                    onClick={() => setActivePreviewIndex(2)}
-                  >
-                    <IconSparkles size={19} stroke={1.75} />
-                  </button>
-                </div>
-                <div className="demo-rail-footer">
-                  <span className="demo-rail-avatar" title={t("Your account", "当前账户")}>
-                    H
-                  </span>
-                </div>
-              </aside>
-
-              {/* 2. Contextual Second-Level Sidebar (AppLayout.tsx .niu-workspace-sidebar) */}
               {!sidebarCollapsed && (
                 <aside
                   className="demo-context-sidebar"
                   aria-label="Section navigation"
                 >
+                  <div className="demo-sidebar-header">
+                    <a
+                      href="/workspaces/default/"
+                      className="flex items-center gap-2 font-semibold"
+                    >
+                      <img
+                        src="/site-assets/brand/niu-mark.png"
+                        width="26"
+                        height="26"
+                        alt=""
+                      />
+                      Niu
+                    </a>
+                    <Button
+                      variant="ghost"
+                      className="w-full justify-start gap-2"
+                      onClick={() => setActivePreviewIndex(0)}
+                    >
+                      <FolderKey size={18} />
+                      {t("Workspace", "工作空间")}
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      className="w-full justify-start gap-2"
+                      onClick={() => setActivePreviewIndex(1)}
+                    >
+                      <IconSparkles size={18} />
+                      {t("Generations", "生成对话")}
+                    </Button>
+                  </div>
                   {activeTab.railArea === "workspace" && (
                     <>
                       <div className="demo-sidebar-header">
@@ -810,30 +661,7 @@ export default function LandingContent({
                           <List size={15} />
                           <span>{t("Logs", "请求日志")}</span>
                         </button>
-                        <button
-                          type="button"
-                          className={`demo-sidebar-item${activePreviewIndex === 1 ? " is-active" : ""}`}
-                          onClick={() => setActivePreviewIndex(1)}
-                        >
-                          <IconRoute size={15} />
-                          <span>{t("Routing", "模型路由")}</span>
-                        </button>
-                        <button
-                          type="button"
-                          className="demo-sidebar-item"
-                          onClick={() => setActivePreviewIndex(1)}
-                        >
-                          <IconListSearch size={15} />
-                          <span>{t("Evaluations", "评估")}</span>
-                        </button>
-                        <button
-                          type="button"
-                          className="demo-sidebar-item"
-                          onClick={() => setActivePreviewIndex(1)}
-                        >
-                          <IconPlugConnected size={15} />
-                          <span>{t("Event subscriptions", "事件订阅")}</span>
-                        </button>
+
                         <button
                           type="button"
                           className="demo-sidebar-item"
@@ -944,7 +772,10 @@ export default function LandingContent({
                               )}
                             </strong>
                             <small>
-                              {t("deepseek-r1 · 1h ago", "deepseek-r1 · 1 小时前")}
+                              {t(
+                                "deepseek-r1 · 1h ago",
+                                "deepseek-r1 · 1 小时前",
+                              )}
                             </small>
                           </div>
                         </button>
@@ -1050,7 +881,9 @@ export default function LandingContent({
                             type="button"
                             className="demo-action-btn"
                             onClick={() =>
-                              setSelectedLogIndex((prev) => (prev === 1 ? 3 : 1))
+                              setSelectedLogIndex((prev) =>
+                                prev === 1 ? 3 : 1,
+                              )
                             }
                           >
                             <ShieldAlert size={13} />
@@ -1118,8 +951,8 @@ export default function LandingContent({
                               </span>
                               <span className="demo-filter-chip">
                                 {t(
-                                  "Policy: claude-sonnet-4",
-                                  "路由策略：claude-sonnet-4",
+                                  "Model: claude-sonnet-4",
+                                  "模型：claude-sonnet-4",
                                 )}
                               </span>
                             </div>
@@ -1167,7 +1000,10 @@ export default function LandingContent({
                                           <div>
                                             <strong>{row.model}</strong>
                                             <small>
-                                              {(isZh ? row.timeZh : row.time).replace(
+                                              {(isZh
+                                                ? row.timeZh
+                                                : row.time
+                                              ).replace(
                                                 /^Oct 19, |^10月19日 /,
                                                 "",
                                               )}{" "}
@@ -1216,7 +1052,8 @@ export default function LandingContent({
                                   {selectedLog.model}
                                 </span>{" "}
                                 <small>
-                                  · {isZh ? selectedLog.timeZh : selectedLog.time}
+                                  ·{" "}
+                                  {isZh ? selectedLog.timeZh : selectedLog.time}
                                 </small>
                               </h3>
                             </div>
@@ -1236,7 +1073,9 @@ export default function LandingContent({
                             <div>
                               <span>{t("Customer charge", "客户费用")}</span>
                               <strong>
-                                {isZh ? selectedLog.chargeZh : selectedLog.charge}
+                                {isZh
+                                  ? selectedLog.chargeZh
+                                  : selectedLog.charge}
                               </strong>
                             </div>
                             <div>
@@ -1323,177 +1162,8 @@ export default function LandingContent({
                     </div>
                   )}
 
-                  {/* SURFACE 1: WORKSPACE / ROUTING, EVALUATIONS & EVENTS (features/agent-review/page.tsx) */}
-                  {activePreviewIndex === 1 && (
-                    <div className="investigation demo-page-surface">
-                      <div className="demo-page-header">
-                        <div>
-                          <div className="demo-page-title-row">
-                            <h2>{t("Routing & Evaluations", "模型路由与评估")}</h2>
-                            <span className="demo-count-badge">
-                              {t("3 saved policies · 25 eval samples", "3 条已存策略 · 25 个评估样本")}
-                            </span>
-                          </div>
-                          <p className="demo-page-subtitle">
-                            {t(
-                              "Review workspace routing policies, fingerprinted evaluations, and signed event deliveries.",
-                              "审阅工作空间路由策略、带指纹的任务评估结果及签名事件通知状态。",
-                            )}
-                          </p>
-                        </div>
-                        <div className="demo-header-actions">
-                          <button
-                            type="button"
-                            className="demo-action-btn"
-                            onClick={() => setActivePreviewIndex(0)}
-                          >
-                            <List size={13} />
-                            <span>{t("Selection logs", "路由命中日志")}</span>
-                          </button>
-                          <button
-                            type="button"
-                            className="demo-action-btn is-primary"
-                            onClick={() =>
-                              setSelectedPoolIndex(
-                                (prev) => (prev + 1) % demoRoutePools.length,
-                              )
-                            }
-                          >
-                            <IconHistory size={13} />
-                            <span>{t("Cycle policy", "切换策略")}</span>
-                          </button>
-                        </div>
-                      </div>
-
-                      <div className="demo-kpi-grid is-three-col">
-                        <article className="demo-kpi-card is-highlighted">
-                          <div className="demo-kpi-top">
-                            <span>
-                              {t("Matched evaluation", "同样本对比评估")}
-                            </span>
-                            <span className="demo-outline-badge">
-                              {t("25 samples", "25 个样本")}
-                            </span>
-                          </div>
-                          <strong>{t("96.0% accepted", "96.0% 合格率")}</strong>
-                          <div className="demo-kpi-foot">
-                            <span className="demo-delta-badge is-positive">
-                              {t("$0.0142 / accepted", "$0.0142 / 合格样本")}
-                            </span>
-                          </div>
-                        </article>
-                        <article className="demo-kpi-card">
-                          <div className="demo-kpi-top">
-                            <span>
-                              {t("Delegated authority", "Agent 委托权限")}
-                            </span>
-                            <span className="demo-outline-badge">
-                              {t("Task-scoped", "按任务授权")}
-                            </span>
-                          </div>
-                          <strong>{t("Management only", "仅管理权限")}</strong>
-                          <div className="demo-kpi-foot">
-                            <span className="demo-delta-badge">
-                              {t("Model invocation: Off", "模型调用：默认关闭")}
-                            </span>
-                          </div>
-                        </article>
-                        <article className="demo-kpi-card">
-                          <div className="demo-kpi-top">
-                            <span>
-                              {t("Event notifications", "签名事件通知")}
-                            </span>
-                            <span className="demo-outline-badge">
-                              {t("Active", "运行中")}
-                            </span>
-                          </div>
-                          <strong>{t("100% delivered", "100% 已送达")}</strong>
-                          <div className="demo-kpi-foot">
-                            <span className="demo-delta-badge is-positive">
-                              {t("0 open connection incidents", "0 个未决连接故障")}
-                            </span>
-                          </div>
-                        </article>
-                      </div>
-
-                      <div className="comparison-scroll demo-table-scroll">
-                        <table
-                          className="comparison-matrix demo-data-table"
-                          aria-label="Workspace routing policies"
-                        >
-                          <thead>
-                            <tr>
-                              <th>{t("Routing policy", "路由策略")}</th>
-                              <th>{t("Match conditions", "匹配条件")}</th>
-                              <th>{t("Candidate tiers & evaluation", "候选分层与评估结果")}</th>
-                              <th>{t("Status", "状态")}</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {demoRoutePools.map((pool, idx) => {
-                              const isSelected = idx === selectedPoolIndex;
-                              return (
-                                <tr
-                                  key={pool.alias}
-                                  className={`demo-clickable-row${isSelected ? " matrix-selected" : ""}`}
-                                  onClick={() => setSelectedPoolIndex(idx)}
-                                >
-                                  <td>
-                                    <div className="demo-pool-alias-cell">
-                                      <IconRoute size={15} />
-                                      <div>
-                                        <strong>{pool.alias}</strong>
-                                        <small>
-                                          {isZh ? pool.revisionZh : pool.revision}
-                                        </small>
-                                      </div>
-                                    </div>
-                                  </td>
-                                  <td>
-                                    <span className="demo-outline-badge">
-                                      {isZh ? pool.scopeBadgeZh : pool.scopeBadge}
-                                    </span>
-                                    <small>
-                                      {isZh ? pool.scopeSubZh : pool.scopeSub}
-                                    </small>
-                                  </td>
-                                  <td>
-                                    <div className="demo-candidate-pills">
-                                      {pool.candidates.map((cand) => (
-                                        <span
-                                          key={cand.alias}
-                                          className="demo-candidate-pill"
-                                        >
-                                          <strong>{cand.alias}</strong>
-                                          <span>
-                                            P{cand.priority} · W{cand.weight}
-                                          </span>
-                                        </span>
-                                      ))}
-                                    </div>
-                                    <small>
-                                      {isZh
-                                        ? pool.enabledSummaryZh
-                                        : pool.enabledSummary}
-                                    </small>
-                                  </td>
-                                  <td>
-                                    <span className="demo-status-pill is-completed">
-                                      <i className="demo-status-dot" />
-                                      {isZh ? pool.statusZh : pool.status}
-                                    </span>
-                                  </td>
-                                </tr>
-                              );
-                            })}
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                  )}
-
                   {/* SURFACE 2: GENERATIONS · CHAT COMPARISON & SEEDANCE VIDEO (PlaygroundView.tsx + VideoView.tsx) */}
-                  {activePreviewIndex === 2 && (
+                  {activePreviewIndex === 1 && (
                     <div className="investigation demo-page-surface">
                       <div className="demo-page-header">
                         <div>
@@ -1571,8 +1241,8 @@ export default function LandingContent({
                             </span>
                             <p>
                               {t(
-                                "Compare bounded routing failover vs unconditional retries when an upstream Provider returns HTTP 401 before streaming starts.",
-                                "对比当上游供应商在流式输出开始前返回 HTTP 401 时，有界路由故障切换与无条件重试的区别。",
+                                "Summarize the Q3 usage report in two sentences.",
+                                "用两句话总结第三季度用量报告。",
                               )}
                             </p>
                           </div>
@@ -1586,38 +1256,22 @@ export default function LandingContent({
                                   </span>
                                   <div>
                                     <strong>claude-sonnet-4</strong>
-                                    <small>
-                                      {t(
-                                        "Anthropic · Policy revision 4",
-                                        "Anthropic · 路由策略修订版 4",
-                                      )}
-                                    </small>
+                                    <small>{t("Anthropic", "Anthropic")}</small>
                                   </div>
                                 </div>
                                 <span className="demo-status-pill is-completed">
                                   <i className="demo-status-dot" />
-                                  {t("Completed · 1,180 ms", "已完成 · 1,180 ms")}
+                                  {t(
+                                    "Completed · 1,180 ms",
+                                    "已完成 · 1,180 ms",
+                                  )}
                                 </span>
                               </div>
                               <div className="demo-chat-card-body">
                                 <p>
-                                  {isZh ? (
-                                    <>
-                                      <strong>有界故障切换</strong>仅在上游拒绝发生于任何
-                                      SSE 响应体字节发出之前时才触发重试。遇到{" "}
-                                      <code>HTTP 401</code> 时，Niu 将失败候选路由置入
-                                      60 秒鉴权冷却并自动调度第 2 次尝试，不会对工作空间重复扣费。
-                                    </>
-                                  ) : (
-                                    <>
-                                      <strong>Bounded failover</strong> only retries
-                                      when the upstream rejection occurs before any
-                                      SSE body bytes are committed. On{" "}
-                                      <code>HTTP 401</code>, Niu places the failing
-                                      candidate route into a 60s auth cooldown and
-                                      dispatches Attempt 2 without double-charging
-                                      the workspace.
-                                    </>
+                                  {t(
+                                    "Usage increased in Q3. Most requests came from support workflows.",
+                                    "第三季度用量上升。大部分请求来自客服流程。",
                                   )}
                                 </p>
                               </div>
@@ -1647,10 +1301,7 @@ export default function LandingContent({
                                   <div>
                                     <strong>gpt-4.1</strong>
                                     <small>
-                                      {t(
-                                        "OpenAI Direct · Policy revision 2",
-                                        "OpenAI Direct · 路由策略修订版 2",
-                                      )}
+                                      {t("OpenAI Direct", "OpenAI Direct")}
                                     </small>
                                   </div>
                                 </div>
@@ -1661,24 +1312,9 @@ export default function LandingContent({
                               </div>
                               <div className="demo-chat-card-body">
                                 <p>
-                                  {isZh ? (
-                                    <>
-                                      <strong>流开始前 vs 流传输中：</strong>流开始前的{" "}
-                                      <code>401/429/503</code> 错误可在路由策略的{" "}
-                                      <code>max_attempts</code> 上限内安全切换；若已发出部分
-                                      Token 后流中断，Niu 会将其记录为{" "}
-                                      <code>状态未定 / 待核对</code>。
-                                    </>
-                                  ) : (
-                                    <>
-                                      <strong>Pre-stream vs mid-stream:</strong>{" "}
-                                      Pre-stream <code>401/429/503</code> errors can
-                                      safely fail over within the routing policy’s{" "}
-                                      <code>max_attempts</code> cap. If a stream
-                                      drops after tokens are emitted, Niu records
-                                      the state as{" "}
-                                      <code>Uncertain / Unresolved</code>.
-                                    </>
+                                  {t(
+                                    "Support accounted for most requests. Usage grew over the previous quarter.",
+                                    "客服流程占请求量的大部分。用量比上季度有所增长。",
                                   )}
                                 </p>
                               </div>
@@ -1792,7 +1428,9 @@ export default function LandingContent({
                                   </dd>
                                 </div>
                                 <div>
-                                  <dt>{t("Workspace assets", "工作空间素材")}</dt>
+                                  <dt>
+                                    {t("Workspace assets", "工作空间素材")}
+                                  </dt>
                                   <dd>
                                     {t(
                                       "Materials & safety check verified",
@@ -1805,7 +1443,9 @@ export default function LandingContent({
 
                             <div className="demo-timing-card">
                               <div className="demo-timing-header">
-                                <strong>{t("Video billing", "视频计费明细")}</strong>
+                                <strong>
+                                  {t("Video billing", "视频计费明细")}
+                                </strong>
                                 <span>{t("Tariff settled", "费率已结算")}</span>
                               </div>
                               <dl className="demo-drawer-dl">
@@ -1846,8 +1486,8 @@ export default function LandingContent({
                 <div className="preview-caption">
                   <span>
                     {t(
-                      "Illustrative dashboard data · Inspect logs, routing policies, evaluations and generations in Niu",
-                      "控制台示例数据 · 在 Niu 中审阅请求日志、路由策略、评估运行与生成结果",
+                      "Illustrative dashboard data · Inspect logs and generations in Niu",
+                      "控制台示例数据 · 在 Niu 中查看请求日志与生成结果",
                     )}
                   </span>
                   <Button asChild size="sm" className="cta-primary cta-compact">
@@ -1866,7 +1506,7 @@ export default function LandingContent({
         </div>
       </section>
 
-      {/* 2. SIX CORE CAPABILITIES */}
+      {/* 2. WHAT YOUR AGENT CAN DO WITH NIU */}
       <section
         className="section container"
         id="product"
@@ -1874,53 +1514,49 @@ export default function LandingContent({
       >
         <div className="section-heading" data-reveal>
           <div>
-            <p className="eyebrow">
-              {t("AGENT SCENARIOS", "AGENT 使用场景")}
-            </p>
+            <p className="eyebrow">{t("CAPABILITIES", "核心能力")}</p>
             <h2 id="product-title">
               {isZh ? (
                 <>
-                  告诉 Agent 你的需求，
+                  模型管理的完整闭环，
                   <br />
-                  让它与 Niu 一起完成。
+                  由你的 Agent 直接操作。
                 </>
               ) : (
                 <>
-                  Start with what
+                  The full model workflow,
                   <br />
-                  you want to achieve.
+                  operated by your agent.
                 </>
               )}
             </h2>
           </div>
           <p>
             {t(
-              "Your agent gets the evidence and controls to configure Niu: evaluate candidates, configure routing around your workload, and refine quality, latency and cost from real execution feedback.",
-              "Agent 获取决策证据与管理能力，按任务负载评估候选模型并配置 Niu 的路由策略，再根据实际运行反馈持续改善质量、延迟与成本。",
+              "Niu supplies the evidence and authorized controls. Your agent makes the model and cost decisions; you review what matters.",
+              "Niu 提供可信证据与授权能力，模型与成本取舍由 Agent 决定，重要变更由你审核。",
             )}
           </p>
         </div>
         <div className="capability-grid">
           {capabilities.map((item, index) => {
-            const CapabilityIcon = capabilityIcons[index];
+            const CapabilityIcon = capabilityIcons[index] ?? IconSparkles;
             return (
               <article
                 key={item.href}
                 className="capability"
                 data-reveal
-                data-spotlight
                 style={stagger(index % 3)}
               >
                 <div className="capability-top">
                   <span className="capability-icon" aria-hidden="true">
                     <CapabilityIcon size={20} stroke={1.75} />
                   </span>
-                  <span className="feature-number">{item.number}</span>
                 </div>
                 <h3>{isZh ? item.titleZh : item.title}</h3>
                 <p>{isZh ? item.descriptionZh : item.description}</p>
                 <a className="text-link" href={item.href}>
-                  {isZh ? item.labelZh : item.label}{" "}
+                  {t("Learn more", "了解更多")}{" "}
                   <span aria-hidden="true">→</span>
                 </a>
               </article>
@@ -1929,69 +1565,118 @@ export default function LandingContent({
         </div>
       </section>
 
-      {/* 3. DROP-IN API QUICKSTART */}
+      {/* 3. HOW IT WORKS */}
       <section
         className="gateway-section"
-        id="gateway"
-        aria-labelledby="gateway-title"
+        id="workflow"
+        aria-labelledby="workflow-title"
       >
-        <div className="container section gateway-grid">
-          <div className="gateway-copy" data-reveal>
-            <p className="eyebrow">
-              {t("START WITH YOUR AGENT", "从你的 AGENT 开始")}
+        <div className="container section">
+          <div className="section-heading" data-reveal>
+            <div>
+              <p className="eyebrow">{t("HOW IT WORKS", "使用流程")}</p>
+              <h2 id="workflow-title">
+                {isZh ? (
+                  <>
+                    三步开始，
+                    <br />
+                    接入工作交给 Agent。
+                  </>
+                ) : (
+                  <>
+                    Three steps.
+                    <br />
+                    Your agent does the setup.
+                  </>
+                )}
+              </h2>
+            </div>
+            <p>
+              {t(
+                "Works with Claude Code, Codex and DeepSeek Harness without changing the agent's own host model.",
+                "支持 Claude Code、Codex 与 DeepSeek Harness，且不改动 Agent 自身的宿主模型。",
+              )}
             </p>
-            <h2 id="gateway-title">
+          </div>
+          <ol className="landing-steps">
+            {workflowSteps.map((item, index) => (
+              <li key={item.step} data-reveal style={stagger(index)}>
+                <span className="landing-step-number">{item.step}</span>
+                <h3>{isZh ? item.titleZh : item.title}</h3>
+                <p>{isZh ? item.detailZh : item.detail}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      {/* 4. NATIVE PROTOCOLS, ONE KEY */}
+      <section
+        className="section container protocols-section"
+        id="protocols"
+        aria-labelledby="protocols-title"
+      >
+        <div className="gateway-grid">
+          <div className="gateway-copy" data-reveal>
+            <p className="eyebrow">{t("NATIVE PROTOCOLS", "原生协议")}</p>
+            <h2 id="protocols-title">
               {isZh ? (
                 <>
-                  说清你想做什么，
+                  沿用 SDK 原生协议，
                   <br />
-                  接入工作交给 Agent。
+                  一把 Niu 密钥统一管理。
                 </>
               ) : (
                 <>
-                  Give your agent a goal.
+                  Keep your SDK&apos;s protocol.
                   <br />
-                  Let it handle the setup.
+                  Use one Niu key.
                 </>
               )}
             </h2>
             <p className="section-description">
               {t(
-                "Connect Claude Code, Codex or DeepSeek Harness without changing your agent's own host model.",
-                "连接 Claude Code、Codex 或 DeepSeek Harness，且无需改动 Agent 自身的宿主模型。",
+                "Send requests in their native format—no payload translation. Workspace keys control which models and protocols each caller may use.",
+                "按原生格式发送请求，无需转换请求体。工作空间密钥决定每个调用方可使用的模型与协议。",
               )}
             </p>
-            <ul className="gateway-features">
-              {gatewaySteps.map((item) => (
-                <li key={item.step}>
-                  <span className="gateway-step-badge">{item.step}</span>
-                  <div>
-                    <strong>{isZh ? item.titleZh : item.title}</strong>
-                    <p>{isZh ? item.detailZh : item.detail}</p>
-                  </div>
+            <ul className="landing-protocol-list">
+              {protocolNames.map((name) => (
+                <li key={name.en}>
+                  <IconCheck size={16} aria-hidden="true" />
+                  {isZh ? name.zh : name.en}
                 </li>
               ))}
             </ul>
             <div className="gateway-links">
-              <a className="text-link" href="/docs/guides/personal-assistant/">
-                {t("Build with Niu", "用 Niu 开发")}{" "}
-                <span aria-hidden="true">→</span>
-              </a>
-              <a className="text-link" href="https://github.com/niu-io/niu/tree/main/examples/personal-assistant">
-                {t("Runnable example", "可运行源码示例")}{" "}
+              <a className="text-link" href="/docs/agents/inference/">
+                {t("Inference contract", "推理协议契约")}{" "}
                 <span aria-hidden="true">→</span>
               </a>
             </div>
           </div>
-          <Tabs className="code-card" data-reveal style={stagger(1)}
-            value={codeExamples[activeCodeIndex].id}
-            onValueChange={(value) => { setActiveCodeIndex(codeExamples.findIndex((item) => item.id === value)); setCopiedCode(false); }}
+          <Tabs
+            className="code-card"
+            data-reveal
+            style={stagger(1)}
+            value={activeProtocol.id}
+            onValueChange={(value) => {
+              const idx = protocolExamples.findIndex(
+                (item) => item.id === value,
+              );
+              setActiveProtocolIndex(idx >= 0 ? idx : 0);
+              setCopiedProtocol(false);
+            }}
           >
             <div className="code-heading">
-              <TabsList className="code-tabs" variant="line" aria-label="Agent task prompts">
-                {codeExamples.map((example, idx) => (
+              <TabsList
+                className="code-tabs"
+                variant="line"
+                aria-label={t("Inference protocol examples", "推理协议示例")}
+              >
+                {protocolExamples.map((example) => (
                   <TabsTrigger key={example.id} value={example.id}>
-                    {t(example.label, ["连接", "评估", "改进"][idx])}
+                    {isZh ? example.labelZh : example.label}
                   </TabsTrigger>
                 ))}
               </TabsList>
@@ -1999,415 +1684,111 @@ export default function LandingContent({
                 variant="ghost"
                 type="button"
                 className="code-copy-btn"
-                onClick={handleCopyCode}
-                aria-label={t("Copy agent prompt", "复制 Agent 提示词")}
+                onClick={handleCopyProtocol}
+                aria-label={t("Copy curl example", "复制 curl 示例")}
               >
-                {copiedCode ? (
+                {copiedProtocol ? (
                   <IconCheck size={14} aria-hidden="true" />
                 ) : (
                   <IconCopy size={14} aria-hidden="true" />
                 )}
                 <span>
-                  {copiedCode ? t("Copied", "已复制") : t("Copy", "复制")}
+                  {copiedProtocol ? t("Copied", "已复制") : t("Copy", "复制")}
                 </span>
               </Button>
             </div>
             <div className="code-subbar">
-              <span>{isZh ? codeExamples[activeCodeIndex].endpointZh : codeExamples[activeCodeIndex].endpoint}</span>
-              <span>{t("Prompt for your agent", "交给 Agent 的提示词")}</span>
-            </div>
-            {/* Build-time Shiki HTML from maintained task prompts. */}
-            {codeExamples.map((example, idx) => (
-              <TabsContent key={example.id} value={example.id} className="highlighted-example">
-                <div dangerouslySetInnerHTML={{ __html: highlightedCode[idx] }} />
-              </TabsContent>
-            ))}
-            <div className="code-footnote">
-              <span className="status-dot is-live"></span>
               <span>
-                {t("Scope:", "能力范围：")}{" "}
-                <strong>
-                  {isZh
-                    ? codeExamples[activeCodeIndex].traceZh
-                    : codeExamples[activeCodeIndex].trace}
-                </strong>
+                {isZh ? activeProtocol.endpointZh : activeProtocol.endpoint}
               </span>
             </div>
+            {protocolExamples.map((example, idx) => (
+              <TabsContent
+                key={example.id}
+                value={example.id}
+                className="highlighted-example"
+              >
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: highlightedProtocols[idx] ?? "",
+                  }}
+                />
+              </TabsContent>
+            ))}
           </Tabs>
         </div>
       </section>
 
-      {/* 2. PERFORMANCE BENCHMARK (VISUAL CARDS + VERDICT) */}
-      <section
-        className="section container benchmark-section"
-        id="benchmark"
-        aria-labelledby="benchmark-title"
-      >
-        <div className="benchmark-heading" data-reveal>
-          <div>
-            <p className="eyebrow">
-              {t(
-                "HISTORICAL GATEWAY BENCHMARKS",
-                "历史网关基准测试",
-              )}
-            </p>
-            <h2 id="benchmark-title">
-              {isZh ? (
-                <>
-                  单机 3,239 RPS 峰值吞吐，
-                  <br />
-                  10.7 倍于 LiteLLM · 3.7 倍于 New API。
-                </>
-              ) : (
-                <>
-                  3,239 RPS in Rust.
-                  <br />
-                  10.7× LiteLLM. 3.7× New API.
-                </>
-              )}
-            </h2>
-          </div>
-          <p>
-            {isZh ? (
-              <>
-                以下是 Niu v0.2.4 在指定配置下的历史结果，使用基准工具{" "}
-                <code>ai-gateway-bench</code>{" "}
-                在 Apple M4 与 PostgreSQL 17.11 上测量。这些数据不代表 Niu 0.3 或你的实际模型任务表现。
-              </>
-            ) : (
-              <>
-                Historical Niu v0.2.4 results, measured with <code>ai-gateway-bench</code> on Apple M4 with
-                PostgreSQL 17.11, Niu sustains 3,239 RPS with full database
-                accounting and 18.2 MB idle RAM in this configuration. These are not Niu 0.3 or application task measurements.
-              </>
-            )}
-          </p>
-        </div>
-          <dl className="hero-stats" aria-label="Measured gateway results">
-            {heroStats.map((stat, i) => (
-              <div key={stat.label} data-reveal style={stagger(i)}>
-                <dt>{isZh ? stat.labelZh : stat.label}</dt>
-                <dd>
-                  <CountUp value={stat.value} />
-                </dd>
-              </div>
-            ))}
-          </dl>
-
-        <div className="benchmark-method benchmark-method-compact" data-reveal>
-          <p>
-            {isZh ? (
-              <>
-                <strong>测试基线：</strong> Niu v0.2.4 开启完整 PostgreSQL ACID 转发前准入与批量完成结算；New API (45fbb14) 开启{" "}
-                <code>MEMORY_CACHE_ENABLED=true</code>；LiteLLM Proxy (v1.104.0) 运行于无状态 <code>master_key</code> 模式。
-              </>
-            ) : (
-              <>
-                <strong>Test baseline:</strong> Niu v0.2.4 ran with full ACID PostgreSQL pre-dispatch admission and batched completion; New API (45fbb14) ran with{" "}
-                <code>MEMORY_CACHE_ENABLED=true</code>; LiteLLM Proxy (v1.104.0) ran in stateless <code>master_key</code> mode.
-              </>
-            )}
-          </p>
-          <div className="benchmark-links">
-            <a className="text-link" href={links.benchmark}>
-              {t(
-                "Full benchmark report & methodology",
-                "完整基准测试报告与方法论",
-              )}{" "}
-              <span aria-hidden="true">→</span>
-            </a>
-            <a className="text-link" href="/compare/#performance">
-              {t("Side-by-side matrix", "横向对比矩阵")}{" "}
-              <span aria-hidden="true">→</span>
-            </a>
-          </div>
-        </div>
-      </section>
-
-      {/* 5. SELF-HOSTED ARCHITECTURE & EVALUATION SCOPE */}
+      {/* 5. FOUNDATION: OPEN SOURCE, OPERATING MODES, PERFORMANCE */}
       <section
         className="section container"
-        id="release"
-        aria-labelledby="release-title"
+        id="foundation"
+        aria-labelledby="foundation-title"
       >
         <div className="section-heading" data-reveal>
           <div>
-            <p className="eyebrow">
-              {t(
-                "FULL-STACK OPEN SOURCE · SELF-HOSTED",
-                "全栈开源 · 私有化自托管",
-              )}
-            </p>
-            <h2 id="release-title">
+            <p className="eyebrow">{t("FOUNDATION", "技术底座")}</p>
+            <h2 id="foundation-title">
               {isZh ? (
                 <>
-                  全栈代码开源可控，
+                  开源、可自托管，
                   <br />
-                  单容器连上数据库即可上线。
+                  轻量的 Rust 网关。
                 </>
               ) : (
                 <>
-                  Full-stack open source.
+                  Open source, self-hosted,
                   <br />
-                  Deploy with a single PostgreSQL database.
+                  and built on a lean Rust gateway.
                 </>
               )}
             </h2>
           </div>
           <p>
             {t(
-              "The gateway, dashboard, and docs are MIT-licensed with zero black-box dependencies or license servers—your data stays 100% yours.",
-              "网关、管理控制台与文档站点全部采用 MIT 开源许可，无黑盒依赖、无外部授权服务器，业务数据 100% 掌握在您自己手中。",
+              "Run Niu as a single container with PostgreSQL. Inference still reaches the upstream Providers you configure.",
+              "单容器加 PostgreSQL 即可运行 Niu，推理请求仍发往你配置的上游供应商。",
             )}
           </p>
         </div>
-        <div className="release-grid">
-          <article className="release-card" data-reveal data-spotlight>
-            <span className="phase available">
-              <span className="status-dot is-live"></span>
-              {t("READY TO DEPLOY TODAY", "开箱即用 · 立即部署")}
-            </span>
-            <h3>
-              {t("Included in the open-source stack", "全栈开源版本已内置能力")}
-            </h3>
-            <ul>
-              <li>
-                {t(
-                  "Rust gateway (/v1/chat/completions, /v1/responses, /v1/messages) with MCP and Claude Code, Codex, and DeepSeek Harness packages",
-                  "Rust 高性能网关（兼容 /v1/chat/completions、/v1/responses、/v1/messages），内置 MCP 及 Claude Code、Codex、DeepSeek Harness 接入包",
-                )}
-              </li>
-              <li>
-                {t(
-                  "Internal use mode by default (connect OpenRouter, FastRouter, BabelArk, Qiniu, or DeepSeek with an API key), plus optional Resale mode with customer tariffs and Credits",
-                  "默认采用零门槛内部自用模式（填入 API 密钥即可连接 OpenRouter、FastRouter、BabelArk、七牛云、DeepSeek），亦可开启商业转售模式与品牌 Credits",
-                )}
-              </li>
-              <li>
-                {t(
-                  "Workspace routing policies, fingerprinted task evaluations, and signed webhook event notifications",
-                  "工作空间模型路由策略、带指纹的任务样本评估与签名 Webhook 事件通知",
-                )}
-              </li>
-              <li>
-                {t(
-                  "Task-scoped browser approval, spending caps, Guardrails, phase-timed request logs, and Chat & Seedance Video studio",
-                  "按任务范围的浏览器审批、预算上限、安全护栏、分阶段请求日志，以及多模型对话与 Seedance 视频工作台",
-                )}
-              </li>
-            </ul>
-            <a className="text-link" href={links.deployment}>
-              {t("Single-container deployment guide", "查看单容器部署指南")}{" "}
-              <span aria-hidden="true">→</span>
-            </a>
-          </article>
-          <article
-            className="release-card upcoming"
-            data-reveal
-            data-spotlight
-            style={stagger(1)}
-          >
-            <span className="phase">
-              {t("CONTINUOUS PRODUCTION QUALIFICATION", "生产级准入持续演进")}
-            </span>
-            <h3>
-              {t(
-                "Transparent engineering roadmap",
-                "公开透明的生产准入与演进清单",
-              )}
-            </h3>
-            <ul>
-              <li>
-                {t(
-                  "End-to-end v0.3.0 native host package publication and browser consent verification",
-                  "v0.3.0 原生宿主接入包正式发布与端到端浏览器授权核验",
-                )}
-              </li>
-              <li>
-                {t(
-                  "Expanded Provider protocol, streaming, and commercial settlement reconciliation",
-                  "持续扩展上游供应商流式协议准入与商业对账结算能力",
-                )}
-              </li>
-              <li>
-                {t(
-                  "Multi-node high availability, crash recovery, and zero-downtime upgrade verification",
-                  "多节点高可用部署、故障自动恢复与零停机平滑升级验证",
-                )}
-              </li>
-            </ul>
-            <a className="text-link" href={links.release}>
-              {t("Release acceptance matrix", "查看发布准入矩阵")}{" "}
-              <span aria-hidden="true">↗</span>
-            </a>
-          </article>
-        </div>
-      </section>
-
-      {/* 6. LATEST BLOG POSTS */}
-      {latestPosts.length > 0 && (
-        <section
-          className="section container landing-blog"
-          aria-labelledby="landing-blog-title"
-        >
-          <div className="section-heading" data-reveal>
-            <div>
-              <p className="eyebrow">
-                {t("FROM THE NIU BLOG", "来自 Niu 博客")}
+        <div className="landing-facts">
+          {foundationFacts.map((fact, index) => (
+            <article key={fact.title} data-reveal style={stagger(index)}>
+              <p className="landing-fact-value">
+                {isZh ? fact.valueZh : fact.value}
               </p>
-              <h2 id="landing-blog-title">
-                {isZh ? (
-                  <>
-                    来自网关工程团队的
-                    <br />
-                    架构与产品实践笔记。
-                  </>
-                ) : (
-                  <>
-                    Engineering notes from
-                    <br />
-                    the gateway team.
-                  </>
-                )}
-              </h2>
-            </div>
-            <div className="landing-blog-intro">
-              <p>
-                {t(
-                  "Model access, token usage and reliable API integration in practice.",
-                  "分享模型接入、Token 用量管理与调用可靠性的工程实践。",
-                )}
-              </p>
-              <a className="text-link" href="/blog/">
-                {t("All articles", "全部文章")}{" "}
+              <h3>{isZh ? fact.titleZh : fact.title}</h3>
+              <p>{isZh ? fact.detailZh : fact.detail}</p>
+              <a className="text-link" href={fact.href}>
+                {isZh ? fact.linkZh : fact.link}{" "}
                 <span aria-hidden="true">→</span>
               </a>
-            </div>
-          </div>
-          <div
-            className={`landing-blog-list${latestPosts.length === 1 ? " is-single" : ""}`}
-          >
-            {latestPosts.map((post, index) => (
-              <a
-                key={post.href}
-                className="landing-blog-card"
-                href={post.href}
-                data-reveal
-                data-spotlight
-                style={stagger(index)}
-              >
-                <div className="landing-blog-main">
-                  <div className="landing-blog-meta">
-                    <span className="landing-blog-category">
-                      {isZh && post.chineseCategory ? post.chineseCategory : post.category}
-                    </span>
-                    <time dateTime={post.publishedAt}>{isZh && post.chineseDateLabel ? post.chineseDateLabel : post.dateLabel}</time>
-                    <span>{isZh && post.chineseReadingTime ? post.chineseReadingTime : post.readingTime}</span>
-                  </div>
-                  <h3>
-                    {isZh && post.chineseTitle ? post.chineseTitle : post.title}
-                  </h3>
-                  <p>{isZh && post.chineseDescription ? post.chineseDescription : post.description}</p>
-                  <span className="text-link">
-                    {t("Read article", "阅读全文")}{" "}
-                    <IconArrowRight size={16} aria-hidden="true" />
-                  </span>
-                </div>
-              </a>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* 7. CONCISE FAQ */}
-      <section
-        className="section container faq-section"
-        aria-labelledby="faq-title"
-      >
-        <div className="section-heading" data-reveal>
-          <div>
-            <p className="eyebrow">
-              {t("FREQUENTLY ASKED QUESTIONS", "常见问题解答 (FAQ)")}
-            </p>
-            <h2 id="faq-title">
-              {isZh ? (
-                <>
-                  在投入生产环境前
-                  <br />
-                  最受关注的核心问题。
-                </>
-              ) : (
-                <>
-                  Key questions before
-                  <br />
-                  you run in production.
-                </>
-              )}
-            </h2>
-          </div>
-          <div className="faq-intro">
-            <p>
-              {t(
-                "How agents connect, what they can do today, and where your review is needed.",
-                "了解 Agent 如何接入、目前能做什么，以及哪些环节需要你审核。",
-              )}
-            </p>
-            <div className="faq-intro-links">
-              <a className="text-link" href="/docs/">
-                {t("Read the docs", "阅读技术文档")}{" "}
-                <span aria-hidden="true">→</span>
-              </a>
-              <a className="text-link" href={`${links.repo}/issues`}>
-                {t("Ask on GitHub", "在 GitHub 提问")}{" "}
-                <span aria-hidden="true">↗</span>
-              </a>
-            </div>
-          </div>
-        </div>
-        <div className="faq-list" data-reveal>
-          {faqs.map((faq) => (
-            <details key={faq.question}>
-              <summary>
-                <span className="faq-meta">
-                  <span className="faq-index">{faq.index}</span>
-                  <span className="faq-category">
-                    {isZh ? faq.categoryZh : faq.category}
-                  </span>
-                </span>
-                <span className="faq-question">
-                  {isZh ? faq.questionZh : faq.question}
-                </span>
-                <span className="faq-toggle" aria-hidden="true" />
-              </summary>
-              <div className="faq-body">
-                <p>{isZh ? faq.answerZh : faq.answer}</p>
-                <a className="text-link faq-doc-link" href={faq.linkHref}>
-                  {isZh ? faq.linkLabelZh : faq.linkLabel}{" "}
-                  <span aria-hidden="true">→</span>
-                </a>
-              </div>
-            </details>
+            </article>
           ))}
         </div>
+        <p className="landing-release-note" data-reveal>
+          {t(
+            "Niu 0.3 is a release candidate. Native host packages remain under release qualification;",
+            "Niu 0.3 仍为候选版本，原生宿主接入包尚在发布准入验证中；",
+          )}{" "}
+          <a href={links.release}>
+            {t("see the acceptance matrix", "查看发布准入矩阵")}
+          </a>
+          {t(".", "。")}
+        </p>
       </section>
 
-      {/* 8. CLOSING CTA */}
+      {/* 6. CLOSING CTA */}
       <section
         className="closing-stage container"
         aria-labelledby="closing-title"
       >
         <div className="closing" data-reveal>
           <span className="closing-glow" aria-hidden="true" />
-          <p className="eyebrow">
-            {t(
-              "AGENT-FRIENDLY · COST-EFFICIENT · HIGH-PERFORMANCE",
-              "面向智能体 · 追求性价比 · 高性能",
-            )}
-          </p>
           <h2 id="closing-title">
             {isZh ? (
               <>
-                把你的需求，
+                把下一个任务，
                 <br />
                 <span className="accent">交给连接了 Niu 的 Agent。</span>
               </>
@@ -2419,19 +1800,22 @@ export default function LandingContent({
               </>
             )}
           </h2>
-          <p className="closing-copy">
-            {t(
-              "Use the guided workflow and runnable example. Your agent handles setup and reads the references; you review the results.",
-              "从引导流程和可运行示例开始。Agent 负责接入并按需查阅参考文档，你负责审阅结果。",
-            )}
-          </p>
           <div className="actions hero-actions">
-            <Button asChild size="lg" className="cta-primary">
-              <a href="/docs/guides/personal-assistant/">
-                <IconPlugConnected aria-hidden="true" />
-                {t("Build with Niu", "用 Niu 开发")}
-                <IconArrowRight className="cta-arrow" aria-hidden="true" />
-              </a>
+            <Button
+              size="lg"
+              className="cta-primary"
+              onClick={copyInstallationPrompt}
+            >
+              {copiedInstall ? (
+                <IconCheck aria-hidden="true" />
+              ) : (
+                <IconCopy aria-hidden="true" />
+              )}
+              <span aria-live="polite">
+                {copiedInstall
+                  ? t("Copied", "已复制")
+                  : t("Copy setup prompt", "复制接入提示词")}
+              </span>
             </Button>
             <Button
               asChild

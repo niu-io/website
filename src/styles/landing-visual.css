@@ -812,6 +812,8 @@ html.is-scrolled .public-header {
 }
 .release-card,
 .release-card.upcoming {
+  min-width: 0;
+  overflow-wrap: anywhere;
   display: flex;
   flex-direction: column;
   padding: 32px;
@@ -1517,11 +1519,11 @@ html.is-scrolled .public-header {
 /* ---------- Interactive Niu Dashboard v0.2.23 Replica ---------- */
 .product-preview.demo-dashboard-shell {
   display: grid;
-  grid-template-columns: 56px 212px minmax(0, 1fr);
+  grid-template-columns: 212px minmax(0, 1fr);
   min-height: 620px;
 }
 .product-preview.demo-dashboard-shell.is-sidebar-collapsed {
-  grid-template-columns: 56px minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
 }
 .demo-app-rail {
   border-right: 1px solid var(--data-divider);
@@ -2653,7 +2655,7 @@ html.is-scrolled .public-header {
 
 @media (max-width: 1100px) {
   .product-preview.demo-dashboard-shell {
-    grid-template-columns: 52px minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr);
   }
   .demo-context-sidebar {
     display: none;
@@ -2673,7 +2675,7 @@ html.is-scrolled .public-header {
 @media (max-width: 760px) {
   .product-preview.demo-dashboard-shell,
   .product-preview.demo-dashboard-shell.is-sidebar-collapsed {
-    grid-template-columns: 46px minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr);
   }
   .demo-page-surface {
     padding: 16px 14px;
@@ -2705,27 +2707,76 @@ html.is-scrolled .public-header {
 
 /* Preserve a readable header even when scroll scripts or backdrop filters fail. */
 @supports not (backdrop-filter: blur(1px)) {
-  .public-header { background: var(--background); }
+  .public-header {
+    background: var(--background);
+  }
 }
 @media (max-width: 760px) {
   .product-preview.demo-dashboard-shell,
   .product-preview.demo-dashboard-shell.is-sidebar-collapsed {
     grid-template-columns: minmax(0, 1fr);
   }
-  .demo-app-rail { display: none; }
-  .demo-topbar { padding: 10px 12px; gap: 10px; }
-  .demo-breadcrumb-bar { min-width: 0; font-size: 12px; }
-  .demo-breadcrumb-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .preview-tabs { width: 100%; display: flex; min-width: 0; }
-  .preview-tabs button { flex: 1; min-width: 0; padding: 8px; font-size: 11px; line-height: 1.4; white-space: normal; }
-  .demo-page-surface { padding: 12px; gap: 12px; }
-  .demo-page-title-row { flex-wrap: wrap; gap: 6px; }
-  .demo-page-title-row h2 { font-size: 18px; }
-  .demo-volume-header { flex-wrap: wrap; gap: 4px; }
-  .demo-table-scroll { max-width: 100%; overflow-x: auto; }
-  .demo-data-table { font-size: 11px; }
-  .demo-data-table thead th, .demo-data-table td { padding: 8px 6px; }
-  .demo-filter-chip { max-width: 100%; white-space: normal; height: auto; min-height: 30px; }
+  .demo-app-rail {
+    display: none;
+  }
+  .demo-topbar {
+    padding: 10px 12px;
+    gap: 10px;
+  }
+  .demo-breadcrumb-bar {
+    min-width: 0;
+    font-size: 12px;
+  }
+  .demo-breadcrumb-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .preview-tabs {
+    width: 100%;
+    display: flex;
+    min-width: 0;
+  }
+  .preview-tabs button {
+    flex: 1;
+    min-width: 0;
+    padding: 8px;
+    font-size: 11px;
+    line-height: 1.4;
+    white-space: normal;
+  }
+  .demo-page-surface {
+    padding: 12px;
+    gap: 12px;
+  }
+  .demo-page-title-row {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .demo-page-title-row h2 {
+    font-size: 18px;
+  }
+  .demo-volume-header {
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .demo-table-scroll {
+    max-width: 100%;
+    overflow-x: auto;
+  }
+  .demo-data-table {
+    font-size: 11px;
+  }
+  .demo-data-table thead th,
+  .demo-data-table td {
+    padding: 8px 6px;
+  }
+  .demo-filter-chip {
+    max-width: 100%;
+    white-space: normal;
+    height: auto;
+    min-height: 30px;
+  }
 }
 
 /* Agent task prompts retain one compact action row and readable prose. */
@@ -2735,33 +2786,147 @@ html.is-scrolled .public-header {
   height: auto;
   padding: 0;
 }
-.code-tabs button { flex: 0 0 auto; }
-.highlighted-example > div { min-width: 0; width: 100%; }
-.highlighted-example[hidden] { display: none; }
-.highlighted-example pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+.code-tabs button {
+  flex: 0 0 auto;
+}
+.highlighted-example > div {
+  min-width: 0;
+  width: 100%;
+}
+.highlighted-example[hidden] {
+  display: none;
+}
+.highlighted-example pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
 @media (min-width: 761px) and (max-width: 1100px) {
-  .capability-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .gateway-grid { grid-template-columns: 1fr; }
+  .capability-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .gateway-grid {
+    grid-template-columns: 1fr;
+  }
 }
 @media (max-width: 600px) {
-  .code-heading { padding: 12px; gap: 8px; }
-  .code-tabs { gap: 2px; }
-  .code-tabs button { padding-inline: 8px; font-size: 12px; }
-  .code-copy-btn { padding-inline: 6px; }
-  .code-subbar { flex-wrap: wrap; padding-inline: 16px; }
+  .code-heading {
+    padding: 12px;
+    gap: 8px;
+  }
+  .code-tabs {
+    gap: 2px;
+  }
+  .code-tabs button {
+    padding-inline: 8px;
+    font-size: 12px;
+  }
+  .code-copy-btn {
+    padding-inline: 6px;
+  }
+  .code-subbar {
+    flex-wrap: wrap;
+    padding-inline: 16px;
+  }
 }
 
 /* The primary agent-led entry reuses the existing code/copy surface. */
-.hero-install { margin: 32px auto 0; max-width: 800px; text-align: left; }
-.hero-install .code-heading { flex-wrap: wrap; font-size: 13px; }
-.hero-install .code-heading a { color: var(--muted-foreground); text-decoration: underline; text-underline-offset: 3px; }
-.hero-install-prompt { display: block; padding: 22px 24px; white-space: normal; overflow-wrap: anywhere; font-size: 16px; line-height: 1.65; user-select: text; }
-.hero-install-footer { display: flex; align-items: center; gap: 24px; padding: 0 24px 22px; }
-.hero-install-footer p { margin: 0; flex: 1; color: var(--muted-foreground); font-size: 13px; line-height: 1.65; }
-.hero-install-footer [data-slot="button"] { flex: none; }
-.hero-install-error { padding: 0 24px 18px; margin: 0; font-size: 13px; color: var(--muted-foreground); }
+.hero-install {
+  margin: 32px auto 0;
+  max-width: 800px;
+  text-align: left;
+}
+.hero-install .code-heading {
+  flex-wrap: wrap;
+  font-size: 13px;
+}
+.hero-install .code-heading a {
+  color: var(--muted-foreground);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.hero-install-prompt {
+  display: block;
+  padding: 22px 24px;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  font-size: 16px;
+  line-height: 1.65;
+  user-select: text;
+}
+.hero-install-footer {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 0 24px 22px;
+}
+.hero-install-footer p {
+  margin: 0;
+  flex: 1;
+  color: var(--muted-foreground);
+  font-size: 13px;
+  line-height: 1.65;
+}
+.hero-install-footer [data-slot="button"] {
+  flex: none;
+}
+.hero-install-error {
+  padding: 0 24px 18px;
+  margin: 0;
+  font-size: 13px;
+  color: var(--muted-foreground);
+}
 @media (max-width: 640px) {
-  .hero-install-prompt { padding: 18px; font-size: 14px; }
-  .hero-install-footer { align-items: stretch; flex-direction: column; gap: 16px; padding: 0 18px 18px; }
-  .hero-install .code-heading { padding: 14px 18px; }
+  .hero-install-prompt {
+    padding: 18px;
+    font-size: 14px;
+  }
+  .hero-install-footer {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 16px;
+    padding: 0 18px 18px;
+  }
+  .hero-install .code-heading {
+    padding: 14px 18px;
+  }
+}
+
+.highlighted-example {
+  flex-direction: column;
+}
+
+/* Native multi-protocol showcase section & narrow tab overflow guard */
+.gateway-grid h2 {
+  font-size: var(--type-title);
+  font-weight: 600;
+  letter-spacing: -0.035em;
+}
+.protocols-section {
+  padding-block: clamp(56px, 7vw, 96px);
+}
+.protocols-section .gateway-grid {
+  padding-block: 0;
+  gap: clamp(32px, 5vw, 64px);
+  align-items: start;
+}
+.code-tabs {
+  overflow-x: auto;
+  max-width: 100%;
+  min-width: 0;
+  scrollbar-width: none;
+}
+.code-tabs::-webkit-scrollbar {
+  display: none;
+}
+.code-subbar span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+@media (max-width: 480px) {
+  .protocols-section .code-heading {
+    flex-wrap: wrap;
+  }
+  .protocols-section .code-tabs {
+    flex-wrap: wrap;
+  }
 }

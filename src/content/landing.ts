@@ -1,213 +1,213 @@
-// Agent-oriented model management; planned capabilities remain explicitly labeled.
+// Landing content for the Niu 0.3 line. Follow CONTENT.md claim rules:
+// Niu supplies evidence and authorized controls; the agent owns decisions.
+
 export const capabilities = [
   {
-    "number": "01",
-    "title": "Find models for my task",
-    "titleZh": "为我的任务找到模型",
-    "description": "Your agent reads available models, capabilities, context limits, and pricing through MCP to shortlist candidates for your task.",
-    "descriptionZh": "Agent 通过 MCP 读取可用模型、模态能力、上下文上限与价格，按你的需求筛选候选模型。",
-    "label": "Model discovery",
-    "labelZh": "模型发现",
-    "href": "/docs/agents.md"
+    title: "Discover models",
+    titleZh: "发现模型",
+    description:
+      "Your agent reads available models, capabilities, context limits and customer prices to shortlist candidates.",
+    descriptionZh:
+      "Agent 读取可用模型、能力、上下文上限与客户价格，筛选候选模型。",
+    href: "/docs/agents/capabilities/",
   },
   {
-    "number": "02",
-    "title": "Compare quality, speed and cost",
-    "titleZh": "比较效果、速度与成本",
-    "description": "Run fingerprinted task samples under an approved budget to compare candidate outputs, latency, and cost per accepted sample.",
-    "descriptionZh": "在已批准的测试预算下运行带指纹的任务样本，对比候选模型的输出质量、延迟与单样本成本。",
-    "label": "Model evaluation",
-    "labelZh": "模型评估",
-    "href": "/docs/evaluations.md"
+    title: "Evaluate on your samples",
+    titleZh: "用真实样本评测",
+    description:
+      "Record fingerprinted evaluations of task samples. Unknown charges stay unknown instead of being guessed.",
+    descriptionZh:
+      "对任务样本记录带指纹的评测结果，未知费用如实保留，不做估算。",
+    href: "/docs/agents/evaluations/",
   },
   {
-    "number": "03",
-    "title": "Configure routing around my workload",
-    "titleZh": "按任务需求配置模型路由",
-    "description": "Preview and update workspace routing policies with conditional rules, priority tiers, and weights, then review saved revisions in Niu.",
-    "descriptionZh": "通过条件规则、优先级分层与权重预览并更新工作空间路由策略，在 Niu 中审阅保存的修订。",
-    "label": "Routing policies",
-    "labelZh": "模型路由策略",
-    "href": "/docs/pools.md"
+    title: "Configure routing",
+    titleZh: "配置模型路由",
+    description:
+      "Propose routing policies with priority and weight, and preview them with a dry run before they take effect.",
+    descriptionZh: "提出带优先级与权重的路由策略，并在生效前预演验证。",
+    href: "/docs/agents/pools/",
   },
   {
-    "number": "04",
-    "title": "Keep access, invocation and spending in scope",
-    "titleZh": "明确权限、调用与支出边界",
-    "description": "Separate management grants from model invocation in browser approval, backed by workspace and API-key spending caps and Guardrails.",
-    "descriptionZh": "在浏览器审批中将管理权限与模型调用分离，配以工作空间和 API 密钥支出上限及安全护栏。",
-    "label": "Access and budgets",
-    "labelZh": "权限与预算",
-    "href": "/docs/security/overview/"
+    title: "Scoped access and budgets",
+    titleZh: "权限与预算边界",
+    description:
+      "Browser approval separates management from model invocation, which is off by default. Spending caps and guardrails apply.",
+    descriptionZh:
+      "浏览器审批将管理权限与模型调用分离，调用默认关闭，并受支出上限与安全护栏约束。",
+    href: "/docs/agents/",
   },
   {
-    "number": "05",
-    "title": "Explain a slow, blocked or failed request",
-    "titleZh": "解释请求为什么慢、被拦截或失败",
-    "description": "Your agent inspects upstream attempts, phase timing, guardrail decisions, and connection incidents directly—no manual copy-pasting.",
-    "descriptionZh": "Agent 直接读取上游尝试、阶段耗时、护栏拦截与连接故障证据，无需你手动复制粘贴。",
-    "label": "Request diagnostics",
-    "labelZh": "请求诊断",
-    "href": "/docs/concepts/execution-observation/"
+    title: "Diagnose requests",
+    titleZh: "诊断请求",
+    description:
+      "Inspect upstream attempts, phase timing, guardrail decisions and connection incidents—without copy-pasting logs.",
+    descriptionZh:
+      "直接读取上游尝试、阶段耗时、护栏决策与连接故障，无需手动复制日志。",
+    href: "/docs/concepts/execution-observation/",
   },
   {
-    "number": "06",
-    "title": "Respond when conditions change",
-    "titleZh": "在运行条件变化时响应",
-    "description": "Pull workspace events or subscribe to signed webhook notifications when routing policies change or new evaluations are recorded.",
-    "descriptionZh": "当路由策略变更或记录新评估时，Agent 可拉取工作空间事件或接收签名 Webhook 通知。",
-    "label": "Events and notifications",
-    "labelZh": "事件与通知",
-    "href": "/docs/events.md"
-  }
+    title: "React to events",
+    titleZh: "响应资源事件",
+    description:
+      "Subscribe to signed events when routing policies change or evaluations are recorded.",
+    descriptionZh: "订阅签名事件，在路由策略变更或评测记录生成时及时响应。",
+    href: "/docs/agents/events/",
+  },
 ];
 
-export const codeExamples = [
+export const workflowSteps = [
   {
-    "id": "connect",
-    "language": "text",
-    "label": "Connect",
-    "endpoint": "Step 01 · Connect & verify scope",
-    "endpointZh": "第 01 步 · 连接并核验授权范围",
-    "code": "Install and configure Niu by following https://niu.io/docs/install.md and verify the deployment and workspace during browser authorization.\n\nAfter connecting, inspect our key grants and summarize the available models, capabilities, and published customer pricing.",
-    "trace": "Niu 0.3: Claude Code, Codex and DeepSeek Harness with browser approval.",
-    "traceZh": "Niu 0.3：支持 Claude Code、Codex 与 DeepSeek Harness 浏览器授权接入。"
+    step: "01",
+    title: "Connect your agent",
+    titleZh: "连接 Agent",
+    detail:
+      "Paste the setup prompt. Your agent checks the deployment and opens Niu for sign-in.",
+    detailZh: "粘贴接入提示词，Agent 检查部署并打开 Niu 供你登录。",
   },
   {
-    "id": "compare",
-    "language": "text",
-    "label": "Evaluate",
-    "endpoint": "Step 02 · Evaluate on task samples",
-    "endpointZh": "第 02 步 · 基于任务样本评估模型",
-    "code": "Use Niu to shortlist candidate models for my application. Ask for my task samples, quality rubric, latency target, and test budget first.\n\nRun fingerprinted evaluations to compare quality, latency, and cost per accepted sample, then preview a workspace routing policy for my review.",
-    "trace": "Fingerprinted task evaluations and routing policy previews.",
-    "traceZh": "带指纹的任务样本评估与工作空间路由策略预览。"
+    step: "02",
+    title: "Approve its scope",
+    titleZh: "审批权限范围",
+    detail:
+      "Choose the workspace, expiry and permissions, including whether named models may be invoked.",
+    detailZh: "选择工作空间、有效期与权限，以及是否允许调用指定模型。",
   },
   {
-    "id": "diagnose",
-    "language": "text",
-    "label": "Improve",
-    "endpoint": "Step 03 · Diagnose & refine routing",
-    "endpointZh": "第 03 步 · 诊断请求并优化路由",
-    "code": "Use Niu request evidence to investigate our recent slow, blocked, or failed calls. Inspect upstream attempts, phase timing, guardrail status, and settled charges.\n\nExplain what the evidence establishes and dry-run a routing policy update before applying any change.",
-    "trace": "Direct request diagnostics; consequential changes stay under your review.",
-    "traceZh": "Agent 直接读取诊断证据，重要变更交由你审核确认。"
-  }
+    step: "03",
+    title: "Set goals, review results",
+    titleZh: "设定目标，审阅结果",
+    detail:
+      "Describe the task and constraints. Review requests, usage and charges in the dashboard.",
+    detailZh: "说明任务与约束，在控制台审阅请求、用量与费用。",
+  },
 ];
 
-export const faqs = [
+export const protocolNames = [
   {
-    "index": "01",
-    "category": "Agent integration",
-    "categoryZh": "Agent 接入",
-    "question": "How does my coding agent connect?",
-    "questionZh": "Coding agent 如何接入？",
-    "answer": "Give your agent the setup prompt. It checks Niu 0.3 package and deployment availability, then opens browser approval so you can sign in and scope access without changing the agent's own host model.",
-    "answerZh": "把接入提示词交给 Agent。它会检查 Niu 0.3 接入包与部署可用性，随后打开浏览器供你登录并审批权限，且不会改动 Agent 自身的宿主模型。",
-    "linkLabel": "Connect your agent",
-    "linkLabelZh": "连接 Agent",
-    "linkHref": "/docs/guides/personal-assistant/"
+    en: "OpenAI Chat Completions & Responses",
+    zh: "OpenAI Chat Completions 与 Responses",
   },
-  {
-    "index": "02",
-    "category": "Human review",
-    "categoryZh": "人工审核",
-    "question": "What do I approve and review as a human?",
-    "questionZh": "作为用户我需要审批和审核什么？",
-    "answer": "You choose the workspace, expiration, management scopes, and whether named models may be invoked (off by default). Every routing revision, evaluation run, and charge remains visible in the dashboard.",
-    "answerZh": "你在浏览器中选择工作空间、有效期、管理权限范围，以及是否允许调用指定模型（默认关闭）。每次路由修订、评估运行与费用明细均可在控制台审阅。",
-    "linkLabel": "Agent authority contract",
-    "linkLabelZh": "查看 Agent 权限规范",
-    "linkHref": "/docs/agents.md"
-  },
-  {
-    "index": "03",
-    "category": "Routing & evaluations",
-    "categoryZh": "路由与评估",
-    "question": "How do workspace routing policies and evaluations work?",
-    "questionZh": "工作空间路由策略与任务评估是如何协同的？",
-    "answer": "Under your test budget, your agent runs fingerprinted task samples to compare quality, latency, and cost per accepted sample, then previews and updates conditional routing policies with priority and weight tiers.",
-    "answerZh": "在已批准的测试预算下，Agent 运行带指纹的任务样本对比质量、延迟与单样本成本，随后通过条件规则、优先级与权重分层预览并更新工作空间路由策略。",
-    "linkLabel": "Routing specification",
-    "linkLabelZh": "查看路由规范",
-    "linkHref": "/docs/pools.md"
-  },
-  {
-    "index": "04",
-    "category": "Deployment & modes",
-    "categoryZh": "部署与运行模式",
-    "question": "Can I self-host Niu for my own team or for commercial resale?",
-    "questionZh": "我可以自托管 Niu 供团队自用或商业转售吗？",
-    "answer": "Yes. Self-hosted deployments default to Internal use—connect OpenRouter, FastRouter, BabelArk, Qiniu, DeepSeek, or custom endpoints with an API key and pay upstream directly, or enable Resale mode for customer tariffs and Credits.",
-    "answerZh": "可以。自托管默认采用内部自用模式——填入 API 密钥即可连接 OpenRouter、FastRouter、BabelArk、七牛云、DeepSeek 或自定义端点并由团队直接向上游结算；也可开启商业转售模式使用客户价目表与品牌 Credits。",
-    "linkLabel": "Self-host Niu",
-    "linkLabelZh": "自行部署 Niu",
-    "linkHref": "/docs/deployment/single-container/"
-  }
+  { en: "Anthropic Messages", zh: "Anthropic Messages" },
+  { en: "Google Gemini", zh: "Google Gemini" },
+  { en: "Embeddings and video jobs", zh: "Embeddings 与视频任务" },
 ];
 
-export const heroStats = [
+export const protocolExamples = [
   {
-    "value": "3,239",
-    "label": "requests / second",
-    "labelZh": "单机峰值并发 (RPS)"
+    id: "responses",
+    language: "bash",
+    label: "Responses",
+    labelZh: "Responses",
+    endpoint: "POST /v1/responses",
+    endpointZh: "POST /v1/responses",
+    code: `curl https://niu.io/v1/responses \\
+  -H "Authorization: Bearer $NIU_API_KEY" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "model": "gpt-5",
+    "store": false,
+    "input": "Summarize the routing policy."
+  }'`,
   },
   {
-    "value": "10.7×",
-    "label": "faster than LiteLLM",
-    "labelZh": "吞吐性能超越 LiteLLM"
+    id: "messages",
+    language: "bash",
+    label: "Messages",
+    labelZh: "Messages",
+    endpoint: "POST /v1/messages",
+    endpointZh: "POST /v1/messages",
+    code: `curl https://niu.io/v1/messages \\
+  -H "Authorization: Bearer $NIU_API_KEY" \\
+  -H "anthropic-version: 2023-06-01" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "model": "claude-sonnet-4-5",
+    "max_tokens": 1024,
+    "messages": [{ "role": "user", "content": "List concurrency risks." }]
+  }'`,
   },
   {
-    "value": "31.5 ms",
-    "label": "p99 tail latency",
-    "labelZh": "64 并发 p99 延迟"
+    id: "gemini",
+    language: "bash",
+    label: "Gemini",
+    labelZh: "Gemini",
+    endpoint: "POST /v1beta/models/{model}:generateContent",
+    endpointZh: "POST /v1beta/models/{model}:generateContent",
+    code: `curl "https://niu.io/v1beta/models/gemini-2.5-pro:generateContent" \\
+  -H "Authorization: Bearer $NIU_API_KEY" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "contents": [{ "role": "user", "parts": [{ "text": "Explain this stack trace." }] }]
+  }'`,
   },
   {
-    "value": "18.2 MB",
-    "label": "idle RAM footprint",
-    "labelZh": "极低空闲内存占用"
-  }
+    id: "chat",
+    language: "bash",
+    label: "Chat",
+    labelZh: "Chat",
+    endpoint: "POST /v1/chat/completions",
+    endpointZh: "POST /v1/chat/completions",
+    code: `curl https://niu.io/v1/chat/completions \\
+  -H "Authorization: Bearer $NIU_API_KEY" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "model": "pool/coding-default",
+    "stream": true,
+    "messages": [{ "role": "user", "content": "Summarize model capabilities." }]
+  }'`,
+  },
+];
+
+export const foundationFacts = [
+  {
+    value: "MIT",
+    valueZh: "MIT",
+    title: "Open source and self-hosted",
+    titleZh: "开源与自托管",
+    detail:
+      "Gateway, dashboard and docs are open source. Deploy one container with PostgreSQL.",
+    detailZh: "网关、控制台与文档全部开源，单容器加 PostgreSQL 即可部署。",
+    link: "Deployment guide",
+    linkZh: "部署指南",
+    href: "/docs/deployment/single-container/",
+  },
+  {
+    value: "Internal · Resale",
+    valueZh: "自用 · 转售",
+    title: "Two operating modes",
+    titleZh: "两种运行模式",
+    detail:
+      "Use your own Provider keys and pay upstream directly, or enable Resale for customer pricing and Credits.",
+    detailZh:
+      "使用自有供应商密钥直接向上游结算，或开启转售模式提供客户定价与 Credits。",
+    link: "Provider setup",
+    linkZh: "供应商配置",
+    href: "/docs/admin/suppliers/",
+  },
+  {
+    value: "3,239 RPS",
+    valueZh: "3,239 RPS",
+    title: "Low-overhead Rust gateway",
+    titleZh: "低开销 Rust 网关",
+    detail:
+      "Historical v0.2.4 result on one Apple M4 with full PostgreSQL accounting; not a measure of model performance.",
+    detailZh:
+      "v0.2.4 在单台 Apple M4 上开启完整 PostgreSQL 计费时的历史结果，不代表模型本身性能。",
+    link: "Benchmark method",
+    linkZh: "基准测试方法",
+    href: "/docs/guides/gateway-benchmarks/",
+  },
 ];
 
 export const links = {
-  "repo": "https://github.com/niu-io/niu",
-  "quickstart": "/docs/getting-started/",
-  "deployment": "/docs/deployment/single-container/",
-  "api": "/docs/api/rest/",
-  "benchmark": "/docs/guides/gateway-benchmarks/",
-  "compare": "/compare/",
-  "release": "https://github.com/niu-io/niu/blob/main/docs/releases/first-release.md",
-  "dashboard": "/workspaces/default/"
+  repo: "https://github.com/niu-io/niu",
+  quickstart: "/docs/getting-started/",
+  deployment: "/docs/deployment/single-container/",
+  api: "/docs/api/rest/",
+  benchmark: "/docs/guides/gateway-benchmarks/",
+  compare: "/compare/",
+  release:
+    "https://github.com/niu-io/niu/blob/main/docs/releases/first-release.md",
+  dashboard: "/workspaces/default/",
 };
-
-export const pillars = [
-  {
-    "index": "01",
-    "metric": "Agent-friendly",
-    "metricZh": "面向智能体",
-    "title": "Let your agent work directly with Niu",
-    "titleZh": "让智能体直接使用 Niu",
-    "detail": "Connect via native plugins and MCP with browser approval. Your agent discovers and configures; you set goals and authority.",
-    "detailZh": "通过原生插件与 MCP 接入并在浏览器中审批。智能体负责发现与配置，你设定目标与权限边界。"
-  },
-  {
-    "index": "02",
-    "metric": "Cost-efficient",
-    "metricZh": "追求性价比",
-    "title": "Configure routing around your workload",
-    "titleZh": "按任务负载配置模型路由",
-    "detail": "Compare models on task samples and configure routing policies around your quality, latency, and budget requirements.",
-    "detailZh": "用真实任务样本评估候选模型，按质量、延迟与预算要求配置模型路由策略。"
-  },
-  {
-    "index": "03",
-    "metric": "High-performance",
-    "metricZh": "高性能",
-    "title": "Keep model calls fast and observable",
-    "titleZh": "让模型调用高效且可观测",
-    "detail": "Route calls through Niu’s low-overhead Rust gateway and inspect latency, failures, and settled charges in one place.",
-    "detailZh": "通过低开销 Rust 网关转发调用，集中检视分阶段延迟、失败原因与已结算费用。"
-  }
-];
-
-export const requestExample = "curl http://localhost:2555/v1/chat/completions \\\n  -H \"Authorization: Bearer $NIU_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"model\": \"claude-sonnet-4\",\n    \"messages\": [{\"role\": \"user\", \"content\": \"Check Q3 p99.\"}],\n    \"stream\": true\n  }'";
