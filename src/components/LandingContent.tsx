@@ -455,7 +455,6 @@ export default function LandingContent({
             style={stagger(0)}
             href="#product"
           >
-            <span className="release-tag">Niu 0.3</span>
             <span>
               {t(
                 "Native agent packages, routing and evaluations",
@@ -498,7 +497,7 @@ export default function LandingContent({
                 )}
               </strong>
               <a href="/docs/install.md">
-                {t("Niu 0.3 install contract", "牛元(Niu) 0.3 接入规范")}
+                {t("Installation guide", "接入指南")}
               </a>
             </div>
             <code className="hero-install-prompt">{installationPrompt}</code>
@@ -588,7 +587,7 @@ export default function LandingContent({
                   className="demo-context-sidebar"
                   aria-label="Section navigation"
                 >
-                  <div className="demo-sidebar-header">
+                  <div className="demo-sidebar-header demo-sidebar-primary">
                     <a
                       href="/workspaces/default/"
                       className="flex items-center gap-2 font-semibold"
@@ -1768,8 +1767,8 @@ export default function LandingContent({
         </div>
         <p className="landing-release-note" data-reveal>
           {t(
-            "Niu 0.3 is a release candidate. Native host packages remain under release qualification;",
-            "牛元(Niu) 0.3 仍为候选版本，原生宿主接入包尚在发布准入验证中；",
+            "For the current status of native host packages,",
+            "了解各宿主接入包的发布状态，",
           )}{" "}
           <a href={links.release}>
             {t("see the acceptance matrix", "查看发布准入矩阵")}

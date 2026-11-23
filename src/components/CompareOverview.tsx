@@ -17,7 +17,6 @@ export default function CompareOverview() {
           )}
         </p>
       </header>
-      <CompareBenchmark />
       <CompareMatrix />
       <section className="compare-section">
         <p className="compare-eyebrow">{t("Go deeper", "深入对比")}</p>
@@ -39,6 +38,7 @@ export default function CompareOverview() {
           ))}
         </div>
       </section>
+      <CompareBenchmark />
     </>
   );
 }
