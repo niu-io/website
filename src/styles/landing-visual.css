@@ -1583,6 +1583,7 @@ html.is-scrolled .public-header {
   border-bottom: 1px solid var(--data-divider);
   margin-bottom: 8px;
 }
+.demo-sidebar-primary,
 .demo-sidebar-header-gen {
   flex-direction: column;
   align-items: stretch;
