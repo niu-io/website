@@ -455,7 +455,6 @@ export default function LandingContent({
             style={stagger(0)}
             href="#product"
           >
-            
             <span>
               {t(
                 "Native agent packages, routing and evaluations",
