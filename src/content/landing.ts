@@ -1,4 +1,4 @@
-// Landing content for the Niu 0.3 line. Follow CONTENT.md claim rules:
+// Landing content for the Niu 0.4 line. Follow CONTENT.md claim rules:
 // Niu supplies evidence and authorized controls; the agent owns decisions.
 
 export const capabilities = [
@@ -178,9 +178,9 @@ export const foundationFacts = [
     title: "Two operating modes",
     titleZh: "两种运行模式",
     detail:
-      "Use your own Provider keys and pay upstream directly, or enable Resale for customer pricing and Credits.",
+      "Use your own Provider keys and pay upstream directly, or enable Resale for customer pricing and credits.",
     detailZh:
-      "使用自有供应商密钥直接向上游结算，或开启转售模式提供客户定价与 Credits。",
+      "使用自有供应商密钥直接向上游结算，或开启转售模式提供客户定价与自定义额度。",
     link: "Provider setup",
     linkZh: "供应商配置",
     href: "/docs/admin/suppliers/",
