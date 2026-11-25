@@ -7,12 +7,21 @@ import { fileURLToPath } from "node:url";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
 test("landing interactive preview matches Niu 0.4 navigation, tabs and brand rules", async () => {
-  const [landingTsx, landingTs, footerAstro, visualCss] = await Promise.all([
-    readFile(path.join(root, "src/components/LandingContent.tsx"), "utf8"),
-    readFile(path.join(root, "src/content/landing.ts"), "utf8"),
-    readFile(path.join(root, "src/components/SiteFooter.astro"), "utf8"),
-    readFile(path.join(root, "src/styles/landing-visual.css"), "utf8"),
-  ]);
+  const [landingTsx, landingTs, footerAstro, visualCss, publicHeaderCss, siteHeaderAstro] =
+    await Promise.all([
+      readFile(path.join(root, "src/components/LandingContent.tsx"), "utf8"),
+      readFile(path.join(root, "src/content/landing.ts"), "utf8"),
+      readFile(path.join(root, "src/components/SiteFooter.astro"), "utf8"),
+      readFile(path.join(root, "src/styles/landing-visual.css"), "utf8"),
+      readFile(path.join(root, "src/styles/public-header.css"), "utf8"),
+      readFile(path.join(root, "src/components/SiteHeader.astro"), "utf8"),
+    ]);
+
+  // Top navigation bar must be 100% transparent when unscrolled and frosted glass on scroll.
+  assert.match(publicHeaderCss, /background:transparent; border-bottom:1px solid transparent; box-shadow:none; -webkit-backdrop-filter:none; backdrop-filter:none;/);
+  assert.match(publicHeaderCss, /backdrop-filter:saturate\(180%\) blur\(20px\)/);
+  assert.ok(!visualCss.includes("html.is-scrolled .public-header"));
+  assert.match(siteHeaderAstro, /is-scrolled/);
 
   // All 7 real Niu 0.4 workspace sidebar items must exist with exact Chinese labels.
   for (const labelZh of [

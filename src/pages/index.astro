@@ -62,10 +62,6 @@ const canonical = new URL(`${base}/`, Astro.site);
     <script is:inline>
       (() => {
         const html = document.documentElement;
-        const syncScroll = () =>
-          html.classList.toggle("is-scrolled", window.scrollY > 8);
-        syncScroll();
-        window.addEventListener("scroll", syncScroll, { passive: true });
         if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
         html.classList.add("motion-ready");
         setTimeout(() => {
