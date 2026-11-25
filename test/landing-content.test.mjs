@@ -40,7 +40,7 @@ test("landing interactive preview matches Niu 0.4 navigation, tabs and brand rul
     );
   }
 
-  // Retired / mismatched terminology must never reappear.
+  // Retired / mismatched terminology and trailing button-arrow icons must never reappear.
   for (const retired of [
     "牛刀",
     "牛元(Niu)",
@@ -49,6 +49,8 @@ test("landing interactive preview matches Niu 0.4 navigation, tabs and brand rul
     "双模型并排对比",
     "PostgreSQL 会话实时同步已启用",
     "v0.2.23",
+    "IconArrowUpRight",
+    "IconExternalLink",
   ]) {
     assert.ok(
       !landingTsx.includes(retired) &&

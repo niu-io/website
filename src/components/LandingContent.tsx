@@ -5,7 +5,6 @@ import {
   IconAdjustmentsHorizontal,
   IconArrowRight,
   IconArrowUp,
-  IconArrowUpRight,
   IconBell,
   IconBook,
   IconBrandGithub,
@@ -14,7 +13,6 @@ import {
   IconCheck,
   IconCopy,
   IconCpu,
-  IconExternalLink,
   IconHistory,
   IconKey,
   IconLayoutDashboard,
@@ -1031,7 +1029,6 @@ export default function LandingContent({
               <a href="/docs/guides/personal-assistant/">
                 <IconPlugConnected aria-hidden="true" />
                 {t("Build with Niu", "用 Niu 牛元开发")}
-                <IconArrowRight className="cta-arrow" aria-hidden="true" />
               </a>
             </Button>
             <Button
@@ -1186,14 +1183,13 @@ export default function LandingContent({
                       className="demo-nav-btn"
                       target="_blank"
                       rel="noopener noreferrer"
+                      aria-label={t(
+                        "Docs (opens in a new tab)",
+                        "文档（在新标签页打开）",
+                      )}
                     >
                       <IconBook size={16} aria-hidden="true" />
                       <span>{t("Docs", "文档")}</span>
-                      <IconExternalLink
-                        size={13}
-                        className="demo-nav-ext"
-                        aria-hidden="true"
-                      />
                     </a>
                     <a href={links.dashboard} className="demo-nav-btn">
                       <IconShieldLock size={16} aria-hidden="true" />
@@ -1776,10 +1772,6 @@ export default function LandingContent({
                                     onClick={() => handleTryModel(model)}
                                   >
                                     <span>{t("Try", "试用")}</span>
-                                    <IconArrowUpRight
-                                      size={14}
-                                      aria-hidden="true"
-                                    />
                                   </button>
                                 </div>
                               </div>
@@ -2637,7 +2629,7 @@ export default function LandingContent({
                             setModelsSubTab("routing");
                           }}
                         >
-                          {t("Review routing →", "审阅路由 →")}
+                          {t("Review routing", "审阅路由")}
                         </button>
                       </div>
 
@@ -3008,10 +3000,6 @@ export default function LandingContent({
                   <Button asChild size="sm" className="cta-primary cta-compact">
                     <a href={links.dashboard}>
                       {t("Open workspace dashboard", "进入工作空间控制台")}
-                      <IconArrowRight
-                        className="cta-arrow"
-                        aria-hidden="true"
-                      />
                     </a>
                   </Button>
                 </div>
