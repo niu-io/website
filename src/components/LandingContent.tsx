@@ -48,8 +48,11 @@ function currentDeploymentOrigin() {
   return window.location.origin || "https://niu.io";
 }
 
-function buildInstallationPrompt(origin: string) {
+function buildInstallationPrompt(origin: string, isZh = false) {
   const deployment = origin.replace(/\/$/, "") || "https://niu.io";
+  if (isZh) {
+    return `请按照 ${deployment}/docs/install.md 为 ${deployment} 安装并配置 Niu，并在授权时核验部署地址与工作空间。`;
+  }
   return `Install and configure Niu for ${deployment} by following ${deployment}/docs/install.md. Verify the deployment and workspace during authorization.`;
 }
 
@@ -397,7 +400,7 @@ export default function LandingContent({
     setDeploymentOrigin(currentDeploymentOrigin());
   }, []);
 
-  const installationPrompt = buildInstallationPrompt(deploymentOrigin);
+  const installationPrompt = buildInstallationPrompt(deploymentOrigin, isZh);
 
   useEffect(() => {
     if (previewPaused) return;
@@ -505,7 +508,7 @@ export default function LandingContent({
               <p>
                 {t(
                   "Paste into Claude Code, Codex or DeepSeek Harness. Your agent checks availability and opens Niu for sign-in and approval.",
-                  "粘贴至 Claude Code、Codex 或 DeepSeek Harness。智能体检查可用性并打开牛元(Niu)完成登录与授权审批。",
+                  "粘贴至 Claude Code、Codex 或 DeepSeek Harness。智能体检查可用性并打开 Niu 牛元完成登录与授权审批。",
                 )}
               </p>
               <Button
@@ -543,7 +546,7 @@ export default function LandingContent({
             >
               <a href="/docs/guides/personal-assistant/">
                 <IconPlugConnected aria-hidden="true" />
-                {t("Build with Niu", "用牛元(Niu)开发")}
+                {t("Build with Niu", "用 Niu 牛元开发")}
                 <IconArrowRight className="cta-arrow" aria-hidden="true" />
               </a>
             </Button>
@@ -1486,7 +1489,7 @@ export default function LandingContent({
                   <span>
                     {t(
                       "Illustrative dashboard data · Inspect logs and generations in Niu",
-                      "控制台示例数据 · 在牛元(Niu)中查看请求日志与生成结果",
+                      "控制台示例数据 · 在牛元中查看请求日志与生成结果",
                     )}
                   </span>
                   <Button asChild size="sm" className="cta-primary cta-compact">
@@ -1533,7 +1536,7 @@ export default function LandingContent({
           <p>
             {t(
               "Niu supplies the evidence and authorized controls. Your agent makes the model and cost decisions; you review what matters.",
-              "牛元(Niu)提供可信证据与授权能力，模型与成本取舍由智能体决定，重要变更由你审核。",
+              "Niu 牛元提供可信证据与授权能力，模型与成本取舍由智能体决定，重要变更由你审核。",
             )}
           </p>
         </div>
@@ -1623,7 +1626,7 @@ export default function LandingContent({
                 <>
                   沿用 SDK 原生协议，
                   <br />
-                  一把牛元(Niu)密钥统一管理。
+                  一把牛元密钥统一管理。
                 </>
               ) : (
                 <>
@@ -1746,7 +1749,7 @@ export default function LandingContent({
           <p>
             {t(
               "Run Niu as a single container with PostgreSQL. Inference still reaches the upstream Providers you configure.",
-              "单容器加 PostgreSQL 即可运行牛元(Niu)，推理请求仍发往你配置的上游供应商。",
+              "单容器加 PostgreSQL 即可运行牛元，推理请求仍发往你配置的上游供应商。",
             )}
           </p>
         </div>
@@ -1789,7 +1792,7 @@ export default function LandingContent({
               <>
                 把下一个任务，
                 <br />
-                <span className="accent">交给连接了牛元(Niu)的智能体。</span>
+                <span className="accent">交给连接了 Niu 牛元的智能体。</span>
               </>
             ) : (
               <>

@@ -63,7 +63,7 @@ export const workflowSteps = [
     titleZh: "连接智能体",
     detail:
       "Paste the setup prompt. Your agent checks the deployment and opens Niu for sign-in.",
-    detailZh: "粘贴接入提示词，智能体检查部署并打开牛元(Niu)供你登录。",
+    detailZh: "粘贴接入提示词，智能体检查部署并打开 Niu 牛元供你登录。",
   },
   {
     step: "02",

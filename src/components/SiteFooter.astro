@@ -10,7 +10,11 @@ const footerGroups = [
     titleZh: "产品",
     links: [
       { label: "Dashboard", labelZh: "控制台", href: links.dashboard },
-      { label: "Generations", labelZh: "生成工作台", href: "/docs/reference/generations/" },
+      {
+        label: "Generations",
+        labelZh: "生成工作台",
+        href: "/docs/reference/generations/",
+      },
       { label: "Benchmarks", labelZh: "性能基准", href: links.benchmark },
     ],
   },
@@ -18,10 +22,18 @@ const footerGroups = [
     title: "Developers",
     titleZh: "开发者",
     links: [
-      { label: "Build with Niu", labelZh: "用牛元(Niu)开发", href: "/docs/guides/personal-assistant/" },
+      {
+        label: "Build with Niu",
+        labelZh: "用 Niu 牛元开发",
+        href: "/docs/guides/personal-assistant/",
+      },
       { label: "Docs", labelZh: "文档", href: "/docs/" },
       { label: "REST API", labelZh: "REST API", href: links.api },
-      { label: "JavaScript SDK", labelZh: "JavaScript SDK", href: "/docs/api/sdk/" },
+      {
+        label: "JavaScript SDK",
+        labelZh: "JavaScript SDK",
+        href: "/docs/api/sdk/",
+      },
       { label: "Self-hosting", labelZh: "私有化部署", href: links.deployment },
     ],
   },
@@ -29,11 +41,23 @@ const footerGroups = [
     title: "Resources",
     titleZh: "资源",
     links: [
-      { label: "Why Niu?", labelZh: "为什么选择 Niu？", href: "/blog/why-niu/" },
+      {
+        label: "Why Niu?",
+        labelZh: "为什么选择 Niu？",
+        href: "/blog/why-niu/",
+      },
       { label: "Blog", labelZh: "博客", href: "/blog/" },
       { label: "Compare gateways", labelZh: "网关对比", href: links.compare },
-      { label: "Niu vs. OpenRouter", labelZh: "Niu vs. OpenRouter", href: "/compare/openrouter/" },
-      { label: "Niu vs. LiteLLM", labelZh: "Niu vs. LiteLLM", href: "/compare/litellm/" },
+      {
+        label: "Niu vs. OpenRouter",
+        labelZh: "Niu vs. OpenRouter",
+        href: "/compare/openrouter/",
+      },
+      {
+        label: "Niu vs. LiteLLM",
+        labelZh: "Niu vs. LiteLLM",
+        href: "/compare/litellm/",
+      },
     ],
   },
   {
@@ -41,7 +65,11 @@ const footerGroups = [
     titleZh: "开源",
     links: [
       { label: "GitHub", labelZh: "GitHub", href: links.repo },
-      { label: "Website source", labelZh: "官网源码", href: "https://github.com/niu-io/website" },
+      {
+        label: "Website source",
+        labelZh: "官网源码",
+        href: "https://github.com/niu-io/website",
+      },
       { label: "Release matrix", labelZh: "版本矩阵", href: links.release },
       {
         label: "Third-party notices",
@@ -65,20 +93,38 @@ const footerGroups = [
         <a class="site-footer-brand" href="/" aria-label="Niu home">
           <NiuBrand />
         </a>
-        <p class="site-footer-tagline" data-en="The Model Platform for Agents." data-zh="面向智能体的模型平台。">
+        <p
+          class="site-footer-tagline"
+          data-en="The Model Platform for Agents."
+          data-zh="面向智能体的模型平台。"
+        >
           The Model Platform for Agents.
         </p>
-        <p class="site-footer-submeta" data-en="MIT License · Self-hosted & cloud" data-zh="MIT 开源协议 · 支持私有化部署与云端托管">MIT License · Self-hosted &amp; cloud</p>
+        <p
+          class="site-footer-submeta"
+          data-en="MIT License · Self-hosted & cloud"
+          data-zh="MIT 开源协议 · 支持私有化部署与云端托管"
+        >
+          MIT License · Self-hosted &amp; cloud
+        </p>
       </div>
 
       <nav class="site-footer-columns" aria-label="Footer navigation">
         {footerGroups.map((group) => (
           <div class="site-footer-group">
-            <h3 data-en={group.title} data-zh={group.titleZh}>{group.title}</h3>
+            <h3 data-en={group.title} data-zh={group.titleZh}>
+              {group.title}
+            </h3>
             <ul>
               {group.links.map((item) => (
                 <li>
-                  <a href={item.href} data-en={item.label} data-zh={item.labelZh}>{item.label}</a>
+                  <a
+                    href={item.href}
+                    data-en={item.label}
+                    data-zh={item.labelZh}
+                  >
+                    {item.label}
+                  </a>
                 </li>
               ))}
             </ul>
@@ -89,5 +135,19 @@ const footerGroups = [
   </div>
 </footer>
 <script is:inline>
-(()=>{const sync=()=>{const zh=document.documentElement.dataset.locale==='zh-CN'||document.documentElement.lang==='zh-CN';document.querySelectorAll('footer.site-footer [data-en][data-zh]').forEach(el=>{el.textContent=el.getAttribute(zh?'data-zh':'data-en')||'';});};sync();window.addEventListener('niu-locale-change',sync);window.addEventListener('storage',sync);})();
+  (() => {
+    const sync = () => {
+      const zh =
+        document.documentElement.dataset.locale === "zh-CN" ||
+        document.documentElement.lang === "zh-CN";
+      document
+        .querySelectorAll("footer.site-footer [data-en][data-zh]")
+        .forEach((el) => {
+          el.textContent = el.getAttribute(zh ? "data-zh" : "data-en") || "";
+        });
+    };
+    sync();
+    window.addEventListener("niu-locale-change", sync);
+    window.addEventListener("storage", sync);
+  })();
 </script>
